@@ -7,7 +7,7 @@ moment.suppressDeprecationWarnings = true;
 module.exports = {
   data: new SlashCommandBuilder()
   .setName("permissions")
-  .setDescription("Get the permissions of a user.")
+  .setDescription("Gets the permissions of a user.")
   .addUserOption((option) => option.setName("user").setDescription("The user to get the permissions of.").setRequired(true)),
   async execute(interaction) {
     const member = interaction.options.getMember("user");

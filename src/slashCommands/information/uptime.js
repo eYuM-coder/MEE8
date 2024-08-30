@@ -1,11 +1,12 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
+const config = require("../../../config.json");
 const { MessageEmbed } = require("discord.js");
 const Guild = require("../../database/schemas/Guild");
 
 module.exports = {
   data: new SlashCommandBuilder()
   .setName("uptime")
-  .setDescription("Sends Pogy's uptime!"),
+  .setDescription(`Sends ${config.botName}'s uptime!`),
   async execute(interaction) {
     const guildDB = await Guild.findOne({
       guildId: interaction.guild.id,
@@ -39,7 +40,7 @@ module.exports = {
     // const date = moment().subtract(days, 'ms').format('dddd, MMMM Do YYYY');
     const embed = new MessageEmbed()
     .setDescription(`${language.uptime1} \`${uptime}\`.`)
-    .setFooter({ text: `https://Pogy.ml` })
+    .setFooter({ text: `https://example.com` })
     .setColor(interaction.guild.me.displayHexColor);
     interaction.reply({ embeds: [embed] });
   }

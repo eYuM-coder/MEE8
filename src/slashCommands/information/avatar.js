@@ -5,7 +5,7 @@ const { MessageEmbed } = require("discord.js");
 module.exports = {
   data: new SlashCommandBuilder()
   .setName("avatar")
-  .setDescription("Displays a users avatar")
+  .setDescription("Displays a user avatar")
   .addUserOption((option) => option.setName("member").setDescription("The user to get the avatar of").setRequired(true)),
   async execute(interaction) {
     const guildDB = await Guild.findOne({

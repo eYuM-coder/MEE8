@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
+const config = require("../../../config.json");
 const Guild = require("../../database/schemas/Pogy");
 const Guildd = require("../../database/schemas/Guild");
 const { MessageEmbed } = require("discord.js");
@@ -8,7 +9,7 @@ moment.suppressDeprecationWarnings = true;
 module.exports = {
   data: new SlashCommandBuilder()
   .setName("news")
-  .setDescription("Shows Pogy's latest news"),
+  .setDescription(`Shows ${config.botName}'s latest news`),
   async execute(interaction) {
     const guildDB = await Guild.findOne({});
 
@@ -23,8 +24,8 @@ module.exports = {
     let embed = new MessageEmbed()
     .setColor(interaction.guild.me.displayHexColor)
     .setTitle(`ChaoticNews`)
-    .setDescription(`***__${language.datePublished}__ ${moment(guildDB.time).format("dddd, MMMM Do YYYY")}*** *__[\`(${moment(guildDB.time).fromNow()})\`] (https://Pogy.ml)__*\n\n${guildDB.news}`)
-    .setFooter({ text: "https://Pogy.ml" })
+    .setDescription(`***__${language.datePublished}__ ${moment(guildDB.time).format("dddd, MMMM Do YYYY")}*** *__[\`(${moment(guildDB.time).fromNow()})\`] (https://example.com)__*\n\n${guildDB.news}`)
+    .setFooter({ text: "https://example.com" })
     .setTimestamp();
     interaction.reply({ embeds: [embed] }).catch(() => {
       interaction.reply({ content: `${language.noNews}`, ephemeral: true });

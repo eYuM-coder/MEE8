@@ -6,7 +6,7 @@ const fs = require("fs");
 module.exports = {
   data: new SlashCommandBuilder()
   .setName("help")
-  .setDescription("Shows every command the bot has"),
+  .setDescription("Shows every command the bot currently has"),
   async execute(interaction) {
     const emoji = {
       information: `${emojis.information}`,
@@ -74,7 +74,7 @@ module.exports = {
       { name: `${emojis.moderation} Moderation`, value: "Moderation Category", inline: true },
       { name: `${emojis.owner} Owner`, value: "Owner Category", inline: true },
       { name: `${emojis.utility} Utility`, value: "Utility Category", inline: true },
-      { name: "\u200b", value: "**[Invite](https://invite.Pogy.ml) | " + "[Support Server](https://Pogy.ml/support) | " + "[Dashboard](https://Pogy.ml/dashboard)**" }
+      { name: "\u200b", value: "**[Invite](https://invite.example.com) | " + "[Support Server](https://example.com/support) | " + "[Dashboard](https://example.com/dashboard)**" }
     )
     .setColor("GREEN")
     .setFooter({ text: `Requested by ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
@@ -82,7 +82,7 @@ module.exports = {
     
     let editEmbed = new MessageEmbed()
       .addFields(
-          { name: "\u200b", value: "**[Invite](https://invite.Pogy.ml) | " + "[Support Server](https://Pogy.ml/support) | " + "[Dashboard](https://Pogy.ml/dashboard)**" }
+          { name: "\u200b", value: "**[Invite](https://invite.example.com) | " + "[Support Server](https://example.com/support) | " + "[Dashboard](https://example.com/dashboard)**" }
         )
       .setTimestamp();
 

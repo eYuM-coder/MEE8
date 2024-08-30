@@ -1,11 +1,12 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
+const config = require("../../../config.json");
 const { MessageEmbed, MessageActionRow, MessageButton, MessageSelectMenu } = require("discord.js");
 const Guild = require("../../database/schemas/Guild");
 
 module.exports = {
   data: new SlashCommandBuilder()
   .setName("invite")
-  .setDescription("Sends you the invite to Pogy's support server or the bots invite"),
+  .setDescription(`Sends you the invite to ${config.botName}'s support server or the bots invite link`),
   async execute(interaction) {
     const guildDB = await Guild.findOne({
       guildId: interaction.guild.id,

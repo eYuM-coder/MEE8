@@ -12,7 +12,7 @@ function checkDays(date) {
 module.exports = {
   data: new SlashCommandBuilder()
   .setName("serverinfo")
-  .setDescription("Displays information about the current server."),
+  .setDescription("Displays the information of the current server."),
   async execute(interaction) {
     const guildDB = await Guild.findOne({
       guildId: interaction.guild.id

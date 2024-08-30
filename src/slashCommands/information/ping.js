@@ -7,7 +7,7 @@ const { stripIndent } = require("common-tags");
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("ping")
-    .setDescription("Return the ping of the bot."),
+    .setDescription("Returns the ping of the bot."),
     async execute(interaction) {
         const guildDB = await Guild.findOne({
             guildId: interaction.guild.id,
@@ -17,7 +17,7 @@ module.exports = {
         const embed = new MessageEmbed()
         .setDescription(`Pinging...`)
         .setColor(client.color.red)
-        .setFooter({ text: `Powered by https://Pogy.ml/` });
+        .setFooter({ text: `Powered by https://example.com/` });
 
         const msg = await interaction.reply({ embeds: [embed], fetchReply: true });
 

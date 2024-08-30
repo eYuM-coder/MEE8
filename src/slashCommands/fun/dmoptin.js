@@ -31,7 +31,7 @@ module.exports = {
       } else {
         await dmSystem.updateOne(
           {
-            userId: message.author.id,
+            userId: interaction.author.id,
           },
           { $set: { optedout: false } }
         );

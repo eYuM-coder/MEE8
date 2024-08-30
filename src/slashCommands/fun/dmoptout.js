@@ -42,11 +42,11 @@ module.exports = {
                     .then(async () => {
                         if (logging && logging.moderation.delete_reply === "true") {
                             setTimeout(() => {
-                                interaction.deleteReply().catch(() => { });
+                                interaction.deleteReply().catch(() => { interaction.channel.send({ content: "Error deleting message." }) });
                             }, 5000)
                         }
                     })
-                    .catch(() => { });
+                    .catch(() => { interaction.channel.send({ content: "Error deleting message." }) });
             }
         } catch (err) {
             console.error();

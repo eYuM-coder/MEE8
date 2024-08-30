@@ -13,13 +13,15 @@ module.exports = {
 
       const dmsystem = await dmSystem.findOne({ userId: interaction.author.id });
       if (!dmsystem) {
-        await new dmSystem({
+        const newDmSystem = new dmSystem({
           userId: interaction.author.id,
-          optedout: true,
+          optedout: false,
         });
-        const dmoptin = new MessageEmbed()
-          .setDescription(`You have opted in to the DM system. To stop recieving DMs, use /dmoptout.`);
-        return interaction.reply({ embeds: [dmoptin] })
+
+        await newDmSystem.save();
+        const embed = new MessageEmbed()
+          .setDescription(`DM System profile created.`);
+        return interaction.reply({ embeds: [embed] })
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {

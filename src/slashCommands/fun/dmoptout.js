@@ -9,7 +9,6 @@ module.exports = {
     .setDescription("Opts out of the DM command"),
   async execute(interaction) {
     try {
-      const client = interaction.client;
       const logging = await Logging.findOne({ guildId: interaction.guild.id });
 
       const dmsystem = await dmSystem.findOne({ userId: interaction.author.id });
@@ -49,7 +48,7 @@ module.exports = {
           .catch(() => { interaction.channel.send({ content: "Error deleting message." }) });
       }
     } catch (err) {
-      console.error();
+      interaction.reply({ content: `This command cannot be used in Direct Messages.`, ephemeral: true });
     }
   }
 };

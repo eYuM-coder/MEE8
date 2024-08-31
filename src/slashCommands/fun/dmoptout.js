@@ -15,7 +15,7 @@ module.exports = {
       if (!dmsystem) {
         const newDmSystem = new dmSystem({
           userId: interaction.author.id,
-          optedout: true,
+          optedout: "true",
         });
 
         await newDmSystem.save();
@@ -35,7 +35,7 @@ module.exports = {
           {
             userId: interaction.author.id,
           },
-          { $set: { optedout: true } }
+          { $set: { optedout: "true" } }
         );
         const dmoptout = new MessageEmbed()
           .setDescription(`You have opted out of the DM system. To begin recieving DMs again, use /dmoptin.`);

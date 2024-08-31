@@ -12,6 +12,7 @@ const jointocreate = require("./src/structures/jointocreate");
 const emoji = require("./src/data/emoji");
 const userData = require("./src/data/users.json");
 const sharder = require("./shards.js");
+const deploy = require("./src/deployCommands.js");
 // lets
 let client = Pogy;
 // pogy stuff

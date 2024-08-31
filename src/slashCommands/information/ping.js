@@ -36,14 +36,14 @@ module.exports = {
         **${language.discordAPI}** \`${Math.round(client.ws.ping)}ms\`
         `;
 
-        let color = interaction.guild.me.displayHexColor;
+        let color = interaction.guild.members.me.displayHexColor;
         if (latency < 100) {
             color = `#00ff00`;
         } else if (latency > 100 && latency < 200) {
             color = `#CCCC00`
         } else if (latency > 200) {
             color = interaction.client.color.red;
-        } else color = interaction.guild.me.displayHexColor;
+        } else color = interaction.guild.members.me.displayHexColor;
 
         embed.setDescription(`P${vowel[Math.floor(Math.random() * vowel.length)]}ng\n${koko}`);
         embed.setColor(color);

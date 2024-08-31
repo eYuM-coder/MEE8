@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 
 const dmsystem = mongoose.Schema({
-  userID: { type: String },
-  optedout: { type: Boolean },
+  userId: { type: String },
+  optedout: { type: String },
 });
 
 module.exports = mongoose.model("dmsystem", dmsystem);

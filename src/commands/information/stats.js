@@ -8,7 +8,7 @@ module.exports = class extends Command {
   constructor(...args) {
     super(...args, {
       name: "stats",
-      aliases: ["s", "botinfo"],
+      aliases: ["statinfo", "botinfo", "botstats"],
       description: "Displays Pogys Statistics",
       category: "Information",
       cooldown: 3,

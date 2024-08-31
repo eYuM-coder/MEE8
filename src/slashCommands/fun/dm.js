@@ -17,9 +17,11 @@ module.exports = {
       const member = interaction.options.getMember("member");
       const message = interaction.options.getString("message");
 
-      const dmSystem = await dmSystem.findOne({ userId: member.id });
-      if (!dmSystem) {
-        await new dmSystem({ userId: member.id, optedout: false });
+      const dmProfile = await dmSystem.findOne({ userId: member.id });
+      if (!dmProfile) {
+        const newDmSystem = new dmSystem({ userId: member.id, optedout: "false" });
+
+        await newDmSystem.save();
 
         const dmoptin = new MessageEmbed()
           .setDescription(`User was not registered in DM system, use the command again.`);
@@ -48,7 +50,7 @@ module.exports = {
       }
 
       if (member.id === interaction.member.id) {
-        if (dmSystem.optedout === "false") {
+        if (dmProfile.optedout === "false") {
           const embed = new MessageEmbed()
             .setDescription(`${client.emoji.success} | That was kind of... Ok..? But why would you dm yourself?`)
             .setColor(client.color.green)
@@ -81,7 +83,7 @@ module.exports = {
             .catch(() => { });
         }
       } else {
-        if (dmSystem.optedout === "false") {
+        if (dmProfile.optedout === "false") {
           const embed = new MessageEmbed()
             .setDescription(`${client.emoji.success} | I have successfully sent the message to ${member}!`)
             .setColor(client.color.green)

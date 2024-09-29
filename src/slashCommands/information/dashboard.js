@@ -9,7 +9,7 @@ module.exports = {
   async execute(interaction) {
     const dashembed = new MessageEmbed()
     .setTitle(`Need ${config.botName}'s dashboard link?`)
-    .setDescription(`Click [here](https://example.com) to see ${config.botName}'s dashboard`)
+    .setDescription(`Click [here](${process.env.AUTH_DOMAIN}/dashboard) to see ${config.botName}'s dashboard`)
     .setColor("RANDOM")
     .setFooter({ text: `Requested by ${interaction.author}` })
     .setTimestamp();

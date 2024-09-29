@@ -30,15 +30,6 @@ module.exports = {
       let channel = interaction.options.getChannel("channel");
       let reason = interaction.options.getString("reason");
 
-      let member = interaction.guild.roles.cache.find(
-        (r) => r.name.toLowerCase() === "member",
-      );
-      let memberr = interaction.guild.roles.cache.find(
-        (r) => r.name.toLowerCase() === "members",
-      );
-      let verified = interaction.guild.roles.cache.find(
-        (r) => r.name.toLowerCase() === "verified",
-      );
       if (channel) {
         reason = reason || "`none`";
       } else channel = interaction.channel;
@@ -67,24 +58,6 @@ module.exports = {
       channel.permissionOverwrites
         .edit(interaction.member.id, { SEND_MESSAGES: true })
         .catch(() => {});
-
-      if (member) {
-        channel.permissionOverwrites
-          .edit(member, { SEND_MESSAGES: true })
-          .catch(() => {});
-      }
-
-      if (memberr) {
-        channel.permissionOverwrites
-          .edit(memberr, { SEND_MESSAGES: true })
-          .catch(() => {});
-      }
-
-      if (verified) {
-        channel.permissionOverwrites
-          .edit(verified, { SEND_MESSAGES: true })
-          .catch(() => {});
-      }
 
       const embed = new MessageEmbed()
         .setDescription(

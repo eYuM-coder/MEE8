@@ -1,6 +1,7 @@
 const { relativeTimeRounding } = require("moment");
 const Command = require("../../structures/Command");
 const { MessageEmbed } = require("discord.js");
+const ms = require("ms");
 module.exports = class EmptyCommand extends Command {
   constructor(...args) {
     super(...args, {
@@ -12,11 +13,11 @@ module.exports = class EmptyCommand extends Command {
     });
   }
 
-  async run(message) {
+  async run(message, args) {
     try {
-      const timeString = message.content.split(" ")[1];
-      const timeoutDuration = Number(timeString) * 1000;
-      const reason = message.content.split(" ").slice(3).join(" ");
+      const timeString = args[1];
+      const timeoutDuration = ms(timeString);
+      const reason = args[2];
       if (isNaN(timeoutDuration)) {
         return message.channel.send(
           "Please provide a valid numerical time for the timeout."
@@ -40,20 +41,12 @@ module.exports = class EmptyCommand extends Command {
       if (!message.member.roles.highest.comparePositionTo(User.roles.highest) > 0) {
         return message.channel.send("You cannot mute someone with a higher or equal role.");
       }
-      const durationInMinutes = Math.floor(timeoutDuration / 60000); // Minutes
-      const durationInHours = Math.floor(durationInMinutes / 60); // Hours
-      const leftoverMinutes = durationInMinutes % 60; // Remaining minutes
-
-      const readableTime = `${durationInHours} hour${
-        durationInHours === 1 ? "" : "s"
-      } ${leftoverMinutes} minute${leftoverMinutes === 1 ? "" : "s"}`;
-
-      const realtile = timeString * 1000;
-      await User.timeout(timeString * 1000, `${reason}`);
+      
+      await User.timeout(timeoutDuration, `${reason}`);
       // Chore : convert to embed
       const embed = new MessageEmbed()
         .setColor("#fe0a0a")
-        .setDescription(`User has been timed out for ${readableTime} ${reason}`)
+        .setDescription(`User has been timed out for ${ms(timeString)} ${reason}`)
         .setFooter(
           message.member.displayName,
           message.author.displayAvatarURL({ dynamic: true })

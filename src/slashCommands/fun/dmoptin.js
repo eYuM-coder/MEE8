@@ -11,10 +11,10 @@ module.exports = {
     try {
       const logging = await Logging.findOne({ guildId: interaction.guild.id });
 
-      const dmsystem = await dmSystem.findOne({ userId: interaction.author.id });
+      const dmsystem = await dmSystem.findOne({ userId: interaction.user.id });
       if (!dmsystem) {
         const newDmSystem = new dmSystem({
-          userId: interaction.author.id,
+          userId: interaction.user.id,
           optedout: "false",
         });
 
@@ -33,7 +33,7 @@ module.exports = {
       } else {
         await dmSystem.updateOne(
           {
-            userId: interaction.author.id,
+            userId: interaction.user.id,
           },
           { $set: { optedout: "false" } }
         );

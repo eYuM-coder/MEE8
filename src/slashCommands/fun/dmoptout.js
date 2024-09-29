@@ -11,10 +11,10 @@ module.exports = {
     try {
       const logging = await Logging.findOne({ guildId: interaction.guild.id });
 
-      const dmsystem = await dmSystem.findOne({ userId: interaction.author.id });
+      const dmsystem = await dmSystem.findOne({ userId: interaction.user.id });
       if (!dmsystem) {
         const newDmSystem = new dmSystem({
-          userId: interaction.author.id,
+          userId: interaction.user.id,
           optedout: "true",
         });
 
@@ -33,7 +33,7 @@ module.exports = {
       } else {
         await dmSystem.updateOne(
           {
-            userId: interaction.author.id,
+            userId: interaction.user.id,
           },
           { $set: { optedout: "true" } }
         );
@@ -51,6 +51,7 @@ module.exports = {
       }
     } catch (err) {
       interaction.reply({ content: `This command cannot be used in Direct Messages.`, ephemeral: true });
+      console.error(err);
     }
   }
 };

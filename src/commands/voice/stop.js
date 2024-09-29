@@ -1,55 +1,28 @@
 const Command = require("../../structures/Command");
-const sharedPlayer = null;
-const {MessageEmbed} = require('discord.js');
-const { joinVoiceChannel, VoiceConnectionStatus,createAudioPlayer, VoiceState } = require('@discordjs/voice'); // Import the voice function
-// Function to access or create the shared player
-const ytdl = require("ytdl-core");
-async function getSharedPlayer(message) {
-  const connection = message.member.voice.channel.connection;
-  if (!connection) {
-    return message.channel.send('Not connected to a voice channel.');
-  }
+const player = require("../../handlers/player");
 
-  if (!sharedPlayer) {
-    sharedPlayer = createAudioPlayer();
-    connection.subscribe(sharedPlayer);
-  }
-
-  return sharedPlayer;
-}
-module.exports = class StopCommand extends Command {
+module.exports = class extends Command {
   constructor(...args) {
     super(...args, {
       name: "stop",
-      aliases: [],
-      description: "Stop playback",
-      category: "General",
-      cooldown: 2,
+      description: "Stops the current playing song.",
+      category: "Music",
+      cooldown: 3,
     });
   }
 
-  run(message) {
-    try {
-      const guildId = message.guild.id;
-      const { connection, player, nowPlayingMessage } = message.guild.playerInfo || {};
-
-      if (!connection || !player || !nowPlayingMessage) {
-        return message.channel.send("Not currently playing any song.");
-      }
-
-      connection.destroy(); // Disconnect from the voice channel
-
-      const embed = new MessageEmbed()
-        .setDescription("Playback stopped.")
-        .setColor("#FF5733");
-      nowPlayingMessage.edit({ embeds: [embed] });
-
-      // Remove player information from the guild map
-      delete message.guild.playerInfo;
-
-    } catch (error) {
-      console.error("Error stopping playback:", error);
-      message.channel.send("An error occurred while stopping playback.");
+  async run(message) {
+    let member = message.guild.members.cache.get(message.author.id);
+    let channel = member.voice.channel;
+    if (!channel) {
+      return message.channel.send("You need to be in a voice channel to use this command.");
     }
+    const queue = player.getQueue(message.guild.id);
+    if (!queue) return message.channel.send("There are no songs playing.");
+
+    if (!queue || !queue.playing) return message.channel.send("No music is being played.");
+
+    queue.stop();
+    return message.reply("Stopped the player and disconnected from the channel.");
   }
-};
+}

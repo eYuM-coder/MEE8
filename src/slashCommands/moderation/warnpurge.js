@@ -47,7 +47,7 @@ module.exports = {
       const fail = client.emoji.fail;
       const success = client.emoji.success;
       const mentionedMember = interaction.options.getMember("member");
-      const amount = interaction.options.getNumber("amount");
+      const amount = interaction.options.getInteger("amount");
       const reason =
         interaction.options.getString("reason") || "No Reason Provided";
 

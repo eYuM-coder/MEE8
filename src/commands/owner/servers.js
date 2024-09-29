@@ -8,11 +8,18 @@ module.exports = class extends Command {
       aliases: [],
       description: "Check the servers!",
       category: "Owner",
-      ownerOnly: true,
     });
   }
 
   async run(message) {
+    if (
+      !message.client.config.owner.includes(message.author.id) &&
+      !message.client.config.developers.includes(message.author.id)
+    ) {
+      return message.channel.sendCustom(
+        `You are not a developer or the owner of this bot.`,
+      );
+    }
     const servers = message.client.guilds.cache.map((guild) => {
       return `\`${guild.id}\` - **${guild.name}** - \`${guild.memberCount}\` members`;
     });
@@ -23,7 +30,7 @@ module.exports = class extends Command {
         message.member.displayName,
         message.author.displayAvatarURL({
           dynamic: true,
-        })
+        }),
       )
       .setTimestamp()
       .setColor(message.guild.me.displayHexColor);
@@ -39,7 +46,7 @@ module.exports = class extends Command {
         message.channel,
         message.member,
         embed,
-        servers
+        servers,
       );
     }
   }

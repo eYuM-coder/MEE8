@@ -8,11 +8,18 @@ module.exports = class extends Command {
       aliases: ["finvite", "finv"],
       description: "Fetch an invite!",
       category: "Owner",
-      ownerOnly: true,
     });
   }
 
   async run(message, args) {
+    if (
+      !message.client.config.owner.includes(message.author.id) &&
+      !message.client.config.developers.includes(message.author.id)
+    ) {
+      return message.channel.sendCustom(
+        `You are not a developer or the owner of this bot.`,
+      );
+    }
     const guildId = args[0];
     if (!rgx.test(guildId))
       return message.channel.sendCustom(`Provide a guild`);
@@ -22,7 +29,7 @@ module.exports = class extends Command {
     var textChats = guild.channels.cache.find(
       (ch) =>
         ch.type === "GUILD_TEXT" &&
-        ch.permissionsFor(guild.me).has("CREATE_INSTANT_INVITE")
+        ch.permissionsFor(guild.me).has("CREATE_INSTANT_INVITE"),
     );
 
     if (!textChats) message.channel.sendCustom(`No channel`);

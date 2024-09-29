@@ -14,9 +14,10 @@ module.exports = {
     });
 
     const language = require(`../../data/language/${guildDB.language}.json`);
-    const reason = interaction.options.getString("reason") || "AFK"
+    const reason = interaction.options.getString("reason") || "AFK";
+    const member = interaction.guild.members.cache.get(interaction.user.id);
 
-    const oldNickname = interaction.member.nickname || interaction.user.username;
+    const oldNickname = interaction.user.username;
     const nickname = `[AFK] ${oldNickname}`;
 
     const afklist = await afk.findOne({
@@ -30,8 +31,6 @@ module.exports = {
         oldNickname: oldNickname,
         time: Date.now()
       });
-
-      await interaction.member.setNickname(nickname).catch(() => {});
 
       const embed = new discord.MessageEmbed()
       .setDescription(`${language.afk5} ${reason}`)

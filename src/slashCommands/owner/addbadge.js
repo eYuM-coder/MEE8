@@ -8,7 +8,16 @@ module.exports = {
   .addStringOption((option) => option.setName("badge").setDescription("The badge to add").setRequired(true))
   .addUserOption((option) => option.setName("member").setDescription("The member to give the badge to")),
   async execute(interaction) {
-    const client = interaction.client;
+
+    if(!interaction.client.config.owner.includes(interaction.member.id) && interaction.client.config.developers.includes(interaction.member.id)) {
+      return interaction.reply({
+        embeds: [
+          new MessageEmbed()
+          .setColor(interaction.client.color.red)
+          .setDescription(`${interaction.client.emoji.fail} | This command is for the owner.`)
+        ], ephemeral: true
+      })
+    }
 
     let user = interaction.options.getMember("member") || interaction.member;
 

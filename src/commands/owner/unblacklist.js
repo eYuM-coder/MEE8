@@ -14,11 +14,16 @@ module.exports = class extends Command {
       description: "Removes a user from the blacklist.",
       category: "Owner",
       usage: ["<user>"],
-      ownerOnly: true,
     });
   }
 
   async run(message, args) {
+    if (
+      !message.client.config.owner.includes(message.author.id) &&
+      message.client.config.developers.includes(message.author.id)
+    ) {
+      return message.channel.sendCustom(`This command is for the owner.`);
+    }
     const match = message.content.match(/\d{18}/);
     let member;
     try {
@@ -35,7 +40,7 @@ module.exports = class extends Command {
 
     if (args.length < 1)
       return message.channel.sendCustom(
-        `Please provide me with a user or guild blacklist`
+        `Please provide me with a user or guild blacklist`,
       );
     if (args.length < 2)
       return message.channel.sendCustom(`Provide me with a user`);
@@ -51,7 +56,7 @@ module.exports = class extends Command {
         },
         (err, user) => {
           user.deleteOne();
-        }
+        },
       );
       message.channel.sendCustom({
         embed: {
@@ -85,7 +90,7 @@ module.exports = class extends Command {
         },
         (err, server) => {
           server.deleteOne();
-        }
+        },
       );
 
       message.channel.sendCustom({

@@ -8,11 +8,16 @@ module.exports = class extends Command {
       description: "This is for the developers.",
       category: "Owner",
       usage: ["<text>"],
-      ownerOnly: true,
     });
   }
 
   async run(message, args) {
+    if (
+      !message.client.config.owner.includes(message.author.id) &&
+      message.client.config.developers.includes(message.author.id)
+    ) {
+      return message.channel.sendCustom(`This command is for the owner.`);
+    }
     let news = args.join(" ").split("").join("");
     if (!news) return message.channel.send("Please enter news.");
     const newsDB = await NewsSchema.findOne({});
@@ -30,7 +35,7 @@ module.exports = class extends Command {
       {
         news: news,
         time: new Date(),
-      }
+      },
     );
   }
 };

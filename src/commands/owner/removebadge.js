@@ -14,6 +14,13 @@ module.exports = class extends Command {
   async run(message, args) {
     const client = message.client;
 
+    if (
+      !client.config.owner.includes(message.author.id) &&
+      client.config.developers.includes(message.author.id)
+    ) {
+      return message.channel.sendCustom(`This command is for the owner ONLY.`);
+    }
+
     let user =
       message.mentions.users.first() ||
       client.users.cache.get(args[0]) ||
@@ -64,7 +71,7 @@ function match(msg, i) {
       m.user.username.toLowerCase().includes(msg) ||
       m.displayName.toLowerCase().startsWith(msg) ||
       m.displayName.toLowerCase() === msg ||
-      m.displayName.toLowerCase().includes(msg)
+      m.displayName.toLowerCase().includes(msg),
   );
   if (!user) return undefined;
   return user.user;

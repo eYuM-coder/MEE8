@@ -19,7 +19,7 @@ module.exports = class PogyClient extends Client {
         "GUILD_PRESENCES",
       ],
       allowedMentions: {
-        parse: ["roles", "users", "everyone"],
+        parse: ["roles", "users"],
         repliedUser: true,
       },
       presence: {
@@ -59,6 +59,7 @@ module.exports = class PogyClient extends Client {
     await this.utils.loadCommands();
     await this.utils.loadEvents();
     await this.mongoose.init();
+    require("./src/handlers/Music_Handler.js");
     this.login(token);
   }
 };

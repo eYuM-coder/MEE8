@@ -23,7 +23,7 @@ module.exports = class extends Command {
 
     const dashembed = new MessageEmbed()
       .setTitle("Need the bot's dashboard link? Here you go!")
-      .setDescription("https://v2.pogy.xyz")
+      .setDescription(`Click [here](${process.env.AUTH_DOMAIN}/dashboard) to go to the dashboard!`)
       .setColor("RANDOM")
       .setFooter({ text: `Requested by ${message.author.username}` })
       .setTimestamp();

@@ -17,7 +17,7 @@ module.exports = {
         const embed = new MessageEmbed()
         .setDescription(`Pinging...`)
         .setColor(client.color.red)
-        .setFooter({ text: `Powered by https://example.com/` });
+        .setFooter({ text: `Powered by ${process.env.AUTH_DOMAIN}` });
 
         const msg = await interaction.reply({ embeds: [embed], fetchReply: true });
 

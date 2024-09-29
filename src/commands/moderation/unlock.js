@@ -32,17 +32,8 @@ module.exports = class extends Command {
     let channel = message.mentions.channels.first();
     let reason = args.join(" ") || "`none`";
 
-    let member = message.guild.roles.cache.find(
-      (r) => r.name.toLowerCase() === "member"
-    );
-    let memberr = message.guild.roles.cache.find(
-      (r) => r.name.toLowerCase() === "members"
-    );
-    let verified = message.guild.roles.cache.find(
-      (r) => r.name.toLowerCase() === "verified"
-    );
     if (channel) {
-      reason = args.join(" ").slice(22) || "`none`";
+      reason = args.join(" ").slice(1021) || "`none`";
     } else channel = message.channel;
 
     if (
@@ -67,31 +58,13 @@ module.exports = class extends Command {
       .edit(message.author.id, { SEND_MESSAGES: true })
       .catch(() => {});
 
-    if (member) {
-      channel.permissionOverwrites
-        .edit(member, { SEND_MESSAGES: true })
-        .catch(() => {});
-    }
-
-    if (memberr) {
-      channel.permissionOverwrites
-        .edit(memberr, { SEND_MESSAGES: true })
-        .catch(() => {});
-    }
-
-    if (verified) {
-      channel.permissionOverwrites
-        .edit(verified, { SEND_MESSAGES: true })
-        .catch(() => {});
-    }
-
     const embed = new MessageEmbed()
       .setDescription(
-        `${success} | successfully Unlocked **${channel}** ${
+        `${success} | Successfully Unlocked **${channel}** ${
           logging && logging.moderation.include_reason === "true"
             ? `\n\n**Reason:** ${reason}`
             : ``
-        }`
+        }`,
       )
       .setColor(client.color.green);
     message.channel
@@ -111,10 +84,10 @@ module.exports = class extends Command {
       }
 
       const role = message.guild.roles.cache.get(
-        logging.moderation.ignore_role
+        logging.moderation.ignore_role,
       );
       const channel = message.guild.channels.cache.get(
-        logging.moderation.channel
+        logging.moderation.channel,
       );
 
       if (logging.moderation.toggle == "true") {
@@ -124,7 +97,7 @@ module.exports = class extends Command {
               !role ||
               (role &&
                 !message.member.roles.cache.find(
-                  (r) => r.name.toLowerCase() === role.name
+                  (r) => r.name.toLowerCase() === role.name,
                 ))
             ) {
               if (logging.moderation.lock == "true") {
@@ -142,7 +115,7 @@ module.exports = class extends Command {
                 const logEmbed = new MessageEmbed()
                   .setAuthor(
                     `Action: \`UnLock\` | ${message.author.tag} | Case #${logcase}`,
-                    message.author.displayAvatarURL({ format: "png" })
+                    message.author.displayAvatarURL({ format: "png" }),
                   )
                   .addField("Channel", `${channel}`, true)
                   .addField("Moderator", `${message.member}`, true)

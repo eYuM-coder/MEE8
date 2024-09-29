@@ -2,7 +2,7 @@
 
 const Command = require("../../structures/Command");
 const fs = require("fs");
-const userData = require("../../data/users.json");
+const Guild = require("../../database/models/leveling");
 let toggle = true;
 
 module.exports = class extends Command {
@@ -31,6 +31,16 @@ module.exports = class extends Command {
 
     const action = args[0].toLowerCase();
 
+    try {
+      let guild = await Guild.findOne({ guildId: guildId });
+      if (!guild) {
+        guild = new Guild({
+          guildId: guildId,
+          levelingEnabled: true,
+          users: [],
+        });
+      }
+
     // Update the guild's levelingEnabled property
     if (action === "enable") {
       toggle = true;
@@ -43,6 +53,9 @@ module.exports = class extends Command {
     } else {
       return message.reply("Invalid action. Use `enable` or `disable`.");
     }
-    fs.writeFileSync("./src/data/users.json", JSON.stringify(userData));
+    } catch (erorr) {
+      console.error("Error occured: ", error);
+      message.reply("An error occured while updating the leveling system.");
+    }
   }
 };

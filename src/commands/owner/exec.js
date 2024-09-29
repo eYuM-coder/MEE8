@@ -9,19 +9,28 @@ module.exports = class extends Command {
       description: "This is for the developers.",
       category: "Owner",
       usage: ["<thing-to-exec>"],
-      ownerOnly: true,
     });
   }
 
   async run(message, args) {
+    if (
+      message.client.config.owner.includes(message.author.id)
+    ) {
+      message.channel.sendCustom(`Access Granted. Welcome owner.`);
+    } else if (
+      message.client.config.developers.includes(message.author.id) ||
+      !message.client.config.owner.includes(message.author.id)
+    ) {
+      return message.channel.sendCustom(`You are not the owner of this bot.`);
+    }
     if (message.content.includes("config.json"))
       return message.channel.sendCustom(
-        "Due to privacy reasons, we can't show the config.json file."
+        "Due to privacy reasons, we can't show the config.json file.",
       );
 
     if (args.length < 1)
       return message.channel.sendCustom(
-        "You have to give me some text to execute!"
+        "You have to give me some text to execute!",
       );
 
     exec(args.join(" "), (error, stdout) => {

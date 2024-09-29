@@ -191,7 +191,7 @@ module.exports = class extends Event {
                 message.author
               }\n\n${
                 number === 1
-                  ? "*Did You know that Chaotichas its own dashboard? `https://394wkx-3000.csb.app/dashboard`*"
+                  ? `*Did You know that ${config.botName} has its own dashboard? \`https://394wkx-3000.csb.app/dashboard\`*`
                   : ""
               }${
                 number === 2

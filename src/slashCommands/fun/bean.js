@@ -48,22 +48,6 @@ module.exports = {
         .catch(() => {});
       }
   
-      if(member.roles.highest.position >= interaction.member.roles.highest.position) {
-        let rolesmatch = new MessageEmbed()
-        .setColor(client.color.red)
-        .setDescription(`${client.emoji.fail} | They have more power than you or have equal power as you do!`)
-        .setTimestamp()
-        return interaction.reply({ embeds: [rolesmatch] })
-        .then(async () => {
-          if (logging && logging.moderation.delete_reply === "true") {
-            setTimeout(() => {
-              interaction.deleteReply().catch(() => {});
-            }, 5000)
-          }
-        })
-        .catch(() => {});
-      }
-  
       if(member) {
         let embed = new MessageEmbed()
         .setColor("BLURPLE")

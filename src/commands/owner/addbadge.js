@@ -1,5 +1,6 @@
 const Command = require("../../structures/Command");
 const User = require("../../database/schemas/User");
+const { ApplicationCommandPermissionsManager } = require("discord.js");
 module.exports = class extends Command {
   constructor(...args) {
     super(...args, {
@@ -7,12 +8,20 @@ module.exports = class extends Command {
       aliases: ["ab"],
       description: "Add a certain badge to a user.",
       category: "Owner",
-      ownerOnly: true,
     });
   }
 
   async run(message, args) {
     const client = message.client;
+
+    if (message.client.config.owner.includes(message.author.id)) {
+      message.channel.sendCustom(`Access Granted. Welcome owner.`);
+    } else if (
+      message.client.config.developers.includes(message.author.id) ||
+      !message.client.config.owner.includes(message.author.id)
+    ) {
+      return message.channel.sendCustom(`You are not the owner of this bot.`);
+    }
 
     let user =
       message.mentions.users.first() ||
@@ -59,7 +68,7 @@ function match(msg, i) {
       m.user.username.toLowerCase().includes(msg) ||
       m.displayName.toLowerCase().startsWith(msg) ||
       m.displayName.toLowerCase() === msg ||
-      m.displayName.toLowerCase().includes(msg)
+      m.displayName.toLowerCase().includes(msg),
   );
   if (!user) return undefined;
   return user.user;

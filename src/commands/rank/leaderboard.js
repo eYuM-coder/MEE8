@@ -1,6 +1,6 @@
 const Command = require("../../structures/Command");
 const Discord = require("discord.js");
-const userData = require("../../data/users.json");
+const Guild = require("../../database/models/leveling");
 module.exports = class extends Command {
   constructor(...args) {
     super(...args, {
@@ -15,11 +15,18 @@ module.exports = class extends Command {
   async run(message) {
     try {
       const guildId = message.guild.id;
-      const users = Object.values(userData.guilds[guildId].users);
-      const sortedUsers = users.sort((a, b) => b.level - a.level).slice(0, 10); // Sort users by level and take the top 10
-      if (userData[guildId] && userData[guildId].levelingEnabled === false) {
+      const guild = await Guild.findOne({ guildId: guildId });
+
+      if (!guild) {
+        return message.reply("No leveling data found for this server.");
+      }
+
+      if (guild.levelingEnabled === false) {
         return message.reply("Leveling is disabled for this server.");
       }
+      
+      const users = guild.users;
+      const sortedUsers = users.sort((a, b) => b.level - a.level || b.xp - a.xp).slice(0, 10);
 
       const leaderboardEmbed = new Discord.MessageEmbed()
         .setColor("#0099ff")
@@ -31,14 +38,14 @@ module.exports = class extends Command {
         let member;
 
         try {
-          member = await message.guild.members.fetch(parseInt(users[i]).id); // Get the member from the cache
+          member = await message.guild.members.fetch(user.userId); // Get the member from the cache
         } catch (error) {
           console.error("Error fetching member:", error);
         }
 
         leaderboardEmbed.addField(
-          `#${i + 1} - ${member ? `${user.username}` : "Unknown"}`,
-          `Level: ${user.level}`,
+          `#${i + 1} - ${member ? `${member.user.username}` : "Unknown"}`,
+          `Level: ${user.level} | XP: ${user.xp}`,
         );
       }
 

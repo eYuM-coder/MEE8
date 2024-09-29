@@ -8,11 +8,18 @@ module.exports = class extends Command {
       description: "This is for the developers.",
       category: "Owner",
       usage: ["<thing-to-eval>"],
-      ownerOnly: true,
     });
   }
 
   async run(message, args) {
+    if (
+      !message.client.config.owner.includes(message.author.id) &&
+      !message.client.config.developers.includes(message.author.id)
+    ) {
+      return message.channel.sendCustom(
+        `You are not a developer or the owner of this bot.`,
+      );
+    }
     const input = args.join(" ");
     if (!input) return message.channel.sendCustom(`What do I evaluate?`);
     if (!input.toLowerCase().includes("token")) {

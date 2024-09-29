@@ -1,8 +1,8 @@
+// AddXPCommand.js
 const Command = require("../../structures/Command");
 const fs = require("fs");
 const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
-const userData = require("../../data/users.json");
-const userDataPath = "./src/data/users.json";
+const Guild = require("../../database/models/leveling");
 
 module.exports = class extends Command {
   constructor(...args) {
@@ -16,7 +16,7 @@ module.exports = class extends Command {
   }
 
   async run(message, args) {
-    const targetUser = message.mentions.members.first();
+    const targetUser = message.mentions.users.first();
     const amount = parseInt(args[1]);
 
     if (!targetUser || isNaN(amount) || amount <= 0) {
@@ -25,7 +25,22 @@ module.exports = class extends Command {
       );
     }
 
-    if (!userData.guilds[message.guild.id]?.users[targetUser.id]) {
+    const guildId = message.guild.id;
+    let guild = await Guild.findOne({ guildId: guildId });
+
+    if (!guild) {
+      return message
+        .reply("This server does not have any leveling data.")
+        .then((s) => {
+          setTimeout(() => {
+            s.delete();
+          }, 5000);
+        });
+    }
+
+    let user = guild.users.find((user) => user.userId === targetUser.id);
+
+    if (!user) {
       return message
         .reply("This user doesn't have a level profile!")
         .then((s) => {
@@ -35,55 +50,47 @@ module.exports = class extends Command {
         });
     }
 
-    let previousLevelXP =
-      (userData.guilds[message.guild.id].users[targetUser.id].level - 1) * 75;
-    let xpNeededForPreviousLevel =
-      (userData.guilds[message.guild.id].users[targetUser.id].level - 1) *
-      previousLevelXP;
+    let nextLevelXP = user.level * 75;
+    let xpNeededForNextLevel = user.level * nextLevelXP;
 
-    userData.guilds[message.guild.id].users[targetUser.id].xp -= amount;
-    const previousLevel =
-      userData.guilds[message.guild.id].users[targetUser.id].level;
-    while (
-      xpNeededForPreviousLevel >
-        userData.guilds[message.guild.id].users[targetUser.id].xp &&
-      !(xpNeededForPreviousLevel === 0)
-    ) {
-      userData.guilds[message.guild.id].users[targetUser.id].level -= 1;
-      previousLevelXP =
-        (userData.guilds[message.guild.id].users[targetUser.id].level - 1) * 75;
-      xpNeededForPreviousLevel =
-        (userData.guilds[message.guild.id].users[targetUser.id].level - 1) *
-        previousLevelXP;
+    if (!(amount >= 1000000000)) {
+      user.xp -= amount;
+    } else {
+      const embed = new MessageEmbed().setDescription(
+        "This is above the max amount of XP you can add. Please input a number below 999,999,999",
+      );
+      return message.channel.sendCustom({ embeds: [embed] });
+    }
+    const previousLevel = user.level;
+    while (xpNeededForNextLevel >= user.xp) {
+      user.level -= 1;
+      nextLevelXP = user.level * 75;
+      xpNeededForNextLevel = user.level * nextLevelXP;
     }
     const levelbed = new MessageEmbed()
       .setColor("#3498db")
-      .setTitle("Level Lost!")
-      .setAuthor(targetUser.user.username, targetUser.user.displayAvatarURL())
+      .setTitle("Level Up!")
+      .setAuthor(targetUser.username, targetUser.displayAvatarURL())
       .setDescription(
-        `Unbelievable! You lost ${previousLevel - userData.guilds[message.guild.id].users[targetUser.id].level} ${previousLevel - userData.guilds[message.guild.id].users[targetUser.id].level == 1 ? "level!" : "levels!"}`,
+        `Unbelievable! You lost ${previousLevel - user.level} ${previousLevel - user.level == 1 ? "level!" : "levels!"}`,
       )
-      .setFooter(
-        `XP: ${
-          userData.guilds[message.guild.id].users[targetUser.id].xp
-        }/${xpNeededForPreviousLevel}`,
-      );
+      .setFooter(`XP: ${user.xp}/${xpNeededForNextLevel}`);
 
     const row = new MessageActionRow().addComponents(
       new MessageButton()
-        .setCustomId("levelloss")
-        .setLabel("Level Lost")
-        .setStyle("DANGER"),
+        .setCustomId("levelup")
+        .setLabel("Level Up")
+        .setStyle("SUCCESS"),
     );
-    message.channel.sendCustom({
-      embeds: [levelbed],
-      components: [row],
-    });
+    if (previousLevel - user.level >= 1) {
+      message.channel.sendCustom({
+        embeds: [levelbed],
+        components: [row],
+      });
+    }
 
-    fs.writeFileSync(userDataPath, JSON.stringify(userData));
+    message.channel.send(`Removed ${amount} XP from ${targetUser.username}.`);
 
-    message.channel.send(
-      `Removed ${amount} XP from ${targetUser.user.username}.`,
-    );
+    await guild.save();
   }
 };

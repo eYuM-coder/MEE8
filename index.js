@@ -2,6 +2,7 @@
 
 const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
 const PogyClient = require("./Pogy");
+const Guild = require("./src/database/models/leveling.js");
 const config = require("./config.json");
 const { Collection } = require("discord.js");
 const logger = require("./src/utils/logger");
@@ -15,6 +16,7 @@ const sharder = require("./shards.js");
 const deploy = require("./src/deployCommands.js");
 // lets
 let client = Pogy;
+module.exports = client; //;-;
 // pogy stuff
 jointocreate(client);
 Pogy.color = color;
@@ -22,118 +24,91 @@ Pogy.emoji = emoji;
 // reqs
 require("dotenv").config();
 
+async function getGuildData(guildId) {
+  let guild = await Guild.findOne({ guildId: guildId });
+
+  if (!guild) {
+    guild = new Guild({
+      guildId: guildId,
+      users: [],
+    });
+    await guild.save();
+  }
+
+  return guild;
+}
+
+async function getUserInGuild(userId, guildId, username) {
+  let guild = await getGuildData(guildId);
+
+  let user = guild.users.find((u) => u.userId === userId);
+
+  if (!user) {
+    user = {
+      xp: 0,
+      level: 1,
+      messageTimeout: Date.now(),
+      username,
+      userId,
+    };
+    guild.users.push(user);
+    await guild.save();
+  }
+
+  return { guild, user };
+}
+
+async function updateUserLevel(guildId, userId, xpGain) {
+  const { guild, user } = await getUserInGuild(userId, guildId);
+
+  user.xp += xpGain;
+  let nextLevelXP = user.level * 75;
+  let xpNeededForNextLevel = user.level * nextLevelXP;
+
+  user.messageTimeout = Date.now();
+
+  if (user.xp >= xpNeededForNextLevel) {
+    user.level += 1;
+    nextLevelXP = user.level * 75;
+    xpNeededForNextLevel = user.level * nextLevelXP;
+  }
+
+  await guild.save();
+
+  return { user, xpNeededForNextLevel };
+}
+
 client.on("messageCreate", async (message) => {
   if (message.author.bot) {
     return;
   }
 
   const guildId = message.guild?.id;
-
-  if (!guildId) {
-    console.error("Guild ID is undefined");
-    return;
-  }
-
   const userId = message.author.id;
+  const username = message.author.username;
 
-  // Load user data from file
-  const userDataPath = "./src/data/users.json";
+  const { user, guild } = await getUserInGuild(userId, guildId, username);
 
-  // Ensure userData.guilds is defined
-  if (!userData.guilds) {
-    userData.guilds = {};
-  }
+  if (Date.now() - user.messageTimeout >= 60000 && guild.levelingEnabled) {
+    const xpGain = Math.floor(Math.random() * 15) + 10;
+    const { xpNeededForNextLevel } = await updateUserLevel(
+      guildId,
+      userId,
+      xpGain,
+    );
 
-  // Ensure userData.guilds[guildId] is defined
-  if (!userData.guilds[guildId]) {
-    userData.guilds[guildId] = {
-      users: {},
-      levelingEnabled: true,
-    };
-  }
-
-  // Ensure userData.guilds[guildId].users[userId] is defined
-  if (!userData.guilds[guildId].users[userId]) {
-    userData.guilds[guildId].users[userId] = {
-      xp: 0,
-      level: 1,
-      messageTimeout: Date.now(),
-      username: message.author.username,
-    };
-  }
-
-  if (!userData.guilds[guildId].users[userId].background) {
-    userData.guilds[guildId].users[userId].background =
-      "https://img.freepik.com/premium-photo/abstract-blue-black-gradient-plain-studio-background_570543-8893.jpg"; // Replace with your default background URL
-  }
-
-  if (!userData.guilds[guildId].users[userId].messageTimeout) {
-    userData.guilds[guildId].users[userId].messageTimeout = Date.now() - 60000;
-  }
-
-  let delay = userData.guilds[guildId].users[userId].messageTimeout;
-
-  if (Date.now() - delay >= 60000) {
-    // Increment XP for the user in the specific guild
-    userData.guilds[guildId].users[userId].xp +=
-      Math.floor(Math.random() * 15) + 10;
-
-    let nextLevelXP = userData.guilds[guildId].users[userId].level * 75;
-    userData.guilds[guildId].users[userId].messageTimeout = Date.now();
-
-    // Check for level-up logic
-    let xpNeededForNextLevel =
-      userData.guilds[guildId].users[userId].level * nextLevelXP;
-
-    if (userData.guilds[guildId].users[userId].xp >= xpNeededForNextLevel) {
-      userData.guilds[guildId].users[userId].level += 1;
-      nextLevelXP = userData.guilds[guildId].users[userId].level * 75;
-      xpNeededForNextLevel =
-        userData.guilds[guildId].users[userId].level * nextLevelXP;
-
-      // Get the role ID for the current user's level
-      const roleForLevel = getRoleForLevel(
-        userData.guilds[guildId].users[userId].level,
-        guildId,
-        userId,
-        userData,
-      );
-
-      // Add the role to the user if a valid role ID is found
-      if (roleForLevel) {
-        const member = message.guild.members.cache.get(userId);
-        const role = message.guild.roles.cache.get(roleForLevel);
-        if (member && role) {
-          await member.roles.add(role);
-        }
-      }
-
+    if (user.xp >= xpNeededForNextLevel) {
       const levelbed = new MessageEmbed()
         .setColor("#3498db")
         .setTitle("Level Up!")
-        .setAuthor(message.author.username, message.author.displayAvatarURL())
-        .setDescription(
-          `You have reached level ${userData.guilds[guildId].users[userId].level}!`,
+        .setAuthor(
+          message.author.username,
+          message.author.displayAvatarURL({ dynamic: true }),
         )
-        .setFooter(
-          `XP: ${userData.guilds[guildId].users[userId].xp}/${xpNeededForNextLevel}`,
-        );
+        .setDescription(`You have reached level ${user.level}`)
+        .setFooter(`XP: ${user.xp}/${xpNeededForNextLevel}`);
 
-      const row = new MessageActionRow().addComponents(
-        new MessageButton()
-          .setCustomId("levelup")
-          .setLabel("Level Up")
-          .setStyle("SUCCESS"),
-      );
-      message.channel.send({
-        embeds: [levelbed],
-        components: [row],
-      });
-
-      // Save updated data back to the JSON file
-      fs.writeFile(userDataPath, JSON.stringify(userData, null, 2), (err) => {
-        if (err) console.error("Error writing user data file:", err);
-      });
+      message.channel.send({ embeds: [levelbed] });
     }
   }
 });
@@ -193,6 +168,7 @@ client.on("interactionCreate", async (interaction) => {
       content: "There was an error while executing this command!",
       ephemeral: true,
     });
+    console.error(error);
   }
 });
 

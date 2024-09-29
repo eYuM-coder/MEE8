@@ -39,7 +39,7 @@ module.exports = {
     }
     // const date = moment().subtract(days, 'ms').format('dddd, MMMM Do YYYY');
     const embed = new MessageEmbed()
-    .setDescription(`${language.uptime1} \`${uptime}\`.`)
+    .setDescription(`${config.botName} ${language.uptime1} \`${uptime}\`.`)
     .setFooter({ text: `https://example.com` })
     .setColor(interaction.guild.me.displayHexColor);
     interaction.reply({ embeds: [embed] });

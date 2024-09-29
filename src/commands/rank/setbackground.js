@@ -1,5 +1,5 @@
 const Command = require("../../structures/Command");
-const userData = require("../../data/users.json");
+const Guild = require("../../database/models/leveling");
 const fs = require("fs");
 const guildData = require("../../data/users.json");
 module.exports = class extends Command {
@@ -14,35 +14,36 @@ module.exports = class extends Command {
     });
   }
 
-  run(message, args) {
+  async run(message, args) {
     const backgroundURL = args[0];
     const targetUser = message.mentions.users.first() || message.author;
-    const guild = message.guild;
-    const user = userData.guilds[guild.id].users[targetUser.id];
-    if (guildData[guild.id] && guildData[guild.id].levelingEnabled === false) {
-      return message.reply("Leveling is disabled for this server.");
-    }
+    const guildId = message.guild.id;
 
     if (!backgroundURL) {
       return message.reply("Please provide a background URL.");
     }
 
-    const userId = message.author.id;
-    userData.users[userId].background = backgroundURL;
+    try {
+      const guild = await Guild.findOne({ guildId: guildId });
 
-    // Save updated data back to the JSON file
-    fs.writeFile(
-      "./src/data/users.json",
-      JSON.stringify(userData, null, 2),
-      (err) => {
-        if (err) {
-          console.error("Error writing file:", err);
-          return message.reply(
-            "An error occurred while saving the background preference.",
-          );
-        }
-        message.reply("Background preference saved successfully!");
-      },
-    );
+      if (guild && !guild.levelingEnabled) {
+        return message.reply("Leveling is disabled for this server.");
+      }
+
+      let user = await guild.users.find((u) => u.userId === targetUser.id);
+
+      if (!user) {
+        return message.reply("This user does not have a level profile!");
+      } else {
+        user.background = backgroundURL;
+      }
+
+      await guild.save();
+
+      message.reply(`Your background has been set to: ${backgroundURL}`);
+    } catch (error) {
+      console.error("Error occurred:", error);
+      message.reply("An error occurred while setting the background.");
+    }
   }
 };

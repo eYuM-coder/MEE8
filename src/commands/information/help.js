@@ -3,6 +3,7 @@ const Command = require("../../structures/Command");
 const Guild = require("../../database/schemas/Guild");
 const { stripIndent } = require("common-tags");
 const { MessageButton, MessageActionRow } = require("discord.js");
+const config = require("../../../config.json");
 const emojis = require("../../assets/emojis.json");
 
 module.exports = class extends Command {
@@ -66,7 +67,7 @@ module.exports = class extends Command {
           .map((cmd) => cmd.category),
       );
 
-      if (this.client.config.developers.includes(message.author.id))
+      if (this.client.config.owner.includes(message.author.id) || this.client.config.developers.includes(message.author.id))
         categories = this.client.utils.removeDuplicates(
           this.client.botCommands.map((cmd) => cmd.category),
         );
@@ -80,7 +81,7 @@ module.exports = class extends Command {
           true,
         );
       }
-      embed.setTitle(`Pogy's Command List`);
+      embed.setTitle(`${config.botName}'s Command List`);
       embed.setDescription(stripIndent`
         <:purple:826033456207233045> The Prefix for this server is \`${prefix}\`
   
@@ -95,7 +96,7 @@ module.exports = class extends Command {
       embed.addField(
         "\u200b",
         "**[Invite](https://invite.pogy.xyz) | " +
-          "[Support Server](https://394wkx-3000.csb.app//support) | " +
+          "[Support Server](https://394wkx-3000.csb.app/support) | " +
           "[Dashboard](https://394wkx-3000.csb.app/dashboard)**",
       );
       return message.channel.sendCustom({
@@ -131,7 +132,7 @@ module.exports = class extends Command {
       embed.addField(
         "\u200b",
         "**[Invite](https://invite.pogy.xyz) | " +
-          "[Support Server](https://394wkx-3000.csb.app//support) | " +
+          "[Support Server](https://394wkx-3000.csb.app/support) | " +
           "[Dashboard](https://394wkx-3000.csb.app/dashboard)**",
       );
       return message.channel.sendCustom({
@@ -170,7 +171,7 @@ module.exports = class extends Command {
       embed.addField(
         "\u200b",
         "**[Invite](https://invite.pogy.xyz) | " +
-          "[Support Server](https://394wkx-3000.csb.app//support) | " +
+          "[Support Server](https://394wkx-3000.csb.app/support) | " +
           "[Dashboard](https://394wkx-3000.csb.app/dashboard)**",
       );
       return message.channel.sendCustom({ embeds: [embed] });
@@ -205,7 +206,7 @@ module.exports = class extends Command {
       embed.addField(
         "\u200b",
         "**[Invite](https://invite.pogy.xyz) | " +
-          "[Support Server](https://394wkx-3000.csb.app//support) | " +
+          "[Support Server](https://394wkx-3000.csb.app/support) | " +
           "[Dashboard](https://394wkx-3000.csb.app/dashboard)**",
       );
 
@@ -240,7 +241,7 @@ module.exports = class extends Command {
       embed.addField(
         "\u200b",
         "**[Invite](https://invite.pogy.xyz) | " +
-          "[Support Server](https://394wkx-3000.csb.app//support) | " +
+          "[Support Server](https://394wkx-3000.csb.app/support) | " +
           "[Dashboard](https://394wkx-3000.csb.app/dashboard)**",
       );
       return message.channel.sendCustom({ embeds: [embed] });
@@ -274,7 +275,7 @@ module.exports = class extends Command {
       embed.addField(
         "\u200b",
         "**[Invite](https://invite.pogy.xyz) | " +
-          "[Support Server](https://394wkx-3000.csb.app//support) | " +
+          "[Support Server](https://394wkx-3000.csb.app/support) | " +
           "[Dashboard](https://394wkx-3000.csb.app/dashboard)**",
       );
       return message.channel.sendCustom({ embeds: [embed] });
@@ -308,7 +309,7 @@ module.exports = class extends Command {
       embed.addField(
         "\u200b",
         "**[Invite](https://invite.pogy.xyz) | " +
-          "[Support Server](https://394wkx-3000.csb.app//support) | " +
+          "[Support Server](https://394wkx-3000.csb.app/support) | " +
           "[Dashboard](https://394wkx-3000.csb.app/dashboard)**",
       );
       return message.channel.sendCustom({ embeds: [embed] });
@@ -323,7 +324,7 @@ module.exports = class extends Command {
                 cmd.disabled || disabledCommands.includes(cmd.name || cmd)
                   ? red
                   : green
-              } \`${cmd.name} ${" ".repeat(10 - Number(cmd.name.length))}:\` ${
+              } \`${cmd.name} ${" ".repeat(29 - Number(cmd.name.length))}:\` ${
                 cmd.description
               }`,
           )
@@ -339,7 +340,7 @@ module.exports = class extends Command {
       embed.addField(
         "\u200b",
         "**[Invite](https://invite.pogy.xyz) | " +
-          "[Support Server](https://394wkx-3000.csb.app//support) | " +
+          "[Support Server](https://394wkx-3000.csb.app/support) | " +
           "[Dashboard](https://394wkx-3000.csb.app/dashboard)**",
       );
       return message.channel.sendCustom({ embeds: [embed] });
@@ -373,7 +374,7 @@ module.exports = class extends Command {
       embed.addField(
         "\u200b",
         "**[Invite](https://invite.pogy.xyz) | " +
-          "[Support Server](https://394wkx-3000.csb.app//support) | " +
+          "[Support Server](https://394wkx-3000.csb.app/support) | " +
           "[Dashboard](https://394wkx-3000.csb.app/dashboard)**",
       );
       return message.channel.sendCustom({ embeds: [embed] });
@@ -407,7 +408,34 @@ module.exports = class extends Command {
       embed.addField(
         "\u200b",
         "**[Invite](https://invite.pogy.xyz) | " +
-          "[Support Server](https://394wkx-3000.csb.app//support) | " +
+          "[Support Server](https://394wkx-3000.csb.app/support) | " +
+          "[Dashboard](https://394wkx-3000.csb.app/dashboard)**",
+      );
+      return message.channel.sendCustom({ embeds: [embed] });
+    } else if (
+      (args && args[0].toLowerCase() == "leveling") ||
+      (args && args[0].toLowerCase() == "ranking")
+    ) {
+      embed.setTitle(`${emojis.leveling} - Leveling`);
+      embed.setDescription(
+        this.client.botCommands
+          .filter((cmd) => cmd.category.toLowerCase() === "leveling")
+          .map(
+            (cmd) =>
+              `${cmd.disabled || disabledCommands.includes(cmd.name || cmd) ? red : green} \`${cmd.name} ${" ".repeat(7 - Number(cmd.name.length))}:\` ${cmd.description}`,
+          )
+          .join("\n"),
+      );
+      embed.setFooter({
+        text: `Requested by ${message.author.username}`,
+        iconURL: message.author.displayAvatarURL({ dynamic: true }),
+      });
+
+      embed.setTimestamp();
+      embed.addField(
+        "\u200b",
+        "**[Invite](https://invite.pogy.xyz) | " +
+          "[Support Server](https://394wkx-3000.csb.app/support) | " +
           "[Dashboard](https://394wkx-3000.csb.app/dashboard)**",
       );
       return message.channel.sendCustom({ embeds: [embed] });
@@ -440,7 +468,7 @@ module.exports = class extends Command {
       embed.addField(
         "\u200b",
         "**[Invite](https://invite.pogy.xyz) | " +
-          "[Support Server](https://394wkx-3000.csb.app//support) | " +
+          "[Support Server](https://394wkx-3000.csb.app/support) | " +
           "[Dashboard](https://394wkx-3000.csb.app/dashboard)**",
       );
       return message.channel.sendCustom({ embeds: [embed] });
@@ -474,7 +502,7 @@ module.exports = class extends Command {
       embed.addField(
         "\u200b",
         "**[Invite](https://invite.pogy.xyz) | " +
-          "[Support Server](https://394wkx-3000.csb.app//support) | " +
+          "[Support Server](https://394wkx-3000.csb.app/support) | " +
           "[Dashboard](https://394wkx-3000.csb.app/dashboard)**",
       );
 
@@ -502,7 +530,7 @@ module.exports = class extends Command {
       embed.addField(
         "\u200b",
         "**[Invite](https://invite.pogy.xyz) | " +
-          "[Support Server](https://394wkx-3000.csb.app//support) | " +
+          "[Support Server](https://394wkx-3000.csb.app/support) | " +
           "[Dashboard](https://394wkx-3000.csb.app/dashboard)**",
       );
       embed.setFooter({

@@ -1152,24 +1152,23 @@ module.exports = async (client) => {
     });
   });
 
-  //commands
-  app.get("/dashboard/:guildID/commands", checkAuth, async (req, res) => {
-    const guild = client.guilds.cache.get(req.params.guildID);
-    if (!guild) return res.redirect("/dashboard");
+  async function getDashboardData(req, guildId) {
+    const guild = client.guilds.cache.get(guildId);
+    if (!guild) return { redirect: "/dashboard" };
+  
     const member = await guild.members.fetch(req.user.id);
-    if (!member) return res.redirect("/dashboard");
-    if (!member.permissions.has("MANAGE_GUILD"))
-      return res.redirect("/dashboard");
-
+    if (!member || !member.permissions.has("MANAGE_GUILD"))
+      return { redirect: "/dashboard" };
+  
     const maintenance = await Maintenance.findOne({
       maintenance: "maintenance",
     });
-
+  
     if (maintenance && maintenance.toggle == "true") {
-      return renderTemplate(res, req, "maintenance.ejs");
+      return { template: "maintenance.ejs" };
     }
-
-    var storedSettings = await GuildSettings.findOne({ guildId: guild.id });
+  
+    let storedSettings = await GuildSettings.findOne({ guildId: guild.id });
     if (!storedSettings) {
       const newSettings = new GuildSettings({
         guildId: guild.id,
@@ -1177,43 +1176,73 @@ module.exports = async (client) => {
       await newSettings.save().catch(() => {});
       storedSettings = await GuildSettings.findOne({ guildId: guild.id });
     }
+  
+    // Fetch default bot commands
+    const commands = client.botCommands
+      .filter(cmd => cmd.category !== "dev") // Exclude commands you don't want to show
+      .map(cmd => ({
+        name: cmd.name,
+        description: cmd.description || "No description provided.",
+        category: cmd.category || "General",
+        usage: cmd.usage || "No usage provided.",
+        aliases: cmd.aliases && cmd.aliases.length ? cmd.aliases : ["None"],
+        cooldown: cmd.cooldown || 5,
+      }));
 
+    // Fetch custom commands for the guild
+    const maxDescriptionLength = 100;
+
+    const customCommands = await customCommand.find({ guildId: guild.id });
+    const customCommandsMapped = customCommands.map(customCmd => ({
+      name: customCmd.name,
+      description: customCmd.content
+        ? (customCmd.content.length > maxDescriptionLength
+            ? customCmd.content.substring(0, maxDescriptionLength) + "..." 
+            : customCmd.content)
+        : "No description provided.",
+      category: "Custom", // Mark it as a custom command
+      usage: "Custom Command", // You can change this if necessary
+      aliases: ["None"], // Assuming custom commands don't have aliases
+      cooldown: 0, // You can modify this based on your need
+      content: customCmd.content // Add any custom fields you want to display
+    }));
+  
+    const allCommands = [...commands, ...customCommandsMapped];
+  
+    return {
+      guild,
+      storedSettings,
+      commands: allCommands
+    };
+  }
+  
+  // GET Route for commands
+  app.get("/dashboard/:guildID/commands", checkAuth, async (req, res) => {
+    const dashboardData = await getDashboardData(req, req.params.guildID);
+    
+    if (dashboardData.redirect) return res.redirect(dashboardData.redirect);
+    if (dashboardData.template) return renderTemplate(res, req, dashboardData.template);
+  
     renderTemplate(res, req, "./new/maincommands.ejs", {
-      guild: guild,
+      guild: dashboardData.guild,
       alert: null,
-      settings: storedSettings,
+      settings: dashboardData.storedSettings,
+      commands: dashboardData.commands
     });
   });
-
+  
+  // POST Route for commands (similar handling)
   app.post("/dashboard/:guildID/commands", checkAuth, async (req, res) => {
-    const guild = client.guilds.cache.get(req.params.guildID);
-    if (!guild) return res.redirect("/dashboard");
-    const member = await guild.members.fetch(req.user.id);
-    if (!member) return res.redirect("/dashboard");
-    if (!member.permissions.has("MANAGE_GUILD"))
-      return res.redirect("/dashboard");
-
-    const maintenance = await Maintenance.findOne({
-      maintenance: "maintenance",
-    });
-
-    if (maintenance && maintenance.toggle == "true") {
-      return renderTemplate(res, req, "maintenance.ejs");
-    }
-
-    var storedSettings = await GuildSettings.findOne({ guildId: guild.id });
-    if (!storedSettings) {
-      const newSettings = new GuildSettings({
-        guildId: guild.id,
-      });
-      await newSettings.save().catch(() => {});
-      storedSettings = await GuildSettings.findOne({ guildId: guild.id });
-    }
-
+    const dashboardData = await getDashboardData(req, req.params.guildID);
+    
+    if (dashboardData.redirect) return res.redirect(dashboardData.redirect);
+    if (dashboardData.template) return renderTemplate(res, req, dashboardData.template);
+  
     renderTemplate(res, req, "./new/maincommands.ejs", {
-      guild: guild,
+      guild: dashboardData.guild,
       alert: null,
-      settings: storedSettings,
+      settings: dashboardData.storedSettings,
+      commands: dashboardData.commands
     });
   });
 

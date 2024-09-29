@@ -2,8 +2,7 @@
 const Command = require("../../structures/Command");
 const fs = require("fs");
 const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
-const userData = require("../../data/users.json");
-const userDataPath = "./src/data/users.json";
+const Guild = require("../../database/models/leveling");
 
 module.exports = class extends Command {
   constructor(...args) {
@@ -26,7 +25,22 @@ module.exports = class extends Command {
       );
     }
 
-    if (!userData.guilds[message.guild.id]?.users[targetUser.id]) {
+    const guildId = message.guild.id;
+    let guild = await Guild.findOne({ guildId: guildId });
+
+    if (!guild) {
+      return message
+        .reply("This server does not have any leveling data.")
+        .then((s) => {
+          setTimeout(() => {
+            s.delete();
+          }, 5000);
+        });
+    }
+
+    let user = guild.users.find((user) => user.userId === targetUser.id);
+
+    if (!user) {
       return message
         .reply("This user doesn't have a level profile!")
         .then((s) => {
@@ -36,36 +50,31 @@ module.exports = class extends Command {
         });
     }
 
-    let nextLevelXP =
-      userData.guilds[message.guild.id].users[targetUser.id].level * 75;
-    let xpNeededForNextLevel =
-      userData.guilds[message.guild.id].users[targetUser.id].level *
-      nextLevelXP;
+    let nextLevelXP = user.level * 75;
+    let xpNeededForNextLevel = user.level * nextLevelXP;
 
-    userData.guilds[message.guild.id].users[targetUser.id].xp += amount;
-    const previouslevel =
-      userData.guilds[message.guild.id].users[targetUser.id].level;
-    while (
-      userData.guilds[message.guild.id].users[targetUser.id].xp >=
-      xpNeededForNextLevel
-    ) {
-      userData.guilds[message.guild.id].users[targetUser.id].level += 1;
-      nextLevelXP =
-        userData.guilds[message.guild.id].users[targetUser.id].level * 75;
-      xpNeededForNextLevel =
-        userData.guilds[message.guild.id].users[targetUser.id].level *
-        nextLevelXP;
+    if (!(amount >= 1000000000)) {
+      user.xp += amount;
+    } else {
+      const embed = new MessageEmbed().setDescription(
+        "This is above the max amount of XP you can add. Please input a number below 999,999,999",
+      );
+      return message.channel.sendCustom({ embeds: [embed] });
+    }
+    const previousLevel = user.level;
+    while (user.xp >= xpNeededForNextLevel) {
+      user.level += 1;
+      nextLevelXP = user.level * 75;
+      xpNeededForNextLevel = user.level * nextLevelXP;
     }
     const levelbed = new MessageEmbed()
       .setColor("#3498db")
       .setTitle("Level Up!")
-      .setAuthor(targetUser.user.username, targetUser.user.displayAvatarURL())
+      .setAuthor(targetUser.username, targetUser.displayAvatarURL())
       .setDescription(
-        `You have reached level ${userData.guilds[message.guild.id].users[targetUser.id].level}! An increase of ${userData.guilds[message.guild.id].users[targetUser.id].level - previouslevel} ${userData.guilds[message.guild.id].users[targetUser.id].level - previouslevel == 1 ? "level!" : "levels!"}`,
+        `You have reached level ${user.level}! An increase of ${user.level - previousLevel} ${user.level - previousLevel == 1 ? "level!" : "levels!"}`,
       )
-      .setFooter(
-        `XP: ${userData.guilds[message.guild.id].users[targetUser.id].xp}/${xpNeededForNextLevel}`,
-      );
+      .setFooter(`XP: ${user.xp}/${xpNeededForNextLevel}`);
 
     const row = new MessageActionRow().addComponents(
       new MessageButton()
@@ -73,13 +82,14 @@ module.exports = class extends Command {
         .setLabel("Level Up")
         .setStyle("SUCCESS"),
     );
+    if(user.level - previousLevel >= 1) {
     message.channel.sendCustom({
       embeds: [levelbed],
-      components: [row],
     });
+  }
 
-    fs.writeFileSync(userDataPath, JSON.stringify(userData));
+    message.channel.send(`Added ${amount} XP to ${targetUser.username}.`);
 
-    message.channel.send(`Added ${amount} XP to ${targetUser.user.username}.`);
+    await guild.save();
   }
 };

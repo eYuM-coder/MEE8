@@ -13,11 +13,21 @@ module.exports = class extends Command {
       description: "Adds a user to the blacklist.",
       category: "Owner",
       usage: ["<user> <reason>"],
-      ownerOnly: true,
     });
   }
 
   async run(message, args) {
+    if (
+      message.client.config.owner.includes(message.author.id)
+    ) {
+      message.channel.sendCustom(`Access Granted. Welcome owner.`);
+    } else if (
+      message.client.config.developers.includes(message.author.id) ||
+      !message.client.config.owner.includes(message.author.id)
+    ) {
+      return message.channel.sendCustom(`You are not the owner of this bot.`);
+    }
+
     const match = message.content.match(/\d{18}/);
     let member;
     try {
@@ -34,7 +44,7 @@ module.exports = class extends Command {
 
     if (args.length < 1)
       return message.channel.sendCustom(
-        `Please provide me with a user or guild blacklist [{prefix} blacklist <user | guild> <actual user or guild>. Example: {prefix} blacklist user @user]`
+        `Please provide me with a user or guild blacklist [{prefix} blacklist <user | guild> <actual user or guild>. Example: {prefix} blacklist user @user]`,
       );
     if (args.length < 2)
       return message.channel.sendCustom(`Provide me with a user`);
@@ -65,7 +75,7 @@ module.exports = class extends Command {
               length: null,
             });
           }
-        }
+        },
       );
 
       message.channel.sendCustom({
@@ -115,7 +125,7 @@ module.exports = class extends Command {
               length: null,
             });
           }
-        }
+        },
       );
 
       message.channel.sendCustom({

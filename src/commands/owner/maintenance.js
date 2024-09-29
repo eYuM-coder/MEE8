@@ -12,9 +12,15 @@ module.exports = class extends Command {
   }
 
   async run(message, args) {
+    if (
+      !message.client.config.owner.includes(message.author.id) &&
+      message.client.config.developers.includes(message.author.id)
+    ) {
+      return message.channel.sendCustom(`This command is for the owner ONLY.`);
+    }
     if (!args[0])
       return message.channel.sendCustom(
-        "Would you like to enable or disable maintenance mode?"
+        "Would you like to enable or disable maintenance mode?",
       );
 
     const maintenance = await Maintenance.findOne({

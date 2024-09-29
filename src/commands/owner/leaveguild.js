@@ -15,6 +15,14 @@ module.exports = class extends Command {
 
   async run(message, args) {
     const guildId = args[0];
+    if (message.client.config.developers.includes(message.author.id)) {
+      return message.channel.sendCustom(`This command is for the owner.`);
+    } else if (
+      !message.client.config.developers.includes(message.author.id) &&
+      !message.client.config.owner.includes(message.author.id)
+    ) {
+      return message.channel.sendCustom(`You are not the owner of this bot.`);
+    }
     if (!rgx.test(guildId))
       return message.channel.sendCustom(`Provide a guild`);
     const guild = message.client.guilds.cache.get(guildId);

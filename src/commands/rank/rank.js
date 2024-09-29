@@ -1,8 +1,7 @@
 const Command = require("../../structures/Command");
 const { createCanvas, loadImage } = require("canvas");
 const { MessageAttachment, MessageEmbed } = require("discord.js");
-const userData = require("../../data/users.json");
-const guildData = require("../../data/users.json");
+const Guild = require("../../database/models/leveling");
 
 // Calculate the required XP for a certain level
 function calculateRequiredXP(level) {
@@ -15,6 +14,11 @@ function calculateRequiredXP(level) {
     return xpNeeded;
   }
 }
+
+function abbreviateNumber(number) {
+   return number >= 1e12 ? `${(number / 1e12).toFixed(2)}T` : number >= 1e9 ? `${(number / 1e9).toFixed(2)}B` : number >= 1e6 ? `${(number / 1e6).toFixed(2)}M` : number >= 1e3 ? `${(number / 1e3).toFixed(2)}K` : number.toString();
+}
+
 
 module.exports = class extends Command {
   constructor(...args) {
@@ -30,18 +34,24 @@ module.exports = class extends Command {
   async run(message) {
     try {
       const targetUser = message.mentions.users.first() || message.author;
-      const guild = message.guild;
-      const user = userData.guilds[guild.id]?.users[targetUser.id];
+      const guildId = message.guild.id;
+      const guild = await Guild.findOne({ guildId: guildId });
+
+      if (!guild) {
+        return message.reply("Guild data not found in database.");
+      }
 
       if (
-        guildData.guilds[guild.id] &&
-        guildData.guilds[guild.id].levelingEnabled === false
+        guild &&
+        guild.levelingEnabled === false
       ) {
         return message.reply("Leveling is disabled for this server.");
       }
 
+      const user = guild.users.find((u) => u.userId === targetUser.id);
+
       if (!user) {
-        return message.reply("User not found.");
+        return message.reply("This user doesn't have any levels or XP.");
       }
 
       const canvas = createCanvas(900, 300);
@@ -52,6 +62,9 @@ module.exports = class extends Command {
         user.background ||
         "https://img.freepik.com/premium-photo/abstract-blue-black-gradient-plain-studio-background_570543-8893.jpg";
       const background = await loadImage(backgroundURL);
+      const sortedUsers = guild.users.sort((a, b) => b.xp - a.xp);
+
+      const userRank = sortedUsers.findIndex((u) => u.userId === targetUser.id) + 1;
       ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
       // Draw user details
@@ -88,7 +101,7 @@ module.exports = class extends Command {
       );
 
       ctx.font = "24px Arial";
-      ctx.fillText(`Total XP: ${user.xp}/${requiredXPForNextLevel}`, 250, 250);
+      ctx.fillText(`Level: ${user.level}    Total XP: ${abbreviateNumber(user.xp)}/${abbreviateNumber(requiredXPForNextLevel)}    Rank: ${userRank}`, 100, 250);
 
       // Rounded progress bar
       ctx.roundRect = function (x, y, width, height, radius, fill, stroke) {
@@ -113,7 +126,7 @@ module.exports = class extends Command {
       };
 
       ctx.save();
-      ctx.roundRect(200, 250, progressWidth, 15, 7, true, false);
+      ctx.roundRect(100, 250, progressWidth, 15, 7, true, false);
 
       const attachment = new MessageAttachment(canvas.toBuffer(), "rank.png");
       message.channel.send({ files: [attachment] });

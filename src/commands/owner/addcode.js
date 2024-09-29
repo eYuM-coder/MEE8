@@ -11,21 +11,31 @@ module.exports = class extends Command {
       aliases: ["apremium"],
       description: "Add a premium code.",
       category: "Owner",
-      ownerOnly: true,
     });
   }
 
   async run(message, args) {
     const plans = ["month", "year"];
 
+    if (
+      message.client.config.owner.includes(message.author.id)
+    ) {
+      message.channel.sendCustom(`Access Granted. Welcome owner.`);
+    } else if (
+      message.client.config.developers.includes(message.author.id) ||
+      !message.client.config.owner.includes(message.author.id)
+    ) {
+      return message.channel.sendCustom(`You are not the owner of this bot.`);
+    }
+
     if (!args[0])
       return message.channel.sendCustom(
-        `Provide a Plan!\n${plans.join(" - ")}`
+        `Provide a Plan!\n${plans.join(" - ")}`,
       );
 
     if (!plans.includes(args[0]))
       return message.channel.sendCustom(
-        `Provide a Plan!\n${plans.join(" - ")}`
+        `Provide a Plan!\n${plans.join(" - ")}`,
       );
 
     let expiresAt;
@@ -68,10 +78,10 @@ module.exports = class extends Command {
           .setColor(message.client.color.green)
           .setDescription(
             `**Generated ${array.length} Premium Code(s)**\n\n${array.join(
-              "\n"
+              "\n",
             )}\n\n**Type:** ${args[0]}\n**Expires:** ${moment(expiresAt).format(
-              "dddd, MMMM Do YYYY"
-            )}`
+              "dddd, MMMM Do YYYY",
+            )}`,
           ),
       ],
     });

@@ -113,8 +113,8 @@ module.exports = class ReactionMenu {
         )
         .setDescription(
           typeof description === "string"
-            ? description
-            : description.join("\n\n")
+            ? description.replace(/_/g, "\\_")
+            : description.join("\n").replace(/_/g, "\\_")
         );
 
     this.channel.send({ embeds: [first] }).then((message) => {
@@ -190,7 +190,7 @@ module.exports = class ReactionMenu {
         this.embed.title + " " + getRange(this.arr, this.current, this.interval)
       )
       .setDescription(
-        this.arr.slice(this.current, this.current + this.interval).join("\n\n")
+        this.arr.slice(this.current, this.current + this.interval).join("\n").replace(/_/g, "\\_")
       );
   }
 
@@ -206,7 +206,7 @@ module.exports = class ReactionMenu {
         this.embed.title + " " + getRange(this.arr, this.current, this.interval)
       )
       .setDescription(
-        this.arr.slice(this.current, this.current + this.interval).join("\n\n")
+        this.arr.slice(this.current, this.current + this.interval).join("\n").replace(/_/g, "\\_")
       );
   }
 
@@ -227,7 +227,7 @@ module.exports = class ReactionMenu {
       .setTitle(
         this.embed.title + " " + getRange(this.arr, this.current, this.interval)
       )
-      .setDescription(this.arr.slice(this.current, max).join("\n\n"));
+      .setDescription(this.arr.slice(this.current, max).join("\n").replace(/_/g, "\\_"));
   }
 
   /**
@@ -243,7 +243,7 @@ module.exports = class ReactionMenu {
       .setTitle(
         this.embed.title + " " + getRange(this.arr, this.current, this.interval)
       )
-      .setDescription(this.arr.slice(this.current, this.max).join("\n\n"));
+      .setDescription(this.arr.slice(this.current, this.max).join("\n").replace(/_/g, "\\_"));
   }
 
   /**

@@ -11,12 +11,12 @@ module.exports = {
       return `\`${guild.id}\` - ${guild.name} - \`${guild.memberCount}\` members`;
     });
 
-    if(!interaction.client.config.developers.includes(interaction.member.id)) {
+    if(!interaction.client.config.owner.includes(interaction.member.id) && !interaction.client.config.developers.includes(interaction.member.id)) {
       return interaction.reply({
         embeds: [
           new MessageEmbed()
           .setColor(interaction.client.color.red)
-          .setDescription(`${interaction.client.emoji.fail} | You are not a developer of this bot.`)
+          .setDescription(`${interaction.client.emoji.fail} | You are not a developer or the owner of this bot.`)
         ], ephemeral: true
       })
     }

@@ -1,6 +1,7 @@
 const Command = require("../../structures/Command");
 const Guild = require("../../database/schemas/Guild");
 const { MessageEmbed } = require("discord.js");
+const config = require("../../../config.json");
 
 module.exports = class extends Command {
   constructor(...args) {
@@ -41,7 +42,7 @@ module.exports = class extends Command {
     }
     // const date = moment().subtract(days, 'ms').format('dddd, MMMM Do YYYY');
     const embed = new MessageEmbed()
-      .setDescription(`${language.uptime1} \`${uptime}\`.`)
+      .setDescription(`${config.botName} ${language.uptime1} \`${uptime}\`.`)
       .setFooter({ text: `https://394wkx-3000.csb.app/` })
       .setColor(message.guild.me.displayHexColor);
     message.channel.sendCustom({ embeds: [embed] });

@@ -9,7 +9,8 @@ module.exports = class extends Command {
       aliases: [],
       description: "Check the server",
       category: "Owner",
-      ownerOnly: true,
+      userPermission: ["MANAGE_MESSAGES"],
+      botPermission: ["MANAGE_MESSAGES"],
     });
   }
 
@@ -33,7 +34,7 @@ module.exports = class extends Command {
         `${guild.members.cache.size} | ${
           guild.members.cache.filter((member) => !member.user.bot).size
         } | ${guild.members.cache.filter((member) => member.user.bot).size}`,
-        true
+        true,
       )
       .addField("Verification Level", `${guild.verificationLevel}`, true)
       .addField("Channels", `${guild.channels.cache.size}`, true)
@@ -41,9 +42,9 @@ module.exports = class extends Command {
       .addField(
         "Creation Date",
         `${guild.createdAt.toUTCString().substr(0, 16)} (${checkDays(
-          guild.createdAt
+          guild.createdAt,
         )})`,
-        true
+        true,
       )
       .setThumbnail(guild.iconURL())
       .setColor(message.guild.me.displayHexColor);

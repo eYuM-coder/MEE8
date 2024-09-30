@@ -13,7 +13,7 @@ module.exports = class extends Event {
         `Required Permission: \`${permissions.replace("_", " ")}\``
       )
       .setTimestamp()
-      .setFooter({ text: "https://394wkx-3000.csb.app//" })
+      .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
       .setColor(message.guild.me.displayHexColor);
     if (
       message.channel &&

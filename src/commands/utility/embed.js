@@ -484,7 +484,7 @@ module.exports = class extends Command {
                                                                               )
                                                                               .setTimestamp()
                                                                               .setFooter(
-                                                                                "https://394wkx-3000.csb.app/"
+                                                                                `${process.env.AUTH_DOMAIN}`
                                                                               )
                                                                               .setColor(
                                                                                 message

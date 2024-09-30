@@ -145,7 +145,7 @@ module.exports = class extends Command {
         .addField("Reason", reason);
 
       return webhookClient.sendCustom({
-        username: "ChaoticBlacklists",
+        username: `${config.botName} Blacklists`,
         avatarURL: `https://v2.pogy.xyz/logo.png`,
         embeds: [embed],
       });

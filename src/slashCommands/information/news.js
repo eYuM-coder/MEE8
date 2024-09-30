@@ -23,7 +23,7 @@ module.exports = {
 
     let embed = new MessageEmbed()
     .setColor(interaction.guild.me.displayHexColor)
-    .setTitle(`ChaoticNews`)
+    .setTitle(`${config.botName} News`)
     .setDescription(`***__${language.datePublished}__ ${moment(guildDB.time).format("dddd, MMMM Do YYYY")}*** *__[\`(${moment(guildDB.time).fromNow()})\`] (https://example.com)__*\n\n${guildDB.news}`)
     .setFooter({ text: "https://example.com" })
     .setTimestamp();

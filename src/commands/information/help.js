@@ -46,7 +46,7 @@ module.exports = class extends Command {
       new MessageButton()
         .setLabel("Invite Pogy")
         .setStyle("LINK")
-        .setURL("https://394wkx-3000.csb.app//invite"),
+        .setURL(`${process.env.AUTH_DOMAIN}/invite`),
 
       new MessageButton()
         .setCustomId("info")
@@ -95,9 +95,7 @@ module.exports = class extends Command {
 
       embed.addField(
         "\u200b",
-        "**[Invite](https://invite.pogy.xyz) | " +
-          "[Support Server](https://394wkx-3000.csb.app/support) | " +
-          "[Dashboard](https://394wkx-3000.csb.app/dashboard)**",
+        "**[Invite](https://invite.pogy.xyz) | " + `[Support Server](${process.env.AUTH_DOMAIN}/support) | ` + `[Dashboard](${process.env.AUTH_DOMAIN}/dashboard)**`,
       );
       return message.channel.sendCustom({
         embeds: [embed],
@@ -131,9 +129,7 @@ module.exports = class extends Command {
       embed.setTimestamp();
       embed.addField(
         "\u200b",
-        "**[Invite](https://invite.pogy.xyz) | " +
-          "[Support Server](https://394wkx-3000.csb.app/support) | " +
-          "[Dashboard](https://394wkx-3000.csb.app/dashboard)**",
+        "**[Invite](https://invite.pogy.xyz) | " + `[Support Server](${process.env.AUTH_DOMAIN}/support) | ` + `[Dashboard](${process.env.AUTH_DOMAIN}/dashboard)**`,
       );
       return message.channel.sendCustom({
         embeds: [embed],
@@ -170,9 +166,7 @@ module.exports = class extends Command {
       embed.setTimestamp();
       embed.addField(
         "\u200b",
-        "**[Invite](https://invite.pogy.xyz) | " +
-          "[Support Server](https://394wkx-3000.csb.app/support) | " +
-          "[Dashboard](https://394wkx-3000.csb.app/dashboard)**",
+        "**[Invite](https://invite.pogy.xyz) | " + `[Support Server](${process.env.AUTH_DOMAIN}/support) | ` + `[Dashboard](${process.env.AUTH_DOMAIN}/dashboard)**`,
       );
       return message.channel.sendCustom({ embeds: [embed] });
     } else if (
@@ -205,9 +199,7 @@ module.exports = class extends Command {
 
       embed.addField(
         "\u200b",
-        "**[Invite](https://invite.pogy.xyz) | " +
-          "[Support Server](https://394wkx-3000.csb.app/support) | " +
-          "[Dashboard](https://394wkx-3000.csb.app/dashboard)**",
+        "**[Invite](https://invite.pogy.xyz) | " + `[Support Server](${process.env.AUTH_DOMAIN}/support) | ` + `[Dashboard](${process.env.AUTH_DOMAIN}/dashboard)**`,
       );
 
       return message.channel.sendCustom({ embeds: [embed] });
@@ -240,9 +232,7 @@ module.exports = class extends Command {
       embed.setTimestamp();
       embed.addField(
         "\u200b",
-        "**[Invite](https://invite.pogy.xyz) | " +
-          "[Support Server](https://394wkx-3000.csb.app/support) | " +
-          "[Dashboard](https://394wkx-3000.csb.app/dashboard)**",
+        "**[Invite](https://invite.pogy.xyz) | " + `[Support Server](${process.env.AUTH_DOMAIN}/support) | ` + `[Dashboard](${process.env.AUTH_DOMAIN}/dashboard)**`,
       );
       return message.channel.sendCustom({ embeds: [embed] });
     } else if (
@@ -274,9 +264,7 @@ module.exports = class extends Command {
       embed.setTimestamp();
       embed.addField(
         "\u200b",
-        "**[Invite](https://invite.pogy.xyz) | " +
-          "[Support Server](https://394wkx-3000.csb.app/support) | " +
-          "[Dashboard](https://394wkx-3000.csb.app/dashboard)**",
+        "**[Invite](https://invite.pogy.xyz) | " + `[Support Server](${process.env.AUTH_DOMAIN}/support) | ` + `[Dashboard](${process.env.AUTH_DOMAIN}/dashboard)**`,
       );
       return message.channel.sendCustom({ embeds: [embed] });
     } else if (
@@ -308,9 +296,7 @@ module.exports = class extends Command {
       embed.setTimestamp();
       embed.addField(
         "\u200b",
-        "**[Invite](https://invite.pogy.xyz) | " +
-          "[Support Server](https://394wkx-3000.csb.app/support) | " +
-          "[Dashboard](https://394wkx-3000.csb.app/dashboard)**",
+        "**[Invite](https://invite.pogy.xyz) | " + `[Support Server](${process.env.AUTH_DOMAIN}/support) | ` + `[Dashboard](${process.env.AUTH_DOMAIN}/dashboard)**`,
       );
       return message.channel.sendCustom({ embeds: [embed] });
     } else if (args && args[0].toLowerCase() == "fun") {
@@ -339,9 +325,7 @@ module.exports = class extends Command {
       embed.setTimestamp();
       embed.addField(
         "\u200b",
-        "**[Invite](https://invite.pogy.xyz) | " +
-          "[Support Server](https://394wkx-3000.csb.app/support) | " +
-          "[Dashboard](https://394wkx-3000.csb.app/dashboard)**",
+        "**[Invite](https://invite.pogy.xyz) | " + `[Support Server](${process.env.AUTH_DOMAIN}/support) | ` + `[Dashboard](${process.env.AUTH_DOMAIN}/dashboard)**`,
       );
       return message.channel.sendCustom({ embeds: [embed] });
     } else if (
@@ -373,9 +357,7 @@ module.exports = class extends Command {
       embed.setTimestamp();
       embed.addField(
         "\u200b",
-        "**[Invite](https://invite.pogy.xyz) | " +
-          "[Support Server](https://394wkx-3000.csb.app/support) | " +
-          "[Dashboard](https://394wkx-3000.csb.app/dashboard)**",
+        "**[Invite](https://invite.pogy.xyz) | " + `[Support Server](${process.env.AUTH_DOMAIN}/support) | ` + `[Dashboard](${process.env.AUTH_DOMAIN}/dashboard)**`,
       );
       return message.channel.sendCustom({ embeds: [embed] });
     } else if (
@@ -407,9 +389,7 @@ module.exports = class extends Command {
       embed.setTimestamp();
       embed.addField(
         "\u200b",
-        "**[Invite](https://invite.pogy.xyz) | " +
-          "[Support Server](https://394wkx-3000.csb.app/support) | " +
-          "[Dashboard](https://394wkx-3000.csb.app/dashboard)**",
+        "**[Invite](https://invite.pogy.xyz) | " + `[Support Server](${process.env.AUTH_DOMAIN}/support) | ` + `[Dashboard](${process.env.AUTH_DOMAIN}/dashboard)**`,
       );
       return message.channel.sendCustom({ embeds: [embed] });
     } else if (
@@ -434,9 +414,7 @@ module.exports = class extends Command {
       embed.setTimestamp();
       embed.addField(
         "\u200b",
-        "**[Invite](https://invite.pogy.xyz) | " +
-          "[Support Server](https://394wkx-3000.csb.app/support) | " +
-          "[Dashboard](https://394wkx-3000.csb.app/dashboard)**",
+        "**[Invite](https://invite.pogy.xyz) | " + `[Support Server](${process.env.AUTH_DOMAIN}/support) | ` + `[Dashboard](${process.env.AUTH_DOMAIN}/dashboard)**`,
       );
       return message.channel.sendCustom({ embeds: [embed] });
     } else if (
@@ -467,9 +445,7 @@ module.exports = class extends Command {
       embed.setTimestamp();
       embed.addField(
         "\u200b",
-        "**[Invite](https://invite.pogy.xyz) | " +
-          "[Support Server](https://394wkx-3000.csb.app/support) | " +
-          "[Dashboard](https://394wkx-3000.csb.app/dashboard)**",
+        "**[Invite](https://invite.pogy.xyz) | " + `[Support Server](${process.env.AUTH_DOMAIN}/support) | ` + `[Dashboard](${process.env.AUTH_DOMAIN}/dashboard)**`,
       );
       return message.channel.sendCustom({ embeds: [embed] });
     } else if (
@@ -501,9 +477,7 @@ module.exports = class extends Command {
       embed.setTimestamp();
       embed.addField(
         "\u200b",
-        "**[Invite](https://invite.pogy.xyz) | " +
-          "[Support Server](https://394wkx-3000.csb.app/support) | " +
-          "[Dashboard](https://394wkx-3000.csb.app/dashboard)**",
+        "**[Invite](https://invite.pogy.xyz) | " + `[Support Server](${process.env.AUTH_DOMAIN}/support) | ` + `[Dashboard](${process.env.AUTH_DOMAIN}/dashboard)**`,
       );
 
       return message.channel.sendCustom({ embeds: [embed] });
@@ -529,9 +503,7 @@ module.exports = class extends Command {
       );
       embed.addField(
         "\u200b",
-        "**[Invite](https://invite.pogy.xyz) | " +
-          "[Support Server](https://394wkx-3000.csb.app/support) | " +
-          "[Dashboard](https://394wkx-3000.csb.app/dashboard)**",
+        "**[Invite](https://invite.pogy.xyz) | " + `[Support Server](${process.env.AUTH_DOMAIN}/support) | ` + `[Dashboard](${process.env.AUTH_DOMAIN}/dashboard)**`,
       );
       embed.setFooter({
         text: `Requested by ${message.author.username}`,

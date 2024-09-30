@@ -610,7 +610,7 @@ module.exports = async (client) => {
                 "dddd, MMMM Do YYYY HH:mm:ss"
               )}`
             )
-            .setFooter({ text: "https://394wkx-3000.csb.app//" })
+            .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
             .setColor("GREEN");
         } else {
           form.paste.push(`Question #${i + 1} - ${db.questions[i]}`);
@@ -625,7 +625,7 @@ module.exports = async (client) => {
                 "dddd, MMMM Do YYYY HH:mm:ss"
               )}`
             )
-            .setFooter({ text: "https://394wkx-3000.csb.app//" })
+            .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
             .setColor("GREEN");
         }
       }
@@ -634,7 +634,7 @@ module.exports = async (client) => {
           embeds: [
             new MessageEmbed()
               .setColor("GREEN")
-              .setFooter({ text: `Powered by https://394wkx-3000.csb.app/` })
+              .setFooter({ text: `Powered by ${process.env.AUTH_DOMAIN}/` })
               .setTitle(`Application #${ticketID}`)
               .setDescription(
                 `Hey ${
@@ -784,7 +784,7 @@ module.exports = async (client) => {
       .setColor(guild.me.displayHexColor);
 
     premiumWeb.send({
-      username: "ChaoticPremium",
+      username: `${jsonconfig.botName} Premium`,
       avatarURL: `${domain}/logo.png`,
       embeds: [embedPremium],
     });
@@ -857,7 +857,7 @@ module.exports = async (client) => {
 
     renderTemplate(res, req, "./new/mainpage.ejs", {
       guild: guild,
-      alert: `Dashboard was made by https://394wkx-3000.csb.app/`,
+      alert: `Dashboard was made by ${process.env.AUTH_DOMAIN}/`,
       join1: join1.length || 0,
       join2: join2.length || 0,
       leave1: leave1.length || 0,
@@ -3564,13 +3564,13 @@ send
 
       const report = new MessageEmbed()
         .setColor("GREEN")
-        .setTitle(`ChaoticReports`)
+        .setTitle(`${jsonconfig.botName} Reports`)
         .setDescription(
           `Someone just reported a user!\n\nUser: ${req.body.name}\`(${req.body.id})\`\nReported User: ${req.body.reported_user}\nReported User ID: ${req.body.reported_id}\nReason: \`${req.body.reason}\`\nProof: ${req.body.proof}`
         );
 
       reportEmbed.sendCustom({
-        username: "ChaoticReports",
+        username: `${jsonconfig.botName} Reports`,
         avatarURL: `${domain}/logo.png`,
         embeds: [report],
       });
@@ -3591,7 +3591,7 @@ send
         );
 
       contactEmbed.sendCustom({
-        username: "ChaoticContact",
+        username: `${jsonconfig.botName} Contact`,
         avatarURL: `${domain}/logo.png`,
         embeds: [contact],
       });

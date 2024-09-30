@@ -27,47 +27,47 @@ module.exports = class extends Command {
           .setTitle(`${language.serversettings1}`)
           .addField(
             `Main Settings`,
-            `[\`Click here\`](https://394wkx-3000.csb.app/dashboard/${message.guild.id})`,
+            `[\`Click here\`](${process.env.AUTH_DOMAIN}/dashboard/${message.guild.id})`,
             true,
           )
           .addField(
             `Welcome & Leave`,
-            `[\`Click here\`](https://394wkx-3000.csb.app/dashboard/${message.guild.id}/welcome)`,
+            `[\`Click here\`](${process.env.AUTH_DOMAIN}/dashboard/${message.guild.id}/welcome)`,
             true,
           )
           .addField(
             `Logging`,
-            `[\`Click here\`](https://394wkx-3000.csb.app/dashboard/${message.guild.id}/logging)`,
+            `[\`Click here\`](${process.env.AUTH_DOMAIN}/dashboard/${message.guild.id}/logging)`,
             true,
           )
           .addField(
             `Autorole`,
-            `[\`Click here\`](https://394wkx-3000.csb.app/dashboard/${message.guild.id}/autorole)`,
+            `[\`Click here\`](${process.env.AUTH_DOMAIN}/dashboard/${message.guild.id}/autorole)`,
             true,
           )
           .addField(
             `Alt Detector`,
-            `[\`Click here\`](https://394wkx-3000.csb.app/dashboard/${message.guild.id}/altdetector)`,
+            `[\`Click here\`](${process.env.AUTH_DOMAIN}/dashboard/${message.guild.id}/altdetector)`,
             true,
           )
           .addField(
             `Tickets`,
-            `[\`Click here\`](https://394wkx-3000.csb.app/dashboard/${message.guild.id}/tickets)`,
+            `[\`Click here\`](${process.env.AUTH_DOMAIN}/dashboard/${message.guild.id}/tickets)`,
             true,
           )
           .addField(
             `Suggestions`,
-            `[\`Click here\`](https://394wkx-3000.csb.app/dashboard/${message.guild.id}/Suggestions)`,
+            `[\`Click here\`](${process.env.AUTH_DOMAIN}/dashboard/${message.guild.id}/Suggestions)`,
             true,
           )
           .addField(
             `Server Reports`,
-            `[\`Click here\`](https://394wkx-3000.csb.app/dashboard/${message.guild.id}/reports)`,
+            `[\`Click here\`](${process.env.AUTH_DOMAIN}/dashboard/${message.guild.id}/reports)`,
             true,
           )
           .addField(
             `Automod`,
-            `[\`Click here\`](https://394wkx-3000.csb.app/dashboard/${message.guild.id}/automod)`,
+            `[\`Click here\`](${process.env.AUTH_DOMAIN}/dashboard/${message.guild.id}/automod)`,
             true,
           )
 

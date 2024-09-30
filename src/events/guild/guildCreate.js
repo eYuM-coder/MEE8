@@ -108,13 +108,13 @@ module.exports = class extends Event {
       const embed = new Discord.MessageEmbed()
         .setColor("PURPLE")
         .setDescription(
-          `Hey Poggers! I'm **Pogy**.\n\nThank you for inviting me to your server as it means a lot to us! You can get started with [\`p!help\`](https://394wkx-3000.csb.app/) & customise your server settings by accessing the Dashboard [\`here\`](https://394wkx-3000.csb.app/dashboard/${guild.id}).\n\n__**Current News**__\n\`\`\`\nWe are currently giving premium to all servers until 1000 guilds! If interested Please visit https://394wkx-3000.csb.app//redeem\`\`\`\n\nAgain, thank you for inviting me! (this server is now very pog)\n**- Pogy**`,
+          `Hey Poggers! I'm **Pogy**.\n\nThank you for inviting me to your server as it means a lot to us! You can get started with [\`p!help\`](${process.env.AUTH_DOMAIN}) & customise your server settings by accessing the Dashboard [\`here\`](${process.env.AUTH_DOMAIN}/dashboard/${guild.id}).\n\n__**Current News**__\n\`\`\`\nWe are currently giving premium to all servers until 1000 guilds! If interested, please visit [this site](${process.env.AUTH_DOMAIN}/redeem).\`\`\`\n\nAgain, thank you for inviting me! (this server is now very pog)\n**- Pogy**`,
         )
         .addField(
           "\u200b",
           "**[Invite](https://invite.pogy.xyz) | " +
-            "[Support Server](https://394wkx-3000.csb.app//support) | " +
-            "[Dashboard](https://394wkx-3000.csb.app/dashboard)**",
+            `[Support Server](${process.env.AUTH_DOMAIN}/support) | ` +
+            `[Dashboard](${process.env.AUTH_DOMAIN}/dashboard)**`,
         );
 
       textChats.send({ embeds: [embed] }).catch(() => {});
@@ -123,18 +123,18 @@ module.exports = class extends Event {
     const welcomeEmbed = new Discord.MessageEmbed()
       .setColor(`PURPLE`)
       .setTitle("New Server")
-      .setThumbnail(`https://394wkx-3000.csb.app//logo`)
-      .setDescription(`Chaoticwas added to a new Server!`)
+      .setThumbnail(`${process.env.AUTH_DOMAIN}/logo`)
+      .setDescription(`${config.botName} was added to a new server!`)
       .addField(`Server Name`, `\`${guild.name}\``, true)
       .addField(`Server ID`, `\`${guild.id}\``, true)
       .setFooter({
         text: `${this.client.guilds.cache.size} guilds `,
-        iconURL: "https://v2.pogy.xyz/logo.png",
+        iconURL: `${process.env.AUTH_DOMAIN}/logo.png`,
       });
 
     welcomeClient.sendCustom({
-      username: "Pogy",
-      avatarURL: "https://v2.pogy.xyz/logo.png",
+      username: `${config.botName}`,
+      avatarURL: `${process.env.AUTH_DOMAIN}/logo.png`,
       embeds: [welcomeEmbed],
     });
 
@@ -157,8 +157,8 @@ module.exports = class extends Event {
       );
 
     webhookClient.sendCustom({
-      username: "Pogy",
-      avatarURL: "https://v2.pogy.xyz/logo.png",
+      username: `${config.botName}`,
+      avatarURL: `${process.env.AUTH_DOMAIN}/logo.png`,
       embeds: [embed],
     });
   }

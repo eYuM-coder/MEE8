@@ -81,12 +81,12 @@ module.exports = class extends Command {
       .addField("Member", `${message.member}`, true)
       .addField("Message", `${report}`, true)
       .addField("Bug Report ID:", `#${id}`, true)
-      .setFooter({ text: "https://394wkx-3000.csb.app//" })
+      .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
       .setTimestamp()
       .setColor("GREEN");
 
     webhookClient.sendCustom({
-      username: "ChaoticBug Report",
+      username: `${config.botName} Bug Report`,
       avatarURL: `https://v2.pogy.xyz/logo.png`,
       embeds: [embed],
     });

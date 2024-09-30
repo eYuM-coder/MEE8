@@ -39,7 +39,7 @@ module.exports = class extends Command {
                 choices.join(", ")
               )}`
             )
-            .setFooter({ text: "https://394wkx-3000.csb.app//" })
+            .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
             .setTimestamp()
             .setColor("RED"),
         ],
@@ -61,7 +61,7 @@ module.exports = class extends Command {
                 choices.join(", ")
               )}`
             )
-            .setFooter({ text: "https://394wkx-3000.csb.app//" })
+            .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
             .setTimestamp()
             .setColor("RED"),
         ],
@@ -94,7 +94,7 @@ module.exports = class extends Command {
                   message.client.emoji.success
                 } ${language.aactionSuccess.replace("{action}", args[0])}`
               )
-              .setFooter({ text: "https://394wkx-3000.csb.app//" })
+              .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
               .setTimestamp()
               .setColor("RED"),
           ],
@@ -116,7 +116,7 @@ module.exports = class extends Command {
                 message.client.emoji.success
               } ${language.aactionSuccess.replace("{action}", args[0])}`
             )
-            .setFooter({ text: "https://394wkx-3000.csb.app//" })
+            .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
             .setTimestamp()
             .setColor("RED"),
         ],

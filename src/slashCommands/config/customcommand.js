@@ -28,7 +28,7 @@ module.exports = {
         })
         .setDescription(`${language.properusage} \`${prefix}customcommand <command-name> <text-reply>\`\n\n${language.example} \`${prefix}customcommand ping pong\``)
         .setTimestamp()
-        .setFooter({ text: "https://Pogy.ml/" })
+        .setFooter({ text: `${process.env.AUTH_DOMAIN}/` })
         .setColor(interaction.guild.me.displayHexColor),
       ],
     });
@@ -44,7 +44,7 @@ module.exports = {
         })
         .setDescription(`${language.properusage} \`${prefix}customcommand <command-name> <text-reply>\`\n\n${language.example} \`${prefix}customcommand ping pong\``)
         .setTimestamp()
-        .setFooter({ text: "https://Pogy.ml" })
+        .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
         .setColor(interaction.guild.me.displayHexColor),
       ],
     });
@@ -66,7 +66,7 @@ module.exports = {
           embeds: [
             new MessageEmbed()
             .setColor(interaction.guild.me.displayHexColor)
-            .setDescription(`${interaction.client.emoji.fail} | Custom Command Limit Reached **(10)**\n\n[Upgrade to Premium Here for unlimited commands](https://Pogy.ml/premium)`),
+            .setDescription(`${interaction.client.emoji.fail} | Custom Command Limit Reached **(10)**\n\n[Upgrade to Premium Here for unlimited commands](${process.env.AUTH_DOMAIN}/premium)`),
           ],
         });
 
@@ -90,7 +90,7 @@ module.exports = {
               })
               .setDescription(`**${language.cc3}** ${name}\n\nDelete the following command using \`${prefix}deletecommand <command-name>\``)
               .setTimestamp()
-              .setFooter({ text: "https://Pogy.ml" })
+              .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
               .setColor(interaction.guild.me.displayHexColor),
             ],
           });

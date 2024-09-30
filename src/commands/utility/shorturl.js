@@ -210,7 +210,7 @@ module.exports = class extends Command {
         embeds: [
           new discord.MessageEmbed()
             .setDescription(
-              `${language.urlCreated}\n\n**Short Url:** [https://394wkx-3000.csb.app//url/${kaka}](https://394wkx-3000.csb.app//url/${kaka})\n**Full url:** ${args[0]}\n\n**Please note that by making urls you abide by our [policy](https://394wkx-3000.csb.app//url)**`
+              `${language.urlCreated}\n\n**Short Url:** [${process.env.AUTH_DOMAIN}/url/${kaka}](${process.env.AUTH_DOMAIN}/url/${kaka})\n**Full url:** ${args[0]}\n\n**Please note that by making urls you abide by our [policy](${process.env.AUTH_DOMAIN}/url)**`
             )
             .setColor(message.client.color.blue),
         ],

@@ -1,5 +1,6 @@
 const Command = require("../../structures/Command");
 const Guild = require("../../database/schemas/Pogy");
+const config = require("../../../config.json");
 const Guildd = require("../../database/schemas/Guild");
 const { MessageEmbed } = require("discord.js");
 const moment = require("moment");
@@ -9,7 +10,7 @@ module.exports = class extends Command {
   constructor(...args) {
     super(...args, {
       name: "news",
-      description: `Shows Pogy's latest news`,
+      description: `Shows ${config.botName}'s latest news`,
       category: "Information",
       cooldown: 3,
     });
@@ -28,15 +29,15 @@ module.exports = class extends Command {
 
     let embed = new MessageEmbed()
       .setColor(message.guild.me.displayHexColor)
-      .setTitle(`ChaoticNews`)
+      .setTitle(`${message.client.config.botName} News`)
       .setDescription(
         `***__${language.datePublished}__ ${moment(guildDB.time).format(
           "dddd, MMMM Do YYYY"
         )}*** *__[\`(${moment(
           guildDB.time
-        ).fromNow()})\`](https://394wkx-3000.csb.app/)__*\n\n ${guildDB.news}`
+        ).fromNow()})\`](${process.env.AUTH_DOMAIN}/)__*\n\n ${guildDB.news}`
       )
-      .setFooter({ text: "https://394wkx-3000.csb.app//" })
+      .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
       .setTimestamp();
 
     message.channel.sendCustom({ embeds: [embed] }).catch(() => {

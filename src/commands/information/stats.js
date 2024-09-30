@@ -90,7 +90,7 @@ module.exports = class extends Command {
       .addField(`${language.pogyGeneral}`, `\`\`\`css\n${tech}\`\`\``, true)
       .addField(`${language.pogyTeam}`, `\`\`\`css\n${devs}\`\`\``, true)
       .addField(`${language.pogyStats}`, `\`\`\`css\n${serverStats}\`\`\``)
-      .setFooter({ text: `https://394wkx-3000.csb.app/` })
+      .setFooter({ text: `${process.env.AUTH_DOMAIN}/` })
       .setTimestamp()
       .setColor(message.guild.me.displayHexColor);
     message.channel.sendCustom({ embeds: [embed] });

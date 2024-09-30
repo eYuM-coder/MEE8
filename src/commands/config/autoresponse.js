@@ -39,7 +39,7 @@ module.exports = class extends Command {
               `${language.properusage} \`${prefix}autoResponse <command-name> <text-reply>\`\n\n${language.example} \`${prefix}autoResponse ping pong\``
             )
             .setTimestamp()
-            .setFooter({ text: "https://394wkx-3000.csb.app//" })
+            .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
             .setColor(message.guild.me.displayHexColor),
         ],
       });
@@ -58,7 +58,7 @@ module.exports = class extends Command {
               `${language.properusage} \`${prefix}autoResponse <command-name> <text-reply>\`\n\n${language.example} \`${prefix}autoResponse ping pong\``
             )
             .setTimestamp()
-            .setFooter({ text: "https://394wkx-3000.csb.app//" })
+            .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
             .setColor(message.guild.me.displayHexColor),
         ],
       });
@@ -84,7 +84,7 @@ module.exports = class extends Command {
             new MessageEmbed()
               .setColor(message.guild.me.displayHexColor)
               .setDescription(
-                `${message.client.emoji.fail} Auto Response Limit Reached **(10)**\n\n[Upgrade Premium Here for unlimited commands](https://394wkx-3000.csb.app//premium)`
+                `${message.client.emoji.fail} Auto Response Limit Reached **(10)**\n\n[Upgrade Premium Here for unlimited commands](${process.env.AUTH_DOMAIN}/premium)`
               ),
           ],
         });
@@ -112,7 +112,7 @@ module.exports = class extends Command {
                   `**${language.cc3}** ${name}\n\nDelete the following auto response using \`${prefix}deleteresponse <command-name>\``
                 )
                 .setTimestamp()
-                .setFooter({ text: "https://394wkx-3000.csb.app//" })
+                .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
                 .setColor(message.guild.me.displayHexColor),
             ],
           });

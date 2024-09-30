@@ -36,7 +36,7 @@ module.exports = {
           iconURL: interaction.user.displayAvatarURL({ dynamic: true })
         })
         .setColor(interaction.guild.me.displayHexColor)
-        .setFooter({ text: "https://Pogy.ml" })
+        .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
         .setTimestamp(),
       ],
     });

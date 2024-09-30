@@ -1,12 +1,11 @@
 {
-  "botName": "asasdsadfgdrsdg6u5uy",
-  "clientId": "1135714988493910136",
+  "botName": "MEE8 (New and Improved)",
   "owner": "1067137336674107453",
   "developers": ["1153363797701046327", "1118665799209599006", "793174232804753439"],
   "status": "!help | website here",
-  "discord": "https://discord.gg/",
+  "discord": "https://discord.gg/hYzXf2vAxE",
   "dashboard": "true",
-  "server": "",
+  "server": "https://discord.gg/hYzXf2vAxE",
   "prefix": "!",
   "webhooks": {
     "logs": "https://discord.com/api/webhooks/1279227126486270005/YcwhYvEJNS_xfdoZfkb_C5HyesDdGFxVzcH9fbhPQCixgeCz1muUWnoBIt74BoQMBlFx",

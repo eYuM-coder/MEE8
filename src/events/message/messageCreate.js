@@ -122,7 +122,7 @@ module.exports = class extends Event {
           if (maintenanceCooldown.has(message.author.id)) return;
 
           message.channel.sendCustom(
-            `Chaoticis currently undergoing maintenance which won't allow anyone to access Pogy's Commands. Feel free to try again later. For updates: ${config.discord}`,
+            `${config.botName} is currently undergoing maintenance, which means no one is allowed to access ${config.botName}'s commands. Feel free to try again later. For updates: ${config.discord}`,
           );
 
           maintenanceCooldown.add(message.author.id);
@@ -191,7 +191,7 @@ module.exports = class extends Event {
                 message.author
               }\n\n${
                 number === 1
-                  ? `*Did You know that ${config.botName} has its own dashboard? \`https://394wkx-3000.csb.app/dashboard\`*`
+                  ? `*Did You know that ${config.botName} has its own dashboard? \`${process.env.AUTH_DOMAIN}/dashboard\`*`
                   : ""
               }${
                 number === 2
@@ -228,7 +228,7 @@ module.exports = class extends Event {
                   .join(" - ")}**`,
               )
               .setTimestamp()
-              .setFooter("https://394wkx-3000.csb.app/")
+              .setFooter(`${process.env.AUTH_DOMAIN}`)
               .setColor(message.guild.me.displayHexColor);
             return message.channel.sendCustom(embed).catch(() => {});
           }
@@ -254,7 +254,7 @@ module.exports = class extends Event {
                   .join("\n")}**`,
               )
               .setTimestamp()
-              .setFooter("https://394wkx-3000.csb.app/")
+              .setFooter(`${process.env.AUTH_DOMAIN}`)
               .setColor(message.guild.me.displayHexColor);
             return message.channel.sendCustom(embed).catch(() => {});
           }

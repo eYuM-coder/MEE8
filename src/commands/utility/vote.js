@@ -50,7 +50,7 @@ module.exports = class extends Command {
             message.author.displayAvatarURL({ dynamic: true })
           )
           .setColor(message.guild.me.displayHexColor)
-          .setFooter({ text: "https://394wkx-3000.csb.app//" })
+          .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
           .setTimestamp(),
       ],
     });

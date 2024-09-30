@@ -66,7 +66,7 @@ module.exports = class extends Command {
               ],
             });
 
-          let Chaotic= message.guild.me;
+          let MEE8 = message.guild.me;
           let everyone = message.guild.roles.everyone;
           let author = message.author;
 

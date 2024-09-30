@@ -87,13 +87,13 @@ module.exports = {
     .addField("Member", `${interaction.member}`, true)
     .addField("Message", `${report}`, true)
     .addField("Bug Report ID:", `#${id}`, true)
-    .setFooter({ text: "https://Pogy.ml" })
+    .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
     .setTimestamp()
     .setColor("GREEN");
 
     webhookClient.sendCustom({
-      username: "ChaoticBug Report",
-      avatarURL: `https://Pogy.ml/logo.png`,
+      username: `${config.botName} Bug Report`,
+      avatarURL: `${process.env.AUTH_DOMAIN}/logo.png`,
       embeds: [embed],
     });
 

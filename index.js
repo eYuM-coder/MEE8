@@ -161,8 +161,11 @@ client.on("interactionCreate", async (interaction) => {
 
   if (!slashCommand) return;
 
+  const subcommand = interaction.options.getSubcommand(false);
+
   try {
     await slashCommand.execute(interaction);
+    await logger.info(`/${slashCommand.data.name} (${subcommand ? `${subcommand}` : 'No subcommand executed'}) ran by "${interaction.user.username}" (${interaction.user.id}) on guild "${interaction.guild.name}" (${interaction.guild.id}) in channel "${interaction.channel.name}" (${interaction.channel.id})`, { label: "Slash Commmand" });
   } catch (error) {
     await interaction.reply({
       content: "There was an error while executing this command!",
@@ -182,16 +185,23 @@ client.setMaxListeners(20);
 const moreInfoEmbed = new MessageEmbed()
   .setColor("#0099ff") // Set color to blue
   .setTitle("More Info")
-  .setURL("https://pogy.xyz/invite")
+  .setURL(`${process.env.AUTH_DOMAIN}/invite`)
   .setDescription(
-    "Chaotic is a discord bot with a lot of features. You can invite Pogy to your server by clicking the button below",
+    `${config.botName} is a discord bot with a lot of features. You can invite ${config.botName} to your server by clicking the button below.`,
   )
-  .setFooter("Pogy", "https://pogy.xyz/assets/images/pogy.png") // Set footer with text and icon
+  .setFooter(
+    `${config.botName}`,
+    `${process.env.AUTH_DOMAIN}/assets/images/pogy.png`,
+  ) // Set footer with text and icon
   .addFields(
-    { name: "Invite Pogy", value: "https://pogy.xyz/invite", inline: false },
+    {
+      name: `Invite ${config.botName}`,
+      value: `${process.env.AUTH_DOMAIN}/invite`,
+      inline: false,
+    },
     { name: "Support Server", value: "https://discord.gg/pogy", inline: false },
     {
-      name: "Vote Pogy",
+      name: `Vote ${config.botName}`,
       value: "https://top.gg/bot/880243836830652958/vote",
       inline: false,
     },
@@ -199,26 +209,26 @@ const moreInfoEmbed = new MessageEmbed()
 const levelupbutton = new MessageEmbed()
   .setColor(color.blue)
   .setTitle("Level Up")
-  .setFooter("Pogy", "https://pogy.xyz/assets/images/pogy.png")
+  .setFooter(`${config.botName}`, `${process.env.AUTH_DOMAIN}/assets/images/pogy.png`)
   .setDescription(
-    `Hm this doesnt seem to do much. But you can click it anyways`,
+    `Hmmm... This doesnt seem to do much, but you can click it anyways.`,
   )
-  .setURL("https://pogy.xyz/invite");
+  .setURL(`${process.env.AUTH_DOMAIN}/invite`);
 
 const invitebutton = new MessageActionRow().addComponents(
   new MessageButton()
-    .setLabel("Invite Pogy")
+    .setLabel(`Invite ${config.botName}`)
     .setStyle("LINK")
-    .setURL("https://394wkx-3000.csb.app//invite"),
+    .setURL(`${process.env.AUTH_DOMAIN}/invite`),
 );
 
 const infobutton = new MessageEmbed()
   .setTitle(`Info`)
   .setDescription(
-    " hello there poger. If you want more info on this bot you can check out the github repo or join the support server",
+    "Hello there pogger. If you want more info on this bot, you can check out the github repo or join the support server",
   )
-  .setURL("https://github.com/hotsu0p/Pogy/")
-  .addField("Github Repo", "https://github.com/hotsu0p/Pogy/");
+  .setURL("https://github.com/eYuM-coder/MEE8/")
+  .addField("Github Repo", "https://github.com/eYuM-coder/MEE8/");
 
 client.on("interactionCreate", async (interaction) => {
   try {

@@ -29,7 +29,7 @@ module.exports = class extends Command {
               .setDescription(
                 `Unable to close ticket, it seems like you aren't in any ticket channel.`
               )
-              .setFooter({ text: "https://394wkx-3000.csb.app//" })
+              .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
               .setTimestamp(),
           ],
         })
@@ -70,7 +70,7 @@ module.exports = class extends Command {
                     .setDescription(
                       `${message.client.emoji.fail} Only users with the support team role Can Close this Ticket`
                     )
-                    .setFooter({ text: "https://394wkx-3000.csb.app//" })
+                    .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
                     .setTimestamp()
                     .setColor("RED"),
                 ],
@@ -126,7 +126,7 @@ module.exports = class extends Command {
                   message.channel.name
                 }\n**Reason:** ${reason}\n**Date:** ${moment(new Date()).format(
                   "dddd, MMMM Do YYYY"
-                )}\n**Transcript:** [here](https://394wkx-3000.csb.app//paste/${ticketID})`
+                )}\n**Transcript:** [here](${process.env.AUTH_DOMAIN}/paste/${ticketID})`
               );
 
             channelReact.send({ embeds: [closeEmbed] });

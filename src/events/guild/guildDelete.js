@@ -28,18 +28,18 @@ module.exports = class extends Event {
     const welcomeEmbed = new Discord.MessageEmbed()
       .setColor(`RED`)
       .setTitle("Leave Server")
-      .setThumbnail(`https://394wkx-3000.csb.app//logo`)
-      .setDescription(`Chaoticleft a Server!`)
+      .setThumbnail(`${process.env.AUTH_DOMAIN}/logo`)
+      .setDescription(`${config.botName} left a server!`)
       .addField(`Server Name`, `\`${guild.name}\``, true)
       .addField(`Server ID`, `\`${guild.id}\``, true)
       .setFooter({
         text: `${this.client.guilds.cache.size} guilds `,
-        iconURL: "https://v2.pogy.xyz/logo.png",
+        iconURL: `${process.env.AUTH_DOMAIN}/logo.png`,
       });
 
     welcomeClient.sendCustom({
-      username: "Pogy",
-      avatarURL: "https://v2.pogy.xyz/logo.png",
+      username: `${config.botName}`,
+      avatarURL: `${process.env.AUTH_DOMAIN}/logo.png`,
       embeds: [welcomeEmbed],
     });
 
@@ -65,8 +65,8 @@ module.exports = class extends Event {
       .addField("Server Owner", `${guild.owner} / ${guild.ownerID}`);
 
     webhookClient.sendCustom({
-      username: "Pogy",
-      avatarURL: "https://v2.pogy.xyz/logo.png",
+      username: `${config.botName}`,
+      avatarURL: `${process.env.AUTH_DOMAIN}/logo.png`,
       embeds: [embed],
     });
   }

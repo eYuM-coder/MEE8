@@ -40,7 +40,7 @@ module.exports = class extends Command {
                 `${language.properusage} \`${prefix}deletecommand <command-name>\`\n\n${language.example} \`${prefix}deletecommand pog\``
               )
               .setTimestamp()
-              .setFooter({ text: "https://394wkx-3000.csb.app//" }),
+              .setFooter({ text: `${process.env.AUTH_DOMAIN}` }),
           ],
         })
         .setColor(message.guild.me.displayHexColor);
@@ -69,7 +69,7 @@ module.exports = class extends Command {
                 .setTitle(`${message.client.emoji.success} Delete Command`)
                 .setDescription(`${language.deletecmd1} **${name}**`)
                 .setTimestamp()
-                .setFooter({ text: "https://394wkx-3000.csb.app//" }),
+                .setFooter({ text: `${process.env.AUTH_DOMAIN}` }),
             ],
           });
         } else {

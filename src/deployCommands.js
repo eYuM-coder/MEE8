@@ -1,7 +1,6 @@
 const fs = require("node:fs");
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v9");
-const { clientId } = require("../config.json");
 const { green } = require("colors");
 
 
@@ -21,7 +20,7 @@ for(const folder of commandFolders) {
 const rest = new REST({ version: '9' }).setToken(process.env.TOKEN);
     console.log(green("Started refreshing application (/) commands."));
 
-rest.put(Routes.applicationCommands(clientId), { body: commands })
+rest.put(Routes.applicationCommands(process.env.MAIN_CLIENT_ID), { body: commands })
 .then((c) => {
   console.log(green("Successfully registered application commands."));
   return Promise.resolve(commands);

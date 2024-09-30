@@ -80,15 +80,15 @@ module.exports = async function (channel, message, options) {
     if (sended) return;
 
     // Assign Webhook
-    let hook = webhooks.find((w) => w.name === "https://394wkx-3000.csb.app/");
+    let hook = webhooks.find((w) => w.name === `${process.env.AUTH_DOMAIN}`);
     if (!hook) {
       try {
-        hook = await channel.createWebhook("https://394wkx-3000.csb.app/", {
+        hook = await channel.createWebhook(`${process.env.AUTH_DOMAIN}`, {
           avatar: `https://v2.pogy.xyz/logo.png`,
         });
       } catch (e) {
         hook = await channel.createWebhook(
-          "https://394wkx-3000.csb.app/",
+          `${process.env.AUTH_DOMAIN}`,
           `https://v2.pogy.xyz/logo.png`
         );
       }

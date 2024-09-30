@@ -47,13 +47,13 @@ window.onload = () => {
       embed: {
         title: "Hello! :wave:",
         description:
-          "You can use [links](https://394wkx-3000.csb.app/) or emojis :smile: :eyes:\n```\nAnd also code blocks\n```",
+          "You can use [links](${process.env.AUTH_DOMAIN}/) or emojis :smile: :eyes:\n```\nAnd also code blocks\n```",
         color: 4321431,
         timestamp: new Date().toISOString(),
-        url: "https://394wkx-3000.csb.app/",
+        url: `${process.env.AUTH_DOMAIN}`,
         author: {
           name: "Author name",
-          url: "https://394wkx-3000.csb.app/",
+          url: `${process.env.AUTH_DOMAIN}`,
           icon_url: "https://i.imgur.com/sGUVicW.png",
         },
         thumbnail: {
@@ -1094,7 +1094,7 @@ window.onload = () => {
       return error("Command length exceeds 30 characters.", 4000);
 
     error(
-      'Successfully saved command, if not saved, <a href="https://394wkx-3000.csb.app//embeds">read here</a>',
+      'Successfully saved command, if not saved, <a href=`${process.env.AUTH_DOMAIN}/embeds`>read here</a>',
       10000
     );
     e.preventDefault();

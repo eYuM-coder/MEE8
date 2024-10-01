@@ -8,7 +8,7 @@ module.exports = class EmptyCommand extends Command {
       name: "mute",
       aliases: [],
       description: "mute a member in ms",
-      category: "General",
+      category: "Moderation",
       cooldown: 5,
     });
   }

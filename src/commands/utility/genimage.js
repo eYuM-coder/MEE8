@@ -8,7 +8,7 @@ module.exports = class GenerateArtCommand extends Command {
     super(...args, {
       name: "generateart",
       description: "Generate art using the Prodia API.",
-      category: "Art",
+      category: "General",
       cooldown: 5,
       usage: "<prompt>",
       args: true,

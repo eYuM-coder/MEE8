@@ -9,7 +9,7 @@ module.exports = class EmptyCommand extends Command {
       name: "load", // Replace with your command name
       aliases: [], // Add any aliases for your command
       description: "load channels",
-      category: "General", // Adjust the category as needed
+      category: "Moderation", // Adjust the category as needed
       cooldown: 5,
       // Add any other command options or configurations
     });

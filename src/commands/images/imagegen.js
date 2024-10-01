@@ -6,7 +6,7 @@ module.exports = class EmptyCommand extends Command {
       name: "img",
       aliases: [],
       description: "Empty command template.",
-      category: "General",
+      category: "Images",
       cooldown: 5,
     });
   }

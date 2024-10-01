@@ -6,7 +6,7 @@ module.exports = class EmoteAddCommand extends Command {
     super(...args, {
       name: "emoteadd",
       description: "Adds an emote to the server.",
-      category: "Emotes",
+      category: "Emojis",
       cooldown: 5,
       userPermissions: ["MANAGE_EMOJIS_AND_STICKERS"],
       botPermissions: ["MANAGE_EMOJIS_AND_STICKERS"],

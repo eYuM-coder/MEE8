@@ -2,9 +2,10 @@ const { MessageEmbed } = require("discord.js");
 const Command = require("../../structures/Command");
 const Guild = require("../../database/schemas/Guild");
 const { stripIndent } = require("common-tags");
-const { MessageButton, MessageActionRow } = require("discord.js");
+const { MessageButton, MessageActionRow, MessageSelectMenu } = require("discord.js");
 const config = require("../../../config.json");
 const emojis = require("../../assets/emojis.json");
+const fs = require("fs");
 
 module.exports = class extends Command {
   constructor(...args) {
@@ -42,6 +43,33 @@ module.exports = class extends Command {
       tickets: `${emojis.tickets}`,
       owner: `${emojis.owner}`,
     };
+
+    let categories;
+    categories = this.client.utils.removeDuplicates(
+      this.client.botCommands.filter((cmd) => cmd.category !== "Owner").map((cmd) => cmd.category),
+    );
+
+    if (this.client.config.owner.includes(message.author.id) || this.client.config.developers.includes(message.author.id))
+      categories = this.client.utils.removeDuplicates(
+        this.client.botCommands.map((cmd) => cmd.category),
+      );
+
+    const options = [
+      {
+        label: "Home",
+        description: "Click to view all categories",
+        value: "home",
+      }
+    ];
+
+    categories.forEach((category) => {
+      options.push({
+        label: capitalize(category),
+        description: `Click to view ${capitalize(category)} commands`,
+        value: category.toLowerCase(),
+      });
+    });
+
     const helpinfobutton = new MessageActionRow().addComponents(
       new MessageButton()
         .setLabel("Invite Pogy")
@@ -54,465 +82,72 @@ module.exports = class extends Command {
         .setStyle("SECONDARY"), // can be "PRIMARY", "SECONDARY", "SUCCESS", "DANGER", "LINK", "INFO"
     );
 
+    const row = new MessageActionRow().addComponents(
+      new MessageSelectMenu()
+      .setCustomId("select")
+      .setPlaceholder("Select your option")
+      .addOptions(options)
+    )
+
     const green = "<:purple:826033456207233045>";
     const red = "<:redsquare:803527843661217802>";
 
-    const embed = new MessageEmbed().setColor("PURPLE");
+    if (!args[0]) {
+      let embed = new MessageEmbed()
+        .setTitle(`${message.client.config.botName}'s categories`)
+        .setDescription(`Choose a category from the list below`);
+      
+      categories.forEach((category) => {embed.addField(capitalize(category), "Use the select menu to explore this category!", true)})
 
-    if (!args || args.length < 1) {
-      let categories;
-      categories = this.client.utils.removeDuplicates(
-        this.client.botCommands
-          .filter((cmd) => cmd.category !== "Owner")
-          .map((cmd) => cmd.category),
-      );
+      let editEmbed = new MessageEmbed()
+        .addFields({
+          name: "\u200b",
+          value:
+            "**[Invite](https://invite.example.com) | " +
+            `[Support Server](${process.env.AUTH_DOMAIN}/support) | ` +
+            `[Dashboard](${process.env.AUTH_DOMAIN}/dashboard)**`,
+        })
+        .setTimestamp();
 
-      if (this.client.config.owner.includes(message.author.id) || this.client.config.developers.includes(message.author.id))
-        categories = this.client.utils.removeDuplicates(
-          this.client.botCommands.map((cmd) => cmd.category),
-        );
-
-      for (const category of categories) {
-        embed.addField(
-          `${emoji[category.split(" ").join("").toLowerCase()]} **${capitalize(
-            category,
-          )}**`,
-          `\`${prefix}help ${category.toLowerCase()}\``,
-          true,
-        );
-      }
-      embed.setTitle(`${config.botName}'s Command List`);
-      embed.setDescription(stripIndent`
-        <:purple:826033456207233045> The Prefix for this server is \`${prefix}\`
-  
-        `);
-
-      embed.setFooter({
-        text: `Requested by ${message.author.username}`,
-        iconURL: message.author.displayAvatarURL({ dynamic: true }),
-      });
-      embed.setTimestamp();
-
-      embed.addField(
-        "\u200b",
-        "**[Invite](https://invite.pogy.xyz) | " + `[Support Server](${process.env.AUTH_DOMAIN}/support) | ` + `[Dashboard](${process.env.AUTH_DOMAIN}/dashboard)**`,
-      );
-      return message.channel.sendCustom({
+      let sendmsg = await message.channel.send({
+        content: " ",
         embeds: [embed],
-        components: [helpinfobutton],
-      });
-    } else if (
-      (args && args.join(" ").toLowerCase() == "alt detector") ||
-      (args && args[0].toLowerCase() == "alt")
-    ) {
-      embed.setTitle(` ${emojis.altdetector} - Alt Detector`);
-      embed.setDescription(
-        this.client.botCommands
-          .filter((cmd) => cmd.category.toLowerCase() === "alt detector")
-          .map(
-            (cmd) =>
-              `${
-                cmd.disabled || disabledCommands.includes(cmd.name || cmd)
-                  ? red
-                  : green
-              } \`${cmd.name} ${" ".repeat(9 - Number(cmd.name.length))}:\` ${
-                cmd.description
-              }`,
-          )
-          .join("\n"),
-      );
-
-      embed.setFooter({
-        text: `Requested by ${message.author.username}`,
-        iconURL: message.author.displayAvatarURL({ dynamic: true }),
-      });
-      embed.setTimestamp();
-      embed.addField(
-        "\u200b",
-        "**[Invite](https://invite.pogy.xyz) | " + `[Support Server](${process.env.AUTH_DOMAIN}/support) | ` + `[Dashboard](${process.env.AUTH_DOMAIN}/dashboard)**`,
-      );
-      return message.channel.sendCustom({
-        embeds: [embed],
-        componenets: [helpinfobutton],
-      });
-    } else if (args && args[0].toLowerCase() == "owner") {
-      if (!this.client.config.developers.includes(message.author.id))
-        return message.channel.sendCustom(
-          `${message.client.emoji.fail} | You are not allowed to view this category`,
-        );
-
-      embed.setTitle(`${emojis.owner} Owner Commands`);
-      embed.setDescription(
-        this.client.botCommands
-          .filter((cmd) => cmd.category.toLowerCase() === "owner")
-          .map(
-            (cmd) =>
-              `${
-                cmd.disabled || disabledCommands.includes(cmd.name || cmd)
-                  ? red
-                  : green
-              } \`${cmd.name} ${" ".repeat(11 - Number(cmd.name.length))}:\` ${
-                cmd.description
-              }`,
-          )
-          .join("\n"),
-      );
-
-      embed.setFooter({
-        text: `Requested by ${message.author.username}`,
-        iconURL: message.author.displayAvatarURL({ dynamic: true }),
+        components: [helpinfobutton, row],
       });
 
-      embed.setTimestamp();
-      embed.addField(
-        "\u200b",
-        "**[Invite](https://invite.pogy.xyz) | " + `[Support Server](${process.env.AUTH_DOMAIN}/support) | ` + `[Dashboard](${process.env.AUTH_DOMAIN}/dashboard)**`,
-      );
-      return message.channel.sendCustom({ embeds: [embed] });
-    } else if (
-      (args && args[0].toLowerCase() == "applications") ||
-      (args && args[0].toLowerCase() == "apps")
-    ) {
-      embed.setTitle(` ${emojis.applications} - applications`);
-      embed.setDescription(
-        this.client.botCommands
-          .filter((cmd) => cmd.category.toLowerCase() === "applications")
-          .map(
-            (cmd) =>
-              `${
-                cmd.disabled || disabledCommands.includes(cmd.name || cmd)
-                  ? red
-                  : green
-              } \`${cmd.name} ${" ".repeat(11 - Number(cmd.name.length))}:\` ${
-                cmd.description
-              }`,
-          )
-          .join("\n"),
-      );
-
-      embed.setFooter({
-        text: `Requested by ${message.author.username}`,
-        iconURL: message.author.displayAvatarURL({ dynamic: true }),
+      const collector = message.channel.createMessageComponentCollector({
+        componentType: "SELECT_MENU",
+        time: 60000,
+        idle: 60000 / 2,
       });
 
-      embed.setTimestamp();
-
-      embed.addField(
-        "\u200b",
-        "**[Invite](https://invite.pogy.xyz) | " + `[Support Server](${process.env.AUTH_DOMAIN}/support) | ` + `[Dashboard](${process.env.AUTH_DOMAIN}/dashboard)**`,
-      );
-
-      return message.channel.sendCustom({ embeds: [embed] });
-    } else if (
-      (args && args[0].toLowerCase() == "config") ||
-      (args && args[0].toLowerCase() == "configuration")
-    ) {
-      embed.setTitle(` ${emojis.config} - Config`);
-      embed.setDescription(
-        this.client.botCommands
-          .filter((cmd) => cmd.category.toLowerCase() === "config")
-          .map(
-            (cmd) =>
-              `${
-                cmd.disabled || disabledCommands.includes(cmd.name || cmd)
-                  ? red
-                  : green
-              } \`${cmd.name} ${" ".repeat(14 - Number(cmd.name.length))}:\` ${
-                cmd.description
-              }`,
-          )
-          .join("\n"),
-      );
-
-      embed.setFooter({
-        text: `Requested by ${message.author.username}`,
-        iconURL: message.author.displayAvatarURL({ dynamic: true }),
+      collector.on("end", async () => {
+        await message.channel.edit({ components: [] });
       });
 
-      embed.setTimestamp();
-      embed.addField(
-        "\u200b",
-        "**[Invite](https://invite.pogy.xyz) | " + `[Support Server](${process.env.AUTH_DOMAIN}/support) | ` + `[Dashboard](${process.env.AUTH_DOMAIN}/dashboard)**`,
-      );
-      return message.channel.sendCustom({ embeds: [embed] });
-    } else if (
-      (args && args[0].toLowerCase() == "utility") ||
-      (args && args[0].toLowerCase() == "utils")
-    ) {
-      embed.setTitle(` ${emojis.utility} - Utility`);
-      embed.setDescription(
-        this.client.botCommands
-          .filter((cmd) => cmd.category.toLowerCase() === "utility")
-          .map(
-            (cmd) =>
-              `${
-                cmd.disabled || disabledCommands.includes(cmd.name || cmd)
-                  ? red
-                  : green
-              } \`${cmd.name} ${" ".repeat(10 - Number(cmd.name.length))}:\` ${
-                cmd.description
-              }`,
-          )
-          .join("\n"),
-      );
+      collector.on("collect", async (collected) => {
+        if (!collected.deffered) await collected.deferUpdate();
+        const value = collected.values[0];
+        if (value != "home") {
+          let _commands = "";
 
-      embed.setFooter({
-        text: `Requested by ${message.author.username}`,
-        iconURL: message.author.displayAvatarURL({ dynamic: true }),
+          const commandsInCategory = this.client.botCommands.filter((cmd) => cmd.category && cmd.category.toLowerCase() === value.toLowerCase());
+
+          commandsInCategory.forEach((cmd) => { _commands += `- \`${cmd.name}\`: ${cmd.description}\n` });
+
+          editEmbed
+            .setDescription(_commands || "No commands found for this category.")
+            .setColor("GREEN")
+            .setTitle(`${emoji[value]} ${capitalize(value)} Commands`)
+            .setFooter({
+              text: `Requested by ${message.author.tag} | Total ${capitalize(value)} commands: ${commandsInCategory.size}`,
+              iconURL: message.author.displayAvatarURL({ dynamic: true }),
+            });
+          return await sendmsg.edit({ embeds: [editEmbed] });
+        } else {
+          sendmsg.edit({ embeds: [embed] });
+        }
       });
-
-      embed.setTimestamp();
-      embed.addField(
-        "\u200b",
-        "**[Invite](https://invite.pogy.xyz) | " + `[Support Server](${process.env.AUTH_DOMAIN}/support) | ` + `[Dashboard](${process.env.AUTH_DOMAIN}/dashboard)**`,
-      );
-      return message.channel.sendCustom({ embeds: [embed] });
-    } else if (
-      (args && args[0].toLowerCase() == "economy") ||
-      (args && args[0].toLowerCase() == "currency")
-    ) {
-      embed.setTitle(` ${emojis.economy} - Economy`);
-      embed.setDescription(
-        this.client.botCommands
-          .filter((cmd) => cmd.category.toLowerCase() === "economy")
-          .map(
-            (cmd) =>
-              `${
-                cmd.disabled || disabledCommands.includes(cmd.name || cmd)
-                  ? red
-                  : green
-              } \`${cmd.name} ${" ".repeat(9 - Number(cmd.name.length))}:\` ${
-                cmd.description
-              }`,
-          )
-          .join("\n"),
-      );
-
-      embed.setFooter({
-        text: `Requested by ${message.author.username}`,
-        iconURL: message.author.displayAvatarURL({ dynamic: true }),
-      });
-
-      embed.setTimestamp();
-      embed.addField(
-        "\u200b",
-        "**[Invite](https://invite.pogy.xyz) | " + `[Support Server](${process.env.AUTH_DOMAIN}/support) | ` + `[Dashboard](${process.env.AUTH_DOMAIN}/dashboard)**`,
-      );
-      return message.channel.sendCustom({ embeds: [embed] });
-    } else if (args && args[0].toLowerCase() == "fun") {
-      embed.setTitle(` ${emojis.fun} - Fun`);
-      embed.setDescription(
-        this.client.botCommands
-          .filter((cmd) => cmd.category.toLowerCase() === "fun")
-          .map(
-            (cmd) =>
-              `${
-                cmd.disabled || disabledCommands.includes(cmd.name || cmd)
-                  ? red
-                  : green
-              } \`${cmd.name} ${" ".repeat(29 - Number(cmd.name.length))}:\` ${
-                cmd.description
-              }`,
-          )
-          .join("\n"),
-      );
-
-      embed.setFooter({
-        text: `Requested by ${message.author.username}`,
-        iconURL: message.author.displayAvatarURL({ dynamic: true }),
-      });
-
-      embed.setTimestamp();
-      embed.addField(
-        "\u200b",
-        "**[Invite](https://invite.pogy.xyz) | " + `[Support Server](${process.env.AUTH_DOMAIN}/support) | ` + `[Dashboard](${process.env.AUTH_DOMAIN}/dashboard)**`,
-      );
-      return message.channel.sendCustom({ embeds: [embed] });
-    } else if (
-      (args && args[0].toLowerCase() == "images") ||
-      (args && args[0].toLowerCase() == "image")
-    ) {
-      embed.setTitle(` ${emojis.images} - Image`);
-      embed.setDescription(
-        this.client.botCommands
-          .filter((cmd) => cmd.category.toLowerCase() === "images")
-          .map(
-            (cmd) =>
-              `${
-                cmd.disabled || disabledCommands.includes(cmd.name || cmd)
-                  ? red
-                  : green
-              } \`${cmd.name} ${" ".repeat(14 - Number(cmd.name.length))}:\` ${
-                cmd.description
-              }`,
-          )
-          .join("\n"),
-      );
-
-      embed.setFooter({
-        text: `Requested by ${message.author.username}`,
-        iconURL: message.author.displayAvatarURL({ dynamic: true }),
-      });
-
-      embed.setTimestamp();
-      embed.addField(
-        "\u200b",
-        "**[Invite](https://invite.pogy.xyz) | " + `[Support Server](${process.env.AUTH_DOMAIN}/support) | ` + `[Dashboard](${process.env.AUTH_DOMAIN}/dashboard)**`,
-      );
-      return message.channel.sendCustom({ embeds: [embed] });
-    } else if (
-      (args && args[0].toLowerCase() == "information") ||
-      (args && args[0].toLowerCase() == "info")
-    ) {
-      embed.setTitle(` ${emojis.information} - Info`);
-      embed.setDescription(
-        this.client.botCommands
-          .filter((cmd) => cmd.category.toLowerCase() === "information")
-          .map(
-            (cmd) =>
-              `${
-                cmd.disabled || disabledCommands.includes(cmd.name || cmd)
-                  ? red
-                  : green
-              } \`${cmd.name} ${" ".repeat(11 - Number(cmd.name.length))}:\` ${
-                cmd.description
-              }`,
-          )
-          .join("\n"),
-      );
-
-      embed.setFooter({
-        text: `Requested by ${message.author.username}`,
-        iconURL: message.author.displayAvatarURL({ dynamic: true }),
-      });
-
-      embed.setTimestamp();
-      embed.addField(
-        "\u200b",
-        "**[Invite](https://invite.pogy.xyz) | " + `[Support Server](${process.env.AUTH_DOMAIN}/support) | ` + `[Dashboard](${process.env.AUTH_DOMAIN}/dashboard)**`,
-      );
-      return message.channel.sendCustom({ embeds: [embed] });
-    } else if (
-      (args && args[0].toLowerCase() == "leveling") ||
-      (args && args[0].toLowerCase() == "ranking")
-    ) {
-      embed.setTitle(`${emojis.leveling} - Leveling`);
-      embed.setDescription(
-        this.client.botCommands
-          .filter((cmd) => cmd.category.toLowerCase() === "leveling")
-          .map(
-            (cmd) =>
-              `${cmd.disabled || disabledCommands.includes(cmd.name || cmd) ? red : green} \`${cmd.name} ${" ".repeat(7 - Number(cmd.name.length))}:\` ${cmd.description}`,
-          )
-          .join("\n"),
-      );
-      embed.setFooter({
-        text: `Requested by ${message.author.username}`,
-        iconURL: message.author.displayAvatarURL({ dynamic: true }),
-      });
-
-      embed.setTimestamp();
-      embed.addField(
-        "\u200b",
-        "**[Invite](https://invite.pogy.xyz) | " + `[Support Server](${process.env.AUTH_DOMAIN}/support) | ` + `[Dashboard](${process.env.AUTH_DOMAIN}/dashboard)**`,
-      );
-      return message.channel.sendCustom({ embeds: [embed] });
-    } else if (
-      (args && args[0].toLowerCase() == "moderation") ||
-      (args && args[0].toLowerCase() == "mod")
-    ) {
-      embed.setTitle(` ${emojis.moderation} - Moderation`);
-      embed.setDescription(
-        this.client.botCommands
-          .filter((cmd) => cmd.category.toLowerCase() === "moderation")
-          .map(
-            (cmd) =>
-              `${
-                cmd.disabled || disabledCommands.includes(cmd.name || cmd)
-                  ? red
-                  : green
-              } \`${cmd.name} ${" ".repeat(11 - Number(cmd.name.length))}:\` ${
-                cmd.description
-              }`,
-          )
-          .join("\n"),
-      );
-      embed.setFooter({
-        text: `Requested by ${message.author.username}`,
-        iconURL: message.author.displayAvatarURL({ dynamic: true }),
-      });
-
-      embed.setTimestamp();
-      embed.addField(
-        "\u200b",
-        "**[Invite](https://invite.pogy.xyz) | " + `[Support Server](${process.env.AUTH_DOMAIN}/support) | ` + `[Dashboard](${process.env.AUTH_DOMAIN}/dashboard)**`,
-      );
-      return message.channel.sendCustom({ embeds: [embed] });
-    } else if (
-      (args && args.slice(0).join(" ").toLowerCase() == "reaction role") ||
-      (args && args[0].toLowerCase() == "rr")
-    ) {
-      embed.setTitle(` ${emojis.reactionrole} - Reaction Roles`);
-      embed.setDescription(
-        this.client.botCommands
-          .filter((cmd) => cmd.category.toLowerCase() === "reaction role")
-          .map(
-            (cmd) =>
-              `${
-                cmd.disabled || disabledCommands.includes(cmd.name || cmd)
-                  ? red
-                  : green
-              } \`${cmd.name} ${" ".repeat(12 - Number(cmd.name.length))}:\` ${
-                cmd.description
-              }`,
-          )
-          .join("\n"),
-      );
-
-      embed.setFooter({
-        text: `Requested by ${message.author.username}`,
-        iconURL: message.author.displayAvatarURL({ dynamic: true }),
-      });
-
-      embed.setTimestamp();
-      embed.addField(
-        "\u200b",
-        "**[Invite](https://invite.pogy.xyz) | " + `[Support Server](${process.env.AUTH_DOMAIN}/support) | ` + `[Dashboard](${process.env.AUTH_DOMAIN}/dashboard)**`,
-      );
-
-      return message.channel.sendCustom({ embeds: [embed] });
-    } else if (
-      (args && args[0].toLowerCase() == "tickets") ||
-      (args && args[0].toLowerCase() == "ticketing")
-    ) {
-      embed.setTitle(` ${emojis.tickets} - Tickets`);
-      embed.setDescription(
-        this.client.botCommands
-          .filter((cmd) => cmd.category.toLowerCase() === "tickets")
-          .map(
-            (cmd) =>
-              `${
-                cmd.disabled || disabledCommands.includes(cmd.name || cmd)
-                  ? red
-                  : green
-              } \`${cmd.name} ${" ".repeat(11 - Number(cmd.name.length))}:\` ${
-                cmd.description
-              }`,
-          )
-          .join("\n"),
-      );
-      embed.addField(
-        "\u200b",
-        "**[Invite](https://invite.pogy.xyz) | " + `[Support Server](${process.env.AUTH_DOMAIN}/support) | ` + `[Dashboard](${process.env.AUTH_DOMAIN}/dashboard)**`,
-      );
-      embed.setFooter({
-        text: `Requested by ${message.author.username}`,
-        iconURL: message.author.displayAvatarURL({ dynamic: true }),
-      });
-
-      embed.setTimestamp();
-
-      return message.channel.sendCustom({ embeds: [embed] });
     } else {
       const cmd =
         this.client.botCommands.get(args[0]) ||
@@ -528,6 +163,7 @@ module.exports = class extends Command {
           `${message.client.emoji.fail} Could not find the Command you're looking for`,
         );
 
+      let embed = new MessageEmbed();
       embed.setTitle(`Command: ${cmd.name}`);
       embed.setDescription(cmd.description);
       embed.setThumbnail(`https://v2.pogy.xyz/logo.png`);

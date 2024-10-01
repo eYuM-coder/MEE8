@@ -73,6 +73,7 @@ module.exports = {
     let embed = new MessageEmbed()
       .setTitle(`${interaction.client.config.botName}'s slash commands`)
       .setDescription(`Choose a category from the list below`)
+      .setColor("#9C59B6")
       .addFields(
         {
           name: `${emojis.config} Config`,

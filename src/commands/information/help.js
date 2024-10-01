@@ -95,7 +95,8 @@ module.exports = class extends Command {
     if (!args[0]) {
       let embed = new MessageEmbed()
         .setTitle(`${message.client.config.botName}'s categories`)
-        .setDescription(`Choose a category from the list below`);
+        .setDescription(`Choose a category from the list below`)
+        .setColor("#9C59B6");
       
       categories.forEach((category) => {embed.addField(capitalize(category), "Use the select menu to explore this category!", true)})
 
@@ -167,6 +168,7 @@ module.exports = class extends Command {
       embed.setTitle(`Command: ${cmd.name}`);
       embed.setDescription(cmd.description);
       embed.setThumbnail(`https://v2.pogy.xyz/logo.png`);
+      embed.setColor("#9C59B6")
       embed.setFooter(
         cmd.disabled ||
           disabledCommands.includes(args[0] || args[0].toLowerCase())

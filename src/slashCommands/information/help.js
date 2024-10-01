@@ -109,7 +109,6 @@ module.exports = {
             `[Dashboard](${process.env.AUTH_DOMAIN}/dashboard)**`,
         },
       )
-      .setColor("GREEN")
       .setFooter({
         text: `Requested by ${interaction.user.tag}`,
         iconURL: interaction.user.displayAvatarURL({ dynamic: true }),

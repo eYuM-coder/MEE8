@@ -31,6 +31,7 @@ module.exports = {
       if (!interaction.member.permissions.has("MODERATE_MEMBERS"))
         return interaction.followUp({
           content: "You do not have permission to use this command.",
+          ephemeral: true,
         });
 
       const member = interaction.options.getMember("member");
@@ -95,10 +96,10 @@ module.exports = {
         let timeoutsuccess = new MessageEmbed()
           .setColor("GREEN")
           .setDescription(
-            `${client.emoji.success} | ${member} has been timed out for ${ms(
+            `***${client.emoji.success} | ${member} has been timed out for ${ms(
               time,
               { long: true },
-            )}`,
+            )}* || ${reason}**`,
           );
         return interaction
           .reply({ embeds: [timeoutsuccess] })
@@ -135,7 +136,7 @@ module.exports = {
     } catch (err) {
       console.error(err);
       interaction.reply({
-        content: "This command cannot be used in Direct Messages.",
+        content: "This command cannot be used in Direct Messages, or this member is not muteable.",
         ephemeral: true,
       });
     }

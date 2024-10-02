@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageEmbed } = require("discord.js");
+const ms = require("ms");
 const Guild = require("../../database/schemas/Guild");
 const Logging = require("../../database/schemas/logging.js");
 
@@ -63,15 +64,15 @@ module.exports = {
           .catch(() => {});
       }
 
-      const rate = interaction.options.getString("rate");
-      if (!rate || rate < 0 || rate > 59) {
+      const rate = ms(interaction.options.getString("rate"));
+      if (!rate || rate < 0 || rate > 21600) {
         let embed = new MessageEmbed()
           .setAuthor({
             name: `${interaction.user.tag}`,
             iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
           })
           .setDescription(
-            `${fail} | Please provide a rate limit between 0 and 59 seconds`,
+            `${fail} | Please provide a rate limit between 0 seconds and 6 hours.`,
           )
           .setTimestamp()
           .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
@@ -96,7 +97,7 @@ module.exports = {
             iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
           })
           .setDescription(
-            `${fail} | Please provide a rate limit between 0 and 59 seconds`,
+            `${fail} | Please provide a rate limit between 0 seconds and 6 hours`,
           )
           .setTimestamp()
           .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
@@ -140,7 +141,10 @@ module.exports = {
             embeds: [
               new MessageEmbed()
                 .setDescription(
-                  `${success} | Slow Mode was successfully set to **1 msg/${rate}s**`,
+                  `${success} | Slow Mode was successfully set to **1 msg/${ms(
+                    rate,
+                    { long: false },
+                  )}**`,
                 )
                 .setColor(interaction.guild.me.displayHexColor),
             ],

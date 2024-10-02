@@ -1,64 +1,130 @@
-const { relativeTimeRounding } = require("moment");
 const Command = require("../../structures/Command");
 const { MessageEmbed } = require("discord.js");
 const ms = require("ms");
-module.exports = class EmptyCommand extends Command {
+const Logging = require("../../database/schemas/logging");
+
+module.exports = class extends Command {
   constructor(...args) {
     super(...args, {
       name: "mute",
-      aliases: [],
-      description: "mute a member in ms",
+      description: "",
       category: "Moderation",
       cooldown: 5,
-    });
+    })
   }
-
   async run(message, args) {
     try {
-      const timeString = args[1];
-      const timeoutDuration = ms(timeString);
-      const reason = args[2];
-      if (isNaN(timeoutDuration)) {
-        return message.channel.send(
-          "Please provide a valid numerical time for the timeout."
-        );
+      const client = message.client;
+      const logging = await Logging.findOne({
+        guildId: message.guild.id,
+      });
+      if (!message.member.permissions.has("MODERATE_MEMBERS"))
+        return message.channel.send({
+          content: "You do not have permission to use this command.",
+        });
+
+      const member = message.mentions.members.first();
+      const reason = args.slice(2).join(" ") || "No reason provided";
+      const time = ms(args[1]);
+
+      if (!member) {
+        let usernotfound = new MessageEmbed()
+          .setColor("RED")
+          .setDescription(`${client.emoji.fail} | I can't find that member`);
+        return message.channel
+          .sendCustom({ embeds: [usernotfound] })
+          .then(async (s) => {
+            if (logging && logging.moderation.delete_reply === "true") {
+              setTimeout(() => {
+                s.delete().catch(() => {});
+              }, 5000);
+            }
+          })
+          .catch(() => {});
       }
 
-      const User = message.mentions.members.first();
-      // checks for a user
-      if (!User) {
-        return message.channel.send("Please mention a user to mute.");
+      if (
+        member.roles.highest.position >=
+        message.member.roles.highest.position
+      ) {
+        let rolesmatch = new MessageEmbed()
+          .setColor("RED")
+          .setDescription(
+            `${client.emoji.fail} | They have more power than you or have equal power as you do!`,
+          );
+        return message.channel.sendCustom({ embeds: [rolesmatch] })
+          .then(async (s) => {
+            if (logging && logging.moderation.delete_reply === "true") {
+              setTimeout(() => {
+                s.delete().catch(() => {});
+              }, 5000);
+            }
+          })
+          .catch(() => {});
       }
-      // cant mute your self retard
-      if (message.author.id === User.id) {
-        return message.channel.send("You cannot mute yourself.");
+
+      if (!time) {
+        let timevalid = new MessageEmbed()
+          .setColor("RED")
+          .setDescription(
+            `${client.emoji.fail} | The time specified is not valid. It is necessary that you provide valid time.`,
+          );
+
+        return message.channel.sendCustom({ embeds: [timevalid] }).then(async (s) => {
+          if (logging && logging.moderation.delete_reply === "true") {
+            setTimeout(() => {
+              s.delete().catch(() => {});
+            }, 5000);
+          }
+        });
       }
-      // perms lol
-      if(!message.member.permissions.has('MUTE_MEMBERS')) {
-        return msg.channel.send(":x: You don't have permissions. :x:") 
+      if (member) {
+        const response = await member.timeout(time, reason);
+        let timeoutsuccess = new MessageEmbed()
+          .setColor("GREEN")
+          .setDescription(
+            `***${client.emoji.success} | ${member} has been timed out for ${ms(
+              time,
+              { long: true },
+            )}* || ${reason}**`,
+          );
+        return message.channel
+          .sendCustom({ embeds: [timeoutsuccess] })
+          .then(async (s) => {
+            if (logging && logging.moderation.delete_reply === "true") {
+              setTimeout(() => {
+                s.delete().catch(() => {});
+              }, 5000);
+            }
+          })
+          .catch(() => {});
       }
-      // check roles for postions
-      if (!message.member.roles.highest.comparePositionTo(User.roles.highest) > 0) {
-        return message.channel.send("You cannot mute someone with a higher or equal role.");
+      if (member) {
+        let dmEmbed = new MessageEmbed()
+          .setColor("RED")
+          .setDescription(
+            `You have been muted in **${
+              interaction.guild.name
+            }**.\n\n__**Moderator:**__ ${interaction.author} **(${
+              interaction.author.tag
+            })**\n__**Reason:**__ ${reason || "No Reason Provided"}`,
+          )
+          .setTimestamp();
+        member.send({ embeds: [dmEmbed] });
+      } else {
+        let failembed = new MessageEmbed()
+          .setColor(client.color.red)
+          .setDescription(
+            `${client.emoji.fail} | I cannot time out that member. Make sure that my role is above their role or that I have sufficient perms to execute the command.`,
+          )
+          .setTimestamp();
+        return message.channel.sendCustom({ embeds: [failembed] });
       }
-      
-      await User.timeout(timeoutDuration, `${reason}`);
-      // Chore : convert to embed
-      const embed = new MessageEmbed()
-        .setColor("#fe0a0a")
-        .setDescription(`User has been timed out for ${ms(timeString)} ${reason}`)
-        .setFooter(
-          message.member.displayName,
-          message.author.displayAvatarURL({ dynamic: true })
-        )
-        .setAuthor(
-          message.author.username,
-          message.author.displayAvatarURL({ dynamic: true })
-        );
-      await message.channel.send({ embeds: [embed] }); // Use timeString for clarity
-    } catch (error) {
-      console.error("Error in the empty command:", error);
-      message.channel.send("An error occurred. Please try again later.");
+    } catch (err) {
+      console.error(err);
+      message.reply({
+        content: "This command cannot be used in Direct Messages, or this member is not muteable.",
+      });
     }
   }
 };

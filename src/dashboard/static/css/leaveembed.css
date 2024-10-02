@@ -16,18 +16,21 @@ a.patreon-link {
   border: 1px solid rgba(255, 255, 255, 0.5);
   text-align: center;
 }
+
 .badge-container .badge-icon {
   background: url("https://s3.amazonaws.com/patreon_public_assets/toolbox/patreon_white.png") center center no-repeat;
   background-size: contain;
   width: 100%;
   height: 20px;
 }
+
 .badge-container .badge-text {
   font-family: "Lato", sans-serif;
   font-size: 12px;
   padding: 2px;
   color: #fff;
 }
+
 .badge-container .badge-text.badge-text-bottom {
   position: relative;
   top: -2px;
@@ -64,14 +67,17 @@ a.patreon-link {
   color: rgba(255, 255, 255, 0.6);
   font-size: 14px;
 }
+
 .embedd .card-block {
   padding: 0;
   display: flex;
   margin-bottom: 10px;
 }
+
 .embedd a {
   color: #0096cf;
 }
+
 .embedd img.embed-thumb {
   max-height: 80px;
   max-width: 80px;
@@ -79,37 +85,44 @@ a.patreon-link {
   flex-shrink: 0;
   width: auto;
   -o-object-fit: contain;
-     object-fit: contain;
+  object-fit: contain;
   margin-left: 20px;
 }
+
 .embedd .embed-footer {
   font-size: 12px;
 }
+
 .embedd .embed-footer span {
   color: rgba(255, 255, 255, 0.6);
 }
+
 .embedd .embed-innerr .embed-title {
   color: #fff;
 }
+
 .embed .embed-innerr .embed-author {
   display: flex;
   align-items: center;
   margin-bottom: 5px;
 }
+
 .embedd .embed-innerr .embed-author img.embed-author-icon {
   margin-right: 9px;
   width: 20px;
   height: 20px;
   -o-object-fit: contain;
-     object-fit: contain;
+  object-fit: contain;
   border-radius: 50%;
 }
+
 .embedd .embed-innerr .embed-author .embed-author-name {
   display: inline-block;
   font-weight: 600;
   font-size: 14px;
   color: #fff !important;
 }
+
 .embedd .embed-innerr .fields {
   display: flex;
   flex-wrap: wrap;
@@ -117,6 +130,7 @@ a.patreon-link {
   box-lines: miltiple;
   margin-top: -10px;
 }
+
 .embedd .embed-innerr .fields .field {
   flex: 0;
   box-flex: 1;
@@ -124,18 +138,21 @@ a.patreon-link {
   max-width: 506px;
   min-width: 100%;
 }
+
 .embedd .embed-innerr .fields .field.inline {
   box-flex: 1;
   flex: 1;
   min-width: 150px;
   flex-basis: auto;
 }
+
 .embedd .embed-innerr .fields .field .field-name {
   color: #fff;
   font-size: 14px;
   margin-bottom: 4px;
   font-weight: 600;
 }
+
 .embedd .embed-innerr .fields .field .field-value {
   color: rgba(255, 255, 255, 0.7);
   font-size: 14px;

@@ -57,7 +57,7 @@ function draw() {
   requestAnimationFrame(draw);
 }
 
-setInterval(function() {
+setInterval(function () {
   if (hyper) {
     for (var i = 0; i < 3; i++) {
       spawnMeme();
@@ -69,7 +69,7 @@ setInterval(function() {
 
 // resize the canvas
 resize();
-window.addEventListener('resize', function() {
+window.addEventListener('resize', function () {
   memes = [];
   resize();
 });

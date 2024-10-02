@@ -5,7 +5,8 @@ $(document).ready(() => {
   let switches = {
     title: false,
     url: false,
-    icon: false };
+    icon: false
+  };
 
 
   let fields = 0;
@@ -15,7 +16,8 @@ $(document).ready(() => {
     author: {
       name: '',
       url: '',
-      icon: '' },
+      icon: ''
+    },
 
     description: '',
     url: '',
@@ -24,7 +26,8 @@ $(document).ready(() => {
     fields: [{}],
 
 
-    footer: '' };
+    footer: ''
+  };
 
 
   function resetEmbed() {
@@ -35,69 +38,69 @@ $(document).ready(() => {
 
   function updateEmbed(embed) {
     resetEmbed();
-    
-   if (embed.footer) {
+
+    if (embed.footer) {
       $('.card.embed').append(`<div class="embed-footer"><span>${embed.footer}</span></div>`);
 
-     
+
     }
 
     if (embed.url) {
       $('.embed-innerr').append(`<div class="embed-title"><a href="${embed.url}">${embed.title}</a></div>`);
 
-      
+
     } else {
       $('.embed-innerr').append(`<div class="embed-title">${embed.title.match(/.{1,46}/g).join("<br/>")}</div>`);
 
-      
+
     }
 
     if (embed.description) {
       $('.embed-innerr').append(`<div class="embed-description">${embed.description.match(/.{1,46}/g).join("<br/>").replace(/{user}/g, `<b style="color: red">{User}</b>`).replace(/{user_tag}/g, `<b style="color: red">{user_tag}</b>`).replace(/{guild}/g, `<b style="color: red">{guild}</b>`).replace(/{memberCount}/g, `<b style="color: red">{memberCount}</b>`)}</div>`);
 
-    
+
     }
 
     if (embed.color) {
       $('.side-colored').css('background-color', embed.color);
 
-    
+
     }
 
 
 
     if (embed.author.name) {
-     
+
 
       $('.embed-title').before(`<div class="embed-author"><a class="embed-author-name" href="${embed.author.url}">${embed.author.name.match(/.{1,46}/g).join("<br/>")}</a></div>`);
 
-     
+
       if (embed.author.icon) {
         $('.embed-author-name').before(`<img class="embed-author-icon" src="${embed.author.icon}" />`);
 
-        
+
       }
 
-      
+
     }
 
     if (embed.thumb_url) {
       // add thumbnail
-    
+
 
       $('.card.embed .card-block').append(`<img class="embed-thumb" src="${embed.thumb_url}" />`);
       $('.embed-thumb').height($('.embed-thumb')[0].naturalHeight);
 
-      
 
-    
+
+
     }
 
-  
- 
 
 
-  
+
+
+
   }
 
   // run once on startup
@@ -281,7 +284,7 @@ $(document).ready(() => {
     let item = $('#icon1');
     let icon = item.val();
 
-      if (number == "69") {
+    if (number == "69") {
       addWarning(item, 'icon', 'invalid url');
     } else {
       addSuccess(item, 'icon');
@@ -315,7 +318,7 @@ $(document).ready(() => {
     let item = $('#author_url1');
     let author_url = item.val();
 
-     if (number == "69") {
+    if (number == "69") {
       addWarning(item, 'author_url', 'invalid Url');
     } else {
       addSuccess(item, 'author_url');

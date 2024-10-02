@@ -134,10 +134,10 @@ window.onload = () => {
       time &&
         setTimeout(
           () =>
-            (notif.animate(
-              { opacity: "0", bottom: "-50px", offset: 1 },
-              { easing: "ease", duration: 500 }
-            ).onfinish = () => notif.style.removeProperty("display")),
+          (notif.animate(
+            { opacity: "0", bottom: "-50px", offset: 1 },
+            { easing: "ease", duration: 500 }
+          ).onfinish = () => notif.style.removeProperty("display")),
           time
         );
       return false;
@@ -181,10 +181,10 @@ window.onload = () => {
             x
               ? `<code class="inline">${x}</code>`
               : y
-              ? `<code class="inline">${y}</code>`
-              : z
-              ? `<code class="inline">${z}</code>`
-              : m
+                ? `<code class="inline">${y}</code>`
+                : z
+                  ? `<code class="inline">${z}</code>`
+                  : m
         );
       else
         txt = txt.replace(
@@ -193,10 +193,10 @@ window.onload = () => {
             w && x
               ? `<pre><code class="${w}">${x}</code></pre>`
               : x
-              ? `<pre><code class="hljs nohighlight">${x}</code></pre>`
-              : y || z
-              ? `<code class="inline">${y || z}</code>`
-              : m
+                ? `<pre><code class="hljs nohighlight">${x}</code></pre>`
+                : y || z
+                  ? `<code class="inline">${y || z}</code>`
+                  : m
         );
       if (opts.inEmbed)
         txt = txt.replace(
@@ -239,8 +239,8 @@ window.onload = () => {
       return today.toDateString() === date.toDateString()
         ? `Today at ${dateArray}`
         : yesterday.toDateString() === date.toDateString()
-        ? `Yesterday at ${dateArray}`
-        : `${String(date.getMonth() + 1).padStart(2, "0")}/${String(
+          ? `Yesterday at ${dateArray}`
+          : `${String(date.getMonth() + 1).padStart(2, "0")}/${String(
             date.getDate()
           ).padStart(2, "0")}/${date.getFullYear()}`;
     },
@@ -265,28 +265,27 @@ window.onload = () => {
                 <div class="item content"><p class="ttle">Message content</p></div>
                 <div class="edit">
                     <textarea class="editContent" placeholder="Message content" autocomplete="off">${encodeHTML(
-                      object.content || ""
-                    )}</textarea>
+      object.content || ""
+    )}</textarea>
                 </div>
                     <div class="item author rows2"><p class="ttle">Author</p></div>
                     <div class="edit">
                         <div class="linkName">
                             <div class="editIcon">
-                                <span class="imgParent" ${
-                                  object.embed?.author?.icon_url
-                                    ? 'style="content: url(' +
-                                      encodeHTML(object.embed.author.icon_url) +
-                                      ')"'
-                                    : ""
-                                }></span>
+                                <span class="imgParent" ${object.embed?.author?.icon_url
+        ? 'style="content: url(' +
+        encodeHTML(object.embed.author.icon_url) +
+        ')"'
+        : ""
+      }></span>
                                 <input class="editAuthorLink" type="text" value="${encodeHTML(
-                                  object.embed?.author?.icon_url || ""
-                                )}" placeholder="Icon URL" autocomplete="off"/>
+        object.embed?.author?.icon_url || ""
+      )}" placeholder="Icon URL" autocomplete="off"/>
                             </div>
                             <div class="editName">
                                 <input class="editAuthorName" type="text" value="${encodeHTML(
-                                  object.embed?.author?.name || ""
-                                )}" placeholder="Author name" autocomplete="off" />
+        object.embed?.author?.name || ""
+      )}" placeholder="Author name" autocomplete="off" />
                             </div>
                         </div>
                         <form method="post" enctype="multipart/form-data">
@@ -319,14 +318,14 @@ window.onload = () => {
                     <div class="item title inlineField">
                         <p class="ttle">Title</p>
                         <input class="editTitle" type="text" placeholder="Title" autocomplete="off" value="${encodeHTML(
-                          object.embed?.title || ""
-                        )}">
+        object.embed?.title || ""
+      )}">
                     </div>
                     <div class="item description"><p class="ttle">Description</p></div>
                     <div class="edit">
                         <textarea class="editDescription" placeholder="Embed description" autocomplete="off">${encodeHTML(
-                          object.embed?.description || ""
-                        )}</textarea>
+        object.embed?.description || ""
+      )}</textarea>
                     </div>
                     <div class="item fields"><p class="ttle">Fields</p></div>
                     <div class="edit"></div>
@@ -334,17 +333,16 @@ window.onload = () => {
                     <div class="edit">
                         <div class="linkName">
                             <div class="editIcon">
-                                <span class="imgParent" ${
-                                  object.embed?.thumbnail?.url
-                                    ? 'style="content: url(' +
-                                      encodeHTML(object.embed.thumbnail.url) +
-                                      ')"'
-                                    : ""
-                                }></span>
+                                <span class="imgParent" ${object.embed?.thumbnail?.url
+        ? 'style="content: url(' +
+        encodeHTML(object.embed.thumbnail.url) +
+        ')"'
+        : ""
+      }></span>
                                 <div class="txtCol">
                                     <input class="editThumbnailLink" type="text" value="${encodeHTML(
-                                      object.embed?.thumbnail?.url || ""
-                                    )}" placeholder="Thumbnail URL" autocomplete="off" />
+        object.embed?.thumbnail?.url || ""
+      )}" placeholder="Thumbnail URL" autocomplete="off" />
                                     <form method="post" enctype="multipart/form-data">
                                         <input class="browseThumbLink" type="file" name="file" id="file3" accept="image/png,image/gif,image/jpeg,image/webp" autocomplete="off" />
                                         <button type="submit"></button>
@@ -379,17 +377,16 @@ window.onload = () => {
                     <div class="edit">
                         <div class="linkName">
                             <div class="editIcon">
-                                <span class="imgParent" ${
-                                  object.embed?.image?.url
-                                    ? 'style="content: url(' +
-                                      encodeHTML(object.embed.image.url) +
-                                      ')"'
-                                    : ""
-                                }></span>
+                                <span class="imgParent" ${object.embed?.image?.url
+        ? 'style="content: url(' +
+        encodeHTML(object.embed.image.url) +
+        ')"'
+        : ""
+      }></span>
                                 <div class="txtCol">
                                     <input class="editImageLink" type="text" value="${encodeHTML(
-                                      object.embed?.image?.url || ""
-                                    )}" placeholder="Image URL" autocomplete="off" />
+        object.embed?.image?.url || ""
+      )}" placeholder="Image URL" autocomplete="off" />
                                     <form method="post" enctype="multipart/form-data">
                                         <input class="browseImageLink" type="file" name="file" id="file4" accept="image/png,image/gif,image/jpeg,image/webp" autocomplete="off" />
                                         <button type="submit"></button>
@@ -424,21 +421,20 @@ window.onload = () => {
                     <div class="edit">
                         <div class="linkName">
                             <div class="editIcon">
-                                <span class="imgParent" ${
-                                  object.embed?.footer?.icon_url
-                                    ? 'style="content: url(' +
-                                      encodeHTML(object.embed.footer.icon_url) +
-                                      ')"'
-                                    : ""
-                                }></span>
+                                <span class="imgParent" ${object.embed?.footer?.icon_url
+        ? 'style="content: url(' +
+        encodeHTML(object.embed.footer.icon_url) +
+        ')"'
+        : ""
+      }></span>
                                 <input class="editFooterLink" type="text" value="${encodeHTML(
-                                  object.embed?.footer?.icon_url || ""
-                                )}" placeholder="Icon URL" autocomplete="off"/>
+        object.embed?.footer?.icon_url || ""
+      )}" placeholder="Icon URL" autocomplete="off"/>
                             </div>
                             <div class="editName">
                                 <input class="editFooterText" type="text" value="${encodeHTML(
-                                  object.embed?.footer?.text || ""
-                                )}" placeholder="Footer text" autocomplete="off" />
+        object.embed?.footer?.text || ""
+      )}" placeholder="Footer text" autocomplete="off" />
                             </div>
                         </div>
                         <form method="post" enctype="multipart/form-data">
@@ -515,20 +511,19 @@ window.onload = () => {
                         <div class="fieldInner">
                             <div class="designerFieldName">
                                 <input type="text" placeholder="Field name" autocomplete="off" value="${encodeHTML(
-                                  f.name
-                                )}">
+              f.name
+            )}">
                             </div>
                             <div class="designerFieldValue">
                                 <textarea placeholder="Field value" autocomplete="off">${encodeHTML(
-                                  f.value
-                                )}</textarea>
+              f.value
+            )}</textarea>
                             </div>
                         </div>
                         <div class="inlineCheck">
                             <label>
-                                <input type="checkbox" autocomplete="off" ${
-                                  f.inline ? "checked" : ""
-                                }>
+                                <input type="checkbox" autocomplete="off" ${f.inline ? "checked" : ""
+              }>
                                 <span>Inline</span>
                             </label>
                         </div>
@@ -770,8 +765,7 @@ window.onload = () => {
             else json.embed.footer.icon_url = res.link;
             update(json);
             console.info(
-              `Image (${
-                res.link
+              `Image (${res.link
               }) will be deleted in 5 minutes. To delete it now got to ${res.link.replace(
                 "/files",
                 "/del"
@@ -801,14 +795,13 @@ window.onload = () => {
           display(
             embedTitle,
             markup(
-              `${
-                e.url
-                  ? '<a class="anchor" target="_blank" href="' +
-                    encodeHTML(url(e.url)) +
-                    '">' +
-                    encodeHTML(e.title) +
-                    "</a>"
-                  : encodeHTML(e.title)
+              `${e.url
+                ? '<a class="anchor" target="_blank" href="' +
+                encodeHTML(url(e.url)) +
+                '">' +
+                encodeHTML(e.title) +
+                "</a>"
+                : encodeHTML(e.title)
               }`,
               { replaceEmojis: true, inlineBlock: true }
             )
@@ -834,24 +827,22 @@ window.onload = () => {
           display(
             embedAuthor,
             `
-                    ${
-                      e.author.icon_url
-                        ? '<img class="embedAuthorIcon" src="' +
-                          encodeHTML(url(e.author.icon_url)) +
-                          '">'
-                        : ""
-                    }
-                    ${
-                      e.author.url
-                        ? '<a class="embedAuthorNameLink embedLink embedAuthorName" href="' +
-                          encodeHTML(url(e.author.url)) +
-                          '" target="_blank">' +
-                          encodeHTML(e.author.name) +
-                          "</a>"
-                        : '<span class="embedAuthorName">' +
-                          encodeHTML(e.author.name) +
-                          "</span>"
-                    }`,
+                    ${e.author.icon_url
+              ? '<img class="embedAuthorIcon" src="' +
+              encodeHTML(url(e.author.icon_url)) +
+              '">'
+              : ""
+            }
+                    ${e.author.url
+              ? '<a class="embedAuthorNameLink embedLink embedAuthorName" href="' +
+              encodeHTML(url(e.author.url)) +
+              '" target="_blank">' +
+              encodeHTML(e.author.name) +
+              "</a>"
+              : '<span class="embedAuthorName">' +
+              encodeHTML(e.author.name) +
+              "</span>"
+            }`,
             "flex"
           );
         else hide(embedAuthor);
@@ -867,20 +858,18 @@ window.onload = () => {
           display(
             embedFooter,
             `
-                    ${
-                      e.footer.icon_url
-                        ? '<img class="embedFooterIcon" src="' +
-                          encodeHTML(url(e.footer.icon_url)) +
-                          '">'
-                        : ""
-                    }<span class="embedFooterText">
+                    ${e.footer.icon_url
+              ? '<img class="embedFooterIcon" src="' +
+              encodeHTML(url(e.footer.icon_url)) +
+              '">'
+              : ""
+            }<span class="embedFooterText">
                         ${encodeHTML(e.footer.text)}
-                    ${
-                      e.timestamp
-                        ? '<span class="embedFooterSeparator">•</span>' +
-                          encodeHTML(tstamp(e.timestamp))
-                        : ""
-                    }</span></div>`,
+                    ${e.timestamp
+              ? '<span class="embedFooterSeparator">•</span>' +
+              encodeHTML(tstamp(e.timestamp))
+              : ""
+            }</span></div>`,
             "flex"
           );
         else if (e.timestamp)
@@ -904,17 +893,17 @@ window.onload = () => {
                 el.outerHTML = `
                             <div class="embedField" style="grid-column: 1 / 13;">
                                 <div class="embedFieldName">${markup(
-                                  encodeHTML(f.name),
-                                  {
-                                    inEmbed: true,
-                                    replaceEmojis: true,
-                                    inlineBlock: true,
-                                  }
-                                )}</div>
+                  encodeHTML(f.name),
+                  {
+                    inEmbed: true,
+                    replaceEmojis: true,
+                    inlineBlock: true,
+                  }
+                )}</div>
                                 <div class="embedFieldValue">${markup(
-                                  encodeHTML(f.value),
-                                  { inEmbed: true, replaceEmojis: true }
-                                )}</div>
+                  encodeHTML(f.value),
+                  { inEmbed: true, replaceEmojis: true }
+                )}</div>
                             </div>`;
               } else {
                 el = embedFields.insertBefore(
@@ -922,21 +911,20 @@ window.onload = () => {
                   null
                 );
                 el.outerHTML = `
-                            <div class="embedField ${num}" style="grid-column: ${colNum} / ${
-                  colNum + 4
-                };">
+                            <div class="embedField ${num}" style="grid-column: ${colNum} / ${colNum + 4
+                  };">
                                 <div class="embedFieldName">${markup(
-                                  encodeHTML(f.name),
-                                  {
-                                    inEmbed: true,
-                                    replaceEmojis: true,
-                                    inlineBlock: true,
-                                  }
-                                )}</div>
+                    encodeHTML(f.name),
+                    {
+                      inEmbed: true,
+                      replaceEmojis: true,
+                      inlineBlock: true,
+                    }
+                  )}</div>
                                 <div class="embedFieldValue">${markup(
-                                  encodeHTML(f.value),
-                                  { inEmbed: true, replaceEmojis: true }
-                                )}</div>
+                    encodeHTML(f.value),
+                    { inEmbed: true, replaceEmojis: true }
+                  )}</div>
                             </div>`;
                 colNum = colNum === 9 ? 1 : colNum + 4;
                 num++;
@@ -1109,7 +1097,7 @@ window.onload = () => {
       }),
       contentType: "application/json",
     })
-      .done(function (response) {})
+      .done(function (response) { })
       .fail(function (xhr, status, message) {
         error(`${message}`, 4000);
       });

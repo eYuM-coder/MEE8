@@ -1,9 +1,6 @@
 <nav class="nav" role="navigation">
-  <span class="logo"
-    ><span class="name"
-      ><b class="button-menu"
-        ><i style="color: white" class="fa fa-bars"></i></b></span
-  ></span>
+  <span class="logo"><span class="name"><b class="button-menu"><i style="color: white"
+          class="fa fa-bars"></i></b></span></span>
   <link rel="icon" type="image/png" href="<%=domain%>/logo.png" />
   <div id="mobile">
     <nav class="header__nav nav-bar">
@@ -31,127 +28,78 @@
   </div>
   <ul class="menu">
     <% if (user) { %>
-    <li>
-      <a href="<%=domain%>/server" target="_blank" rel="noopener">Support</a>
-    </li>
-    <li>
-      <a href="<%=domain%>/commands" target="_blank" rel="noopener">Commands</a>
-    </li>
-    <li>
-      <a href="<%=domain%>/manage" target="_blank" rel="noopener">Manage</a>
-    </li>
-    <% if (user.avatar) { avatar = "https://cdn.discordapp.com/avatars/" +
-    user.id + "/" + user.avatar + ".png?size=128"; } else { avatar =
-    "https://cdn.glitch.com/82fe990a-7942-42e3-9790-39807ccdb9f6%2Ficon-404.png?v=1602412158188";
-    } %>
-    <a
-      class="avatar-container dropdownHead"
-      id="dropdownHead"
-      onclick="dropdown(this)"
-      ><img class="user-avatar" src="<%= avatar %>" /><span class="user-name"
-        ><%= user.username %></span
-      ></a
-    >
-    <% } else { %>
-    <li>
-      <a href="<%=domain%>/support" target="_blank" rel="noopener">Support</a>
-    </li>
-    <li>
-      <a href="<%=domain%>/commands" target="_blank" rel="noopener">Commands</a>
-    </li>
-    <li>
-      <a href="<%=domain%>/manage" target="_blank" rel="noopener">Manage</a>
-    </li>
-    <li><a href="<%=domain%>/login">Login</a></li>
-    <% } %>
+      <li>
+        <a href="<%=domain%>/server" target="_blank" rel="noopener">Support</a>
+      </li>
+      <li>
+        <a href="<%=domain%>/commands" target="_blank" rel="noopener">Commands</a>
+      </li>
+      <li>
+        <a href="<%=domain%>/manage" target="_blank" rel="noopener">Manage</a>
+      </li>
+      <% if (user.avatar) { avatar="https://cdn.discordapp.com/avatars/" + user.id + "/" + user.avatar + ".png?size=128"
+        ; } else { avatar="https://cdn.glitch.com/82fe990a-7942-42e3-9790-39807ccdb9f6%2Ficon-404.png?v=1602412158188" ;
+        } %>
+        <a class="avatar-container dropdownHead" id="dropdownHead" onclick="dropdown(this)"><img class="user-avatar"
+            src="<%= avatar %>" /><span class="user-name">
+            <%= user.username %>
+          </span></a>
+        <% } else { %>
+          <li>
+            <a href="<%=domain%>/support" target="_blank" rel="noopener">Support</a>
+          </li>
+          <li>
+            <a href="<%=domain%>/commands" target="_blank" rel="noopener">Commands</a>
+          </li>
+          <li>
+            <a href="<%=domain%>/manage" target="_blank" rel="noopener">Manage</a>
+          </li>
+          <li><a href="<%=domain%>/login">Login</a></li>
+          <% } %>
   </ul>
 
   <ul class="dropdown" id="dropdown">
-    <div class="cross-container"><div class="cross"></div></div>
-    <% if (path === "/dashboard") { %>
-    <span
-      ><a class="dropdown-li" href="<%=domain%>/">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          height="24"
-          viewBox="0 0 24 24"
-          width="24"
-        >
-          <path d="M0 0h24v24H0V0z" fill="none" />
-          <path
-            d="M12 5.69l5 4.5V18h-2v-6H9v6H7v-7.81l5-4.5M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3z"
-          />
-        </svg>
-        Home</a
-      ></span
-    >
-    <% } else if (path !== "/") { %>
-    <span
-      ><a class="dropdown-li" href="<%=domain%>/"
-        ><svg
-          xmlns="http://www.w3.org/2000/svg"
-          height="24"
-          viewBox="0 0 24 24"
-          width="24"
-        >
-          <path d="M0 0h24v24H0V0z" fill="none" />
-          <path
-            d="M12 5.69l5 4.5V18h-2v-6H9v6H7v-7.81l5-4.5M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3z"
-          />
-        </svg>
-        Home</a
-      ></span
-    >
-    <span
-      ><a class="dropdown-li" href="<%=domain%>/dashboard"
-        ><svg
-          xmlns="http://www.w3.org/2000/svg"
-          height="24"
-          viewBox="0 0 24 24"
-          width="24"
-        >
-          <path d="M0 0h24v24H0z" fill="none" />
-          <path
-            d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"
-          />
-        </svg>
-        My Servers</a
-      ></span
-    >
-    <% } else { %>
-    <span
-      ><a class="dropdown-li" href="<%=domain%>/dashboard"
-        ><svg
-          xmlns="http://www.w3.org/2000/svg"
-          height="24"
-          viewBox="0 0 24 24"
-          width="24"
-        >
-          <path d="M0 0h24v24H0z" fill="none" />
-          <path
-            d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"
-          />
-        </svg>
-        My Servers</a
-      ></span
-    >
-    <% } %>
+    <div class="cross-container">
+      <div class="cross"></div>
+    </div>
+    <% if (path==="/dashboard" ) { %>
+      <span><a class="dropdown-li" href="<%=domain%>/">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+            <path d="M0 0h24v24H0V0z" fill="none" />
+            <path d="M12 5.69l5 4.5V18h-2v-6H9v6H7v-7.81l5-4.5M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3z" />
+          </svg>
+          Home</a></span>
+      <% } else if (path !=="/" ) { %>
+        <span><a class="dropdown-li" href="<%=domain%>/"><svg xmlns="http://www.w3.org/2000/svg" height="24"
+              viewBox="0 0 24 24" width="24">
+              <path d="M0 0h24v24H0V0z" fill="none" />
+              <path d="M12 5.69l5 4.5V18h-2v-6H9v6H7v-7.81l5-4.5M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3z" />
+            </svg>
+            Home</a></span>
+        <span><a class="dropdown-li" href="<%=domain%>/dashboard"><svg xmlns="http://www.w3.org/2000/svg" height="24"
+              viewBox="0 0 24 24" width="24">
+              <path d="M0 0h24v24H0z" fill="none" />
+              <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" />
+            </svg>
+            My Servers</a></span>
+        <% } else { %>
+          <span><a class="dropdown-li" href="<%=domain%>/dashboard"><svg xmlns="http://www.w3.org/2000/svg" height="24"
+                viewBox="0 0 24 24" width="24">
+                <path d="M0 0h24v24H0z" fill="none" />
+                <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" />
+              </svg>
+              My Servers</a></span>
+          <% } %>
 
-    <span
-      ><a class="dropdown-li logout" href="<%=domain%>/logout" class="logout"
-        ><svg width="20" height="20" viewBox="0 0 98.28 68.04">
-          <path fill="none" d="M82.78 0h15.5v68.04h-15.5z" />
-          <path
-            d="M0 0h.51v68.04H0zM56 47.11V60.1H8.39V7.94H56v12.99h7.88V0H.51v68.04h63.37V47.11H56z"
-          />
-          <path fill="none" d="M0 0h22.97v68.04H0z" />
-          <path
-            d="M41.87 38.04h40.85l-9.93 9.9 5.63 5.67 19.35-19.49-19.35-19.48-5.63 5.57L82.51 30H41.87v8.04z"
-          />
-        </svg>
-        Logout</a
-      ></span
-    >
+            <span><a class="dropdown-li logout" href="<%=domain%>/logout" class="logout"><svg width="20" height="20"
+                  viewBox="0 0 98.28 68.04">
+                  <path fill="none" d="M82.78 0h15.5v68.04h-15.5z" />
+                  <path d="M0 0h.51v68.04H0zM56 47.11V60.1H8.39V7.94H56v12.99h7.88V0H.51v68.04h63.37V47.11H56z" />
+                  <path fill="none" d="M0 0h22.97v68.04H0z" />
+                  <path
+                    d="M41.87 38.04h40.85l-9.93 9.9 5.63 5.67 19.35-19.49-19.35-19.48-5.63 5.57L82.51 30H41.87v8.04z" />
+                </svg>
+                Logout</a></span>
   </ul>
 </nav>
 <script>
@@ -166,14 +114,17 @@
     .nav li {
       float: left;
     }
+
     .nav li a {
       padding: 20px 30px;
     }
+
     .nav .menu {
       clear: none;
       float: right;
       max-height: none;
     }
+
     .nav .menu-icon {
       display: none;
     }

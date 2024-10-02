@@ -13,11 +13,8 @@ module.exports = {
         .setDescription("Amount of messages to clear")
         .setRequired(true),
     )
-    .addUserOption((option) =>
-      option.setName("member").setDescription("The member"),
-    )
-    .addChannelOption((option) =>
-      option.setName("channel").setDescription("The channel"),
+    .addStringOption((option) =>
+      option.setName("reason").setDescription("The reason for the purge"),
     ),
   async execute(interaction) {
     try {
@@ -28,10 +25,9 @@ module.exports = {
       const success = client.emoji.success;
 
       const amount = interaction.options.getString("amount");
-      const member = interaction.options.getMember("member");
       const channel =
-        interaction.options.getChannel("channel") ||
         interaction.guild.channels.cache.get(interaction.channel.id);
+      const reason = interaction.options.getString("reason");
       interaction.deferReply({ ephemeral: true });
 
       if (amount < 0 || amount > 100) {
@@ -83,27 +79,59 @@ module.exports = {
           const embed = new MessageEmbed()
 
             .setDescription(
-              `${success} | Successfully deleted **${messages.size}** ${messageDisplay}`,
+              `${success} | ***Successfully deleted ${messages.size} ${messageDisplay}* || ${reason}**`,
             )
 
             .setColor(interaction.client.color.green);
 
-          if (member) {
-            embed
-              .spliceFields(1, 1, {
-                name: "Found Messages",
-                value: `\`${messages.size}\``,
-                inline: true,
-              })
-              .spliceFields(1, 0, {
-                name: "Member",
-                value: `${member}`,
-                inline: true,
-              });
-          }
-
           interaction.editReply({ embeds: [embed], ephemeral: true });
         });
+      }
+
+      if (logging) {
+        const role = interaction.guild.roles.cache.get(
+          logging.moderation.ignore_role
+        );
+        const channel = interaction.guild.channels.cache.get(
+          logging.moderation.channel
+        );
+
+        if (logging.moderation.toggle == "true") {
+          if (channel) {
+            if (interaction.channel.id !== logging.moderation.ignore_channel) {
+              if (
+                !role ||
+                (role &&
+                  !interaction.member.roles.cache.find(
+                    (r) => r.name.toLowerCase() === role.name
+                  ))
+              ) {
+                if (logging.moderation.purge == "true") {
+                  let color = logging.moderation.color;
+                  if (color == "#000000") color = interaction.client.color.red;
+
+                  let logcase = logging.moderation.caseN;
+                  if (!logcase) logcase = `1`;
+
+                  const logEmbed = new MessageEmbed()
+                    .setAuthor(
+                      `Action: \`Purge\` | Case #${logcase}`,
+                      message.author.displayAvatarURL({ format: "png" })
+                    )
+                    .addField("Moderator", `${interaction.user}`, true)
+                    .setTimestamp()
+                    .setFooter({ text: `Responsible ID: ${interaction.user.id}` })
+                    .setColor(color);
+
+                  channel.send({ embeds: [logEmbed] }).catch(() => {});
+
+                  logging.moderation.caseN = logcase + 1;
+                  await logging.save().catch(() => {});
+                }
+              }
+            }
+          }
+        }
       }
     } catch (err) {
       console.error(err);

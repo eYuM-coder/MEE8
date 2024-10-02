@@ -30,38 +30,6 @@ module.exports = class extends Command {
       const fail = client.emoji.fail;
       const success = client.emoji.success;
 
-      let channel =
-        getChannelFromMention(message, args[0]) ||
-        message.guild.channels.cache.get(args[0]);
-      if (channel) {
-        args.shift();
-      } else channel = message.channel;
-
-      if (channel.type != "GUILD_TEXT" || !channel.viewable)
-        return message.channel.sendCustom({
-          embeds: [
-            new MessageEmbed()
-              .setAuthor(
-                `${message.author.tag}`,
-                message.author.displayAvatarURL({ dynamic: true })
-              )
-              .setTitle(`${fail} Clear Error`)
-              .setDescription(`Please make sure I can view that channel`)
-              .setTimestamp()
-              .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-              .setColor(message.guild.me.displayHexColor),
-          ],
-        });
-
-      const member =
-        message.mentions.members.first() ||
-        getMemberFromMention(message, args[0]) ||
-        message.guild.members.cache.get(args[0]);
-
-      if (member) {
-        args.shift();
-      }
-
       const amount = parseInt(args[0]);
       if (isNaN(amount) === true || !amount || amount < 0 || amount > 100)
         return message.channel.sendCustom({
@@ -143,20 +111,6 @@ module.exports = class extends Command {
 
             .setColor(message.guild.me.displayHexColor);
 
-          if (member) {
-            embed
-              .spliceFields(1, 1, {
-                name: "Found Messages",
-                value: `\`${messages.size}\``,
-                inline: true,
-              })
-              .spliceFields(1, 0, {
-                name: "Member",
-                value: member,
-                inline: true,
-              });
-          }
-
           message.channel
             .sendCustom({ embeds: [embed] })
             .then(async (s) => {
@@ -169,15 +123,6 @@ module.exports = class extends Command {
             .catch(() => {});
         });
       }
-
-      const fields = {
-        Channel: channel,
-      };
-
-      if (member) {
-        fields["Member"] = member;
-        fields["Messages"] = `\`${messages.size}\``;
-      } else fields["Message Count"] = `\`${amount}\``;
 
       if (logging) {
         if (logging.moderation.delete_after_executed === "true") {
@@ -217,10 +162,6 @@ module.exports = class extends Command {
                     .setTimestamp()
                     .setFooter({ text: `Responsible ID: ${message.author.id}` })
                     .setColor(color);
-
-                  for (const field in fields) {
-                    logEmbed.addField(field, fields[field], true);
-                  }
 
                   channel.send({ embeds: [logEmbed] }).catch(() => {});
 

@@ -126,6 +126,56 @@ module.exports = {
           .setTimestamp();
         return interaction.reply({ embeds: [failembed] });
       }
+
+      if (logging) {
+        const role = interaction.guild.roles.cache.get(
+          logging.moderation.ignore_role
+        );
+        const channel = interaction.guild.channels.cache.get(
+          logging.moderation.channel
+        );
+  
+        if (logging.moderation.toggle == "true") {
+          if (channel) {
+            if (interaction.channel.id !== logging.moderation.ignore_channel) {
+              if (
+                !role ||
+                (role &&
+                  !interaction.member.roles.cache.find(
+                    (r) => r.name.toLowerCase() === role.name
+                  ))
+              ) {
+                if (logging.moderation.ban == "true") {
+                  let color = logging.moderation.color;
+                  if (color == "#000000") color = interaction.client.color.red;
+  
+                  let logcase = logging.moderation.caseN;
+                  if (!logcase) logcase = `1`;
+  
+                  const logEmbed = new MessageEmbed()
+                    .setAuthor(
+                      `Action: \`Ban\` | ${member.user.tag} | Case #${logcase}`,
+                      member.user.displayAvatarURL({ format: "png" })
+                    )
+                    .addField("User", `${member}`, true)
+                    .addField("Moderator", `${interaction.user}`, true)
+                    .addField("Reason", `${reason}`, true)
+                    .setFooter({ text: `ID: ${member.id}` })
+                    .setTimestamp()
+                    .setColor(color);
+  
+                  channel.send({ embeds: [logEmbed] }).catch((e) => {
+                    console.log(e);
+                  });
+  
+                  logging.moderation.caseN = logcase + 1;
+                  await logging.save().catch(() => {});
+                }
+              }
+            }
+          }
+        }
+      }
     } catch (err) {
       console.error(err);
       interaction.reply({

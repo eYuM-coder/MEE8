@@ -173,17 +173,17 @@ module.exports = {
     
                         let reason = interaction.options.getString("reason");
     
-                        if (!reason) reason = "No reason Provided";
+                        if (!reason) reason = "No reason provided";
                         if (reason.length > 1024)
                           reason = reason.slice(0, 1021) + "...";
     
                         const logEmbed = new MessageEmbed()
                           .setAuthor(
-                            `Action: \`set Nickname\` | ${member.user.tag} | Case #${logcase}`,
+                            `Action: \`Set Nickname\` | ${member.user.tag} | Case #${logcase}`,
                             member.user.displayAvatarURL({ format: "png" })
                           )
                           .addField("User", `${member}`, true)
-                          .addField("Moderator", `${message.member}`, true)
+                          .addField("Moderator", `${interaction.user}`, true)
                           .addField("Reason", `${reason}`, true)
                           .setFooter({ text: `ID: ${member.id}` })
                           .setTimestamp()

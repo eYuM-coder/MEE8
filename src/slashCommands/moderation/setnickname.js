@@ -14,7 +14,8 @@ module.exports = {
     )
     .addStringOption((option) =>
       option.setName("nickname").setDescription("The nickname"),
-    ),
+    )
+    .addStringOption((option) => option.setName("reason").setDescription("The reason for the change")),
   async execute(interaction) {
     try {
       const client = interaction.client;
@@ -24,6 +25,7 @@ module.exports = {
 
       const member = interaction.options.getMember("member");
       const nickname = interaction.options.getString("nickname");
+      const reason = interaction.options.getString("reason");
 
       if (!interaction.member.permissions.has("MANAGE_NICKNAMES"))
         return interaction.reply({
@@ -124,9 +126,9 @@ module.exports = {
       }
 
       let nick = nickname;
-      if (nickname) {
+      if (nickname && !(nickname.length > 32)) {
         try {
-          const oldNickname = member.nickname || "None";
+          const oldNickname = member.nickname || member.username;
           await member.setNickname(nick);
           const embed = new MessageEmbed()
             .setDescription(
@@ -143,8 +145,62 @@ module.exports = {
               }
             })
             .catch(() => {});
+
+            if (logging) {
+              const role = interaction.guild.roles.cache.get(
+                logging.moderation.ignore_role
+              );
+              const channel = interaction.guild.channels.cache.get(
+                logging.moderation.channel
+              );
+    
+              if (logging.moderation.toggle == "true") {
+                if (channel) {
+                  if (interaction.channel.id !== logging.moderation.ignore_channel) {
+                    if (
+                      !role ||
+                      (role &&
+                        !interaction.member.roles.cache.find(
+                          (r) => r.name.toLowerCase() === role.name
+                        ))
+                    ) {
+                      if (logging.moderation.nicknames == "true") {
+                        let color = logging.moderation.color;
+                        if (color == "#000000") color = interaction.client.color.yellow;
+    
+                        let logcase = logging.moderation.caseN;
+                        if (!logcase) logcase = `1`;
+    
+                        let reason = interaction.options.getString("reason");
+    
+                        if (!reason) reason = "No reason Provided";
+                        if (reason.length > 1024)
+                          reason = reason.slice(0, 1021) + "...";
+    
+                        const logEmbed = new MessageEmbed()
+                          .setAuthor(
+                            `Action: \`set Nickname\` | ${member.user.tag} | Case #${logcase}`,
+                            member.user.displayAvatarURL({ format: "png" })
+                          )
+                          .addField("User", `${member}`, true)
+                          .addField("Moderator", `${message.member}`, true)
+                          .addField("Reason", `${reason}`, true)
+                          .setFooter({ text: `ID: ${member.id}` })
+                          .setTimestamp()
+                          .setColor(color);
+    
+                        channel.send({ embeds: [logEmbed] }).catch(() => {});
+    
+                        logging.moderation.caseN = logcase + 1;
+                        await logging.save().catch(() => {});
+                      }
+                    }
+                  }
+                }
+              }
+            }
         } catch (err) {
-          interaction.client.logger.error(err.stack);
+          console.error(err.stack);
           interaction.reply({
             embeds: [
               new MessageEmbed()

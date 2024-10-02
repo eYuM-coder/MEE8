@@ -84,7 +84,7 @@ module.exports = class extends Command {
 
     let nickname = args[1];
     if (nickname.startsWith('"')) {
-      nickname = message.content.slice(message.content.indexOf(args[1]) + 1);
+      nickname = args.slice(1).join(" ");
       if (!nickname.includes('"'))
         return message.channel.sendCustom({
           embeds: [
@@ -239,7 +239,7 @@ module.exports = class extends Command {
           }
         }
       } catch (err) {
-        message.client.logger.error(err.stack);
+        console.error(err.stack);
         message.channel.sendCustom({
           embeds: [
             new MessageEmbed()

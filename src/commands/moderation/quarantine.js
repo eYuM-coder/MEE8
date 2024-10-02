@@ -3,13 +3,14 @@ const { MessageEmbed } = require("discord.js");
 module.exports = class RemoveRolesCommand extends Command {
   constructor(...args) {
     super(...args, {
-      name: "Quarantine",
+      name: "quarantine",
       aliases: ["clearroles", "clearrole"],
       category: "Moderation",
       description:
         "Remove all roles from a user and assign the Quarantine role.",
       cooldown: 5,
       botPermission: ["MANAGE_ROLES"],
+      userPermission: ["MANAGE_ROLES"],
       usage: "<user>",
     });
   }

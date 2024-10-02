@@ -76,6 +76,63 @@ module.exports = {
           }
         })
         .catch(() => {});
+
+        if (logging) {
+          if (logging.moderation.delete_after_executed === "true") {
+            interaction.delete().catch(() => {});
+          }
+    
+          const role = interaction.guild.roles.cache.get(
+            logging.moderation.ignore_role,
+          );
+          const channel = interaction.guild.channels.cache.get(
+            logging.moderation.channel,
+          );
+    
+          if (logging.moderation.toggle == "true") {
+            if (channel) {
+              if (interaction.channel.id !== logging.moderation.ignore_channel) {
+                if (
+                  !role ||
+                  (role &&
+                    !interaction.member.roles.cache.find(
+                      (r) => r.name.toLowerCase() === role.name,
+                    ))
+                ) {
+                  if (logging.moderation.lock == "true") {
+                    let color = logging.moderation.color;
+                    if (color == "#000000") color = interaction.client.color.red;
+    
+                    let logcase = logging.moderation.caseN;
+                    if (!logcase) logcase = `1`;
+    
+                    let reason = args.slice(1).join(" ");
+                    if (!reason) reason = `${language.noReasonProvided}`;
+                    if (reason.length > 1024)
+                      reason = reason.slice(0, 1021) + "...";
+    
+                    const logEmbed = new MessageEmbed()
+                      .setAuthor(
+                        `Action: \`Lock\` | ${interaction.user.tag} | Case #${logcase}`,
+                        interaction.user.displayAvatarURL({ format: "png" }),
+                      )
+                      .addField("Channel", `${channel}`, true)
+                      .addField("Moderator", `${interaction.user}`, true)
+                      .addField("Reason", `${reason}`, true)
+                      .setFooter({ text: `ID: ${interaction.user.id}` })
+                      .setTimestamp()
+                      .setColor(color);
+    
+                    channel.send({ embeds: [logEmbed] }).catch(() => {});
+    
+                    logging.moderation.caseN = logcase + 1;
+                    await logging.save().catch(() => {});
+                  }
+                }
+              }
+            }
+          }
+        }
     } catch (err) {
       console.error(err);
       interaction.reply({

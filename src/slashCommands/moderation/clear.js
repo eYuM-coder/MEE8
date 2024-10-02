@@ -7,7 +7,7 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName("clear")
     .setDescription("Purges a channels messages")
-    .addStringOption((option) =>
+    .addIntegerOption((option) =>
       option
         .setName("amount")
         .setDescription("Amount of messages to clear")
@@ -24,7 +24,7 @@ module.exports = {
       const fail = client.emoji.fail;
       const success = client.emoji.success;
 
-      const amount = interaction.options.getString("amount");
+      const amount = interaction.options.getInteger("amount");
       const channel =
         interaction.guild.channels.cache.get(interaction.channel.id);
       const reason = interaction.options.getString("reason");

@@ -72,11 +72,7 @@ module.exports = class extends Command {
       await message.delete();
 
       let messages;
-      if (member) {
-        messages = (await channel.messages.fetch({ limit: amount })).filter(
-          (m) => m.member.id === member.id
-        );
-      } else messages = amount;
+      messages = amount;
 
       if (messages.size === 0) {
         message.channel

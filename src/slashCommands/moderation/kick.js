@@ -22,9 +22,10 @@ module.exports = {
       const logging = await Logging.findOne({
         guildId: interaction.guild.id,
       });
-      if (!interaction.member.permissions.has("MODERATE_MEMBERS"))
+      if (!interaction.member.permissions.has("KICK_MEMBERS"))
         return interaction.followUp({
           content: "You do not have permission to use this command.",
+          ephemeral: true,
         });
 
       const member = interaction.options.getMember("member");

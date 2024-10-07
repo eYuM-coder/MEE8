@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageEmbed } = require("discord.js");
 const Logging = require("../../database/schemas/logging.js");
+const logger = require("../../utils/logger.js");
 let messageDisplay = "messages";
 
 module.exports = {
@@ -25,18 +26,18 @@ module.exports = {
       const success = client.emoji.success;
 
       const amount = interaction.options.getInteger("amount");
-      const channel = interaction.channel.id;
+      const channel = interaction.channel;
       const reason = interaction.options.getString("reason");
       interaction.deferReply({ ephemeral: true });
 
-      if (amount < 0 || amount > 100) {
+      if (amount < 0 || amount > 200) {
         let invalidamount = new MessageEmbed()
           .setAuthor({
             name: `${interaction.user.tag}`,
             iconURL: interaction.member.displayAvatarURL({ dynamic: true }),
           })
           .setTitle(`${fail} | Purge Error`)
-          .setDescription(`Please Provide a message count between 1 - 100!`)
+          .setDescription(`Please Provide a message count between 1 and 200!`)
           .setTimestamp()
           .setFooter({
             text: `${process.env.AUTH_DOMAIN}`,
@@ -49,13 +50,23 @@ module.exports = {
       }
 
       let messages;
-      if (member) {
-        messages = (await channel.messages.fetch({ limit: amount })).filter(
-          (m) => m.member.id === member.id,
-        );
-      } else messages = amount;
+      messages = amount;
 
-      if (messages.size === 0) {
+      let totalDeleted = 0;
+
+      while (totalDeleted < amount) {
+        const messagesToDelete = Math.min(100, deleteCount - totalDeleted);
+        try {
+          const deletedMessages = await channel.bulkDelete(messagesToDelete, true);
+          totalDeleted += deletedMessages.size;
+          logger.info(`Deleted ${deletedMessages.size} ${deletedMessages.size === 1 ? "message" : "messages"}.`, { label: "Purge" });
+        } catch (error) {
+          logger.info(`Error deleting messages: ${error}`, { label: "ERROR" });
+          return interaction.channel.send("There was an error trying to delete messages in this channel!");
+        }
+      }
+
+      if (totalDeleted === 0) {
         interaction.editReply({
           embeds: [
             new MessageEmbed()
@@ -69,16 +80,11 @@ module.exports = {
           ephemeral: true,
         });
       } else {
-        if (messages == 1) {
-          messageDisplay = "message";
-        } else {
-          messageDisplay = "messages";
-        }
         channel.bulkDelete(messages, true).then((messages) => {
           const embed = new MessageEmbed()
 
             .setDescription(
-              `${success} | ***Successfully deleted ${messages.size} ${messageDisplay}* || ${reason}**`,
+              `${success} | ***Successfully deleted ${totalDeleted} ${totalDeleted === 1 ? "message" : "messages"}* || ${reason}**`,
             )
 
             .setColor(interaction.client.color.green);

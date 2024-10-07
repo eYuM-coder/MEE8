@@ -6,6 +6,7 @@ const discord = require("discord.js");
 const randoStrings = require("../../packages/randostrings.js");
 const random = new randoStrings();
 const Logging = require("../../database/schemas/logging.js");
+const ms = require("ms");
 module.exports = class extends Command {
   constructor(...args) {
     super(...args, {
@@ -14,7 +15,7 @@ module.exports = class extends Command {
       description:
         "Gives a warning to the specified user from your Discord server.",
       category: "Moderation",
-      usage: "<user> [reason]",
+      usage: "<user> [reason] [time]",
       examples: ["warn @Peter Please do not swear."],
       guildOnly: true,
       userPermission: ["KICK_MEMBERS"],
@@ -61,12 +62,17 @@ module.exports = class extends Command {
       });
     }
 
-    const reason = args.slice(1).join(" ") || "Not Specified";
+    const time = ms(args[1]) / 1000 || ms("1d") / 1000;
+
+    const reason = args.slice(2).join(" ") || "Not Specified";
 
     let warnID = random.password({
-      length: 8,
-      string: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
+      length: 16,
+      string: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890",
     });
+
+    const expirationTime = new Date();
+    expirationTime.setSeconds(expirationTime.getSeconds() + time);
 
     let warnDoc = await warnModel
       .findOne({
@@ -84,6 +90,7 @@ module.exports = class extends Command {
         warningID: [],
         moderator: [],
         date: [],
+        expiresAt: [],
       });
 
       await warnDoc.save().catch((err) => console.log(err));
@@ -98,6 +105,7 @@ module.exports = class extends Command {
     warnDoc.warningID.push(warnID);
     warnDoc.moderator.push(message.member.id);
     warnDoc.date.push(Date.now());
+    warnDoc.expiresAt.push(expirationTime);
 
     await warnDoc.save().catch((err) => console.log(err));
     let dmEmbed;
@@ -107,11 +115,11 @@ module.exports = class extends Command {
       logging.moderation.warn_action !== "1"
     ) {
       if (logging.moderation.warn_action === "2") {
-        dmEmbed = `${message.client.emoji.fail} You've been warned in **${message.guild.name}**`;
+        dmEmbed = `${message.client.emoji.fail} | You were warned in **${message.guild.name}**.\n\n**Expires** <t:${expirationTime}:F>`;
       } else if (logging.moderation.warn_action === "3") {
-        dmEmbed = `${message.client.emoji.fail} You've been warned in **${message.guild.name}**\n\n__**Reason:**__ ${reason}`;
+        dmEmbed = `${message.client.emoji.fail} | You were warned in **${message.guild.name}** for ${reason}.\n\n**Expires** <t:${expirationTime}:F>`;
       } else if (logging.moderation.warn_action === "4") {
-        dmEmbed = `${message.client.emoji.fail} You've been warned in **${message.guild.name}**\n\n__**Moderator:**__ ${message.author} **(${message.author.tag})**\n__**Reason:**__ ${reason}`;
+        dmEmbed = `${message.client.emoji.fail} | You were warned in **${message.guild.name}** by **${message.author} (${message.author.tag})** for ${reason}.\n\n**Expires** <t:${expirationTime}:F>`;
       }
 
       mentionedMember

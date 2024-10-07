@@ -11,6 +11,7 @@ const Pogy = new PogyClient(config);
 const color = require("./src/data/colors");
 const jointocreate = require("./src/structures/jointocreate");
 const emoji = require("./src/data/emoji");
+const warnModel = require("./src/database/models/moderation.js");
 const userData = require("./src/data/users.json");
 const sharder = require("./shards.js");
 const deploy = require("./src/deployCommands.js");
@@ -23,6 +24,39 @@ Pogy.color = color;
 Pogy.emoji = emoji;
 // reqs
 require("dotenv").config();
+
+async function checkExpiredWarnings() {
+  const now = new Date();
+
+  try {
+    const userWarnings = await warnModel.find({ expiresAt: { $exists: true, $not: { $size: 0 } } });
+
+    userWarnings.forEach(async (userWarning) => {
+      let modified = false;
+
+      for (let i = userWarning.expiresAt.length - 1; i >= 0; i--) {
+        if (userWarning.expiresAt[i] <= now) {
+          userWarning.modType.splice(i, 1);
+          userWarning.warnings.splice(i, 1);
+          userWarning.warningID.splice(i, 1);
+          userWarning.moderator.splice(i, 1);
+          userWarning.date.splice(i, 1);
+          userWarning.expiresAt.splice(i, 1);
+          modified = true;
+        }
+      }
+
+      if (modified) {
+        await userWarning.save();
+        logger.info(`Removed expired warnings for user ${userWarning.memberID} in guild ${userWarning.guildID}`, { label: "Database" });
+      }
+    })
+  } catch (error) {
+    logger.info('Error removing expired warnings: ' + error, { label: "ERROR" });
+  }
+}
+
+setInterval(checkExpiredWarnings, 60000);
 
 async function getGuildData(guildId) {
   let guild = await Guild.findOne({ guildId: guildId });

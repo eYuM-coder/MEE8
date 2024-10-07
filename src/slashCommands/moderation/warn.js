@@ -4,6 +4,7 @@ const Guild = require("../../database/schemas/Guild.js");
 const warnModel = require("../../database/models/moderation.js");
 const discord = require("discord.js");
 const randoStrings = require("../../packages/randostrings.js");
+const ms = require("ms");
 /**
  * Instantiates a new randoStrings object to generate random strings.
  */
@@ -22,6 +23,9 @@ module.exports = {
     )
     .addStringOption((option) =>
       option.setName("reason").setDescription("The reason for the warn"),
+    )
+    .addStringOption((option) =>
+      option.setName("time").setDescription("The time the warning expires at")
     ),
   async execute(interaction) {
     try {
@@ -37,6 +41,7 @@ module.exports = {
       const mentionedMember = interaction.options.getMember("member");
       const reason =
         interaction.options.getString("reason") || "No Reason Provided";
+      const time = ms(interaction.options.getString("time")) / 1000 || ms("1d") / 1000;
 
       if (!mentionedMember) {
         let validmention = new MessageEmbed()
@@ -80,6 +85,9 @@ module.exports = {
           "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890",
       });
 
+      const expirationTime = new Date();
+      expirationTime.setSeconds(expirationTime.getSeconds() + time);
+
       let warnDoc = await warnModel
         .findOne({
           guildID: interaction.guild.id,
@@ -96,6 +104,7 @@ module.exports = {
           warningsID: [],
           moderator: [],
           date: [],
+          expiresAt: [],
         });
 
         await warnDoc.save().catch((err) => console.log(err));
@@ -110,6 +119,7 @@ module.exports = {
       warnDoc.warningID.push(warnID);
       warnDoc.moderator.push(interaction.user.id);
       warnDoc.date.push(Date.now());
+      warnDoc.expiresAt.push(expirationTime);
 
       await warnDoc.save().catch((err) => console.log(err));
       let dmEmbed;
@@ -119,11 +129,11 @@ module.exports = {
         logging.moderation.waran_action !== "1"
       ) {
         if (logging.moderation.warn_action === "2") {
-          dmEmbed = `${interaction.client.emoji.fail} | You've been warned in **${interaction.guild.name}**`;
+          dmEmbed = `${interaction.client.emoji.fail} | You were warned in **${interaction.guild.name}**.\n\n**Expires** <t:${expirationTime}:F>`;
         } else if (logging.moderation.warn_action === "3") {
-          dmEmbed = `${interaction.client.emoji.fail} | You've been warned in **${interaction.guild.name}**\n\n__**Reason:**__ ${reason}`;
+          dmEmbed = `${interaction.client.emoji.fail} | You were warned in **${interaction.guild.name}** for **${reason}**.\n\n**Expires** <t:${expirationTime}:F>`;
         } else if (logging.moderation.warn_action === "4") {
-          dmEmbed = `${interaction.client.emoji.fail} | You've been warned in **${interaction.guild.name}**.\n\n__**Moderator:**__ ${interaction.author} **(${interaction.author.tag})**\n__**Reason:**__ ${reason}`;
+          dmEmbed = `${interaction.client.emoji.fail} | You were warned in **${interaction.guild.name}** by **${interaction.member} (${interaction.member.tag})** for **${reason}**.\n\n**Expires** <t:${expirationTime}:F>`;
         }
 
         mentionedMember

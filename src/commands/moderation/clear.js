@@ -6,10 +6,10 @@ module.exports = class extends Command {
   constructor(...args) {
     super(...args, {
       name: "clear",
-      aliases: ["clear", "c", "purge"],
+      aliases: ["cls", "purge"],
       description: "  Delete the specified amount of messages",
       category: "Moderation",
-      usage: "purge [channel] [user] <message-count> [reason]",
+      usage: "purge <message-count> [reason]",
       examples: [
         "purge 20",
         "purge #general 10",
@@ -31,6 +31,7 @@ module.exports = class extends Command {
       const success = client.emoji.success;
 
       const amount = parseInt(args[0]);
+      const channel = message.channel;
       if (isNaN(amount) === true || !amount || amount < 0 || amount > 100)
         return message.channel.sendCustom({
           embeds: [

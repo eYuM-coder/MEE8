@@ -25,8 +25,7 @@ module.exports = {
       const success = client.emoji.success;
 
       const amount = interaction.options.getInteger("amount");
-      const channel =
-        interaction.guild.channels.cache.get(interaction.channel.id);
+      const channel = interaction.channel.id;
       const reason = interaction.options.getString("reason");
       interaction.deferReply({ ephemeral: true });
 
@@ -62,7 +61,7 @@ module.exports = {
             new MessageEmbed()
               .setDescription(
                 `
-            ${fail} | Unable to find any messages from ${member}. 
+            ${fail} | Unable to find any messages. 
             `,
               )
               .setColor(interaction.client.color.red),

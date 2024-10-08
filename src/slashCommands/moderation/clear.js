@@ -97,12 +97,12 @@ module.exports = {
         const role = interaction.guild.roles.cache.get(
           logging.moderation.ignore_role
         );
-        const channel = interaction.guild.channels.cache.get(
+        const loggingChannel = interaction.guild.channels.cache.get(
           logging.moderation.channel
         );
 
         if (logging.moderation.toggle == "true") {
-          if (channel) {
+          if (loggingChannel) {
             if (interaction.channel.id !== logging.moderation.ignore_channel) {
               if (
                 !role ||
@@ -128,7 +128,7 @@ module.exports = {
                     .setFooter({ text: `Responsible ID: ${interaction.user.id}` })
                     .setColor(color);
 
-                  channel.send({ embeds: [logEmbed] }).catch(() => {});
+                  loggingChannel.send({ embeds: [logEmbed] }).catch(() => {});
 
                   logging.moderation.caseN = logcase + 1;
                   await logging.save().catch(() => {});

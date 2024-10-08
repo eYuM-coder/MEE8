@@ -55,14 +55,14 @@ module.exports = {
       let totalDeleted = 0;
 
       while (totalDeleted < amount) {
-        const messagesToDelete = Math.min(100, deleteCount - totalDeleted);
+        const messagesToDelete = Math.min(100, amount - totalDeleted);
         try {
           const deletedMessages = await channel.bulkDelete(messagesToDelete, true);
           totalDeleted += deletedMessages.size;
           logger.info(`Deleted ${deletedMessages.size} ${deletedMessages.size === 1 ? "message" : "messages"}.`, { label: "Purge" });
         } catch (error) {
           logger.info(`Error deleting messages: ${error}`, { label: "ERROR" });
-          return interaction.channel.send("There was an error trying to delete messages in this channel!");
+          return interaction.editReply({ content: "There was an error trying to delete messages in this channel.", ephemeral: true });
         }
       }
 

@@ -32,7 +32,7 @@ module.exports = class extends Command {
 
       const amount = parseInt(args[0]);
       const channel = message.channel;
-      if (isNaN(amount) === true || !amount || amount < 0 || amount > 100)
+      if (isNaN(amount) === true || !amount || amount < 0 || amount > 200)
         return message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
@@ -41,7 +41,7 @@ module.exports = class extends Command {
                 message.author.displayAvatarURL({ dynamic: true })
               )
               .setTitle(`${fail} Clear Error`)
-              .setDescription(`I can only purge between 1 - 100 messages.`)
+              .setDescription(`I can only purge between 1 - 200 messages.`)
               .setTimestamp()
               .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
               .setColor(message.guild.me.displayHexColor),
@@ -75,55 +75,47 @@ module.exports = class extends Command {
       let messages;
       messages = amount;
 
-      if (messages.size === 0) {
-        message.channel
-          .sendCustom(
-            new MessageEmbed()
-              .setDescription(
-                `
-            ${fail} Unable to find any messages from ${member}. 
-          `
-              )
-              .setColor(message.guild.me.displayHexColor)
-          )
-          .then((msg) => {
-            setTimeout(() => {
-              msg.delete();
-            }, 10000);
-          })
-          .catch(() => {});
-      } else {
-        channel.bulkDelete(messages, true).then((messages) => {
-          const embed = new MessageEmbed()
+      let totalDeleted = 0;
 
-            .setDescription(
-              `
-            ${success} Successfully deleted **${messages.size}** message(s) ${
-                logging && logging.moderation.include_reason === "true"
-                  ? `\n\n**Reason:** ${reason}`
-                  : ``
-              }
-          `
-            )
-
-            .setColor(message.guild.me.displayHexColor);
-
-          message.channel
-            .sendCustom({ embeds: [embed] })
-            .then(async (s) => {
-              if (logging && logging.moderation.delete_reply === "true") {
-                setTimeout(() => {
-                  s.delete().catch(() => {});
-                }, 5000);
-              }
-            })
-            .catch(() => {});
-        });
+      while (totalDeleted < amount) {
+        const messagesToDelete = Math.min(100, amount - totalDeleted);
+        try {
+          const deletedMessages = await channel.bulkDelete(messagesToDelete, true);
+          totalDeleted += deletedMessages.size;
+          logger.info(`Deleted ${deletedMessages.size} ${deletedMessages.size === 1 ? "message" : "messages"}.`, { label: "Purge" });
+        } catch (error) {
+          logger.info(`Error deleting messages: ${error}`, { label: "ERROR" });
+          return message.channel.send({ content: "There was an error trying to delete messages in this channel." });
+        }
       }
+
+      const embed = new MessageEmbed()
+
+        .setDescription(
+          `
+            ${success} Successfully deleted **${totalDeleted}** ${totalDeleted === 1 ? "message" : "messages"} ${logging && logging.moderation.include_reason === "true"
+            ? `\n\n**Reason:** ${reason}`
+            : ``
+          }
+          `
+        )
+
+        .setColor(message.guild.me.displayHexColor);
+
+      message.channel
+        .sendCustom({ embeds: [embed] })
+        .then(async (s) => {
+          if (logging && logging.moderation.delete_reply === "true") {
+            setTimeout(() => {
+              s.delete().catch(() => { });
+            }, 5000);
+          }
+        })
+        .catch(() => { });
 
       if (logging) {
         if (logging.moderation.delete_after_executed === "true") {
-          message.delete().catch(() => {});
+          message.delete().catch(() => { });
         }
 
         const role = message.guild.roles.cache.get(
@@ -160,10 +152,10 @@ module.exports = class extends Command {
                     .setFooter({ text: `Responsible ID: ${message.author.id}` })
                     .setColor(color);
 
-                  channel.send({ embeds: [logEmbed] }).catch(() => {});
+                  channel.send({ embeds: [logEmbed] }).catch(() => { });
 
                   logging.moderation.caseN = logcase + 1;
-                  await logging.save().catch(() => {});
+                  await logging.save().catch(() => { });
                 }
               }
             }

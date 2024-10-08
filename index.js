@@ -56,7 +56,7 @@ async function checkExpiredWarnings() {
   }
 }
 
-setInterval(checkExpiredWarnings, 60000);
+setInterval(checkExpiredWarnings, 1000);
 
 async function getGuildData(guildId) {
   let guild = await Guild.findOne({ guildId: guildId });

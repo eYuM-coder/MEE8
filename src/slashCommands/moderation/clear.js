@@ -28,7 +28,6 @@ module.exports = {
       const amount = interaction.options.getInteger("amount");
       const channel = interaction.channel;
       const reason = interaction.options.getString("reason");
-      interaction.deferReply({ ephemeral: true });
 
       if (amount < 0 || amount > 200) {
         let invalidamount = new MessageEmbed()
@@ -43,7 +42,7 @@ module.exports = {
             text: `${process.env.AUTH_DOMAIN}`,
           })
           .setColor(client.color.red);
-        return interaction.editReply({
+        return interaction.reply({
           embeds: [invalidamount],
           ephemeral: true,
         });
@@ -67,7 +66,7 @@ module.exports = {
       }
 
       if (totalDeleted === 0) {
-        interaction.editReply({
+        interaction.reply({
           embeds: [
             new MessageEmbed()
               .setDescription(
@@ -89,7 +88,7 @@ module.exports = {
 
             .setColor(interaction.client.color.green);
 
-          interaction.editReply({ embeds: [embed], ephemeral: true });
+          interaction.reply({ embeds: [embed], ephemeral: true });
         });
       }
 

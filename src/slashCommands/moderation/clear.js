@@ -64,7 +64,7 @@ module.exports = {
           const deletedMessages = await channel.bulkDelete(messagesToDelete, true);
           totalDeleted += deletedMessages.size;
         } catch (error) {
-          logger.info(`Error deleting messages: ${error}`, { label: "ERROR" });
+          return interaction.editReply({ content: "There was an error trying to delete messages in this channel.", ephemeral: true });
         }
       }
 

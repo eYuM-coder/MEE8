@@ -165,7 +165,7 @@ module.exports = {
             ],
           })
           .then(async () => {
-            if (logging && logging.moderation.deleteReply === "true") {
+            if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
                 interaction.deleteReply().catch(() => { });
               }, 5000);

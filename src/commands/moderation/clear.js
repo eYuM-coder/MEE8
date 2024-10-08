@@ -32,7 +32,7 @@ module.exports = class extends Command {
 
       const amount = parseInt(args[0]);
       const channel = message.channel;
-      if (isNaN(amount) === true || !amount || amount < 0 || amount > 200)
+      if (isNaN(amount) === true || !amount || amount < 0 || amount > 200) {
         return message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
@@ -47,28 +47,15 @@ module.exports = class extends Command {
               .setColor(message.guild.me.displayHexColor),
           ],
         });
-
-      if (!channel.permissionsFor(message.guild.me).has(["MANAGE_MESSAGES"]))
-        return message.channel.sendCustom({
-          embeds: [
-            new MessageEmbed()
-              .setAuthor(
-                `${message.author.tag}`,
-                message.author.displayAvatarURL({ dynamic: true })
-              )
-              .setTitle(`${fail} Clear Error`)
-              .setDescription(
-                `Please make sure I have the **Manage Messages** Permission!`
-              )
-              .setTimestamp()
-              .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-              .setColor(message.guild.me.displayHexColor),
-          ],
-        });
+      }
 
       let reason = args.slice(1).join(" ");
-      if (!reason) reason = "None";
-      if (reason.length > 1024) reason = reason.slice(0, 1021) + "...";
+      if (!reason) {
+        reason = "None";
+      }
+      if (reason.length > 1024) {
+        reason = reason.slice(0, 1021) + "...";
+      }
 
       await message.delete();
 

@@ -29,6 +29,12 @@ module.exports = {
       const amount = interaction.options.getInteger("amount");
       const channel = interaction.channel;
       const reason = interaction.options.getString("reason");
+      if (!reason) {
+        reason = "None";
+      }
+      if (reason.length > 1024) {
+        reason = reason.slice(0, 1021) + "...";
+      }
 
       if (amount < 0 || amount > 200) {
         let invalidamount = new MessageEmbed()

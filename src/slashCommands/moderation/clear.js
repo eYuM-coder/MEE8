@@ -19,6 +19,7 @@ module.exports = {
     ),
   async execute(interaction) {
     try {
+      interaction.deferReply({ ephemeral: true });
       const logging = await Logging.findOne({ guildId: interaction.guild.id });
 
       const client = interaction.client;
@@ -42,7 +43,7 @@ module.exports = {
             text: `${process.env.AUTH_DOMAIN}`,
           })
           .setColor(client.color.red);
-        return interaction.reply({
+        return interaction.editReply({
           embeds: [invalidamount],
           ephemeral: true,
         });
@@ -66,7 +67,7 @@ module.exports = {
       }
 
       if (totalDeleted === 0) {
-        interaction.reply({
+        interaction.editReply({
           embeds: [
             new MessageEmbed()
               .setDescription(
@@ -88,7 +89,7 @@ module.exports = {
 
             .setColor(interaction.client.color.green);
 
-          interaction.reply({ embeds: [embed], ephemeral: true });
+          interaction.editReply({ embeds: [embed], ephemeral: true });
         });
       }
 
@@ -138,8 +139,8 @@ module.exports = {
         }
       }
     } catch (err) {
-      console.error(err);
-      interaction.reply({
+      logger.info(`An error occurred. ${err}`, { label: "ERROR" });
+      interaction.editReply({
         content: "This command cannot be used in Direct Messages.",
         ephemeral: true,
       });

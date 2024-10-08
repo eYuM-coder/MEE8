@@ -115,11 +115,11 @@ module.exports = class extends Command {
       logging.moderation.warn_action !== "1"
     ) {
       if (logging.moderation.warn_action === "2") {
-        dmEmbed = `${message.client.emoji.fail} | You were warned in **${message.guild.name}**.\n\n**Expires** <t:${expirationTime}:F>`;
+        dmEmbed = `${message.client.emoji.fail} | You were warned in **${message.guild.name}**.\n\n**Expires** <t:${Math.floor(expirationTime.getTime() / 1000)}:F>`;
       } else if (logging.moderation.warn_action === "3") {
-        dmEmbed = `${message.client.emoji.fail} | You were warned in **${message.guild.name}** for ${reason}.\n\n**Expires** <t:${expirationTime}:F>`;
+        dmEmbed = `${message.client.emoji.fail} | You were warned in **${message.guild.name}** for ${reason}.\n\n**Expires** <t:${Math.floor(expirationTime.getTime() / 1000)}:F>`;
       } else if (logging.moderation.warn_action === "4") {
-        dmEmbed = `${message.client.emoji.fail} | You were warned in **${message.guild.name}** by **${message.author} (${message.author.tag})** for ${reason}.\n\n**Expires** <t:${expirationTime}:F>`;
+        dmEmbed = `${message.client.emoji.fail} | You were warned in **${message.guild.name}** by **${message.author} (${message.author.tag})** for ${reason}.\n\n**Expires** <t:${Math.floor(expirationTime.getTime() / 1000)}:F>`;
       }
 
       mentionedMember

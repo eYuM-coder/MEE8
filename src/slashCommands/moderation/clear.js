@@ -139,7 +139,6 @@ module.exports = {
         }
       }
     } catch (err) {
-      logger.info(`An error occurred. ${err}`, { label: "ERROR" });
       interaction.reply({
         content: "This command cannot be used in Direct Messages.",
         ephemeral: true,

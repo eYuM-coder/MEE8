@@ -72,6 +72,7 @@ module.exports = class extends Command {
           logger.info(`Error deleting messages: ${error}`, { label: "ERROR" });
           return message.channel.send({ content: "There was an error trying to delete messages in this channel." });
         }
+        setTimeout(() => { }, 10000);
       }
 
       const embed = new MessageEmbed()
@@ -88,7 +89,7 @@ module.exports = class extends Command {
         .setColor(message.guild.me.displayHexColor);
 
       message.channel
-        .sendCustom({ embeds: [embed] })
+        .send({ embeds: [embed] })
         .then(async (s) => {
           if (logging && logging.moderation.delete_reply === "true") {
             setTimeout(() => {

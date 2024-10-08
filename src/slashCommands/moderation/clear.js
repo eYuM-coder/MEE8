@@ -1,7 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageEmbed } = require("discord.js");
 const Logging = require("../../database/schemas/logging.js");
-const logger = require("../../utils/logger.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -64,10 +63,8 @@ module.exports = {
         try {
           const deletedMessages = await channel.bulkDelete(messagesToDelete, true);
           totalDeleted += deletedMessages.size;
-          logger.info(`Deleted ${deletedMessages.size} ${deletedMessages.size === 1 ? "message" : "messages"}.`, { label: "Purge" });
         } catch (error) {
           logger.info(`Error deleting messages: ${error}`, { label: "ERROR" });
-          return interaction.editReply({ content: "There was an error trying to delete messages in this channel.", ephemeral: true });
         }
       }
 

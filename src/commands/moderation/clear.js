@@ -1,20 +1,20 @@
 const Command = require("../../structures/Command");
 const { MessageEmbed } = require("discord.js");
 const Logging = require("../../database/schemas/logging.js");
+const logger = require("../../utils/logger.js");
 
 module.exports = class extends Command {
   constructor(...args) {
     super(...args, {
       name: "clear",
       aliases: ["cls", "purge"],
-      description: "  Delete the specified amount of messages",
+      description: "Delete the specified amount of messages",
       category: "Moderation",
       usage: "purge <message-count> [reason]",
       examples: [
         "purge 20",
-        "purge #general 10",
-        "purge @peter 50",
-        "purge #general @peter 5",
+        "cls 50",
+        "clear 125"
       ],
       guildOnly: true,
       botPermission: ["MANAGE_MESSAGES"],
@@ -56,8 +56,6 @@ module.exports = class extends Command {
       if (reason.length > 1024) {
         reason = reason.slice(0, 1021) + "...";
       }
-
-      await message.delete();
 
       let messages;
       messages = amount;
@@ -149,26 +147,11 @@ module.exports = class extends Command {
           }
         }
       }
-    } catch {
+    } catch (error) {
+      logger.info(`An error occurred: ${error}`, { label: "ERROR" });
       return message.channel.sendCustom(
         `${message.client.emoji.fail} | Could not purge messages`
       );
     }
   }
 };
-
-function getMemberFromMention(message, mention) {
-  if (!mention) return;
-  const matches = mention.match(/^<@!?(\d+)>$/);
-  if (!matches) return;
-  const id = matches[1];
-  return message.guild.members.cache.get(id);
-}
-
-function getChannelFromMention(message, mention) {
-  if (!mention) return;
-  const matches = mention.match(/^<#(\d+)>$/);
-  if (!matches) return;
-  const id = matches[1];
-  return message.guild.channels.cache.get(id);
-}

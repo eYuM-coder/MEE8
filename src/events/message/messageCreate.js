@@ -219,7 +219,7 @@ module.exports = class extends Event {
                 `${this.client.user.tag}`,
                 message.client.user.displayAvatarURL({ dynamic: true }),
               )
-              .setTitle(`<:wrong:822376943763980348> Missing Bot Permissions`)
+              .setTitle(`<:fail:1293235307998740480> Missing Bot Permissions`)
               .setDescription(
                 `Command Name: **${
                   command.name
@@ -245,7 +245,7 @@ module.exports = class extends Event {
                 `${message.author.tag}`,
                 message.author.displayAvatarURL({ dynamic: true }),
               )
-              .setTitle(`<:wrong:822376943763980348> Missing User Permissions`)
+              .setTitle(`<:fail:1293235307998740480> Missing User Permissions`)
               .setDescription(
                 `Command Name: **${
                   command.name

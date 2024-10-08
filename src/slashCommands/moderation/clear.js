@@ -2,13 +2,12 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageEmbed } = require("discord.js");
 const Logging = require("../../database/schemas/logging.js");
 const logger = require("../../utils/logger.js");
-let messageDisplay = "messages";
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("clear")
     .setDescription("Purges a channels messages")
-    .addIntegerOption((option) =>
+    .addStringOption((option) =>
       option
         .setName("amount")
         .setDescription("Amount of messages to clear")
@@ -26,17 +25,17 @@ module.exports = {
       const fail = client.emoji.fail;
       const success = client.emoji.success;
 
-      const amount = interaction.options.getInteger("amount");
+      const amount = parseInt(interaction.options.getString("amount"));
       const channel = interaction.channel;
       const reason = interaction.options.getString("reason");
       if (!reason) {
-        reason = "None";
+        reason = "No reason provided.";
       }
       if (reason.length > 1024) {
         reason = reason.slice(0, 1021) + "...";
       }
 
-      if (amount < 0 || amount > 200) {
+      if (isNaN(amount) || amount < 0 || amount > 200) {
         let invalidamount = new MessageEmbed()
           .setAuthor({
             name: `${interaction.user.tag}`,
@@ -86,17 +85,15 @@ module.exports = {
           ephemeral: true,
         });
       } else {
-        channel.bulkDelete(messages, true).then((messages) => {
           const embed = new MessageEmbed()
 
             .setDescription(
-              `${success} | ***Successfully deleted ${totalDeleted} ${totalDeleted === 1 ? "message" : "messages"}* || ${reason}**`,
+              `${success} | ***Successfully deleted ${totalDeleted} ${totalDeleted === 1 ? "message" : "messages"}.* || ${reason}**`,
             )
 
             .setColor(interaction.client.color.green);
 
           interaction.editReply({ embeds: [embed], ephemeral: true });
-        });
       }
 
       if (logging) {
@@ -127,11 +124,11 @@ module.exports = {
                   const logEmbed = new MessageEmbed()
                     .setAuthor(
                       `Action: \`Purge\` | Case #${logcase}`,
-                      message.author.displayAvatarURL({ format: "png" })
+                      interaction.member.displayAvatarURL({ format: "png" })
                     )
-                    .addField("Moderator", `${interaction.user}`, true)
+                    .addField("Moderator", `${interaction.member}`, true)
                     .setTimestamp()
-                    .setFooter({ text: `Responsible ID: ${interaction.user.id}` })
+                    .setFooter({ text: `Responsible ID: ${interaction.member.id}` })
                     .setColor(color);
 
                   loggingChannel.send({ embeds: [logEmbed] }).catch(() => {});

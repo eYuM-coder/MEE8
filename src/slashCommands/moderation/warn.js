@@ -53,16 +53,19 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => {});
+                interaction.deleteReply().catch(() => { });
               }, 5000);
             }
           })
-          .catch(() => {});
+          .catch(() => { });
       }
 
+      const mentionedPotision = mentionedMember.roles.highest.position;
+      const memberPotision = interaction.member.roles.highest.position;
+
       if (
-        mentionedMember.roles.highest.position >=
-        interaction.member.roles.highest.position
+        memberPotision <=
+        mentionedPotision
       ) {
         let rolesmatch = new MessageEmbed()
           .setColor(client.color.red)
@@ -73,11 +76,11 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => {});
+                interaction.deleteReply().catch(() => { });
               }, 5000);
             }
           })
-          .catch(() => {});
+          .catch(() => { });
       }
       let warnID = random.password({
         length: 18,
@@ -144,7 +147,7 @@ module.exports = {
                 .setDescription(dmEmbed),
             ],
           })
-          .catch(() => {});
+          .catch(() => { });
       }
 
       if (mentionedMember) {
@@ -153,23 +156,22 @@ module.exports = {
             embeds: [
               new MessageEmbed().setColor(client.color.green)
                 .setDescription(`${language.warnSuccessful
-                .replace("{emoji}", client.emoji.success)
-                .replace("{user}", `**${mentionedMember.user.tag}**`)}
-            ${
-              logging && logging.moderation.include_reason === "true"
-                ? `\n\n**Reason:** ${reason}`
-                : ``
-            }`),
+                  .replace("{emoji}", client.emoji.success)
+                  .replace("{user}", `**${mentionedMember.user.tag}**`)}
+            ${logging && logging.moderation.include_reason === "true"
+                    ? `\n\n**Reason:** ${reason}`
+                    : ``
+                  }`),
             ],
           })
           .then(async () => {
             if (logging && logging.moderation.deleteReply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => {});
+                interaction.deleteReply().catch(() => { });
               }, 5000);
             }
           })
-          .catch(() => {});
+          .catch(() => { });
       } else {
         let failembed = new MessageEmbed()
           .setColor(client.color.red)

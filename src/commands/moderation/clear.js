@@ -104,10 +104,6 @@ module.exports = class extends Command {
         .catch(() => { });
 
       if (logging) {
-        if (logging.moderation.delete_after_executed === "true") {
-          message.delete().catch(() => { });
-        }
-
         const role = message.guild.roles.cache.get(
           logging.moderation.ignore_role
         );

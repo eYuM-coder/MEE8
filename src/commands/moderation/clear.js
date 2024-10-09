@@ -57,6 +57,10 @@ module.exports = class extends Command {
         reason = reason.slice(0, 1021) + "...";
       }
 
+      if (logging.moderation.delete_after_executed === "true") {
+        message.delete().catch(() => { });
+      }
+
       let messages;
       messages = amount;
 

@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageEmbed } = require("discord.js");
 const Logging = require("../../database/schemas/logging.js");
+const logger = require("../../utils/logger.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -63,35 +64,28 @@ module.exports = {
         try {
           const deletedMessages = await channel.bulkDelete(messagesToDelete, true);
           totalDeleted += deletedMessages.size;
+          if (deletedMessages.size === 0) {
+            break;
+          } else if (deletedMessages.size < 100) {
+            continue;
+          }
         } catch (error) {
           return interaction.editReply({ content: "There was an error trying to delete messages in this channel.", ephemeral: true });
         }
+        setTimeout(() => { }, 30000)
       }
 
-      if (totalDeleted === 0) {
-        interaction.editReply({
-          embeds: [
-            new MessageEmbed()
-              .setDescription(
-                `
-            ${fail} | Unable to find any messages. 
-            `,
-              )
-              .setColor(interaction.client.color.red),
-          ],
-          ephemeral: true,
-        });
-      } else {
-          const embed = new MessageEmbed()
 
-            .setDescription(
-              `${success} | ***Successfully deleted ${totalDeleted} ${totalDeleted === 1 ? "message" : "messages"}.* || ${reason}**`,
-            )
+      const embed = new MessageEmbed()
 
-            .setColor(interaction.client.color.green);
+        .setDescription(
+          `${success} | ***Successfully deleted ${totalDeleted} ${totalDeleted === 1 ? "message" : "messages"}.* || ${reason}**`,
+        )
 
-          interaction.editReply({ embeds: [embed], ephemeral: true });
-      }
+        .setColor(interaction.client.color.green);
+
+      interaction.editReply({ embeds: [embed], ephemeral: true });
+
 
       if (logging) {
         const role = interaction.guild.roles.cache.get(
@@ -128,10 +122,10 @@ module.exports = {
                     .setFooter({ text: `Responsible ID: ${interaction.member.id}` })
                     .setColor(color);
 
-                  loggingChannel.send({ embeds: [logEmbed] }).catch(() => {});
+                  loggingChannel.send({ embeds: [logEmbed] }).catch(() => { });
 
                   logging.moderation.caseN = logcase + 1;
-                  await logging.save().catch(() => {});
+                  await logging.save().catch(() => { });
                 }
               }
             }
@@ -139,6 +133,7 @@ module.exports = {
         }
       }
     } catch (err) {
+      logger.info(`An error occurred: ${err}`, { label: "ERROR" });
       interaction.reply({
         content: "This command cannot be used in Direct Messages.",
         ephemeral: true,

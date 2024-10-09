@@ -26,6 +26,10 @@ module.exports = class extends Command {
     try {
       const logging = await Logging.findOne({ guildId: message.guild.id });
 
+      if (logging.moderation.delete_after_executed === "true") {
+        message.delete().catch(() => { });
+      }
+
       const client = message.client;
       const fail = client.emoji.fail;
       const success = client.emoji.success;
@@ -57,10 +61,6 @@ module.exports = class extends Command {
         reason = reason.slice(0, 1021) + "...";
       }
 
-      if (logging.moderation.delete_after_executed === "true") {
-        message.delete().catch(() => { });
-      }
-
       let messages;
       messages = amount;
 
@@ -72,11 +72,16 @@ module.exports = class extends Command {
           const deletedMessages = await channel.bulkDelete(messagesToDelete, true);
           totalDeleted += deletedMessages.size;
           logger.info(`Deleted ${deletedMessages.size} ${deletedMessages.size === 1 ? "message" : "messages"}.`, { label: "Purge" });
+          if (deletedMessages.size === 0) {
+            break;
+          } else if (deletedMessages.size < 100) {
+            continue;
+          }
         } catch (error) {
           logger.info(`Error deleting messages: ${error}`, { label: "ERROR" });
           return message.channel.send({ content: "There was an error trying to delete messages in this channel." });
         }
-        setTimeout(() => { }, 10000);
+        setTimeout(() => { }, 30000);
       }
 
       const embed = new MessageEmbed()

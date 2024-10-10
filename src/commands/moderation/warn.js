@@ -15,8 +15,8 @@ module.exports = class extends Command {
       description:
         "Gives a warning to the specified user from your Discord server.",
       category: "Moderation",
-      usage: "<user> [reason] [time]",
-      examples: ["warn @Peter Please do not swear."],
+      usage: "<user> [time] [reason]",
+      examples: ["warn @user Please do not swear."],
       guildOnly: true,
       userPermission: ["KICK_MEMBERS"],
     });

@@ -60,7 +60,7 @@ module.exports = {
       let totalDeleted = 0;
 
       while (totalDeleted < amount) {
-        const messagesToDelete = Math.min(100, amount - totalDeleted);
+        const messagesToDelete = Math.min(101, amount - totalDeleted);
         try {
           const deletedMessages = await channel.bulkDelete(messagesToDelete, true);
           totalDeleted += deletedMessages.size;

@@ -8,6 +8,7 @@
   "setPrefixMissingArgument":"You did not specify the new prefix",
   "setPrefixLongLength":"The prefix length can't be more than 5",
   "setPrefixChange": "Prefix has been changed to {prefix}",
+  "expiresAt": "Expires On:",
 
 
   "helpInvalidCommand":"Invalid Command",

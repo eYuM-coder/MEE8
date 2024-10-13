@@ -57,7 +57,7 @@ module.exports = {
             warnDoc.moderator[i],
           )}\n**Reason:** ${warnDoc.warnings[i]}\n**Date:** ${moment(
             warnDoc.date[i],
-          ).format("dddd, MMMM do YYYY")}\n**Warning ID:** ${i + 1}\n**Expires At:** ${warnDoc.expiresAt[i].getTime()}`,
+          ).format("dddd, MMMM do YYYY")}\n**Warning ID:** ${i + 1}\n**Expires At:** <t:${Math.floor(warnDoc.expiresAt[i].getTime() / 1000)}:F>`,
         );
       }
 
@@ -106,7 +106,7 @@ module.exports = {
             )
             .addField(
               `${language.expiresAt || "unknown"}`,
-              `${warnDoc.expiresAt[i].getTime()}`,
+              `<t:${Math.floor(warnDoc.expiresAt[i].getTime() / 1000)}:F>`,
             );
           amount += 1;
         }

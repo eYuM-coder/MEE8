@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { MessageEmbed } = require("discord.js");
+const { MessageEmbed, Message } = require("discord.js");
 const Logging = require("../../database/schemas/logging");
 
 module.exports = {
@@ -39,7 +39,7 @@ module.exports = {
             name: `${interaction.user.tag}`,
             iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
           })
-          .setTitle(`${fail} Set Nickname Error`)
+          .setTitle(`${fail} | Set Nickname Error`)
           .setDescription("Please provide a valid user")
           .setTimestamp()
           .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
@@ -62,7 +62,7 @@ module.exports = {
             name: `${interaction.user.tag}`,
             iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
           })
-          .setTitle(`${fail} Set Nickname Error`)
+          .setTitle(`${fail} | Set Nickname Error`)
           .setDescription("You can't change your own nickname!")
           .setTimestamp()
           .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
@@ -88,7 +88,7 @@ module.exports = {
             name: `${interaction.user.tag}`,
             iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
           })
-          .setTitle(`${fail} Set Nickname Error`)
+          .setTitle(`${fail} | Set Nickname Error`)
           .setDescription(
             "The provided user has either an equal or higher role.",
           )
@@ -128,11 +128,11 @@ module.exports = {
       let nick = nickname;
       if (nickname && !(nickname.length > 32)) {
         try {
-          const oldNickname = member.nickname || member.username;
+          const oldNickname = member.nickname || member.user.username;
           await member.setNickname(nick);
           const embed = new MessageEmbed()
             .setDescription(
-              `${success} | **${oldNickname}**'s nickname was set to **${nick}**`,
+              `***${success} | ${oldNickname}'s nickname was set to ${nick}.* || Reason: ${reason}**`,
             )
             .setColor(client.color.green);
           interaction
@@ -218,6 +218,18 @@ module.exports = {
             ],
           });
         }
+      } else {
+        interaction.reply({
+          embeds: [
+            new MessageEmbed()
+            .setAuthor({
+              name: `${interaction.user.tag}`,
+              iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
+            })
+            .setTitle(`${fail} | Set Nickname Error`)
+            .setDescription(`The nickname is too long!`)
+          ],
+        });
       }
     } catch (err) {
       console.error(err);

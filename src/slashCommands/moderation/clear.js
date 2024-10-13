@@ -27,7 +27,7 @@ module.exports = {
 
       const amount = parseInt(interaction.options.getString("amount"));
       const channel = interaction.channel;
-      const reason = interaction.options.getString("reason");
+      let reason = interaction.options.getString("reason");
       if (!reason) {
         reason = "No reason provided.";
       }

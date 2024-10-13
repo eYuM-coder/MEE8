@@ -8,7 +8,7 @@ module.exports = class extends Command {
     super(...args, {
       name: "clear",
       aliases: ["cls", "purge"],
-      description: "Delete the specified amount of messages",
+      description: "Delete the specified amount of messages (limit: 1000)",
       category: "Moderation",
       usage: "purge <message-count> [reason]",
       examples: [
@@ -36,7 +36,7 @@ module.exports = class extends Command {
 
       const amount = parseInt(args[0]);
       const channel = message.channel;
-      if (isNaN(amount) === true || !amount || amount < 0 || amount > 200) {
+      if (isNaN(amount) === true || !amount || amount < 0 || amount > 1000) {
         return message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
@@ -81,7 +81,7 @@ module.exports = class extends Command {
           logger.info(`Error deleting messages: ${error}`, { label: "ERROR" });
           return message.channel.send({ content: "There was an error trying to delete messages in this channel." });
         }
-        setTimeout(() => { }, 30000);
+        setTimeout(() => { }, 45000);
       }
 
       const embed = new MessageEmbed()

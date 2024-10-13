@@ -6,7 +6,7 @@ const logger = require("../../utils/logger.js");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("clear")
-    .setDescription("Purges a channels messages")
+    .setDescription("Purges a channels messages (limit: 1000)")
     .addStringOption((option) =>
       option
         .setName("amount")
@@ -35,7 +35,7 @@ module.exports = {
         reason = reason.slice(0, 1021) + "...";
       }
 
-      if (isNaN(amount) || amount < 0 || amount > 200) {
+      if (isNaN(amount) || amount < 0 || amount > 1000) {
         let invalidamount = new MessageEmbed()
           .setAuthor({
             name: `${interaction.user.tag}`,
@@ -72,7 +72,7 @@ module.exports = {
         } catch (error) {
           return interaction.editReply({ content: "There was an error trying to delete messages in this channel.", ephemeral: true });
         }
-        setTimeout(() => { }, 30000)
+        setTimeout(() => { }, 45000)
       }
 
 

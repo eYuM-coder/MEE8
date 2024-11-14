@@ -9,7 +9,7 @@ module.exports = {
     .setDescription("Check your balance or the balance of another user")
     .addUserOption((option) => option.setName("member").setDescription("The optional member to check")),
     async execute(interaction) {
-        const user = interaction.options.getMember("member");
+        const user = interaction.options.getMember("member") || interaction.user;
 
         const profile = await Profile.findOne({
             userID: user.id,

@@ -23,8 +23,8 @@ module.exports = class extends Command {
       await message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-          .setColor("BLURPLE")
-          .setDescription(`Creating profile.\nUse this command again to collect your weekly earnings`)
+            .setColor("BLURPLE")
+            .setDescription(`Creating profile.\nUse this command again to collect your weekly earnings`)
         ]
       });
     } else {
@@ -36,9 +36,9 @@ module.exports = class extends Command {
         await message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-            .setColor("BLURPLE")
-          .setTitle(`${message.author.username}'s Weekly`)
-            .setDescription(`You have collected this weeks earnings ($500,000).\nCome back next week to collect more`)
+              .setColor("BLURPLE")
+              .setTitle(`${message.author.username}'s Weekly`)
+              .setDescription(`You have collected this weeks earnings ($500,000).\nCome back next week to collect more`)
           ]
         });
       } else if (Date.now() - profile.lastWeekly > 604800000) {
@@ -49,9 +49,9 @@ module.exports = class extends Command {
         await message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-            .setColor("BLURPLE")
-            .setTitle(`${message.author.username}'s Weekly`)
-            .setDescription(`You have collected your weekly earnings.`)
+              .setColor("BLURPLE")
+              .setTitle(`${message.author.username}'s Weekly`)
+              .setDescription(`You have collected your weekly earnings.`)
           ]
         });
       } else {
@@ -64,9 +64,9 @@ module.exports = class extends Command {
         await message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-            .setColor("BLURPLE")
-            .setTitle(`${message.author.username}'s Weekly`)
-            .setDescription(`You have to wait ${days}d ${hours}h ${minutes}m ${seconds}s before you can collect your weekly earnings!`)
+              .setColor("BLURPLE")
+              .setTitle(`${message.author.username}'s Weekly`)
+              .setDescription(`You have to wait ${days}d ${hours}h ${minutes}m ${seconds}s before you can collect your weekly earnings!`)
           ]
         })
       }

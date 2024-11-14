@@ -179,8 +179,8 @@ module.exports = class extends Command {
 
       const earnings = Math.floor(
         Math.random() *
-          (selectedJob.maxEarnings - selectedJob.minEarnings + 1) +
-          selectedJob.minEarnings
+        (selectedJob.maxEarnings - selectedJob.minEarnings + 1) +
+        selectedJob.minEarnings
       );
 
       const now = Date.now();

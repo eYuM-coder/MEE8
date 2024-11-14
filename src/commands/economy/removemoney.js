@@ -24,20 +24,20 @@ module.exports = class extends Command {
       await message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-          .setColor("BLURPLE")
-          .setDescription(`Creating profile.\nUse this command again to use it.`)
+            .setColor("BLURPLE")
+            .setDescription(`Creating profile.\nUse this command again to use it.`)
         ]
       });
     } else {
       await Profile.updateOne({
         userID: user.id, guildId: message.guild.id
       },
-      { $inc: { wallet: -amount } });
+        { $inc: { wallet: -amount } });
       await message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-          .setColor("BLURPLE")
-          .setDescription(`Removed $${amount} from ${user}`)
+            .setColor("BLURPLE")
+            .setDescription(`Removed $${amount} from ${user}`)
         ]
       });
     }

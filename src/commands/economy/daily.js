@@ -19,8 +19,8 @@ module.exports = class extends Command {
       await message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-          .setColor("BLURPLE")
-          .setDescription(`Creating profile.\nUse this command again to collect your daily earnings.`)
+            .setColor("BLURPLE")
+            .setDescription(`Creating profile.\nUse this command again to collect your daily earnings.`)
         ]
       });
     } else {
@@ -28,16 +28,16 @@ module.exports = class extends Command {
         await Profile.updateOne(
           {
             userID: message.author.id, guildId: message.guild.id
-          }, 
+          },
           { $set: { lastDaily: Date.now() } }
         );
         await Profile.updateOne({ userID: message.author.id, guildId: message.guild.id })
         await message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-            .setColor("BLURPLE")
-            .setTitle(`${message.author.username}'s Daily`)
-            .setDescription(`You have collected todays earnings ($50000).\nCome back tommorow to collect more.`)
+              .setColor("BLURPLE")
+              .setTitle(`${message.author.username}'s Daily`)
+              .setDescription(`You have collected todays earnings ($50000).\nCome back tommorow to collect more.`)
           ]
         });
       } else if (Date.now() - profile.lastDaily > 86400000) {
@@ -49,9 +49,9 @@ module.exports = class extends Command {
         await message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-            .setColor("BLURPLE")
-            .setTitle(`${message.author.username}'s Daily`)
-            .setDescription(`You have collected your daily earnings of $50000.`)
+              .setColor("BLURPLE")
+              .setTitle(`${message.author.username}'s Daily`)
+              .setDescription(`You have collected your daily earnings of $50000.`)
           ]
         });
       } else {
@@ -63,9 +63,9 @@ module.exports = class extends Command {
         await message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-            .setColor("BLURPLE")
-            .setTitle(`${message.author.username}'s Daily`)
-            .setDescription(`You have to wait ${hours}h ${minutes}m ${seconds}s before you can collect your daily earnings!`)
+              .setColor("BLURPLE")
+              .setTitle(`${message.author.username}'s Daily`)
+              .setDescription(`You have to wait ${hours}h ${minutes}m ${seconds}s before you can collect your daily earnings!`)
           ]
         });
       }

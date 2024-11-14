@@ -23,23 +23,23 @@ module.exports = class extends Command {
       guildId: message.guild.id
     });
     if (!profile) {
-      if(user.id !== message.author.id) return message.channel.sendCustom(`${user} doesn't have a profile!`);
-      
+      if (user.id !== message.author.id) return message.channel.sendCustom(`${user} doesn't have a profile!`);
+
       await createProfile(user, message.guild);
       await message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-          .setColor("BLURPLE")
-          .setDescription(`Creating profile.\nUse this command again to check your balance.`)
+            .setColor("BLURPLE")
+            .setDescription(`Creating profile.\nUse this command again to check your balance.`)
         ]
       });
     } else {
       await message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-          .setColor("BLURPLE")
-          .setTitle(`${user.username}'s Balance`)
-          .setDescription(`**Wallet:** $${profile.wallet}\n**Bank:** $${profile.bank}`)
+            .setColor("BLURPLE")
+            .setTitle(`${user.username}'s Balance`)
+            .setDescription(`**Wallet:** $${profile.wallet}\n**Bank:** $${profile.bank}`)
         ]
       });
     }

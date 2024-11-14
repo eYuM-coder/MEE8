@@ -22,8 +22,8 @@ module.exports = class extends Command {
       await message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-          .setColor("BLURPLE")
-          .setDescription(`Creating profile.\nUse this command again to collect your monthly earnings`)
+            .setColor("BLURPLE")
+            .setDescription(`Creating profile.\nUse this command again to collect your monthly earnings`)
         ]
       });
     } else {
@@ -35,9 +35,9 @@ module.exports = class extends Command {
         await message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-            .setColor("BLURPLE")
-          .setTitle(`${message.author.username}'s Monthly`)
-            .setDescription(`You have collected this month's earnings ($2,500,000).\nCome back next month to collect more`)
+              .setColor("BLURPLE")
+              .setTitle(`${message.author.username}'s Monthly`)
+              .setDescription(`You have collected this month's earnings ($2,500,000).\nCome back next month to collect more`)
           ]
         });
       } else if (Date.now() - profile.lastMonthly > 2592000000) {
@@ -48,9 +48,9 @@ module.exports = class extends Command {
         await message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-            .setColor("BLURPLE")
-            .setTitle(`${message.author.username}'s Monthly`)
-            .setDescription(`You have collected your monthly earnings of $2,500,000.`)
+              .setColor("BLURPLE")
+              .setTitle(`${message.author.username}'s Monthly`)
+              .setDescription(`You have collected your monthly earnings of $2,500,000.`)
           ]
         });
       } else {
@@ -63,9 +63,9 @@ module.exports = class extends Command {
         await message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-            .setColor("BLURPLE")
-            .setTitle(`${message.author.username}'s Monthly`)
-            .setDescription(`You have to wait ${days}d ${hours}h ${minutes}m ${seconds}s before you can collect your monthly earnings!`)
+              .setColor("BLURPLE")
+              .setTitle(`${message.author.username}'s Monthly`)
+              .setDescription(`You have to wait ${days}d ${hours}h ${minutes}m ${seconds}s before you can collect your monthly earnings!`)
           ]
         })
       }

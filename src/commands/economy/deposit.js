@@ -22,8 +22,8 @@ module.exports = class extends Command {
       await message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-          .setColor("BLURPLE")
-          .setDescription(`Creating profile.\nUse this command again to deposit your money.`)
+            .setColor("BLURPLE")
+            .setDescription(`Creating profile.\nUse this command again to deposit your money.`)
         ]
       });
     } else {
@@ -32,20 +32,20 @@ module.exports = class extends Command {
         await message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-            .setColor("BLURPLE")
-            .setDescription(`You don't have enough money to deposit!`)
+              .setColor("BLURPLE")
+              .setDescription(`You don't have enough money to deposit!`)
           ]
         });
       } else {
         await Profile.updateOne({
           userID: message.author.id, guildId: message.guild.id
         },
-        { $inc: { wallet: -amount, bank: amount } });
+          { $inc: { wallet: -amount, bank: amount } });
         await message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-            .setColor("BLURPLE")
-            .setDescription(`Deposited $${amount} to the bank.`)
+              .setColor("BLURPLE")
+              .setDescription(`Deposited $${amount} to the bank.`)
           ]
         });
       }

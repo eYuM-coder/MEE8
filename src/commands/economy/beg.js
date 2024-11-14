@@ -20,8 +20,8 @@ module.exports = class extends Command {
       await message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-          .setColor("BLURPLE")
-          .setDescription(`Creating profile.\nUse this command again to beg for money.`)
+            .setColor("BLURPLE")
+            .setDescription(`Creating profile.\nUse this command again to beg for money.`)
         ]
       });
     } else {
@@ -29,7 +29,7 @@ module.exports = class extends Command {
         await Profile.updateOne(
           {
             userID: message.author.id,
-  guildId: message.guild.id
+            guildId: message.guild.id
           },
           { $set: { lastBeg: Date.now() } }
         );
@@ -37,9 +37,9 @@ module.exports = class extends Command {
         await message.channel.sendCustomn({
           embeds: [
             new MessageEmbed()
-            .setColor("BLURPLE")
-            .setTitle(`${message.author.username}'s Beg`)
-            .setDescription(`You have begged ($${amount}).\nCome back in 3 minutes to beg again.`)
+              .setColor("BLURPLE")
+              .setTitle(`${message.author.username}'s Beg`)
+              .setDescription(`You have begged ($${amount}).\nCome back in 3 minutes to beg again.`)
           ]
         });
       } else if (Date.now() - profile.lastBeg > 180000) {
@@ -51,9 +51,9 @@ module.exports = class extends Command {
         await message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-            .setColor("BLURPLE")
-            .setTitle(`${message.author.username}'s Beg`)
-            .setDescription(`You begged for a total of $${amount}.`)
+              .setColor("BLURPLE")
+              .setTitle(`${message.author.username}'s Beg`)
+              .setDescription(`You begged for a total of $${amount}.`)
           ]
         });
       } else {
@@ -64,9 +64,9 @@ module.exports = class extends Command {
         await message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-            .setColor("BLURPLE")
-            .setTitle(`${message.author.username}'s Beg`)
-            .setDescription(`You have to wait ${minutes}m ${seconds}s before you can beg again!`)
+              .setColor("BLURPLE")
+              .setTitle(`${message.author.username}'s Beg`)
+              .setDescription(`You have to wait ${minutes}m ${seconds}s before you can beg again!`)
           ]
         });
       }

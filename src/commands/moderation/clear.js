@@ -26,7 +26,7 @@ module.exports = class extends Command {
     try {
       const logging = await Logging.findOne({ guildId: message.guild.id });
 
-      if (logging.moderation.delete_after_executed === "true") {
+      if (logging && logging.moderation.delete_after_executed === "true") {
         message.delete().catch(() => { });
       }
 
@@ -45,7 +45,7 @@ module.exports = class extends Command {
                 message.author.displayAvatarURL({ dynamic: true })
               )
               .setTitle(`${fail} Clear Error`)
-              .setDescription(`I can only purge between 1 - 200 messages.`)
+              .setDescription(`I can only purge between 1 - 1000 messages.`)
               .setTimestamp()
               .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
               .setColor(message.guild.me.displayHexColor),

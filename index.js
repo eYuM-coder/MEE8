@@ -25,38 +25,58 @@ Pogy.emoji = emoji;
 // reqs
 require("dotenv").config();
 
-async function checkExpiredWarnings() {
-  const now = new Date();
+client.on("ready", () => {
+  async function checkExpiredWarnings() {
+    const now = new Date();
 
-  try {
-    const userWarnings = await warnModel.find({ expiresAt: { $exists: true, $not: { $size: 0 } } });
+    try {
+      // Optimize query with a timeout and indexing if needed
+      const userWarnings = await warnModel.find(
+        { expiresAt: { $exists: true, $not: { $size: 0 } } },
+        null,
+        { maxTimeMS: 5000 } // Set a maximum execution time for the query
+      );
 
-    userWarnings.forEach(async (userWarning) => {
-      let modified = false;
+      if (!userWarnings || userWarnings.length === 0) {
+        return; // No warnings to process
+      }
 
-      for (let i = userWarning.expiresAt.length - 1; i >= 0; i--) {
-        if (userWarning.expiresAt[i] <= now) {
-          userWarning.modType.splice(i, 1);
-          userWarning.warnings.splice(i, 1);
-          userWarning.warningID.splice(i, 1);
-          userWarning.moderator.splice(i, 1);
-          userWarning.date.splice(i, 1);
-          userWarning.expiresAt.splice(i, 1);
-          modified = true;
+      for (const userWarning of userWarnings) {
+        let modified = false;
+        const objectId = userWarning._id;
+
+        for (let i = userWarning.expiresAt.length - 1; i >= 0; i--) {
+          if (userWarning.expiresAt[i] <= now) {
+            userWarning.modType.splice(i, 1);
+            userWarning.warnings.splice(i, 1);
+            userWarning.warningID.splice(i, 1);
+            userWarning.moderator.splice(i, 1);
+            userWarning.date.splice(i, 1);
+            userWarning.expiresAt.splice(i, 1);
+            modified = true;
+          }
+        }
+
+        if (modified) {
+          await userWarning.save();
+          logger.info(`Removed expired warnings for user ${userWarning.memberID} in guild ${userWarning.guildID}`, { label: "Database" });
+        } else if (userWarning.warnings.length === 0) {
+          await warnModel.findByIdAndDelete(objectId);
+          logger.info(`Removed database warning model for user ${userWarning.memberID} in guild ${userWarning.guildID}`, { label: "Database" });
         }
       }
-
-      if (modified) {
-        await userWarning.save();
-        logger.info(`Removed expired warnings for user ${userWarning.memberID} in guild ${userWarning.guildID}`, { label: "Database" });
+    } catch (error) {
+      if (error.name === "MongoServerError" && error.code === 50) {
+        logger.error("Query timed out after 5000ms. Consider optimizing the database.", { label: "ERROR" });
+      } else {
+        logger.error(`Error removing expired warnings: ${error.message}`, { label: "ERROR" });
       }
-    })
-  } catch (error) {
-    logger.info('Error removing expired warnings: ' + error, { label: "ERROR" });
+    }
   }
-}
 
-setInterval(checkExpiredWarnings, 60000);
+
+  setInterval(checkExpiredWarnings, 1000);
+});
 
 async function getGuildData(guildId) {
   let guild = await Guild.findOne({ guildId: guildId });
@@ -98,10 +118,11 @@ async function updateUserLevel(guildId, userId, xpGain) {
   user.xp += xpGain;
   let nextLevelXP = user.level * 75;
   let xpNeededForNextLevel = user.level * nextLevelXP;
+  let previousXPNeeded = xpNeededForNextLevel;
 
   user.messageTimeout = Date.now();
 
-  if (user.xp >= xpNeededForNextLevel) {
+  while (user.xp >= xpNeededForNextLevel) {
     user.level += 1;
     nextLevelXP = user.level * 75;
     xpNeededForNextLevel = user.level * nextLevelXP;
@@ -109,7 +130,7 @@ async function updateUserLevel(guildId, userId, xpGain) {
 
   await guild.save();
 
-  return { user, xpNeededForNextLevel };
+  return { previousXPNeeded, xpNeededForNextLevel };
 }
 
 client.on("messageCreate", async (message) => {
@@ -125,13 +146,13 @@ client.on("messageCreate", async (message) => {
 
   if (Date.now() - user.messageTimeout >= 60000 && guild.levelingEnabled) {
     const xpGain = Math.floor(Math.random() * 15) + 10;
-    const { xpNeededForNextLevel } = await updateUserLevel(
+    const { previousXPNeeded, xpNeededForNextLevel } = await updateUserLevel(
       guildId,
       userId,
       xpGain,
     );
 
-    if (user.xp >= xpNeededForNextLevel) {
+    if (user.xp >= previousXPNeeded) {
       const levelbed = new MessageEmbed()
         .setColor("#3498db")
         .setTitle("Level Up!")
@@ -773,7 +794,7 @@ async function startTetrisGame(message) {
           tetromino[row][col] !== 0 &&
           (gameState.board[gameState.tetrominoRow + row] === undefined ||
             gameState.board[gameState.tetrominoRow + row][
-              gameState.tetrominoCol + col
+            gameState.tetrominoCol + col
             ] !== "⬛")
         ) {
           return false;
@@ -791,7 +812,7 @@ async function startTetrisGame(message) {
           gameState.tetromino[row][col] !== 0 &&
           gameState.board[gameState.tetrominoRow + row] &&
           gameState.board[gameState.tetrominoRow + row][
-            gameState.tetrominoCol + col
+          gameState.tetrominoCol + col
           ]
         ) {
           gameState.board[gameState.tetrominoRow + row][
@@ -810,7 +831,7 @@ async function startTetrisGame(message) {
           gameState.tetromino[row][col] !== 0 &&
           gameState.board[gameState.tetrominoRow + row] &&
           gameState.board[gameState.tetrominoRow + row][
-            gameState.tetrominoCol + col
+          gameState.tetrominoCol + col
           ]
         ) {
           gameState.board[gameState.tetrominoRow + row][

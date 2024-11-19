@@ -9,7 +9,7 @@ module.exports = {
     interaction.reply({
       embeds: [
         new MessageEmbed()
-        .setDescription(`helo <@690288007638548522> <:TrollHappy:1058938513946591292>`)
+        .setDescription(`helo <@1067137336674107453> <:TrollHappy:1058938513946591292>`)
         .setColor("BLURPLE")
       ],
     });

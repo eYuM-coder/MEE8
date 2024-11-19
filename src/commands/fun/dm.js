@@ -1,4 +1,4 @@
-const { Command } = require("../../structures/Command");
+const Command = require("../../structures/Command");
 const Logging = require("../../database/schemas/logging");
 const { MessageEmbed } = require("discord.js");
 const dmSystem = require("../../database/models/dmSystem");

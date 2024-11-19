@@ -11,7 +11,7 @@ const { Handler } = require("discord-slash-command-handler");
 module.exports = class extends Event {
   async run() {
     Message(this.client);
-
+  
     logger.info(
       `${this.client.user.tag} is ready to serve ${this.client.guilds.cache.size} guilds with ${this.client.guilds.cache.reduce((a, g) => a + g.memberCount, 0)} members.`,
       { label: "Ready" }

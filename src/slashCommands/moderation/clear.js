@@ -18,7 +18,7 @@ module.exports = {
     ),
   async execute(interaction) {
     try {
-      interaction.deferReply({ ephemeral: true });
+      await interaction.deferReply({ ephemeral: true });
       const logging = await Logging.findOne({ guildId: interaction.guild.id });
 
       const client = interaction.client;
@@ -42,7 +42,7 @@ module.exports = {
             iconURL: interaction.member.displayAvatarURL({ dynamic: true }),
           })
           .setTitle(`${fail} | Purge Error`)
-          .setDescription(`Please Provide a message count between 1 and 200!`)
+          .setDescription(`Please Provide a message count between 1 and 1000!`)
           .setTimestamp()
           .setFooter({
             text: `${process.env.AUTH_DOMAIN}`,
@@ -60,19 +60,19 @@ module.exports = {
       let totalDeleted = 0;
 
       while (totalDeleted < amount) {
-        const messagesToDelete = Math.min(100, amount - totalDeleted);
-        try {
-          const deletedMessages = await channel.bulkDelete(messagesToDelete, true);
-          totalDeleted += deletedMessages.size;
-          if (deletedMessages.size === 0) {
-            break;
-          } else if (deletedMessages.size < 100) {
-            continue;
+          const messagesToDelete = Math.min(100, amount - totalDeleted);
+          try {
+            const deletedMessages = await channel.bulkDelete(messagesToDelete, true);
+            totalDeleted += deletedMessages.size;
+            if (deletedMessages.size === 0) {
+              break;
+            } else if (deletedMessages.size <= 100) {
+              console.log(`Deleting ${messagesToDelete} ${messagesToDelete === 1 ? "message" : "messages"}...`);
+            }
+          } catch (error) {
+            return interaction.editReply({ content: "There was an error trying to delete messages in this channel.", ephemeral: true });
           }
-        } catch (error) {
-          return interaction.editReply({ content: "There was an error trying to delete messages in this channel.", ephemeral: true });
-        }
-        setTimeout(() => { }, 45000)
+        await setTimeout(() => {}, 10000)
       }
 
 

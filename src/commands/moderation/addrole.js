@@ -42,23 +42,6 @@ module.exports = class extends Command {
             .setColor(message.guild.me.displayHexColor),
         ],
       });
-    if (member.roles.highest.position >= message.member.roles.highest.position)
-      return message.channel.sendCustom({
-        embeds: [
-          new MessageEmbed()
-            .setAuthor(
-              `${message.author.tag}`,
-              message.author.displayAvatarURL({ dynamic: true })
-            )
-            .setTitle(`${fail} Role Error`)
-            .setDescription(
-              `The Provided Role has an equal or higher role than you.`
-            )
-            .setTimestamp()
-            .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-            .setColor(message.guild.me.displayHexColor),
-        ],
-      });
 
     const role =
       getRoleFromMention(message, args[1]) ||

@@ -41,7 +41,7 @@ module.exports = {
       const mentionedMember = interaction.options.getMember("member");
       const reason =
         interaction.options.getString("reason") || "No Reason Provided";
-      const time = ms(interaction.options.getString("time")) / 1000 || ms("1d") / 1000;
+      const time = ms(interaction.options.getString("time") !== null ? interaction.options.getString("time") : "1d") / 1000;
 
       if (!mentionedMember) {
         let validmention = new MessageEmbed()

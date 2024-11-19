@@ -61,6 +61,7 @@
     "intl": "^1.2.5",
     "lodash": "^4.17.21",
     "logs.chat": "^1.0.3",
+    "mathfunctionsforeval.js": "^1.0.2",
     "memorystore": "^1.6.5",
     "modmail.djs": "^1.1.0",
     "moment": "^2.27.0",

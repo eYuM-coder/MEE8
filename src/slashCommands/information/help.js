@@ -11,7 +11,9 @@ const fs = require("fs");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("help")
-    .setDescription("Shows every command the bot currently has"),
+    .setDescription("Shows every command the bot currently has")
+    .setContexts([0, 1])
+    .setIntegrationTypes(0),
   async execute(interaction) {
     const emoji = {
       information: `${emojis.information}`,

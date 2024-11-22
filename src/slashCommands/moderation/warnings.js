@@ -11,7 +11,9 @@ module.exports = {
     .setDescription("Shows the warnings for a user")
     .addUserOption((option) =>
       option.setName("member").setDescription("The member").setRequired(true),
-    ),
+    )
+    .setContexts(0)
+    .setIntegrationTypes(0),
   async execute(interaction) {
     try {
       let client = interaction.client;

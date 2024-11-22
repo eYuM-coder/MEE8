@@ -5,7 +5,9 @@ module.exports = {
   data: new SlashCommandBuilder()
   .setName("kill")
   .setDescription("Kill someone! (fake)")
-  .addUserOption((option) => option.setName("member").setDescription("The member to (fake) kill").setRequired(true)),
+  .addUserOption((option) => option.setName("member").setDescription("The member to (fake) kill").setRequired(true))
+  .setContexts(0)
+  .setIntegrationTypes(0),
   async execute(interaction) {
     try {
       const guildDB = await Guild.findOne({

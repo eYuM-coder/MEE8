@@ -9,7 +9,7 @@ module.exports = class extends Command {
       name: "uptime",
       aliases: ["ut", "uptime"],
       cooldown: 2,
-      description: "Sends you Pogy's Uptime!",
+      description: `Sends you ${config.botName}'s Uptime!`,
       category: "Information",
     });
   }
@@ -32,13 +32,13 @@ module.exports = class extends Command {
     seconds = parseInt(seconds % 60);
     uptime = `${seconds}s`;
     if (days) {
-      uptime = `${days} days, ${hours} hours, ${minutes} minutes, ${seconds} seconds`;
+      uptime = `${days} ${days === 1 ? "day" : "days"}, ${hours} ${hours === 1 ? "hour" : "hours"}, ${minutes} ${minutes === 1 ? "minutes" : "minutes"} and ${seconds} ${seconds === 1 ? "second" : "seconds"}`;
     } else if (hours) {
-      uptime = `${hours} hours, ${minutes} minutes and ${seconds} seconds`;
+      uptime = `${hours} ${hours === 1 ? "hour" : "hours"}, ${minutes} ${minutes === 1 ? "minutes" : "minutes"} and ${seconds} ${seconds === 1 ? "second" : "seconds"}`;
     } else if (minutes) {
-      uptime = `${minutes} minutes and ${seconds} seconds`;
+      uptime = `${minutes} ${minutes === 1 ? "minute" : "minutes"} and ${seconds} ${seconds === 1 ? "second" : "seconds"}`;
     } else if (seconds) {
-      uptime = `${seconds} seconds`;
+      uptime = `${seconds} ${seconds === 1 ? "second" : "seconds"}`;
     }
     // const date = moment().subtract(days, 'ms').format('dddd, MMMM Do YYYY');
     const embed = new MessageEmbed()

@@ -17,7 +17,9 @@ module.exports = {
       option
         .setName("reason")
         .setDescription("The reason to unlock the channel"),
-    ),
+    )
+    .setContexts(0)
+    .setIntegrationTypes(0),
   async execute(interaction) {
     try {
       const client = interaction.client;
@@ -49,22 +51,21 @@ module.exports = {
 
       channel.permissionOverwrites
         .edit(interaction.guild.me, { SEND_MESSAGES: true })
-        .catch(() => {});
+        .catch(() => { });
 
       channel.permissionOverwrites
         .edit(interaction.guild.id, { SEND_MESSAGES: true })
-        .catch(() => {});
+        .catch(() => { });
 
       channel.permissionOverwrites
         .edit(interaction.member.id, { SEND_MESSAGES: true })
-        .catch(() => {});
+        .catch(() => { });
 
       const embed = new MessageEmbed()
         .setDescription(
-          `${success} | Successfully unlocked **${channel}** ${
-            logging && logging.moderation.include_reason === "true"
-              ? `\n\n**Reason:** ${reason}`
-              : ``
+          `${success} | Successfully unlocked **${channel}** ${logging && logging.moderation.include_reason === "true"
+            ? `\n\n**Reason:** ${reason}`
+            : ``
           }`,
         )
         .setColor(client.color.green);
@@ -73,11 +74,11 @@ module.exports = {
         .then(() => {
           if (logging && logging.moderation.delete_reply === "true") {
             setTimeout(() => {
-              interaction.deleteReply().catch(() => {});
+              interaction.deleteReply().catch(() => { });
             }, 5000);
           }
         })
-        .catch(() => {});
+        .catch(() => { });
     } catch (err) {
       console.error(err);
       interaction.reply({

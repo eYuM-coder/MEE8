@@ -5,7 +5,9 @@ const { MessageEmbed } = require("discord.js");
 module.exports = {
   data: new SlashCommandBuilder()
   .setName("joke")
-  .setDescription("Generate a random joke from jokeAPI"),
+  .setDescription("Generate a random joke from jokeAPI")
+  .setContexts([0, 1, 2])
+  .setIntegrationTypes([0, 1]),
   async execute(interaction) {
     const data = await fetch(
       `https://sv443.net/jokeapi/v2/joke/Programming,Miscellaneous?blacklistFlags=nsfw,religious,political,racist,sexist`

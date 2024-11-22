@@ -6,7 +6,9 @@ const { createProfile } = require("../../utils/utils");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("beg")
-    .setDescription("Beg for money"),
+    .setDescription("Beg for money")
+    .setContexts(0)
+    .setIntegrationTypes(0),
   async execute(interaction) {
     const amount = Math.floor(Math.random() * 2000);
     const profile = await Profile.findOne({ userID: interaction.user.id, guildId: interaction.guild.id });

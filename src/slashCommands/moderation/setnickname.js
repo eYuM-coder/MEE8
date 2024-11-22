@@ -15,7 +15,9 @@ module.exports = {
     .addStringOption((option) =>
       option.setName("nickname").setDescription("The nickname"),
     )
-    .addStringOption((option) => option.setName("reason").setDescription("The reason for the change")),
+    .addStringOption((option) => option.setName("reason").setDescription("The reason for the change"))
+    .setContexts(0)
+    .setIntegrationTypes(0),
   async execute(interaction) {
     try {
       const client = interaction.client;
@@ -49,11 +51,11 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => {});
+                interaction.deleteReply().catch(() => { });
               }, 5000);
             }
           })
-          .catch(() => {});
+          .catch(() => { });
       }
 
       if (member.id === interaction.member.id) {
@@ -72,11 +74,11 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => {});
+                interaction.deleteReply().catch(() => { });
               }, 5000);
             }
           })
-          .catch(() => {});
+          .catch(() => { });
       }
 
       if (
@@ -100,11 +102,11 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => {});
+                interaction.deleteReply().catch(() => { });
               }, 5000);
             }
           })
-          .catch(() => {});
+          .catch(() => { });
       }
 
       if (!nickname) {
@@ -118,11 +120,11 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => {});
+                interaction.deleteReply().catch(() => { });
               }, 5000);
             }
           })
-          .catch(() => {});
+          .catch(() => { });
       }
 
       let nick = nickname;
@@ -140,65 +142,65 @@ module.exports = {
             .then(async () => {
               if (logging && logging.moderation.delete_reply === "true") {
                 setTimeout(() => {
-                  interaction.deleteReply().catch(() => {});
+                  interaction.deleteReply().catch(() => { });
                 }, 5000);
               }
             })
-            .catch(() => {});
+            .catch(() => { });
 
-            if (logging) {
-              const role = interaction.guild.roles.cache.get(
-                logging.moderation.ignore_role
-              );
-              const channel = interaction.guild.channels.cache.get(
-                logging.moderation.channel
-              );
-    
-              if (logging.moderation.toggle == "true") {
-                if (channel) {
-                  if (interaction.channel.id !== logging.moderation.ignore_channel) {
-                    if (
-                      !role ||
-                      (role &&
-                        !interaction.member.roles.cache.find(
-                          (r) => r.name.toLowerCase() === role.name
-                        ))
-                    ) {
-                      if (logging.moderation.nicknames == "true") {
-                        let color = logging.moderation.color;
-                        if (color == "#000000") color = interaction.client.color.yellow;
-    
-                        let logcase = logging.moderation.caseN;
-                        if (!logcase) logcase = `1`;
-    
-                        let reason = interaction.options.getString("reason");
-    
-                        if (!reason) reason = "No reason provided";
-                        if (reason.length > 1024)
-                          reason = reason.slice(0, 1021) + "...";
-    
-                        const logEmbed = new MessageEmbed()
-                          .setAuthor(
-                            `Action: \`Set Nickname\` | ${member.user.tag} | Case #${logcase}`,
-                            member.user.displayAvatarURL({ format: "png" })
-                          )
-                          .addField("User", `${member}`, true)
-                          .addField("Moderator", `${interaction.user}`, true)
-                          .addField("Reason", `${reason}`, true)
-                          .setFooter({ text: `ID: ${member.id}` })
-                          .setTimestamp()
-                          .setColor(color);
-    
-                        channel.send({ embeds: [logEmbed] }).catch(() => {});
-    
-                        logging.moderation.caseN = logcase + 1;
-                        await logging.save().catch(() => {});
-                      }
+          if (logging) {
+            const role = interaction.guild.roles.cache.get(
+              logging.moderation.ignore_role
+            );
+            const channel = interaction.guild.channels.cache.get(
+              logging.moderation.channel
+            );
+
+            if (logging.moderation.toggle == "true") {
+              if (channel) {
+                if (interaction.channel.id !== logging.moderation.ignore_channel) {
+                  if (
+                    !role ||
+                    (role &&
+                      !interaction.member.roles.cache.find(
+                        (r) => r.name.toLowerCase() === role.name
+                      ))
+                  ) {
+                    if (logging.moderation.nicknames == "true") {
+                      let color = logging.moderation.color;
+                      if (color == "#000000") color = interaction.client.color.yellow;
+
+                      let logcase = logging.moderation.caseN;
+                      if (!logcase) logcase = `1`;
+
+                      let reason = interaction.options.getString("reason");
+
+                      if (!reason) reason = "No reason provided";
+                      if (reason.length > 1024)
+                        reason = reason.slice(0, 1021) + "...";
+
+                      const logEmbed = new MessageEmbed()
+                        .setAuthor(
+                          `Action: \`Set Nickname\` | ${member.user.tag} | Case #${logcase}`,
+                          member.user.displayAvatarURL({ format: "png" })
+                        )
+                        .addField("User", `${member}`, true)
+                        .addField("Moderator", `${interaction.user}`, true)
+                        .addField("Reason", `${reason}`, true)
+                        .setFooter({ text: `ID: ${member.id}` })
+                        .setTimestamp()
+                        .setColor(color);
+
+                      channel.send({ embeds: [logEmbed] }).catch(() => { });
+
+                      logging.moderation.caseN = logcase + 1;
+                      await logging.save().catch(() => { });
                     }
                   }
                 }
               }
             }
+          }
         } catch (err) {
           console.error(err.stack);
           interaction.reply({
@@ -222,12 +224,12 @@ module.exports = {
         interaction.reply({
           embeds: [
             new MessageEmbed()
-            .setAuthor({
-              name: `${interaction.user.tag}`,
-              iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
-            })
-            .setTitle(`${fail} | Set Nickname Error`)
-            .setDescription(`The nickname is too long!`)
+              .setAuthor({
+                name: `${interaction.user.tag}`,
+                iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
+              })
+              .setTitle(`${fail} | Set Nickname Error`)
+              .setDescription(`The nickname is too long!`)
           ],
         });
       }

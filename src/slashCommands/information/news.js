@@ -8,8 +8,10 @@ moment.suppressDeprecationWarnings = true;
 
 module.exports = {
   data: new SlashCommandBuilder()
-  .setName("news")
-  .setDescription(`Shows ${config.botName}'s latest news`),
+    .setName("news")
+    .setDescription(`Shows ${config.botName}'s latest news`)
+    .setContexts(0)
+    .setIntegrationTypes(0),
   async execute(interaction) {
     const guildDB = await Guild.findOne({});
 
@@ -22,11 +24,11 @@ module.exports = {
     if (!guildDB) return interaction.reply({ content: `${language.noNews}`, ephemeral: true });
 
     let embed = new MessageEmbed()
-    .setColor(interaction.guild.me.displayHexColor)
-    .setTitle(`${config.botName} News`)
-    .setDescription(`***__${language.datePublished}__ ${moment(guildDB.time).format("dddd, MMMM Do YYYY")}*** *__[\`(${moment(guildDB.time).fromNow()})\`] (https://example.com)__*\n\n${guildDB.news}`)
-    .setFooter({ text: "https://example.com" })
-    .setTimestamp();
+      .setColor(interaction.guild.me.displayHexColor)
+      .setTitle(`${config.botName} News`)
+      .setDescription(`***__${language.datePublished}__ ${moment(guildDB.time).format("dddd, MMMM Do YYYY")}*** *__[\`(${moment(guildDB.time).fromNow()})\`] (https://example.com)__*\n\n${guildDB.news}`)
+      .setFooter({ text: "https://example.com" })
+      .setTimestamp();
     interaction.reply({ embeds: [embed] }).catch(() => {
       interaction.reply({ content: `${language.noNews}`, ephemeral: true });
     });

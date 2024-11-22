@@ -22,7 +22,9 @@ module.exports = {
   data: new SlashCommandBuilder()
   .setName("emojify")
   .setDescription("Emojify a text")
-  .addStringOption((option) => option.setName("message").setDescription("The message to make big").setRequired(true)),
+  .addStringOption((option) => option.setName("message").setDescription("The message to make big").setRequired(true))
+  .setContexts(0)
+  .setIntegrationTypes(0),
   async execute(interaction) {
     try {
       const guildDB = await Guild.findOne({

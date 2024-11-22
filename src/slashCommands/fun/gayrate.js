@@ -6,7 +6,9 @@ module.exports = {
   data: new SlashCommandBuilder()
   .setName("gayrate")
   .setDescription("See how gay you are")
-  .addUserOption((option) => option.setName("member").setDescription("Optional")),
+  .addUserOption((option) => option.setName("member").setDescription("Optional"))
+  .setContexts(0)
+  .setIntegrationTypes(0),
   async execute(interaction) {
       try {
       const guildDB = await Guild.findOne({

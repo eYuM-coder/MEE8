@@ -6,9 +6,11 @@ moment.suppressDeprecationWarnings = true;
 
 module.exports = {
   data: new SlashCommandBuilder()
-  .setName("permissions")
-  .setDescription("Gets the permissions of a user.")
-  .addUserOption((option) => option.setName("user").setDescription("The user to get the permissions of.").setRequired(true)),
+    .setName("permissions")
+    .setDescription("Gets the permissions of a user.")
+    .addUserOption((option) => option.setName("user").setDescription("The user to get the permissions of.").setRequired(true))
+    .setContexts(0)
+    .setIntegrationTypes(0),
   async execute(interaction) {
     const member = interaction.options.getMember("user");
 
@@ -21,14 +23,14 @@ module.exports = {
     }
 
     const embed = new MessageEmbed()
-    .setTitle(`${member.displayName}'s permissions`)
-    .setDescription(`\`\`\`diff\n${finalPermissions.join("\n")}\n\`\`\``)
-    .setFooter({
-      text: interaction.user.tag,
-      iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
-    })
-    .setTimestamp()
-    .setColor(interaction.guild.me.displayHexColor);
+      .setTitle(`${member.displayName}'s permissions`)
+      .setDescription(`\`\`\`diff\n${finalPermissions.join("\n")}\n\`\`\``)
+      .setFooter({
+        text: interaction.user.tag,
+        iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
+      })
+      .setTimestamp()
+      .setColor(interaction.guild.me.displayHexColor);
     interaction.reply({ embeds: [embed], ephemeral: true });
   }
 };

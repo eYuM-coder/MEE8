@@ -6,7 +6,9 @@ const { MessageEmbed } = require("discord.js");
 module.exports = {
   data: new SlashCommandBuilder()
   .setName("catfact")
-  .setDescription("Generate random cat facts"),
+  .setDescription("Generate random cat facts")
+  .setContexts([0, 1, 2])
+  .setIntegrationTypes([0, 1]),
   async execute(interaction) {
     const res = await fetch("https://catfact.ninja/fact").catch(() => {})
     const fact = (await res.json()).fact;

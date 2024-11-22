@@ -16,7 +16,9 @@ module.exports = {
     )
     .addChannelOption((option) =>
       option.setName("channel").setDescription("The channel"),
-    ),
+    )
+    .setContexts(0)
+    .setIntegrationTypes(0),
   async execute(interaction) {
     try {
       if (!interaction.member.permissions.has("MANAGE_CHANNELS")) {
@@ -57,11 +59,11 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => {});
+                interaction.deleteReply().catch(() => { });
               }, 5000);
             }
           })
-          .catch(() => {});
+          .catch(() => { });
       }
 
       const rate = ms(interaction.options.getString("rate"));
@@ -82,11 +84,11 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => {});
+                interaction.deleteReply().catch(() => { });
               }, 5000);
             }
           })
-          .catch(() => {});
+          .catch(() => { });
       }
 
       const number = parseInt(rate);
@@ -107,11 +109,11 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => {});
+                interaction.deleteReply().catch(() => { });
               }, 5000);
             }
           })
-          .catch(() => {});
+          .catch(() => { });
       }
 
       await channel.setRateLimitPerUser(rate);
@@ -130,11 +132,11 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => {});
+                interaction.deleteReply().catch(() => { });
               }, 5000);
             }
           })
-          .catch(() => {});
+          .catch(() => { });
       } else {
         interaction
           .reply({
@@ -152,11 +154,11 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => {});
+                interaction.deleteReply().catch(() => { });
               }, 5000);
             }
           })
-          .catch(() => {});
+          .catch(() => { });
       }
     } catch (err) {
       console.error(err);

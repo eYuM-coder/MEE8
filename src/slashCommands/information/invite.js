@@ -6,7 +6,9 @@ const Guild = require("../../database/schemas/Guild");
 module.exports = {
   data: new SlashCommandBuilder()
   .setName("invite")
-  .setDescription(`Sends you the invite to ${config.botName}'s support server or the bots invite link`),
+  .setDescription(`Sends you the invite to ${config.botName}'s support server or the bots invite link`)
+  .setContexts(0)
+  .setIntegrationTypes(0),
   async execute(interaction) {
     const guildDB = await Guild.findOne({
       guildId: interaction.guild.id,
@@ -65,7 +67,7 @@ module.exports = {
       }
 
       if (value === "second") {
-        editEmbed.setDescription(`${language.invite}(https://discord.com/api/oauth2/authorize?client_id=1001140963818864750&permissions=4398046511103&scope=bot%20applications.commands) ${client.emoji.success}`)
+        editEmbed.setDescription(`${language.invite}(${config.invite_link}) ${client.emoji.success}`)
         .setColor(client.color.green)
         return await interaction.editReply({ embeds: [editEmbed] });
       }

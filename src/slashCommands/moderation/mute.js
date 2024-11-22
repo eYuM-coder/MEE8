@@ -21,7 +21,9 @@ module.exports = {
     )
     .addStringOption((option) =>
       option.setName("reason").setDescription("The reason of the timeout"),
-    ),
+    )
+    .setContexts(0)
+    .setIntegrationTypes(0),
   async execute(interaction) {
     try {
       const client = interaction.client;
@@ -48,11 +50,11 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => {});
+                interaction.deleteReply().catch(() => { });
               }, 5000);
             }
           })
-          .catch(() => {});
+          .catch(() => { });
       }
 
       if (
@@ -69,11 +71,11 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => {});
+                interaction.deleteReply().catch(() => { });
               }, 5000);
             }
           })
-          .catch(() => {});
+          .catch(() => { });
       }
 
       if (!time) {
@@ -86,7 +88,7 @@ module.exports = {
         return interaction.reply({ embeds: [timevalid] }).then(async () => {
           if (logging && logging.moderation.delete_reply === "true") {
             setTimeout(() => {
-              interaction.deleteReply().catch(() => {});
+              interaction.deleteReply().catch(() => { });
             }, 5000);
           }
         });
@@ -106,20 +108,18 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => {});
+                interaction.deleteReply().catch(() => { });
               }, 5000);
             }
           })
-          .catch(() => {});
+          .catch(() => { });
       }
       if (member) {
         let dmEmbed = new MessageEmbed()
           .setColor("RED")
           .setDescription(
-            `You have been muted in **${
-              interaction.guild.name
-            }**.\n\n__**Moderator:**__ ${interaction.author} **(${
-              interaction.author.tag
+            `You have been muted in **${interaction.guild.name
+            }**.\n\n__**Moderator:**__ ${interaction.author} **(${interaction.author.tag
             })**\n__**Reason:**__ ${reason || "No Reason Provided"}`,
           )
           .setTimestamp();

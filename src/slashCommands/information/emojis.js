@@ -6,7 +6,9 @@ const ReactionMenu = require("../../data/ReactionMenu.js");
 module.exports = {
   data: new SlashCommandBuilder()
   .setName("emojis")
-  .setDescription("Check the current emojis of a server"),
+  .setDescription("Check the current emojis of a server")
+  .setContexts(0)
+  .setIntegrationTypes(0),
   async execute(interaction) {
     const guildDB = await Guild.findOne({
       guildId: interaction.guild.id,

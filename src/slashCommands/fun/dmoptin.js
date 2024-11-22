@@ -6,7 +6,9 @@ const dmSystem = require("../../database/models/dmSystem");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("dmoptin")
-    .setDescription("Opts in to the DM system"),
+    .setDescription("Opts in to the DM system")
+    .setContexts(0)
+    .setIntegrationTypes(0),
   async execute(interaction) {
     try {
       const logging = await Logging.findOne({ guildId: interaction.guild.id });

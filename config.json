@@ -27,7 +27,7 @@
   },
   "maintenance": "false",
   "maintenance_threshold": "5",
-  "invite_link": "https://discord.com/oauth2/authorize?client_id=1290139203023142962&permissions=1759218604441599&scope=bot+applications.commands",
+  "invite_link": "https://discord.com/oauth2/authorize?client_id=1290139203023142962&permissions=1759218604441599&integration_type=0&scope=bot+applications.commands",
   "seo": {
     "enabled": "false",
     "title": "Bot Name",

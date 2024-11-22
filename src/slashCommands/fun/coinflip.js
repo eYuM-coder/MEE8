@@ -5,7 +5,9 @@ const Guild = require("../../database/schemas/Guild");
 module.exports = {
   data: new SlashCommandBuilder()
   .setName("coinflip")
-  .setDescription("Flip a coin"),
+  .setDescription("Flip a coin")
+  .setContexts(0)
+  .setIntegrationTypes(0),
   async execute(interaction) {
     try {
       const client = interaction.client;

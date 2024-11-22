@@ -32,7 +32,9 @@ module.exports = {
       option
         .setName("member")
         .setDescription("The member"),
-    ),
+    )
+    .setContexts(0)
+    .setIntegrationTypes(0),
   async execute(interaction) {
     const guildDB = await Guild.findOne({
       guildId: interaction.guild.id,
@@ -138,25 +140,18 @@ module.exports = {
       .setTimestamp()
       .setColor(member.displayHexColor)
       .setDescription(
-        `**• ${language.userh}** \`${member.user.username}\` | \`#${
-          member.user.discriminator
-        }\`\n** • ID:** \`${member.id}\`\n**• ${
-          language.joinedDiscord
+        `**• ${language.userh}** \`${member.user.username}\` | \`#${member.user.discriminator
+        }\`\n** • ID:** \`${member.id}\`\n**• ${language.joinedDiscord
         }** \`${moment(member.user.createdAt).format(
           "MMMM Do YYYY, h:mm:ss a",
         )}\`\n**• ${language.joinedServer}** \`${moment(member.joinedAt).format(
           "MMMM Do YYYY, h:mm:ss a",
-        )}\`\n**• Roles [${roles.length || "0"}]: ** ${
-          rolesNoob || `\`${language.noRoles}\``
-        }\n\n**• ${language.badgeslmao}** ${
-          userFlags.map((flag) => flags[flag]).join("\n") ||
-          `\`${language.noBadge}\``
-        }\n**• ${language.botBadges}** ${
-          badge || `\`None\``
-        }\n**• Last 5 Nicknames:**\n\`\`\`${
-          nickname || `No Nicknames Tracked`
-        }\`\`\`**• Last 5 Tags:**\n\`\`\`${
-          usernames || `No Tags Tracked`
+        )}\`\n**• Roles [${roles.length || "0"}]: ** ${rolesNoob || `\`${language.noRoles}\``
+        }\n\n**• ${language.badgeslmao}** ${userFlags.map((flag) => flags[flag]).join("\n") ||
+        `\`${language.noBadge}\``
+        }\n**• ${language.botBadges}** ${badge || `\`None\``
+        }\n**• Last 5 Nicknames:**\n\`\`\`${nickname || `No Nicknames Tracked`
+        }\`\`\`**• Last 5 Tags:**\n\`\`\`${usernames || `No Tags Tracked`
         }\`\`\` `,
       );
 

@@ -6,7 +6,7 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName("role")
     .setDescription("Adds a role to a user.")
-    .addSubCommand((subcommand) =>
+    .addSubcommand((subcommand) =>
       subcommand
         .setName("all")
         .setDescription("Adds a role to all users.")
@@ -20,7 +20,7 @@ module.exports = {
           option.setName("remove").setDescription("Remove role or not"),
         ),
     )
-    .addSubCommand((subcommand) =>
+    .addSubcommand((subcommand) =>
       subcommand
         .setName("bots")
         .setDescription("Adds a role to all bots.")
@@ -34,7 +34,7 @@ module.exports = {
           option.setName("remove").setDescription("Remove role or not"),
         ),
     )
-    .addSubCommand((subcommand) =>
+    .addSubcommand((subcommand) =>
       subcommand
         .setName("humans")
         .setDescription("Adds a role to all humans.")
@@ -48,7 +48,7 @@ module.exports = {
           option.setName("remove").setDescription("Remove role or not"),
         ),
     )
-    .addSubCommand((subcommand) =>
+    .addSubcommand((subcommand) =>
       subcommand
         .setName("add")
         .setDescription("Adds a role to a user.")
@@ -65,7 +65,7 @@ module.exports = {
             .setRequired(true),
         ),
     )
-    .addSubCommand((subcommand) =>
+    .addSubcommand((subcommand) =>
       subcommand
         .setName("remove")
         .setDescription("Removes a role from a user.")
@@ -81,7 +81,9 @@ module.exports = {
             .setDescription("The role to remove.")
             .setRequired(true),
         ),
-    ),
+    )
+    .setContexts(0)
+    .setIntegrationTypes(0),
   async execute(interaction) {
     try {
       if (!interaction.member.permissions.has("MANAGE_ROLES") && !interaction.client.config.owner.includes(interaction.member.id)) {
@@ -606,6 +608,7 @@ module.exports = {
         }
       }
     } catch (error) {
+      const fail = interaction.client.emoji.fail;
       let botrolepossiblylow = new MessageEmbed()
         .setAuthor({
           name: `${interaction.user.tag}`,

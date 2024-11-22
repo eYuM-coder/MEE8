@@ -6,7 +6,9 @@ const { MessageEmbed } = require("discord.js");
 module.exports = {
   data: new SlashCommandBuilder()
   .setName("birdfact")
-  .setDescription("Generate random bird facts"),
+  .setDescription("Generate random bird facts")
+  .setContexts([0, 1, 2])
+  .setIntegrationTypes([0, 1]),
   async execute(interaction) {
     const res = await fetch("https://some-random-api.ml/facts/bird").catch(() => {});
 

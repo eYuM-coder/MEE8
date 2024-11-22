@@ -8,7 +8,9 @@ module.exports = {
     .setName("dm")
     .setDescription("DMs a user")
     .addUserOption((option) => option.setName("member").setDescription("The user to dm").setRequired(true))
-    .addStringOption((option) => option.setName("message").setDescription("The message to send to the user.").setRequired(true)),
+    .addStringOption((option) => option.setName("message").setDescription("The message to send to the user.").setRequired(true))
+    .setContexts(0)
+    .setIntegrationTypes(0),
   async execute(interaction) {
     try {
       const client = interaction.client;

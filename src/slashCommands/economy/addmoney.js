@@ -9,7 +9,9 @@ module.exports = {
     .setName("addmoney")
     .setDescription("Add money to a users wallet.")
     .addUserOption((option) => option.setName("member").setDescription("The member").setRequired(true))
-    .addIntegerOption((option) => option.setName("amount").setDescription("The amount to add").setRequired(true)),
+    .addIntegerOption((option) => option.setName("amount").setDescription("The amount to add").setRequired(true))
+    .setContexts(0)
+    .setIntegrationTypes(0),
   async execute(interaction) {
     const user = interaction.options.getMember("member");
     const amount = interaction.options.getInteger("amount");

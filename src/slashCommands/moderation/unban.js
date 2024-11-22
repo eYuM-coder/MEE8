@@ -16,7 +16,9 @@ module.exports = {
     )
     .addStringOption((option) =>
       option.setName("reason").setDescription("The reason for the unban"),
-    ),
+    )
+    .setContexts(0)
+    .setIntegrationTypes(0),
   async execute(interaction) {
     try {
       const client = interaction.client;
@@ -49,11 +51,11 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => {});
+                interaction.deleteReply().catch(() => { });
               }, 5000);
             }
           })
-          .catch(() => {})
+          .catch(() => { })
           .then(() => {
             let dmEmbed = new MessageEmbed()
               .setColor("GREEN")

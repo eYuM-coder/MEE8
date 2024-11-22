@@ -12,7 +12,9 @@ module.exports = {
         .setName("role")
         .setDescription("The role to check")
         .setRequired(true),
-    ),
+    )
+    .setContexts(0)
+    .setIntegrationTypes(0),
   async execute(interaction) {
     const guildDB = await Guild.findOne({
       guildId: interaction.guild.id,

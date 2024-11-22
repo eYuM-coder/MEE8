@@ -3405,7 +3405,9 @@ const rightThere = [
 module.exports = {
   data: new SlashCommandBuilder()
   .setName("kaomoji")
-  .setDescription("Send a kaomoji text!"),
+  .setDescription("Send a kaomoji text!")
+  .setContexts([0, 1, 2])
+  .setIntegrationTypes([0, 1]),
   async execute(interaction) {
     interaction.reply({ content: `${rightThere[Math.round(Math.random() * (rightThere.length - 1))]}`})
     .catch(() => {});

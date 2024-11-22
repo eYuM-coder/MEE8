@@ -7,7 +7,9 @@ const { execute } = require("./beg");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("daily")
-    .setDescription("Collect daily earnings. 24hr cooldown."),
+    .setDescription("Collect daily earnings. 24hr cooldown.")
+    .setContexts(0)
+    .setIntegrationTypes(0),
   async execute(interaction) {
     const profile = await Profile.findOne({ guildId: interaction.guild.id, userID: interaction.user.id });
     if (!profile) {

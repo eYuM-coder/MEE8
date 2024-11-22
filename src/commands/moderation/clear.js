@@ -26,10 +26,6 @@ module.exports = class extends Command {
     try {
       const logging = await Logging.findOne({ guildId: message.guild.id });
 
-      if (logging && logging.moderation.delete_after_executed === "true") {
-        message.delete().catch(() => { });
-      }
-
       const client = message.client;
       const fail = client.emoji.fail;
       const success = client.emoji.success;
@@ -61,28 +57,44 @@ module.exports = class extends Command {
         reason = reason.slice(0, 1021) + "...";
       }
 
-      let messages;
-      messages = amount;
-
       let totalDeleted = 0;
+      const TWO_WEEKS = 14 * 24 * 60 * 60 * 1000; // 14 days in milliseconds
+      const now = Date.now(); // Current timestamp
 
       while (totalDeleted < amount) {
-        const messagesToDelete = Math.min(100, amount - totalDeleted);
+        const messagesToFetch = Math.min(100, amount - totalDeleted);
         try {
-          const deletedMessages = await channel.bulkDelete(messagesToDelete, true);
+          // Fetch messages
+          const fetchedMessages = await channel.messages.fetch({ limit: messagesToFetch, before: message.id });
+
+          // Filter out messages older than 14 days
+          const validMessages = fetchedMessages.filter(
+            (msg) => now - msg.createdTimestamp < TWO_WEEKS
+          );
+
+          if (validMessages.size === 0) break; // No eligible messages to delete
+
+          // Bulk delete the valid messages
+          const deletedMessages = await channel.bulkDelete(validMessages, true);
+
           totalDeleted += deletedMessages.size;
-          logger.info(`Deleted ${deletedMessages.size} ${deletedMessages.size === 1 ? "message" : "messages"}.`, { label: "Purge" });
-          if (deletedMessages.size === 0) {
-            break;
-          } else if (deletedMessages.size < 100) {
-            continue;
-          }
+
+          logger.info(
+            `Deleted ${deletedMessages.size} ${deletedMessages.size === 1 ? "message" : "messages"}.`,
+            { label: "Purge" }
+          );
+
+          // If fewer than `messagesToFetch` were deleted, stop early
+          if (deletedMessages.size < messagesToFetch) break;
         } catch (error) {
-          logger.info(`Error deleting messages: ${error}`, { label: "ERROR" });
-          return message.channel.send({ content: "There was an error trying to delete messages in this channel." });
+          logger.error(`Error deleting messages: ${error}`, { label: "ERROR" });
+          return message.channel.send({
+            content: "There was an error trying to delete messages in this channel.",
+          });
         }
-        setTimeout(() => { }, 45000);
+        await setTimeout(() => { }, 10000);
       }
+
 
       const embed = new MessageEmbed()
 
@@ -96,6 +108,10 @@ module.exports = class extends Command {
         )
 
         .setColor(message.guild.me.displayHexColor);
+
+      if (logging && logging.moderation.delete_after_executed === "true") {
+        message.delete().catch(() => { });
+      }
 
       message.channel
         .send({ embeds: [embed] })

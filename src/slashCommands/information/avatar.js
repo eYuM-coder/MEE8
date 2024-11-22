@@ -6,7 +6,9 @@ module.exports = {
   data: new SlashCommandBuilder()
   .setName("avatar")
   .setDescription("Displays a user avatar")
-  .addUserOption((option) => option.setName("member").setDescription("The user to get the avatar of").setRequired(true)),
+  .addUserOption((option) => option.setName("member").setDescription("The user to get the avatar of").setRequired(true))
+  .setContexts(0)
+  .setIntegrationTypes(0),
   async execute(interaction) {
     const guildDB = await Guild.findOne({
       guildId: interaction.guild.id,

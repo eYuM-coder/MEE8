@@ -15,7 +15,9 @@ module.exports = {
     )
     .addStringOption((option) =>
       option.setName("reason").setDescription("The reason for the purge"),
-    ),
+    )
+    .setContexts(0)
+    .setIntegrationTypes(0),
   async execute(interaction) {
     try {
       await interaction.deferReply({ ephemeral: true });
@@ -54,25 +56,42 @@ module.exports = {
         });
       }
 
-      let messages;
-      messages = amount;
-
       let totalDeleted = 0;
+      const TWO_WEEKS = 14 * 24 * 60 * 60 * 1000; // 14 days in milliseconds
+      const now = Date.now(); // Current timestamp
 
       while (totalDeleted < amount) {
-          const messagesToDelete = Math.min(100, amount - totalDeleted);
-          try {
-            const deletedMessages = await channel.bulkDelete(messagesToDelete, true);
-            totalDeleted += deletedMessages.size;
-            if (deletedMessages.size === 0) {
-              break;
-            } else if (deletedMessages.size <= 100) {
-              console.log(`Deleting ${messagesToDelete} ${messagesToDelete === 1 ? "message" : "messages"}...`);
-            }
-          } catch (error) {
-            return interaction.editReply({ content: "There was an error trying to delete messages in this channel.", ephemeral: true });
-          }
-        await setTimeout(() => {}, 10000)
+        const messagesToFetch = Math.min(100, amount - totalDeleted);
+        try {
+          // Fetch messages
+          const fetchedMessages = await channel.messages.fetch({ limit: messagesToFetch, before: interaction.id });
+
+          // Filter out messages older than 14 days
+          const validMessages = fetchedMessages.filter(
+            (msg) => now - msg.createdTimestamp < TWO_WEEKS
+          );
+
+          if (validMessages.size === 0) break; // No eligible messages to delete
+
+          // Bulk delete the valid messages
+          const deletedMessages = await channel.bulkDelete(validMessages, true);
+
+          totalDeleted += deletedMessages.size;
+
+          logger.info(
+            `Deleted ${deletedMessages.size} ${deletedMessages.size === 1 ? "message" : "messages"}.`,
+            { label: "Purge" }
+          );
+
+          // If fewer than `messagesToFetch` were deleted, stop early
+          if (deletedMessages.size < messagesToFetch) break;
+        } catch (error) {
+          logger.error(`Error deleting messages: ${error}`, { label: "ERROR" });
+          return interaction.editReply({
+            content: "There was an error trying to delete messages in this channel.",
+          });
+        }
+        await setTimeout(() => { }, 10000);
       }
 
 
@@ -134,7 +153,7 @@ module.exports = {
       }
     } catch (err) {
       logger.info(`An error occurred: ${err}`, { label: "ERROR" });
-      interaction.reply({
+      interaction.editReply({
         content: "This command cannot be used in Direct Messages.",
         ephemeral: true,
       });

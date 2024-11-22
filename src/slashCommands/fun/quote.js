@@ -6,7 +6,9 @@ module.exports = {
   .setName("quote")
   .setDescription("Make a quoted text!")
   .addStringOption((option) => option.setName("text").setDescription("The text to quote").setRequired(true))
-  .addChannelOption((option) => option.setName("channel").setDescription("This is optional")),
+  .addChannelOption((option) => option.setName("channel").setDescription("This is optional"))
+  .setContexts(0)
+  .setIntegrationTypes(0),
   async execute(interaction) {
     try {
       const guildDB = await Guild.findOne({

@@ -15,7 +15,9 @@ module.exports = {
     )
     .addStringOption((option) =>
       option.setName("reason").setDescription("The reason of the kick"),
-    ),
+    )
+    .setContexts(0)
+    .setIntegrationTypes(0),
   async execute(interaction) {
     try {
       const client = interaction.client;
@@ -41,11 +43,11 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => {});
+                interaction.deleteReply().catch(() => { });
               }, 5000);
             }
           })
-          .catch(() => {});
+          .catch(() => { });
       }
 
       if (
@@ -62,11 +64,11 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => {});
+                interaction.deleteReply().catch(() => { });
               }, 5000);
             }
           })
-          .catch(() => {});
+          .catch(() => { });
       }
       if (member === interaction.author) {
         let kickerror = new MessageEmbed()
@@ -77,11 +79,11 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => {});
+                interaction.deleteReply().catch(() => { });
               }, 5000);
             }
           })
-          .catch(() => {});
+          .catch(() => { });
       }
 
       if (member) {
@@ -89,10 +91,8 @@ module.exports = {
         let kicksuccess = new MessageEmbed()
           .setColor("GREEN")
           .setDescription(
-            `${
-              client.emoji.success
-            } | ${member} has been kicked. __**Reason:**__ ${
-              reason || "No reason Provided"
+            `${client.emoji.success
+            } | ${member} has been kicked. __**Reason:**__ ${reason || "No reason Provided"
             }`,
           );
         return interaction
@@ -100,20 +100,18 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => {});
+                interaction.deleteReply().catch(() => { });
               }, 5000);
             }
           })
-          .catch(() => {});
+          .catch(() => { });
       }
       if (member) {
         let dmEmbed = new MessageEmbed()
           .setColor("RED")
           .setDescription(
-            `You have been kicked in **${
-              interaction.guild.name
-            }**.\n\n__**Moderator:**__ ${interaction.author} **(${
-              interaction.author.tag
+            `You have been kicked in **${interaction.guild.name
+            }**.\n\n__**Moderator:**__ ${interaction.author} **(${interaction.author.tag
             })**\n__**Reason:**__ ${reason || "No Reason Provided"}`,
           )
           .setTimestamp();
@@ -135,7 +133,7 @@ module.exports = {
         const channel = interaction.guild.channels.cache.get(
           logging.moderation.channel
         );
-  
+
         if (logging.moderation.toggle == "true") {
           if (channel) {
             if (interaction.channel.id !== logging.moderation.ignore_channel) {
@@ -149,15 +147,15 @@ module.exports = {
                 if (logging.moderation.kick == "true") {
                   let color = logging.moderation.color;
                   if (color == "#000000") color = message.client.color.red;
-  
+
                   let logcase = logging.moderation.caseN;
                   if (!logcase) logcase = `1`;
-  
+
                   let reason = args.slice(1).join(" ");
                   if (!reason) reason = `${language.noReasonProvided}`;
                   if (reason.length > 1024)
                     reason = reason.slice(0, 1021) + "...";
-  
+
                   const logEmbed = new MessageEmbed()
                     .setAuthor(
                       `Action: \`Kick\` | ${member.user.tag} | Case #${logcase}`,
@@ -169,11 +167,11 @@ module.exports = {
                     .setFooter({ text: `ID: ${member.id}` })
                     .setTimestamp()
                     .setColor(color);
-  
-                  channel.send({ embeds: [logEmbed] }).catch(() => {});
-  
+
+                  channel.send({ embeds: [logEmbed] }).catch(() => { });
+
                   logging.moderation.caseN = logcase + 1;
-                  await logging.save().catch(() => {});
+                  await logging.save().catch(() => { });
                 }
               }
             }

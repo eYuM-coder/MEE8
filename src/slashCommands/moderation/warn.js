@@ -26,7 +26,9 @@ module.exports = {
     )
     .addStringOption((option) =>
       option.setName("time").setDescription("The time the warning expires at")
-    ),
+    )
+    .setContexts(0)
+    .setIntegrationTypes(0),
   async execute(interaction) {
     try {
       const client = interaction.client;

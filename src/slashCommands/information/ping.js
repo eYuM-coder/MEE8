@@ -6,18 +6,25 @@ const { stripIndent } = require("common-tags");
 
 module.exports = {
     data: new SlashCommandBuilder()
-    .setName("ping")
-    .setDescription("Returns the ping of the bot."),
+        .setName("ping")
+        .setDescription("Returns the ping of the bot.")
+        .setContexts([0, 1, 2])
+        .setIntegrationTypes(0),
     async execute(interaction) {
-        const guildDB = await Guild.findOne({
-            guildId: interaction.guild.id,
-        });
+        let guildDB = {};
+        try {
+            guildDB = await Guild.findOne({
+                guildId: interaction.guild.id,
+            });
+        } catch {
+            guildDB = { language: "english" }
+        }
         const client = interaction.client
         const language = require(`../../data/language/${guildDB.language}.json`)
         const embed = new MessageEmbed()
-        .setDescription(`Pinging...`)
-        .setColor(client.color.red)
-        .setFooter({ text: `Powered by ${process.env.AUTH_DOMAIN}` });
+            .setDescription(`Pinging...`)
+            .setColor(client.color.red)
+            .setFooter({ text: `Powered by ${process.env.AUTH_DOMAIN}` });
 
         const msg = await interaction.reply({ embeds: [embed], fetchReply: true });
 
@@ -36,14 +43,14 @@ module.exports = {
         **${language.discordAPI}** \`${Math.round(client.ws.ping)}ms\`
         `;
 
-        let color = interaction.guild.members.me.displayHexColor;
+        let color = "";
         if (latency < 100) {
             color = `#00ff00`;
         } else if (latency > 100 && latency < 200) {
             color = `#CCCC00`
         } else if (latency > 200) {
             color = interaction.client.color.red;
-        } else color = interaction.guild.members.me.displayHexColor;
+        }
 
         embed.setDescription(`P${vowel[Math.floor(Math.random() * vowel.length)]}ng\n${koko}`);
         embed.setColor(color);

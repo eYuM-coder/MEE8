@@ -108,7 +108,7 @@ module.exports = class extends Event {
       const embed = new Discord.MessageEmbed()
         .setColor("PURPLE")
         .setDescription(
-          `Hey Poggers! I'm **Pogy**.\n\nThank you for inviting me to your server as it means a lot to us! You can get started with [\`p!help\`](${process.env.AUTH_DOMAIN}) & customise your server settings by accessing the Dashboard [\`here\`](${process.env.AUTH_DOMAIN}/dashboard/${guild.id}).\n\n__**Current News**__\n\`\`\`\nWe are currently giving premium to all servers until 1000 guilds! If interested, please visit [this site](${process.env.AUTH_DOMAIN}/redeem).\`\`\`\n\nAgain, thank you for inviting me! (this server is now very pog)\n**- Pogy**`,
+          `Hey Poggers! I'm **${config.botName}**.\n\nThank you for inviting me to your server as it means a lot to us! You can get started with [\`p!help\`](${process.env.AUTH_DOMAIN}) & customise your server settings by accessing the Dashboard [\`here\`](${process.env.AUTH_DOMAIN}/dashboard/${guild.id}).\n\n__**Current News**__\n\`\`\`\nWe are currently giving premium to all servers until 1000 guilds! If interested, please visit [this site](${process.env.AUTH_DOMAIN}/redeem).\`\`\`\n\nAgain, thank you for inviting me! (this server is now very pog)\n**- ${config.botName}**`,
         )
         .addField(
           "\u200b",

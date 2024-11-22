@@ -5,8 +5,10 @@ const Guild = require("../../database/schemas/Guild");
 
 module.exports = {
   data: new SlashCommandBuilder()
-  .setName("uptime")
-  .setDescription(`Sends ${config.botName}'s uptime!`),
+    .setName("uptime")
+    .setDescription(`Sends ${config.botName}'s uptime!`)
+    .setContexts(0)
+    .setIntegrationTypes(0),
   async execute(interaction) {
     const guildDB = await Guild.findOne({
       guildId: interaction.guild.id,
@@ -39,9 +41,9 @@ module.exports = {
     }
     // const date = moment().subtract(days, 'ms').format('dddd, MMMM Do YYYY');
     const embed = new MessageEmbed()
-    .setDescription(`${config.botName} ${language.uptime1} \`${uptime}\`.`)
-    .setFooter({ text: `https://example.com` })
-    .setColor(interaction.guild.me.displayHexColor);
+      .setDescription(`${config.botName} ${language.uptime1} \`${uptime}\`.`)
+      .setFooter({ text: `https://example.com` })
+      .setColor(interaction.guild.me.displayHexColor);
     interaction.reply({ embeds: [embed] });
   }
 };

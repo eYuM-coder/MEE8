@@ -7,8 +7,10 @@ const Guild = require("../../database/schemas/Guild");
 
 module.exports = {
   data: new SlashCommandBuilder()
-  .setName("stats")
-  .setDescription("Shows the bots statistics"),
+    .setName("stats")
+    .setDescription("Shows the bots statistics")
+    .setContexts(0)
+    .setIntegrationTypes(0),
   async execute(interaction) {
     const guildDB = await Guild.findOne({
       guildId: interaction.guild.id,
@@ -76,19 +78,19 @@ module.exports = {
     -------
     `;
     const embed = new MessageEmbed()
-    .setAuthor({
-      name: interaction.member.displayName,
-      iconURL: interaction.member.displayAvatarURL({ dynamic: true })
-    })
-    .setTitle(`${language.pogyInfo}`)
-    .addFields(
-      { name: `${language.pogyGeneral}`, value: `\`\`\`css\n${tech}\`\`\``, inline: true },
-      { name: `${language.pogyTeam}`, value: `\`\`\`css\n${devs}\`\`\``, inline: true },
-      { name: `${language.pogyStats}`, value: `\`\`\`css\n${serverStats}\`\`\``}
-    )
-    .setFooter({ text: `https://example.com` })
-    .setTimestamp()
-    .setColor(interaction.guild.me.displayHexColor);
+      .setAuthor({
+        name: interaction.member.displayName,
+        iconURL: interaction.member.displayAvatarURL({ dynamic: true })
+      })
+      .setTitle(`${language.pogyInfo}`)
+      .addFields(
+        { name: `${language.pogyGeneral}`, value: `\`\`\`css\n${tech}\`\`\``, inline: true },
+        { name: `${language.pogyTeam}`, value: `\`\`\`css\n${devs}\`\`\``, inline: true },
+        { name: `${language.pogyStats}`, value: `\`\`\`css\n${serverStats}\`\`\`` }
+      )
+      .setFooter({ text: `https://example.com` })
+      .setTimestamp()
+      .setColor(interaction.guild.me.displayHexColor);
     interaction.reply({ embeds: [embed] });
   }
 };

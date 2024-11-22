@@ -13,7 +13,9 @@ module.exports = {
     )
     .addStringOption((option) =>
       option.setName("warning").setDescription("The warn ID").setRequired(true),
-    ),
+    )
+    .setContexts(0)
+    .setIntegrationTypes(0),
   async execute(interaction) {
     try {
       const client = interaction.client;
@@ -48,11 +50,11 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => {});
+                interaction.deleteReply().catch(() => { });
               }, 5000);
             }
           })
-          .catch(() => {});
+          .catch(() => { });
       }
 
       const mentionedPosition = mentionedMember.roles.highest.position;
@@ -77,11 +79,11 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => {});
+                interaction.deleteReply().catch(() => { });
               }, 5000);
             }
           })
-          .catch(() => {});
+          .catch(() => { });
       }
 
       const warnDoc = await warnModel
@@ -107,11 +109,11 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => {});
+                interaction.deleteReply().catch(() => { });
               }, 5000);
             }
           })
-          .catch(() => {});
+          .catch(() => { });
       }
 
       if (!warnID) {
@@ -128,11 +130,11 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => {});
+                interaction.deleteReply().catch(() => { });
               }, 5000);
             }
           })
-          .catch(() => {});
+          .catch(() => { });
       }
 
       let check = warnDoc.warningID.filter((word) => warnID === word);
@@ -151,11 +153,11 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => {});
+                interaction.deleteReply().catch(() => { });
               }, 5000);
             }
           })
-          .catch(() => {});
+          .catch(() => { });
       }
 
       if (!check) {
@@ -172,11 +174,11 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => {});
+                interaction.deleteReply().catch(() => { });
               }, 5000);
             }
           })
-          .catch(() => {});
+          .catch(() => { });
       }
 
       let toReset = warnDoc.warningID.length;
@@ -201,11 +203,11 @@ module.exports = {
         .then(async () => {
           if (logging && logging.moderation.delete_reply === "true") {
             setTimeout(() => {
-              interaction.deleteReply().catch(() => {});
+              interaction.deleteReply().catch(() => { });
             }, 5000);
           }
         })
-        .catch(() => {});
+        .catch(() => { });
     } catch (err) {
       console.error(err);
       interaction.reply({

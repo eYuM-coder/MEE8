@@ -4,36 +4,38 @@ const { MessageEmbed } = require("discord.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
-  .setName("servers")
-  .setDescription("View every server the bot is in"),
+    .setName("servers")
+    .setDescription("View every server the bot is in")
+    .setContexts([0, 1, 2])
+    .setIntegrationTypes([0, 1]),
   async execute(interaction) {
     const servers = interaction.client.guilds.cache.map((guild) => {
       return `\`${guild.id}\` - ${guild.name} - \`${guild.memberCount}\` members`;
     });
 
-    if(!interaction.client.config.owner.includes(interaction.member.id) && !interaction.client.config.developers.includes(interaction.member.id)) {
+    if (!interaction.client.config.owner.includes(interaction.user.id) && !interaction.client.config.developers.includes(interaction.user.id)) {
       return interaction.reply({
         embeds: [
           new MessageEmbed()
-          .setColor(interaction.client.color.red)
-          .setDescription(`${interaction.client.emoji.fail} | You are not a developer or the owner of this bot.`)
+            .setColor(interaction.client.color.red)
+            .setDescription(`${interaction.client.emoji.fail} | You are not a developer or the owner of this bot.`)
         ], ephemeral: true
       })
     }
 
     const embed = new MessageEmbed()
-    .setTitle("Server List")
-    .setFooter({
-     text: interaction.member.displayName,
-      iconURL: interaction.member.displayAvatarURL({ dynamic: true })
-    })
-    .setTimestamp()
-    .setColor(interaction.guild.me.displayHexColor)
+      .setTitle("Server List")
+      .setFooter({
+        text: interaction.member.displayName,
+        iconURL: interaction.member.displayAvatarURL({ dynamic: true })
+      })
+      .setTimestamp()
+      .setColor(interaction.guild.me.displayHexColor)
 
     if (servers.length <= 50) {
       const range = servers.length == 1 ? "[1]" : `[1 - ${servers.length}]`;
       embed.setTitle(`Server List ${range}`).setDescription(servers.join("\n"))
-        interaction.reply({ embeds: [embed], ephemeral: true });
+      interaction.reply({ embeds: [embed], ephemeral: true });
     } else {
       interaction.reply({ content: `I am currently in ${servers.length} servers.` })
       new ReactionMenu(

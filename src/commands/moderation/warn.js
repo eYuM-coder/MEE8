@@ -7,6 +7,11 @@ const randoStrings = require("../../packages/randostrings.js");
 const random = new randoStrings();
 const Logging = require("../../database/schemas/logging.js");
 const ms = require("ms");
+async function usePrettyMs(ms) {
+  const { default: prettyMilliseconds } = import("pretty-ms");
+  const time = prettyMilliseconds(ms);
+  return time;
+}
 module.exports = class extends Command {
   constructor(...args) {
     super(...args, {
@@ -62,7 +67,9 @@ module.exports = class extends Command {
       });
     }
 
-    const time = ms(args[1]) / 1000 || ms("1d") / 1000;
+    const time = ms(args[1]) || ms("1d");
+    const formattedTime = await usePrettyMs(time);
+    const warnTime = (time / 1000);
 
     const reason = args.slice(2).join(" ") || "Not Specified";
 
@@ -72,7 +79,7 @@ module.exports = class extends Command {
     });
 
     const expirationTime = new Date();
-    expirationTime.setSeconds(expirationTime.getSeconds() + time);
+    expirationTime.setSeconds(expirationTime.getSeconds() + warnTime);
 
     let warnDoc = await warnModel
       .findOne({
@@ -144,7 +151,7 @@ module.exports = class extends Command {
         logging && logging.moderation.include_reason === "true"
           ? `\n\n**Reason:** ${reason}`
           : ``
-      }`),
+      }\n\n**Expires in ${formattedTime}**`),
         ],
       })
       .then(async (s) => {

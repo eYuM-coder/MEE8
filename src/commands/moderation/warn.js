@@ -8,7 +8,7 @@ const random = new randoStrings();
 const Logging = require("../../database/schemas/logging.js");
 const ms = require("ms");
 async function usePrettyMs(ms) {
-  const { default: prettyMilliseconds } = import("pretty-ms");
+  const { default: prettyMilliseconds } = await import("pretty-ms");
   const time = prettyMilliseconds(ms);
   return time;
 }
@@ -67,11 +67,13 @@ module.exports = class extends Command {
       });
     }
 
-    const time = ms(args[1]) || ms("1d");
+    const lastArg = args[args.length - 1];
+    const timeArg = ms(lastArg);
+    const time = timeArg || ms("1d");
+    const warnTime = time / 1000;
     const formattedTime = await usePrettyMs(time);
-    const warnTime = (time / 1000);
 
-    const reason = args.slice(2).join(" ") || "Not Specified";
+    const reason = timeArg ? args.slice(1, -1).join(" ") : args.slice(1).join(" ") || "Not Specified";
 
     let warnID = random.password({
       length: 16,

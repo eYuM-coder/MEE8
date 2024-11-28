@@ -1,50 +1,120 @@
-const { relativeTimeRounding } = require("moment");
 const Command = require("../../structures/Command");
 const { MessageEmbed } = require("discord.js");
-module.exports = class EmptyCommand extends Command {
+const Logging = require("../../database/schemas/logging");
+
+module.exports = class extends Command {
   constructor(...args) {
     super(...args, {
       name: "unmute",
-      aliases: [],
-      description: "mute a member in ms",
+      description: "",
       category: "Moderation",
       cooldown: 5,
     });
   }
-
-  async run(message) {
+  async run(message, args) {
     try {
+      const client = message.client;
+      const logging = await Logging.findOne({
+        guildId: message.guild.id,
+      });
 
+      if (logging && logging.moderation.delete_after_executed === "true") {
+        await message.delete().catch(() => {});
+      }
 
-      const User = message.mentions.members.first();
-      // checks for a user
-      if (!User) {
-        return message.channel.send("Please mention a user to mute.");
+      // Check for permissions
+      if (!message.member.permissions.has("MODERATE_MEMBERS")) {
+        return message.channel.send({
+          content: "You do not have permission to use this command.",
+        });
       }
-      // cant mute your self retard
-      if (message.author.id === User.id) {
-        return message.channel.send("You cannot mute yourself.");
+
+      const member = message.mentions.members.first();
+      let reason = args.slice(1).join(" ").trim();
+      reason = reason || "Not Specified";
+
+      if (!member) {
+        let usernotfound = new MessageEmbed()
+          .setColor("RED")
+          .setDescription(`${client.emoji.fail} | I can't find that member`);
+        return message.channel
+          .send({ embeds: [usernotfound] })
+          .then(async (s) => {
+            if (logging && logging.moderation.delete_reply === "true") {
+              setTimeout(() => {
+                s.delete().catch(() => {});
+              }, 5000);
+            }
+          })
+          .catch(() => {});
       }
-      // perms lol
-      if(!message.member.permissions.has('MUTE_MEMBERS')) {
-        return msg.channel.send(":x: You don't have permissions. :x:") 
+
+      if (
+        member.roles.highest.position >= message.member.roles.highest.position
+      ) {
+        let rolesmatch = new MessageEmbed()
+          .setColor("RED")
+          .setDescription(
+            `${client.emoji.fail} | They have more power than you or have equal power as you do!`
+          );
+        return message.channel
+          .send({ embeds: [rolesmatch] })
+          .then(async (s) => {
+            if (logging && logging.moderation.delete_reply === "true") {
+              setTimeout(() => {
+                s.delete().catch(() => {});
+              }, 5000);
+            }
+          })
+          .catch(() => {});
       }
-      // check roles for postions
-      if (!message.member.roles.highest.position > User.roles.highest.position) {
-        return message.channel.send("You cannot mute someone with a higher or equal role.");
+
+      if (member) {
+        const response = await member.timeout(null, reason);
+        let unmuteSuccess = new MessageEmbed()
+          .setColor("GREEN")
+          .setDescription(
+            `***${client.emoji.success} | ${member} has been unmuted.* || ${reason}**`
+          );
+        return message.channel
+          .send({ embeds: [unmuteSuccess] })
+          .then(async (s) => {
+            if (logging && logging.moderation.delete_reply === "true") {
+              setTimeout(() => {
+                s.delete().catch(() => {});
+              }, 5000);
+            }
+          })
+          .catch(() => {});
       }
-      await User.timeout(null,);
-      // Chore : convert to embed
-      const embed = new MessageEmbed()
-        .setColor("#fe0a0a")
-        .setDescription(`Unmuted ${User.user.username}`)
-        .setFooter(message.member.displayName, message.author.displayAvatarURL({ dynamic: true }))
-        .setAuthor(message.author.username, message.author.displayAvatarURL({ dynamic: true }))
-        .setTimestamp();
-      await message.channel.send({ embeds: [embed] }); // Use timeString for clarity
-    } catch (error) {
-      console.error("Error in the empty command:", error);
-      message.channel.send("An error occurred. Please try again later.");
+
+      if (member) {
+        let dmEmbed = new MessageEmbed()
+          .setColor("GREEN")
+          .setDescription(
+            `You have been unmuted in **${
+              message.guild.name
+            }**.\n\n__**Moderator:**__ ${message.author} **(${
+              message.author.tag
+            })**\n__**Reason:**__ ${reason || "No Reason Provided"}`
+          )
+          .setTimestamp();
+        member.send({ embeds: [dmEmbed] });
+      } else {
+        let failembed = new MessageEmbed()
+          .setColor("RED")
+          .setDescription(
+            `${client.emoji.fail} | I cannot unmute that member. Make sure that my role is above their role or that I have sufficient permissions to execute the command.`
+          )
+          .setTimestamp();
+        return message.channel.send({ embeds: [failembed] });
+      }
+    } catch (err) {
+      console.error(err);
+      message.reply({
+        content:
+          "This command cannot be used in Direct Messages, or this member is not unmutable.",
+      });
     }
   }
 };

@@ -1,8 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageEmbed } = require("discord.js");
-const ms = require("ms");
 const Logging = require("../../database/schemas/logging");
-const { execute } = require("./kick");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -11,64 +9,86 @@ module.exports = {
     .addStringOption((option) =>
       option
         .setName("member")
-        .setDescription("Person who you want to unban")
-        .setRequired(true),
+        .setDescription("Mention, tag, or ID of the person you want to unban")
+        .setRequired(true)
     )
     .addStringOption((option) =>
-      option.setName("reason").setDescription("The reason for the unban"),
-    )
-    .setContexts(0)
-    .setIntegrationTypes(0),
+      option.setName("reason").setDescription("The reason for the unban")
+    ),
   async execute(interaction) {
     try {
       const client = interaction.client;
-      const logging = Logging.findOne({
+      const logging = await Logging.findOne({
         guildId: interaction.guild.id,
       });
-      if (!interaction.member.permissions.has("MODERATE_MEMBERS"))
-        return interaction.followUp({
-          content: "You do not have permission to use this command.",
-        });
 
-      const user = interaction.options.getString("member");
+      // Check if the user has proper permissions
+      if (!interaction.member.permissions.has("BAN_MEMBERS")) {
+        return interaction.reply({
+          content: "You do not have permission to use this command.",
+          ephemeral: true,
+        });
+      }
+
+      // Fetch the options
+      const input = interaction.options.getString("member");
       const reason =
         interaction.options.getString("reason") || "No reason provided";
 
-      const totalbans = await interaction.guild.bans.fetch();
+      // Fetch all bans to find the user
+      const bans = await interaction.guild.bans.fetch();
 
-      const userToUnabn = totalbans.find(
-        (x) => x.user.id || x.user.username || x.user.tag,
-      );
+      // Try to find the user based on ID, tag, or mention
+      const banInfo = bans.find((ban) => {
+        return (
+          ban.user.id === input || // Match by ID
+          ban.user.tag === input || // Match by tag (username#discriminator)
+          `<@${ban.user.id}>` === input // Match by mention
+        );
+      });
 
-      await interaction.guild.bans.remove(userToUnabn.user.id).then(() => {
-        let unbansuccess = new MessageEmbed()
-          .setColor("GREEN")
-          .setDescription(
-            `${client.emoji.success} | ${user} has been unbanned. __**Reason:**__ ${reason}`,
-          );
-        return interaction
-          .reply({ embeds: [unbansuccess] })
-          .then(async () => {
-            if (logging && logging.moderation.delete_reply === "true") {
-              setTimeout(() => {
-                interaction.deleteReply().catch(() => { });
-              }, 5000);
-            }
-          })
-          .catch(() => { })
-          .then(() => {
-            let dmEmbed = new MessageEmbed()
-              .setColor("GREEN")
-              .setDescription(
-                `You have unbanned in **${interaction.guild.name}**.\n\n__**Moderator:**__ ${interaction.author} **(${interaction.author.tag})**\n__**Reason:**__ ${reason}`,
-              );
-            user.send({ embeds: [dmEmbed] });
-          });
+      if (!banInfo) {
+        return interaction.reply({
+          content: "The specified user is not banned, or the input is invalid.",
+          ephemeral: true,
+        });
+      }
+
+      // Unban the user
+      await interaction.guild.bans.remove(banInfo.user.id, reason);
+
+      // Reply with a success message
+      const unbanSuccessEmbed = new MessageEmbed()
+        .setColor("GREEN")
+        .setDescription(
+          `${client.emoji?.success || "✅"} | <@${
+            banInfo.user.id
+          }> has been unbanned.\n__**Reason:**__ ${reason}`
+        );
+
+      await interaction.reply({ embeds: [unbanSuccessEmbed] });
+
+      // Optional: Delete reply if configured
+      if (logging && logging.moderation?.delete_reply === "true") {
+        setTimeout(() => {
+          interaction.deleteReply().catch(() => {});
+        }, 5000);
+      }
+
+      // Notify the user via DM
+      const dmEmbed = new MessageEmbed()
+        .setColor("GREEN")
+        .setDescription(
+          `You have been unbanned from **${interaction.guild.name}**.\n\n__**Moderator:**__ ${interaction.user.tag}\n__**Reason:**__ ${reason}`
+        );
+
+      banInfo.user.send({ embeds: [dmEmbed] }).catch(() => {
+        console.log(`Could not send DM to ${banInfo.user.tag}`);
       });
     } catch (err) {
       console.error(err);
       interaction.reply({
-        content: "This command cannot be used in Direct Messages.",
+        content: "An error occurred while trying to unban the user.",
         ephemeral: true,
       });
     }

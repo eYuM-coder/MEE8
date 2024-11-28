@@ -11,10 +11,10 @@ module.exports = {
       option
         .setName("amount")
         .setDescription("Amount of messages to clear")
-        .setRequired(true),
+        .setRequired(true)
     )
     .addStringOption((option) =>
-      option.setName("reason").setDescription("The reason for the purge"),
+      option.setName("reason").setDescription("The reason for the purge")
     )
     .setContexts(0)
     .setIntegrationTypes(0),
@@ -60,11 +60,16 @@ module.exports = {
       const TWO_WEEKS = 14 * 24 * 60 * 60 * 1000; // 14 days in milliseconds
       const now = Date.now(); // Current timestamp
 
+      const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
       while (totalDeleted < amount) {
         const messagesToFetch = Math.min(100, amount - totalDeleted);
         try {
           // Fetch messages
-          const fetchedMessages = await channel.messages.fetch({ limit: messagesToFetch, before: interaction.id });
+          const fetchedMessages = await channel.messages.fetch({
+            limit: messagesToFetch,
+            before: interaction.id,
+          });
 
           // Filter out messages older than 14 days
           const validMessages = fetchedMessages.filter(
@@ -79,7 +84,9 @@ module.exports = {
           totalDeleted += deletedMessages.size;
 
           logger.info(
-            `Deleted ${deletedMessages.size} ${deletedMessages.size === 1 ? "message" : "messages"}.`,
+            `Deleted ${deletedMessages.size} ${
+              deletedMessages.size === 1 ? "message" : "messages"
+            }.`,
             { label: "Purge" }
           );
 
@@ -88,23 +95,24 @@ module.exports = {
         } catch (error) {
           logger.error(`Error deleting messages: ${error}`, { label: "ERROR" });
           return interaction.editReply({
-            content: "There was an error trying to delete messages in this channel.",
+            content:
+              "There was an error trying to delete messages in this channel.",
           });
         }
-        await setTimeout(() => { }, 10000);
+        await delay(5000);
       }
-
 
       const embed = new MessageEmbed()
 
         .setDescription(
-          `${success} | ***Successfully deleted ${totalDeleted} ${totalDeleted === 1 ? "message" : "messages"}.* || ${reason}**`,
+          `${success} | ***Successfully deleted ${totalDeleted} ${
+            totalDeleted === 1 ? "message" : "messages"
+          }.* || ${reason}**`
         )
 
         .setColor(interaction.client.color.green);
 
       interaction.editReply({ embeds: [embed], ephemeral: true });
-
 
       if (logging) {
         const role = interaction.guild.roles.cache.get(
@@ -138,13 +146,15 @@ module.exports = {
                     )
                     .addField("Moderator", `${interaction.member}`, true)
                     .setTimestamp()
-                    .setFooter({ text: `Responsible ID: ${interaction.member.id}` })
+                    .setFooter({
+                      text: `Responsible ID: ${interaction.member.id}`,
+                    })
                     .setColor(color);
 
-                  loggingChannel.send({ embeds: [logEmbed] }).catch(() => { });
+                  loggingChannel.send({ embeds: [logEmbed] }).catch(() => {});
 
                   logging.moderation.caseN = logcase + 1;
-                  await logging.save().catch(() => { });
+                  await logging.save().catch(() => {});
                 }
               }
             }

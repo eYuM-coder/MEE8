@@ -67,13 +67,26 @@ module.exports = class extends Command {
       });
     }
 
-    const lastArg = args[args.length - 1];
-    const timeArg = ms(lastArg);
-    const time = timeArg || ms("1d");
-    const warnTime = time / 1000;
-    const formattedTime = await usePrettyMs(time);
+    // Combine all arguments after the mention into one string
+    const allArgs = args.slice(1).join(" ");
 
-    const reason = timeArg ? args.slice(1, -1).join(" ") : args.slice(1).join(" ") || "Not Specified";
+    // Regular expression to detect valid time formats (like "2w", "6d", "1h", "30m", etc.)
+    const timeRegex = /\d+\s*[a-z]+/g;
+
+    // Extract all potential time parts from the combined string
+    const timeMatches = allArgs.match(timeRegex).join(" ");
+
+    console.log(timeMatches);
+
+    // If there are time parts, parse them; otherwise, default to "1d"
+    let time = timeMatches ? ms(timeMatches) : ms("1d");
+    console.log(time);
+    let warnTime = time / 1000;
+    let formattedTime = await usePrettyMs(time);
+
+    // Remove the parsed time from the reason
+    let reason = allArgs.replace(timeMatches ? timeMatches : "", "").trim();
+    reason = reason || "Not Specified"; // Default reason if none provided
 
     let warnID = random.password({
       length: 16,
@@ -124,11 +137,25 @@ module.exports = class extends Command {
       logging.moderation.warn_action !== "1"
     ) {
       if (logging.moderation.warn_action === "2") {
-        dmEmbed = `${message.client.emoji.fail} | You were warned in **${message.guild.name}**.\n\n**Expires** <t:${Math.floor(expirationTime.getTime() / 1000)}:F>`;
+        dmEmbed = `${message.client.emoji.fail} | You were warned in **${
+          message.guild.name
+        }**.\n\n**Expires** <t:${Math.floor(
+          expirationTime.getTime() / 1000
+        )}:F>`;
       } else if (logging.moderation.warn_action === "3") {
-        dmEmbed = `${message.client.emoji.fail} | You were warned in **${message.guild.name}** for ${reason}.\n\n**Expires** <t:${Math.floor(expirationTime.getTime() / 1000)}:F>`;
+        dmEmbed = `${message.client.emoji.fail} | You were warned in **${
+          message.guild.name
+        }** for ${reason}.\n\n**Expires** <t:${Math.floor(
+          expirationTime.getTime() / 1000
+        )}:F>`;
       } else if (logging.moderation.warn_action === "4") {
-        dmEmbed = `${message.client.emoji.fail} | You were warned in **${message.guild.name}** by **${message.author} (${message.author.tag})** for ${reason}.\n\n**Expires** <t:${Math.floor(expirationTime.getTime() / 1000)}:F>`;
+        dmEmbed = `${message.client.emoji.fail} | You were warned in **${
+          message.guild.name
+        }** by **${message.author} (${
+          message.author.tag
+        })** for ${reason}.\n\n**Expires** <t:${Math.floor(
+          expirationTime.getTime() / 1000
+        )}:F>`;
       }
 
       mentionedMember

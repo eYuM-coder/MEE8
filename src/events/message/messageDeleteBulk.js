@@ -36,7 +36,7 @@ module.exports = class extends Event {
               .setDescription(
                 `**${messages.size} messages** in ${message.channel} were deleted.`
               )
-              .setColor(message.guild.me.displayHexColor)
+              .setColor(color)
               .setFooter({ text: `${messages.size} Messages` });
 
             if (

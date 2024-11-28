@@ -11,11 +11,7 @@ module.exports = class extends Command {
       description: "Delete the specified amount of messages (limit: 1000)",
       category: "Moderation",
       usage: "purge <message-count> [reason]",
-      examples: [
-        "purge 20",
-        "cls 50",
-        "clear 125"
-      ],
+      examples: ["purge 20", "cls 50", "clear 125"],
       guildOnly: true,
       botPermission: ["MANAGE_MESSAGES"],
       userPermission: ["MANAGE_MESSAGES"],
@@ -61,11 +57,16 @@ module.exports = class extends Command {
       const TWO_WEEKS = 14 * 24 * 60 * 60 * 1000; // 14 days in milliseconds
       const now = Date.now(); // Current timestamp
 
+      const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
       while (totalDeleted < amount) {
         const messagesToFetch = Math.min(100, amount - totalDeleted);
         try {
           // Fetch messages
-          const fetchedMessages = await channel.messages.fetch({ limit: messagesToFetch, before: message.id });
+          const fetchedMessages = await channel.messages.fetch({
+            limit: messagesToFetch,
+            before: message.id,
+          });
 
           // Filter out messages older than 14 days
           const validMessages = fetchedMessages.filter(
@@ -80,7 +81,9 @@ module.exports = class extends Command {
           totalDeleted += deletedMessages.size;
 
           logger.info(
-            `Deleted ${deletedMessages.size} ${deletedMessages.size === 1 ? "message" : "messages"}.`,
+            `Deleted ${deletedMessages.size} ${
+              deletedMessages.size === 1 ? "message" : "messages"
+            }.`,
             { label: "Purge" }
           );
 
@@ -89,20 +92,23 @@ module.exports = class extends Command {
         } catch (error) {
           logger.error(`Error deleting messages: ${error}`, { label: "ERROR" });
           return message.channel.send({
-            content: "There was an error trying to delete messages in this channel.",
+            content:
+              "There was an error trying to delete messages in this channel.",
           });
         }
-        await setTimeout(() => { }, 10000);
+        await delay(5000);
       }
-
 
       const embed = new MessageEmbed()
 
         .setDescription(
           `
-            ${success} Successfully deleted **${totalDeleted}** ${totalDeleted === 1 ? "message" : "messages"} ${logging && logging.moderation.include_reason === "true"
-            ? `\n\n**Reason:** ${reason}`
-            : ``
+            ${success} Successfully deleted **${totalDeleted}** ${
+            totalDeleted === 1 ? "message" : "messages"
+          } ${
+            logging && logging.moderation.include_reason === "true"
+              ? `\n\n**Reason:** ${reason}`
+              : ``
           }
           `
         )
@@ -110,7 +116,7 @@ module.exports = class extends Command {
         .setColor(message.guild.me.displayHexColor);
 
       if (logging && logging.moderation.delete_after_executed === "true") {
-        message.delete().catch(() => { });
+        message.delete().catch(() => {});
       }
 
       message.channel
@@ -118,11 +124,11 @@ module.exports = class extends Command {
         .then(async (s) => {
           if (logging && logging.moderation.delete_reply === "true") {
             setTimeout(() => {
-              s.delete().catch(() => { });
+              s.delete().catch(() => {});
             }, 5000);
           }
         })
-        .catch(() => { });
+        .catch(() => {});
 
       if (logging) {
         const role = message.guild.roles.cache.get(
@@ -159,10 +165,10 @@ module.exports = class extends Command {
                     .setFooter({ text: `Responsible ID: ${message.author.id}` })
                     .setColor(color);
 
-                  channel.send({ embeds: [logEmbed] }).catch(() => { });
+                  channel.send({ embeds: [logEmbed] }).catch(() => {});
 
                   logging.moderation.caseN = logcase + 1;
-                  await logging.save().catch(() => { });
+                  await logging.save().catch(() => {});
                 }
               }
             }

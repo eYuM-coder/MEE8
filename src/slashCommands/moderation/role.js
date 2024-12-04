@@ -2,6 +2,8 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageEmbed } = require("discord.js");
 const Logging = require("../../database/schemas/logging.js");
 
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("role")
@@ -14,11 +16,11 @@ module.exports = {
           option
             .setName("role")
             .setDescription("The role to add to the users.")
-            .setRequired(true),
+            .setRequired(true)
         )
         .addBooleanOption((option) =>
-          option.setName("remove").setDescription("Remove role or not"),
-        ),
+          option.setName("remove").setDescription("Remove role or not")
+        )
     )
     .addSubcommand((subcommand) =>
       subcommand
@@ -28,11 +30,11 @@ module.exports = {
           option
             .setName("role")
             .setDescription("The role to add to the bots.")
-            .setRequired(true),
+            .setRequired(true)
         )
         .addBooleanOption((option) =>
-          option.setName("remove").setDescription("Remove role or not"),
-        ),
+          option.setName("remove").setDescription("Remove role or not")
+        )
     )
     .addSubcommand((subcommand) =>
       subcommand
@@ -42,11 +44,11 @@ module.exports = {
           option
             .setName("role")
             .setDescription("The role to add to the humans.")
-            .setRequired(true),
+            .setRequired(true)
         )
         .addBooleanOption((option) =>
-          option.setName("remove").setDescription("Remove role or not"),
-        ),
+          option.setName("remove").setDescription("Remove role or not")
+        )
     )
     .addSubcommand((subcommand) =>
       subcommand
@@ -56,14 +58,14 @@ module.exports = {
           option
             .setName("user")
             .setDescription("The user to add the role to.")
-            .setRequired(true),
+            .setRequired(true)
         )
         .addRoleOption((option) =>
           option
             .setName("role")
             .setDescription("The role to add.")
-            .setRequired(true),
-        ),
+            .setRequired(true)
+        )
     )
     .addSubcommand((subcommand) =>
       subcommand
@@ -73,20 +75,23 @@ module.exports = {
           option
             .setName("user")
             .setDescription("The user to remove the role from.")
-            .setRequired(true),
+            .setRequired(true)
         )
         .addRoleOption((option) =>
           option
             .setName("role")
             .setDescription("The role to remove.")
-            .setRequired(true),
-        ),
+            .setRequired(true)
+        )
     )
     .setContexts(0)
     .setIntegrationTypes(0),
   async execute(interaction) {
     try {
-      if (!interaction.member.permissions.has("MANAGE_ROLES") && !interaction.client.config.owner.includes(interaction.member.id)) {
+      if (
+        !interaction.member.permissions.has("MANAGE_ROLES") &&
+        !interaction.client.config.owner.includes(interaction.member.id)
+      ) {
         return interaction.reply({
           content: `You do not have permission to use this command.`,
           ephemeral: true,
@@ -103,7 +108,7 @@ module.exports = {
           interaction.guild.roles.cache.get(role) ||
           interaction.guild.roles.cache.find(
             (rl) =>
-              rl.name.toLowerCase() === role.slice(1).join(" ").toLowerCase(),
+              rl.name.toLowerCase() === role.slice(1).join(" ").toLowerCase()
           );
         const removerole = interaction.options.getBoolean("remove") || false;
 
@@ -130,29 +135,34 @@ module.exports = {
           let members;
           if (removerole === false) {
             members = interaction.guild.members.cache.filter(
-              (member) => !member.roles.cache.has(role.id));
+              (member) => !member.roles.cache.has(role.id)
+            );
             let memberstoaddroleto = members.size;
             interaction
               .reply({
                 embeds: [
                   new MessageEmbed()
                     .setDescription(
-                      `${success} | Adding ${role} to ${memberstoaddroleto} ${memberstoaddroleto === 1 ? "member" : "members"}. This may take a while!`,
+                      `${success} | Adding ${role} to ${memberstoaddroleto} ${
+                        memberstoaddroleto === 1 ? "member" : "members"
+                      }. This may take a while!`
                     )
                     .setColor(interaction.client.color.green),
                 ],
               })
               .then(async () => {
-                await members.forEach((member) =>
-                  member.roles.add(role, [
+                for (const member of members.values()) {
+                  await member.roles.add(role, [
                     `Role Add / Responsible User: ${interaction.user.tag}`,
-                  ]),
-                );
+                  ]);
+                }
               })
               .then(() => {
                 const embed = new MessageEmbed()
                   .setDescription(
-                    `${success} | Added **${role}** to **${memberstoaddroleto}** ${memberstoaddroleto === 1 ? "member" : "members"}.`,
+                    `${success} | Added **${role}** to **${memberstoaddroleto}** ${
+                      memberstoaddroleto === 1 ? "member" : "members"
+                    }.`
                   )
                   .setColor(interaction.client.color.green);
                 interaction
@@ -160,37 +170,42 @@ module.exports = {
                   .then(async () => {
                     if (logging && logging.moderation.delete_reply === "true") {
                       setTimeout(() => {
-                        interaction.deleteReply().catch(() => { });
+                        interaction.deleteReply().catch(() => {});
                       }, 5000);
                     }
                   })
-                  .catch(() => { });
+                  .catch(() => {});
               });
           } else {
-            members = interaction.guild.members.cache.filter(
-              (member) => member.roles.cache.has(role.id));
+            members = interaction.guild.members.cache.filter((member) =>
+              member.roles.cache.has(role.id)
+            );
             let memberstoaddroleto = members.size;
             interaction
               .reply({
                 embeds: [
                   new MessageEmbed()
                     .setDescription(
-                      `${success} | Removing ${role} from ${memberstoaddroleto} ${memberstoaddroleto === 1 ? "member" : "members"}. This may take a while!`,
+                      `${success} | Removing ${role} from ${memberstoaddroleto} ${
+                        memberstoaddroleto === 1 ? "member" : "members"
+                      }. This may take a while!`
                     )
                     .setColor(interaction.client.color.green),
                 ],
               })
               .then(async () => {
-                await members.forEach((member) =>
-                  member.roles.remove(role, [
+                for (const member of members.values()) {
+                  await member.roles.remove(role, [
                     `Role Remove / Responsible User: ${interaction.user.tag}`,
-                  ]),
-                );
+                  ]);
+                }
               })
               .then(() => {
                 const embed = new MessageEmbed()
                   .setDescription(
-                    `${success} | Removed **${role}** from **${memberstoaddroleto}** ${memberstoaddroleto === 1 ? "member" : "members"}.`,
+                    `${success} | Removed **${role}** from **${memberstoaddroleto}** ${
+                      memberstoaddroleto === 1 ? "member" : "members"
+                    }.`
                   )
                   .setColor(interaction.client.color.green);
                 interaction
@@ -198,11 +213,11 @@ module.exports = {
                   .then(async () => {
                     if (logging && logging.moderation.delete_reply === "true") {
                       setTimeout(() => {
-                        interaction.deleteReply().catch(() => { });
+                        interaction.deleteReply().catch(() => {});
                       }, 5000);
                     }
                   })
-                  .catch(() => { });
+                  .catch(() => {});
               });
           }
         }
@@ -212,7 +227,7 @@ module.exports = {
           interaction.guild.roles.cache.get(role) ||
           interaction.guild.roles.cache.find(
             (rl) =>
-              rl.name.toLowerCase() === role.slice(1).join(" ").toLowerCase(),
+              rl.name.toLowerCase() === role.slice(1).join(" ").toLowerCase()
           );
         const removerole = interaction.options.getBoolean("remove") || false;
 
@@ -241,29 +256,32 @@ module.exports = {
           let members;
           if (removerole === false) {
             members = interaction.guild.members.cache.filter(
-              (member) => member.user.bot && !member.roles.cache.has(role.id));
+              (member) => member.user.bot && !member.roles.cache.has(role.id)
+            );
             let memberstoaddroleto = members.size;
             interaction
               .reply({
                 embeds: [
                   new MessageEmbed()
                     .setDescription(
-                      `${success} | Adding ${role} to ${memberstoaddroleto} bots. This may take a while!`,
+                      `${success} | Adding ${role} to ${memberstoaddroleto} bots. This may take a while!`
                     )
                     .setColor(interaction.client.color.green),
                 ],
               })
               .then(async () => {
-                await members.forEach(async (member) =>
-                    await member.roles.add(role, [
-                      `Role Add / Responsible User: ${interaction.user.tag}`,
-                    ]),
-                  );
+                for (const member of members.values()) {
+                  await member.roles.add(role, [
+                    `Role Add / Responsible User: ${interaction.user.tag}`,
+                  ]);
+                }
               })
               .then(() => {
                 const embed = new MessageEmbed()
                   .setDescription(
-                    `${success} | Added **${role}** to **${memberstoaddroleto}** ${memberstoaddroleto === 1 ? "bot" : "bots"}.`,
+                    `${success} | Added **${role}** to **${memberstoaddroleto}** ${
+                      memberstoaddroleto === 1 ? "bot" : "bots"
+                    }.`
                   )
                   .setColor(interaction.client.color.green);
                 interaction
@@ -271,37 +289,42 @@ module.exports = {
                   .then(async () => {
                     if (logging && logging.moderation.delete_reply === "true") {
                       setTimeout(() => {
-                        interaction.deleteReply().catch(() => { });
+                        interaction.deleteReply().catch(() => {});
                       }, 5000);
                     }
                   })
-                  .catch(() => { });
+                  .catch(() => {});
               });
           } else {
             members = interaction.guild.members.cache.filter(
-              (member) => member.user.bot && member.roles.cache.has(role.id));
+              (member) => member.user.bot && member.roles.cache.has(role.id)
+            );
             let memberstoaddroleto = members.size;
             interaction
               .reply({
                 embeds: [
                   new MessageEmbed()
                     .setDescription(
-                      `${success} | Removing ${role} from ${memberstoaddroleto} ${memberstoaddroleto === 1 ? "bot" : "bots"}. This may take a while!`,
+                      `${success} | Removing ${role} from ${memberstoaddroleto} ${
+                        memberstoaddroleto === 1 ? "bot" : "bots"
+                      }. This may take a while!`
                     )
                     .setColor(interaction.client.color.green),
                 ],
               })
               .then(async () => {
-                await members.forEach((member) =>
-                    member.roles.remove(role, [
-                      `Role Remove / Responsible User: ${interaction.user.tag}`,
-                    ]),
-                  );
+                for (const member of members.values()) {
+                  await member.roles.remove(role, [
+                    `Role Remove / Responsible User: ${interaction.user.tag}`,
+                  ]);
+                }
               })
               .then(() => {
                 const embed = new MessageEmbed()
                   .setDescription(
-                    `${success} | Removed **${role}** from **${memberstoaddroleto}** ${memberstoaddroleto === 1 ? "bot" : "bots"}`,
+                    `${success} | Removed **${role}** from **${memberstoaddroleto}** ${
+                      memberstoaddroleto === 1 ? "bot" : "bots"
+                    }`
                   )
                   .setColor(interaction.client.color.green);
                 interaction
@@ -309,11 +332,11 @@ module.exports = {
                   .then(async () => {
                     if (logging && logging.moderation.delete_reply === "true") {
                       setTimeout(() => {
-                        interaction.deleteReply().catch(() => { });
+                        interaction.deleteReply().catch(() => {});
                       }, 5000);
                     }
                   })
-                  .catch(() => { });
+                  .catch(() => {});
               });
           }
         }
@@ -323,7 +346,7 @@ module.exports = {
           interaction.guild.roles.cache.get(role) ||
           interaction.guild.roles.cache.find(
             (rl) =>
-              rl.name.toLowerCase() === role.slice(1).join(" ").toLowerCase(),
+              rl.name.toLowerCase() === role.slice(1).join(" ").toLowerCase()
           );
         const removerole = interaction.options.getBoolean("remove") || false;
 
@@ -349,34 +372,33 @@ module.exports = {
             .setColor(interaction.client.color.red);
           return interaction.reply({ embeds: [rolenotfound], ephmeral: true });
         } else {
+          let members;
           if (removerole === false) {
+            members = interaction.guild.members.cache.filter(
+              (member) => !member.user.bot && !member.roles.cache.has(role.id)
+            );
+            let memberstoaddroleto = members.size;
             interaction
               .reply({
                 embeds: [
                   new MessageEmbed()
                     .setDescription(
-                      `${success} | Adding ${role.name} to ${interaction.guild.members.cache.filter((m) => !m.user.bot)
-                        .size
-                      } humans. This may take a while!`,
+                      `${success} | Adding ${role.name} to ${memberstoaddroleto} humans. This may take a while!`
                     )
                     .setColor(interaction.client.color.green),
                 ],
               })
               .then(async () => {
-                await interaction.guild.members.cache
-                  .filter((m) => !m.user.bot)
-                  .forEach((member) =>
-                    member.roles.add(role, [
-                      `Role Add / Responsible User: ${interaction.user.tag}`,
-                    ]),
-                  );
+                for (const member of members.values()) {
+                  await member.roles.add(role, [
+                    `Role Add / Responsible User: ${interaction.user.tag}`,
+                  ]);
+                }
               })
               .then(() => {
                 const embed = new MessageEmbed()
                   .setDescription(
-                    `${success} | Added **${role}** to **${interaction.guild.members.cache.filter((m) => !m.user.bot)
-                      .size
-                    }** humans.`,
+                    `${success} | Added **${role}** to **${memberstoaddroleto}** humans.`
                   )
                   .setColor(interaction.client.color.green);
                 interaction
@@ -384,40 +406,39 @@ module.exports = {
                   .then(async () => {
                     if (logging && logging.moderation.delete_reply === "true") {
                       setTimeout(() => {
-                        interaction.deleteReply().catch(() => { });
+                        interaction.deleteReply().catch(() => {});
                       }, 5000);
                     }
                   })
-                  .catch(() => { });
+                  .catch(() => {});
               });
           } else {
+            members = interaction.guild.members.cache.filter(
+              (member) =>
+                !member.user.bot && member.user.roles.cache.has(role.id)
+            );
+            let memberstoaddroleto = members.size;
             interaction
               .reply({
                 embeds: [
                   new MessageEmbed()
                     .setDescription(
-                      `${success} | Removing ${role.name} from ${interaction.guild.members.cache.filter((m) => !m.user.bot)
-                        .size
-                      } humans. This may take a while!`,
+                      `${success} | Removing ${role.name} from ${memberstoaddroleto} humans. This may take a while!`
                     )
                     .setColor(interaction.client.color.green),
                 ],
               })
               .then(async () => {
-                await interaction.guild.members.cache
-                  .filter((m) => !m.user.bot)
-                  .forEach((member) =>
-                    member.roles.remove(role, [
-                      `Role Remove / Responsible User: ${interaction.user.tag}`,
-                    ]),
-                  );
+                for (const member of members.values()) {
+                  await member.roles.remove(role, [
+                    `Role Remove / Responsible User: ${interaction.user.tag}`,
+                  ]);
+                }
               })
               .then(() => {
                 const embed = new MessageEmbed()
                   .setDescription(
-                    `${success} | Removed **${role}** from **${interaction.guild.members.cache.filter((m) => !m.user.bot)
-                      .size
-                    }** humans.`,
+                    `${success} | Removed **${role}** from **${memberstoaddroleto}** humans.`
                   )
                   .setColor(interaction.client.color.green);
                 interaction
@@ -425,11 +446,11 @@ module.exports = {
                   .then(async () => {
                     if (logging && logging.moderation.delete_reply === "true") {
                       setTimeout(() => {
-                        interaction.deleteReply().catch(() => { });
+                        interaction.deleteReply().catch(() => {});
                       }, 5000);
                     }
                   })
-                  .catch(() => { });
+                  .catch(() => {});
               });
           }
         }
@@ -440,7 +461,7 @@ module.exports = {
           interaction.guild.roles.cache.get(role) ||
           interaction.guild.roles.cache.find(
             (rl) =>
-              rl.name.toLowerCase() === role.slice(1).join(" ").toLowerCase(),
+              rl.name.toLowerCase() === role.slice(1).join(" ").toLowerCase()
           );
         let reason = `The current feature doesn't need a reason.`;
         if (!reason) {
@@ -470,7 +491,9 @@ module.exports = {
                 name: `${interaction.user.tag}`,
                 iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
               })
-              .setDescription(`${fail} | ${member} already has the role ${role}.`)
+              .setDescription(
+                `${fail} | ${member} already has the role ${role}.`
+              )
               .setTimestamp()
               .setFooter({
                 text: "https://6c7f021b-2514-4460-9d5a-64060cec1990-00-30w9y136gg7mt.riker.replit.dev",
@@ -482,7 +505,9 @@ module.exports = {
             });
           } else {
             member.roles
-              .add(role, [`Role Add / Responsible User: ${interaction.user.tag}`])
+              .add(role, [
+                `Role Add / Responsible User: ${interaction.user.tag}`,
+              ])
               .then(() => {
                 const embed = new MessageEmbed()
                   .setDescription(`${success} | Added ${role} to ${member}.`)
@@ -492,20 +517,22 @@ module.exports = {
                   .then(async () => {
                     if (logging && logging.moderation.delete_reply === "true") {
                       setTimeout(() => {
-                        interaction.deleteReply().catch(() => { });
+                        interaction.deleteReply().catch(() => {});
                       }, 5000);
                     }
                   })
-                  .catch(() => { });
+                  .catch(() => {});
               })
               .catch(() => {
                 let botrolepossiblylow = new MessageEmbed()
                   .setAuthor({
                     name: `${interaction.user.tag}`,
-                    iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
+                    iconURL: interaction.user.displayAvatarURL({
+                      dynamic: true,
+                    }),
                   })
                   .setDescription(
-                    `${fail} | The role is possibly higher than me or you. Please move my role above the role and try again!`,
+                    `${fail} | The role is possibly higher than me or you. Please move my role above the role and try again!`
                   )
                   .setTimestamp()
                   .setFooter({
@@ -526,7 +553,7 @@ module.exports = {
           interaction.guild.roles.cache.get(role) ||
           interaction.guild.roles.cache.find(
             (rl) =>
-              rl.name.toLowerCase() === role.slice(1).join(" ").toLowerCase(),
+              rl.name.toLowerCase() === role.slice(1).join(" ").toLowerCase()
           );
         let reason = `The current feature doesn't need a reason.`;
         if (!reason) {
@@ -557,7 +584,7 @@ module.exports = {
                 iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
               })
               .setDescription(
-                `${fail} | ${member} doesn't have the role ${role}!`,
+                `${fail} | ${member} doesn't have the role ${role}!`
               )
               .setTimestamp()
               .setFooter({
@@ -572,27 +599,31 @@ module.exports = {
               ])
               .then(() => {
                 const embed = new MessageEmbed()
-                  .setDescription(`${success} | Removed ${role} from ${member}.`)
+                  .setDescription(
+                    `${success} | Removed ${role} from ${member}.`
+                  )
                   .setColor(interaction.client.color.green);
                 interaction
                   .reply({ embeds: [embed] })
                   .then(() => {
                     if (logging && logging.moderation.delete_reply === "true") {
                       setTimeout(() => {
-                        interaction.deleteReply().catch(() => { });
+                        interaction.deleteReply().catch(() => {});
                       }, 5000);
                     }
                   })
-                  .catch(() => { });
+                  .catch(() => {});
               })
               .catch(() => {
                 let botrolepossiblylow = new MessageEmbed()
                   .setAuthor({
                     name: `${interaction.user.tag}`,
-                    iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
+                    iconURL: interaction.user.displayAvatarURL({
+                      dynamic: true,
+                    }),
                   })
                   .setDescription(
-                    `${fail} | The role is possibly higher than me or you. Please move my role above the role and try again.`,
+                    `${fail} | The role is possibly higher than me or you. Please move my role above the role and try again.`
                   )
                   .setTimestamp()
                   .setFooter({
@@ -615,7 +646,7 @@ module.exports = {
           iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
         })
         .setDescription(
-          `${fail} | The role is possibly higher than me or you. Please move my role above the role and try again.`,
+          `${fail} | The role is possibly higher than me or you. Please move my role above the role and try again.`
         )
         .setTimestamp()
         .setFooter({
@@ -625,7 +656,7 @@ module.exports = {
       return interaction.reply({
         embeds: [botrolepossiblylow],
         ephemeral: true,
-      })
+      });
     }
   },
 };

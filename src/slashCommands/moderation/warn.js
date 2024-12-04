@@ -24,10 +24,10 @@ module.exports = {
       option
         .setName("member")
         .setDescription("The member to warn")
-        .setRequired(true),
+        .setRequired(true)
     )
     .addStringOption((option) =>
-      option.setName("reason").setDescription("The reason for the warn"),
+      option.setName("reason").setDescription("The reason for the warn")
     )
     .addStringOption((option) =>
       option.setName("time").setDescription("The time the warning expires at")
@@ -48,9 +48,13 @@ module.exports = {
       const mentionedMember = interaction.options.getMember("member");
       const reason =
         interaction.options.getString("reason") || "No Reason Provided";
-      const time = ms(interaction.options.getString("time") !== null ? interaction.options.getString("time") : "1d");
+      const time = ms(
+        interaction.options.getString("time") !== null
+          ? interaction.options.getString("time")
+          : "1d"
+      );
       const formattedTime = await usePrettyMs(time);
-      const warnTime = (time / 1000);
+      const warnTime = time / 1000;
 
       if (!mentionedMember) {
         let validmention = new MessageEmbed()
@@ -62,35 +66,13 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => { });
+                interaction.deleteReply().catch(() => {});
               }, 5000);
             }
           })
-          .catch(() => { });
+          .catch(() => {});
       }
 
-      const mentionedPotision = mentionedMember.roles.highest.position;
-      const memberPotision = interaction.member.roles.highest.position;
-
-      if (
-        memberPotision <=
-        mentionedPotision
-      ) {
-        let rolesmatch = new MessageEmbed()
-          .setColor(client.color.red)
-          .setDescription(`${client.emoji.fail} | ${language.warnHigherRole}`)
-          .setTimestamp();
-        return interaction
-          .reply({ embeds: [rolesmatch] })
-          .then(async () => {
-            if (logging && logging.moderation.delete_reply === "true") {
-              setTimeout(() => {
-                interaction.deleteReply().catch(() => { });
-              }, 5000);
-            }
-          })
-          .catch(() => { });
-      }
       let warnID = random.password({
         length: 18,
         string:
@@ -141,11 +123,25 @@ module.exports = {
         logging.moderation.waran_action !== "1"
       ) {
         if (logging.moderation.warn_action === "2") {
-          dmEmbed = `${interaction.client.emoji.fail} | You were warned in **${interaction.guild.name}**.\n\n**Expires** <t:${Math.floor(expirationTime.getTime() / 1000)}:F>`;
+          dmEmbed = `${interaction.client.emoji.fail} | You were warned in **${
+            interaction.guild.name
+          }**.\n\n**Expires** <t:${Math.floor(
+            expirationTime.getTime() / 1000
+          )}:F>`;
         } else if (logging.moderation.warn_action === "3") {
-          dmEmbed = `${interaction.client.emoji.fail} | You were warned in **${interaction.guild.name}** for **${reason}**.\n\n**Expires** <t:${Math.floor(expirationTime.getTime() / 1000)}:F>`;
+          dmEmbed = `${interaction.client.emoji.fail} | You were warned in **${
+            interaction.guild.name
+          }** for ${reason}.\n\n**Expires** <t:${Math.floor(
+            expirationTime.getTime() / 1000
+          )}:F>`;
         } else if (logging.moderation.warn_action === "4") {
-          dmEmbed = `${interaction.client.emoji.fail} | You were warned in **${interaction.guild.name}** by **${interaction.member} (${interaction.member.tag})** for **${reason}**.\n\n**Expires** <t:${Math.floor(expirationTime.getTime() / 1000)}:F>`;
+          dmEmbed = `${interaction.client.emoji.fail} | You were warned in **${
+            interaction.guild.name
+          }** by **${interaction.member} (${
+            interaction.member.tag
+          })** for ${reason}.\n\n**Expires** <t:${Math.floor(
+            expirationTime.getTime() / 1000
+          )}:F>`;
         }
 
         mentionedMember
@@ -156,7 +152,7 @@ module.exports = {
                 .setDescription(dmEmbed),
             ],
           })
-          .catch(() => { });
+          .catch(() => {});
       }
 
       if (mentionedMember) {
@@ -165,27 +161,28 @@ module.exports = {
             embeds: [
               new MessageEmbed().setColor(client.color.green)
                 .setDescription(`${language.warnSuccessful
-                  .replace("{emoji}", client.emoji.success)
-                  .replace("{user}", `**${mentionedMember.user.tag}**`)}
-            ${logging && logging.moderation.include_reason === "true"
-                    ? `\n\n**Reason:** ${reason}`
-                    : ``
-                  }\n\n**Expires in ${formattedTime}**`),
+                .replace("{emoji}", client.emoji.success)
+                .replace("{user}", `**${mentionedMember.user.tag}**`)}
+            ${
+              logging && logging.moderation.include_reason === "true"
+                ? `\n\n**Reason:** ${reason}`
+                : ``
+            }\n\n**Expires in ${formattedTime}**`),
             ],
           })
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => { });
+                interaction.deleteReply().catch(() => {});
               }, 5000);
             }
           })
-          .catch(() => { });
+          .catch(() => {});
       } else {
         let failembed = new MessageEmbed()
           .setColor(client.color.red)
           .setDescription(
-            `${client.emoji.fail} | I can't warn that member. Make sure that my role is above their role or that I have sufficient permissions to execute the command.`,
+            `${client.emoji.fail} | I can't warn that member. Make sure that my role is above their role or that I have sufficient permissions to execute the command.`
           )
           .setTimestamp();
         return interaction.reply({ embeds: [failembed] });

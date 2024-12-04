@@ -11,10 +11,10 @@ module.exports = {
       option
         .setName("member")
         .setDescription("Person who you want to ban.")
-        .setRequired(true),
+        .setRequired(true)
     )
     .addStringOption((option) =>
-      option.setName("reason").setDescription("The reason of the ban"),
+      option.setName("reason").setDescription("The reason of the ban")
     )
     .setContexts(0)
     .setIntegrationTypes(0),
@@ -42,34 +42,14 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => { });
+                interaction.deleteReply().catch(() => {});
               }, 5000);
             }
           })
-          .catch(() => { });
+          .catch(() => {});
       }
 
-      if (
-        member.roles.highest.position >=
-        interaction.member.roles.highest.position
-      ) {
-        let rolesmatch = new MessageEmbed()
-          .setColor("RED")
-          .setDescription(
-            `${client.emoji.fail} | They have more power than you or have equal power as you do!`,
-          );
-        return interaction
-          .reply({ embeds: [rolesmatch] })
-          .then(async () => {
-            if (logging && logging.moderation.delete_reply === "true") {
-              setTimeout(() => {
-                interaction.deleteReply().catch(() => { });
-              }, 5000);
-            }
-          })
-          .catch(() => { });
-      }
-      if (member === interaction.author) {
+      if (member === interaction.user) {
         let banerror = new MessageEmbed()
           .setColor("RED")
           .setDescription(`${client.emoji.fail} | You can't ban yourself!`);
@@ -78,11 +58,11 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => { });
+                interaction.deleteReply().catch(() => {});
               }, 5000);
             }
           })
-          .catch(() => { });
+          .catch(() => {});
       }
 
       if (member) {
@@ -90,28 +70,32 @@ module.exports = {
         let bansuccess = new MessageEmbed()
           .setColor("GREEN")
           .setDescription(
-            `${client.emoji.success
-            } | ${member} has been banned. __**Reason:**__ ${reason || "No reason Provided"
-            }`,
+            `${
+              client.emoji.success
+            } | ${member} has been banned. __**Reason:**__ ${
+              reason || "No reason Provided"
+            }`
           );
         return interaction
           .reply({ embeds: [bansuccess] })
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => { });
+                interaction.deleteReply().catch(() => {});
               }, 5000);
             }
           })
-          .catch(() => { });
+          .catch(() => {});
       }
       if (member) {
         let dmEmbed = new MessageEmbed()
           .setColor("RED")
           .setDescription(
-            `You have been banned in **${interaction.guild.name
-            }**.\n\n__**Moderator:**__ ${interaction.author} **(${interaction.author.tag
-            })**\n__**Reason:**__ ${reason || "No Reason Provided"}`,
+            `You have been banned in **${
+              interaction.guild.name
+            }**.\n\n__**Moderator:**__ ${interaction.author} **(${
+              interaction.author.tag
+            })**\n__**Reason:**__ ${reason || "No Reason Provided"}`
           )
           .setTimestamp();
         member.send({ embeds: [dmEmbed] });
@@ -119,7 +103,7 @@ module.exports = {
         let failembed = new MessageEmbed()
           .setColor(client.color.red)
           .setDescription(
-            `${client.emoji.fail} | I cannot ban that member. Make sure my role is above their role or that I have sufficient perms to execute the command.`,
+            `${client.emoji.fail} | I cannot ban that member. Make sure my role is above their role or that I have sufficient perms to execute the command.`
           )
           .setTimestamp();
         return interaction.reply({ embeds: [failembed] });
@@ -167,7 +151,7 @@ module.exports = {
                   });
 
                   logging.moderation.caseN = logcase + 1;
-                  await logging.save().catch(() => { });
+                  await logging.save().catch(() => {});
                 }
               }
             }

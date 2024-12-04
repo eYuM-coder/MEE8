@@ -15,8 +15,7 @@
     },
     "dev": {
       "name": "dev",
-      "command": "npm run dev",
-      "runAtStart": true
+      "command": "npm run dev"
     },
     "start": {
       "name": "start",

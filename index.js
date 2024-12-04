@@ -59,21 +59,31 @@ client.on("ready", () => {
 
         if (modified) {
           await userWarning.save();
-          logger.info(`Removed expired warnings for user ${userWarning.memberID} in guild ${userWarning.guildID}`, { label: "Database" });
+          logger.info(
+            `Removed expired warnings for user ${userWarning.memberID} in guild ${userWarning.guildID}`,
+            { label: "Database" }
+          );
         } else if (userWarning.warnings.length === 0) {
           await warnModel.findByIdAndDelete(objectId);
-          logger.info(`Removed database warning model for user ${userWarning.memberID} in guild ${userWarning.guildID}`, { label: "Database" });
+          logger.info(
+            `Removed database warning model for user ${userWarning.memberID} in guild ${userWarning.guildID}`,
+            { label: "Database" }
+          );
         }
       }
     } catch (error) {
       if (error.name === "MongoServerError" && error.code === 50) {
-        logger.error("Query timed out after 5000ms. Consider optimizing the database.", { label: "ERROR" });
+        logger.error(
+          "Query timed out after 5000ms. Consider optimizing the database.",
+          { label: "ERROR" }
+        );
       } else {
-        logger.error(`Error removing expired warnings: ${error.message}`, { label: "ERROR" });
+        logger.error(`Error removing expired warnings: ${error.message}`, {
+          label: "ERROR",
+        });
       }
     }
   }
-
 
   setInterval(checkExpiredWarnings, 1000);
 });
@@ -149,7 +159,7 @@ client.on("messageCreate", async (message) => {
     const { previousXPNeeded, xpNeededForNextLevel } = await updateUserLevel(
       guildId,
       userId,
-      xpGain,
+      xpGain
     );
 
     if (user.xp >= previousXPNeeded) {
@@ -158,7 +168,7 @@ client.on("messageCreate", async (message) => {
         .setTitle("Level Up!")
         .setAuthor(
           message.author.username,
-          message.author.displayAvatarURL({ dynamic: true }),
+          message.author.displayAvatarURL({ dynamic: true })
         )
         .setDescription(`You have reached level ${user.level}`)
         .setFooter(`XP: ${user.xp}/${xpNeededForNextLevel}`);
@@ -221,10 +231,28 @@ client.on("interactionCreate", async (interaction) => {
   try {
     await slashCommand.execute(interaction);
     try {
-      await logger.info(`/${slashCommand.data.name} (${subcommand ? `${subcommand}` : 'No subcommand executed'}) ran by "${interaction.user.username}" (${interaction.user.id}) on guild "${interaction.guild.name}" (${interaction.guild.id}) in channel "${interaction.channel.name}" (${interaction.channel.id})`, { label: "Slash Commmand" });
+      await logger.info(
+        `/${slashCommand.data.name} (${
+          subcommand ? `${subcommand}` : "No subcommand executed"
+        }) ran by "${interaction.user.username}" (${
+          interaction.user.id
+        }) on guild "${interaction.guild.name}" (${
+          interaction.guild.id
+        }) in channel "${interaction.channel.name}" (${
+          interaction.channel.id
+        })`,
+        { label: "Slash Commmand" }
+      );
     } catch (error) {
       console.error(error);
-      await logger.info(`${slashCommand.data.name} (${subcommand ? `${subcommand}` : "No subcommand executed"}) ran by "${interaction.user.username}" (${interaction.user.id}) in a DM.`);
+      await logger.info(
+        `${slashCommand.data.name} (${
+          subcommand ? `${subcommand}` : "No subcommand executed"
+        }) ran by "${interaction.user.username}" (${
+          interaction.user.id
+        }) in a DM.`,
+        { label: "Slash Command" }
+      );
     }
   } catch (error) {
     await interaction.reply({
@@ -247,11 +275,11 @@ const moreInfoEmbed = new MessageEmbed()
   .setTitle("More Info")
   .setURL(`${process.env.AUTH_DOMAIN}/invite`)
   .setDescription(
-    `${config.botName} is a discord bot with a lot of features. You can invite ${config.botName} to your server by clicking the button below.`,
+    `${config.botName} is a discord bot with a lot of features. You can invite ${config.botName} to your server by clicking the button below.`
   )
   .setFooter(
     `${config.botName}`,
-    `${process.env.AUTH_DOMAIN}/assets/images/pogy.png`,
+    `${process.env.AUTH_DOMAIN}/assets/images/pogy.png`
   ) // Set footer with text and icon
   .addFields(
     {
@@ -264,14 +292,17 @@ const moreInfoEmbed = new MessageEmbed()
       name: `Vote ${config.botName}`,
       value: "https://top.gg/bot/880243836830652958/vote",
       inline: false,
-    },
+    }
   );
 const levelupbutton = new MessageEmbed()
   .setColor(color.blue)
   .setTitle("Level Up")
-  .setFooter(`${config.botName}`, `${process.env.AUTH_DOMAIN}/assets/images/pogy.png`)
+  .setFooter(
+    `${config.botName}`,
+    `${process.env.AUTH_DOMAIN}/assets/images/pogy.png`
+  )
   .setDescription(
-    `Hmmm... This doesnt seem to do much, but you can click it anyways.`,
+    `Hmmm... This doesnt seem to do much, but you can click it anyways.`
   )
   .setURL(`${process.env.AUTH_DOMAIN}/invite`);
 
@@ -279,13 +310,13 @@ const invitebutton = new MessageActionRow().addComponents(
   new MessageButton()
     .setLabel(`Invite ${config.botName}`)
     .setStyle("LINK")
-    .setURL(`${process.env.AUTH_DOMAIN}/invite`),
+    .setURL(`${process.env.AUTH_DOMAIN}/invite`)
 );
 
 const infobutton = new MessageEmbed()
   .setTitle(`Info`)
   .setDescription(
-    "Hello there pogger. If you want more info on this bot, you can check out the github repo or join the support server",
+    "Hello there pogger. If you want more info on this bot, you can check out the github repo or join the support server"
   )
   .setURL("https://github.com/eYuM-coder/MEE8/")
   .addField("Github Repo", "https://github.com/eYuM-coder/MEE8/");
@@ -336,7 +367,7 @@ client.on("interactionCreate", async (interaction) => {
         .setColor("#00FF00")
         .setTitle("Rock Paper Scissors")
         .setDescription(
-          `You chose ${emojis[userChoice]}, and the bot chose ${emojis[botChoice]}.`,
+          `You chose ${emojis[userChoice]}, and the bot chose ${emojis[botChoice]}.`
         );
 
       let resultMessage;
@@ -351,7 +382,7 @@ client.on("interactionCreate", async (interaction) => {
         resultMessage = userWins ? "You win!" : "You lose!";
         resultEmbed.addField(
           "Result",
-          `${resultMessage} ${emojis[userChoice]} beats ${emojis[botChoice]}`,
+          `${resultMessage} ${emojis[userChoice]} beats ${emojis[botChoice]}`
         );
         if (userWins) {
           resultEmbed.setColor("#00FF00");
@@ -399,7 +430,7 @@ client.on("interactionCreate", async (interaction) => {
       const buttonRow = new MessageActionRow().addComponents(
         rockButton,
         paperButton,
-        scissorsButton,
+        scissorsButton
       );
 
       await interaction.update({
@@ -476,7 +507,7 @@ async function startTetrisGame(message) {
   gameState.tetrominoCol = Math.floor(gameState.board[0].length / 2) - 2;
   const renderedBoard = renderBoard(gameState.board);
   const buttonMessage = await message.channel.send(
-    `${renderedBoard}\n\nPress the buttons below to move the Tetromino!`,
+    `${renderedBoard}\n\nPress the buttons below to move the Tetromino!`
   );
 
   // Create buttons
@@ -516,7 +547,7 @@ async function startTetrisGame(message) {
       // Debounce button interactions to avoid excessive calls (adjust delay as needed)
       const debouncedHandleInteraction = debounce(async () => {
         console.log(
-          `Clicked ${interaction.customId} from ${interaction.user.username}`,
+          `Clicked ${interaction.customId} from ${interaction.user.username}`
         );
         if (interaction.user.id === message.author.id) {
           switch (interaction.customId) {
@@ -548,7 +579,7 @@ async function startTetrisGame(message) {
       console.error("Error handling interaction:", error);
       // Display an error message in the chat
       await interaction.reply(
-        "An error occurred while processing your request.",
+        "An error occurred while processing your request."
       );
     }
   });
@@ -667,7 +698,7 @@ async function startTetrisGame(message) {
     if (rowsCleared > 0) {
       // Update score or display a message
       await buttonMessage.edit(
-        `${renderBoard(gameState.board)}\n\nRows cleared: ${rowsCleared}`,
+        `${renderBoard(gameState.board)}\n\nRows cleared: ${rowsCleared}`
       );
     }
   }
@@ -787,7 +818,7 @@ async function startTetrisGame(message) {
     gameState.tetromino = newTetromino;
     gameState.tetrominoRow = 0;
     gameState.tetrominoCol = Math.floor(
-      (gameState.board[0].length - newTetromino[0].length) / 2,
+      (gameState.board[0].length - newTetromino[0].length) / 2
     );
   }
 
@@ -799,7 +830,7 @@ async function startTetrisGame(message) {
           tetromino[row][col] !== 0 &&
           (gameState.board[gameState.tetrominoRow + row] === undefined ||
             gameState.board[gameState.tetrominoRow + row][
-            gameState.tetrominoCol + col
+              gameState.tetrominoCol + col
             ] !== "⬛")
         ) {
           return false;
@@ -817,7 +848,7 @@ async function startTetrisGame(message) {
           gameState.tetromino[row][col] !== 0 &&
           gameState.board[gameState.tetrominoRow + row] &&
           gameState.board[gameState.tetrominoRow + row][
-          gameState.tetrominoCol + col
+            gameState.tetrominoCol + col
           ]
         ) {
           gameState.board[gameState.tetrominoRow + row][
@@ -836,7 +867,7 @@ async function startTetrisGame(message) {
           gameState.tetromino[row][col] !== 0 &&
           gameState.board[gameState.tetrominoRow + row] &&
           gameState.board[gameState.tetrominoRow + row][
-          gameState.tetrominoCol + col
+            gameState.tetrominoCol + col
           ]
         ) {
           gameState.board[gameState.tetrominoRow + row][
@@ -850,7 +881,7 @@ async function startTetrisGame(message) {
   async function updateBoard(gameState, buttonMessage) {
     // Update the message with the new board state
     await buttonMessage.edit(
-      `${renderBoard(gameState.board)}\n\nButtons pressed:`,
+      `${renderBoard(gameState.board)}\n\nButtons pressed:`
     );
   }
 }

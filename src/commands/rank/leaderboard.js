@@ -7,6 +7,7 @@ module.exports = class extends Command {
       name: "leaderboard",
       description: "Display the server's leaderboard based on levels.",
       category: "Leveling",
+      aliases: ["leaderb", "lb", "lboard"],
       cooldown: 5,
       guildOnly: true,
     });

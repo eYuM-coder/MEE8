@@ -33,17 +33,10 @@ module.exports = {
       .setTitle("Server List")
       .setFooter({
         text: interaction.user.displayName,
-<<<<<<< HEAD
-        iconURL: interaction.user.displayAvatarURL({ dynamic: true })
-      })
-      .setTimestamp()
-      .setColor("RANDOM")
-=======
         iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
       })
       .setTimestamp()
       .setColor(interaction.user.displayHexColor);
->>>>>>> 9d2efb8ba8da1af8e1f9a8ead10945188358c4f5
 
     if (servers.length <= 50) {
       const range = servers.length == 1 ? "[1]" : `[1 - ${servers.length}]`;

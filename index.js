@@ -84,6 +84,7 @@ async function getGuildData(guildId) {
   if (!guild) {
     guild = new Guild({
       guildId: guildId,
+      levelingEnabled: true,
       users: [],
     });
     await guild.save();
@@ -116,21 +117,23 @@ async function updateUserLevel(guildId, userId, xpGain) {
   const { guild, user } = await getUserInGuild(userId, guildId);
 
   user.xp += xpGain;
-  let nextLevelXP = user.level * 75;
+  let nextLevelXP = user.level * 50;
   let xpNeededForNextLevel = user.level * nextLevelXP;
-  let previousXPNeeded = xpNeededForNextLevel;
+  let previousLevel = user.level;
+  let currentLevel = user.level;
 
   user.messageTimeout = Date.now();
 
   while (user.xp >= xpNeededForNextLevel) {
     user.level += 1;
-    nextLevelXP = user.level * 75;
+    nextLevelXP = user.level * 50;
     xpNeededForNextLevel = user.level * nextLevelXP;
+    currentLevel = user.level;
   }
 
   await guild.save();
 
-  return { previousXPNeeded, xpNeededForNextLevel };
+  return { xpNeededForNextLevel, previousLevel, currentLevel };
 }
 
 client.on("messageCreate", async (message) => {
@@ -146,13 +149,13 @@ client.on("messageCreate", async (message) => {
 
   if (Date.now() - user.messageTimeout >= 60000 && guild.levelingEnabled) {
     const xpGain = Math.floor(Math.random() * 15) + 10;
-    const { previousXPNeeded, xpNeededForNextLevel } = await updateUserLevel(
+    const { previousLevel, xpNeededForNextLevel, currentLevel } = await updateUserLevel(
       guildId,
       userId,
       xpGain,
     );
 
-    if (user.xp >= previousXPNeeded) {
+    if (currentLevel > previousLevel) {
       const levelbed = new MessageEmbed()
         .setColor("#3498db")
         .setTitle("Level Up!")
@@ -160,7 +163,7 @@ client.on("messageCreate", async (message) => {
           message.author.username,
           message.author.displayAvatarURL({ dynamic: true }),
         )
-        .setDescription(`You have reached level ${user.level}`)
+        .setDescription(`You have reached level ${currentLevel}`)
         .setFooter(`XP: ${user.xp}/${xpNeededForNextLevel}`);
 
       message.channel.send({ embeds: [levelbed] });

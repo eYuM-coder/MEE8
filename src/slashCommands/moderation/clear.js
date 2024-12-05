@@ -99,7 +99,7 @@ module.exports = {
               "There was an error trying to delete messages in this channel.",
           });
         }
-        await delay(5000);
+        await delay(10000);
       }
 
       const embed = new MessageEmbed()

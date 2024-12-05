@@ -11,13 +11,14 @@ module.exports = class extends Command {
       category: "Economy",
       usage: "pay <user> <amount>",
       examples: "pay @Peter 500",
-      cooldown: 5,
+      cooldown: 5
     });
   }
   async run(message, args) {
     const user = message.mentions.members.first();
     const amount = args.slice(1).join("");
     const profile = await Profile.findOne({ userID: message.author.id, guildId: message.guild.id });
+    const profileChecker = await Profile.findOne({ userID: user.id, guildId: message.guild.id });
     if (!profile) {
       await createProfile(message.author, message.guild);
       await message.channel.sendCustom({
@@ -45,19 +46,39 @@ module.exports = class extends Command {
           ]
         });
       } else {
-        await Profile.updateOne({
-          userID: message.author.id, guildId: message.guild.id
-        }, { $inc: { wallet: -amount } });
-        await Profile.updateOne({
-          userID: user.id, guildId: message.guild.id
-        }, { $inc: { wallet: amount } });
-        await message.channel.sendCustom({
-          embeds: [
-            new MessageEmbed()
-              .setColor(message.client.color.green)
-              .setDescription(`You payed $${amount} to ${user}.`)
-          ]
-        });
+        if (!profileChecker) {
+          await message.channel.sendCustom({
+            embeds: [
+              new MessageEmbed()
+                .setColor("RED")
+                .setDescription(`${user} does not have a profile!`)
+            ]
+          });
+        } else {
+          await Profile.updateOne({
+            userID: message.author.id,
+            guildId: message.guild.id
+          }, {
+            $inc: {
+              wallet: - amount
+            }
+          });
+          await Profile.updateOne({
+            userID: user.id,
+            guildId: message.guild.id
+          }, {
+            $inc: {
+              wallet: amount
+            }
+          });
+          await message.channel.sendCustom({
+            embeds: [
+              new MessageEmbed()
+                .setColor(message.client.color.green)
+                .setDescription(`You payed $${amount} to ${user}.`)
+            ]
+          });
+        }
       }
     }
   }

@@ -1,6 +1,5 @@
 // AddXPCommand.js
 const Command = require("../../structures/Command");
-const fs = require("fs");
 const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
 const Guild = require("../../database/models/leveling");
 
@@ -50,7 +49,7 @@ module.exports = class extends Command {
         });
     }
 
-    let nextLevelXP = user.level * 75;
+    let nextLevelXP = user.level * 50;
     let xpNeededForNextLevel = user.level * nextLevelXP;
 
     if (!(amount >= 1000000000)) {

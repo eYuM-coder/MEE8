@@ -1,6 +1,5 @@
 const Command = require("../../structures/Command");
-const fs = require("fs");
-const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
+const { MessageEmbed } = require("discord.js");
 const Guild = require("../../database/models/leveling");
 
 module.exports = class extends Command {
@@ -46,14 +45,14 @@ module.exports = class extends Command {
 
     const actualLevelAmount = amount - 1;
 
-    let nextLevelXP = actualLevelAmount * 75;
+    let nextLevelXP = actualLevelAmount * 50;
     let nextLevel = amount;
     let xpNeededForNextLevel = actualLevelAmount * nextLevelXP;
 
     if (!(amount >= 1000)) {
       user.xp = actualLevelAmount * nextLevelXP;
       user.level = amount;
-      nextLevelXP = nextLevel * 75;
+      nextLevelXP = nextLevel * 50;
       xpNeededForNextLevel = nextLevel * nextLevelXP;
     } else {
       const embed = new MessageEmbed().setDescription(
@@ -70,13 +69,6 @@ module.exports = class extends Command {
       .setFooter(
         `XP: ${user.xp}/${xpNeededForNextLevel}`,
       );
-
-    const row = new MessageActionRow().addComponents(
-      new MessageButton()
-        .setCustomId("levelup")
-        .setLabel("Level Up")
-        .setStyle("SUCCESS"),
-    );
     message.channel.sendCustom({
       embeds: [levelbed],
     });

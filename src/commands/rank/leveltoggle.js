@@ -1,7 +1,6 @@
 // LevelingToggleCommand.js
 
 const Command = require("../../structures/Command");
-const fs = require("fs");
 const Guild = require("../../database/models/leveling");
 let toggle = true;
 
@@ -44,16 +43,20 @@ module.exports = class extends Command {
     // Update the guild's levelingEnabled property
     if (action === "enable") {
       toggle = true;
-      userData.guilds[guildId].levelingEnabled = toggle;
-      message.reply("Leveling system enabled for this server.");
+      await guild.updateOne({
+        levelingEnabled: toggle
+      });
+      message.channel.send("Leveling system enabled for this server.");
     } else if (action === "disable") {
       toggle = false;
-      userData.guilds[guildId].levelingEnabled = toggle;
-      message.reply("Leveling system disabled for this server.");
+      await guild.updateOne({
+        levelingEnabled: toggle
+      });
+      message.channel.send("Leveling system disabled for this server.");
     } else {
       return message.reply("Invalid action. Use `enable` or `disable`.");
     }
-    } catch (erorr) {
+    } catch (error) {
       console.error("Error occured: ", error);
       message.reply("An error occured while updating the leveling system.");
     }

@@ -1,7 +1,5 @@
 const Command = require("../../structures/Command");
 const Guild = require("../../database/models/leveling");
-const fs = require("fs");
-const guildData = require("../../data/users.json");
 module.exports = class extends Command {
   constructor(...args) {
     super(...args, {

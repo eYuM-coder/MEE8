@@ -1,12 +1,12 @@
 const Command = require("../../structures/Command");
 const { createCanvas, loadImage } = require("canvas");
-const { MessageAttachment, MessageEmbed } = require("discord.js");
+const { MessageAttachment } = require("discord.js");
 const Guild = require("../../database/models/leveling");
 
 // Calculate the required XP for a certain level
 function calculateRequiredXP(level) {
-  const baseXP = 75;
-  const increment = level * 75;
+  const baseXP = 50;
+  const increment = level * 50;
   const xpNeeded = level * increment;
   if (level === 0) {
     return baseXP + xpNeeded;
@@ -16,7 +16,7 @@ function calculateRequiredXP(level) {
 }
 
 function abbreviateNumber(number) {
-   return number >= 1e12 ? `${(number / 1e12).toFixed(2)}T` : number >= 1e9 ? `${(number / 1e9).toFixed(2)}B` : number >= 1e6 ? `${(number / 1e6).toFixed(2)}M` : number >= 1e3 ? `${(number / 1e3).toFixed(2)}K` : number.toString();
+  return number >= 1e12 ? `${(number / 1e12).toFixed(2)}T` : number >= 1e9 ? `${(number / 1e9).toFixed(2)}B` : number >= 1e6 ? `${(number / 1e6).toFixed(2)}M` : number >= 1e3 ? `${(number / 1e3).toFixed(2)}K` : number.toString();
 }
 
 

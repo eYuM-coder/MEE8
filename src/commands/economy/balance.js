@@ -15,7 +15,7 @@ module.exports = class extends Command {
       cooldown: 3,
     })
   }
-  async run(message, args) {
+  async run(message) {
     const user = message.mentions.members.first() || message.author;
 
     const profile = await Profile.findOne({

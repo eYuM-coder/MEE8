@@ -13,7 +13,7 @@ module.exports = class extends Command {
       examples: "rob @Peter"
     })
   }
-  async run(message, args) {
+  async run(message) {
     const user = message.mentions.members.first();
     const profile = await Profile.findOne({ userID: message.author.id, guildId: message.guild.id });
     if (!profile) {

@@ -6,6 +6,7 @@ const LeaveDB = require("../../database/schemas/leave");
 const StickyDB = require("../../database/schemas/stickyRole");
 const Logging = require("../../database/schemas/logging");
 const Maintenance = require("../../database/schemas/maintenance");
+const send = require("../../packages/logs/index");
 module.exports = class extends Event {
   async run(member) {
     const logging = await Logging.findOne({ guildId: member.guild.id });
@@ -41,7 +42,7 @@ module.exports = class extends Event {
               )
               .setTimestamp()
               .setColor(member.guild.me.displayHexColor);
-            channelEmbed.send({ embeds: [embed] }).catch(() => {});
+              send(channelEmbed, { username: `${this.client.user.username}`, embeds: [embed] }).catch(() => {});
           }
         }
       }

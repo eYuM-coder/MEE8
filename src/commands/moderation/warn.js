@@ -7,6 +7,7 @@ const randoStrings = require("../../packages/randostrings.js");
 const random = new randoStrings();
 const Logging = require("../../database/schemas/logging.js");
 const ms = require("ms");
+const send = require("../../packages/logs/index.js");
 async function usePrettyMs(ms) {
   const { default: prettyMilliseconds } = await import("pretty-ms");
   const time = prettyMilliseconds(ms);
@@ -68,24 +69,18 @@ module.exports = class extends Command {
     }
 
     // Combine all arguments after the mention into one string
-    const allArgs = args.slice(1).join(" ");
+    const fullCommand = args.slice(1).join(" ");
+    let match = fullCommand.match(/"([^"]+)"|(\S+)/g);
 
-    // Regular expression to detect valid time formats (like "2w", "6d", "1h", "30m", etc.)
-    const timeRegex = /\d+\s*[a-z]+/g;
+    const parsedArgs = match.map((arg) => arg.replace(/^"|"$/g, "")) || ["1d"];
+    let time = ms(parsedArgs[0]) || ms("1d");
 
-    // Extract all potential time parts from the combined string
-    const timeMatches = allArgs.match(timeRegex).join(" ");
-
-    console.log(timeMatches);
-
-    // If there are time parts, parse them; otherwise, default to "1d"
-    let time = timeMatches ? ms(timeMatches) : ms("1d");
-    console.log(time);
-    let warnTime = time / 1000;
-    let formattedTime = await usePrettyMs(time);
-
+    // If there are time parts, parse them; otherwise, set time to null (infinite)
+    let formattedTime = time ? await usePrettyMs(time) : "Infinity";
+    
     // Remove the parsed time from the reason
-    let reason = allArgs.replace(timeMatches ? timeMatches : "", "").trim();
+    let reason = parsedArgs.slice(time ? 1 : 0).join(" ");
+
     reason = reason || "Not Specified"; // Default reason if none provided
 
     let warnID = random.password({
@@ -93,8 +88,10 @@ module.exports = class extends Command {
       string: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890",
     });
 
-    const expirationTime = new Date();
-    expirationTime.setSeconds(expirationTime.getSeconds() + warnTime);
+    // Set expiration time only if a duration is provided
+    const expirationTime = time
+      ? new Date(Date.now() + time)
+      : null;
 
     let warnDoc = await warnModel
       .findOne({
@@ -122,14 +119,22 @@ module.exports = class extends Command {
         memberID: mentionedMember.id,
       });
     }
+
     warnDoc.modType.push("warn");
     warnDoc.warnings.push(reason);
     warnDoc.warningID.push(warnID);
     warnDoc.moderator.push(message.member.id);
     warnDoc.date.push(Date.now());
-    warnDoc.expiresAt.push(expirationTime);
+
+    // Only add expiration time if it's not infinite
+    if (expirationTime) {
+      warnDoc.expiresAt.push(expirationTime);
+    } else {
+      warnDoc.expiresAt.push(null); // Represent infinite expiration
+    }
 
     await warnDoc.save().catch((err) => console.log(err));
+
     let dmEmbed;
     if (
       logging &&
@@ -137,25 +142,17 @@ module.exports = class extends Command {
       logging.moderation.warn_action !== "1"
     ) {
       if (logging.moderation.warn_action === "2") {
-        dmEmbed = `${message.client.emoji.fail} | You were warned in **${
-          message.guild.name
-        }**.\n\n**Expires** <t:${Math.floor(
-          expirationTime.getTime() / 1000
-        )}:F>`;
+        dmEmbed = `${message.client.emoji.fail} | You were warned in **${message.guild.name
+          }**.\n\n**Expires** <t:${Math.floor(
+            expirationTime.getTime() / 1000
+          )}:F>`;
       } else if (logging.moderation.warn_action === "3") {
-        dmEmbed = `${message.client.emoji.fail} | You were warned in **${
-          message.guild.name
-        }** for ${reason}.\n\n**Expires** <t:${Math.floor(
-          expirationTime.getTime() / 1000
-        )}:F>`;
+        dmEmbed = `${message.client.emoji.fail} | You were warned in **${message.guild.name
+          }** for ${reason}.\n\n**Duration:** ${formattedTime}`;
       } else if (logging.moderation.warn_action === "4") {
-        dmEmbed = `${message.client.emoji.fail} | You were warned in **${
-          message.guild.name
-        }** by **${message.author} (${
-          message.author.tag
-        })** for ${reason}.\n\n**Expires** <t:${Math.floor(
-          expirationTime.getTime() / 1000
-        )}:F>`;
+        dmEmbed = `${message.client.emoji.fail} | You were warned in **${message.guild.name
+          }** by **${message.author} (${message.author.tag
+          })** for ${reason}.\n\n**Duration:** ${formattedTime}`;
       }
 
       mentionedMember
@@ -166,7 +163,7 @@ module.exports = class extends Command {
               .setDescription(dmEmbed),
           ],
         })
-        .catch(() => {});
+        .catch(() => { });
     }
     message.channel
       .sendCustom({
@@ -174,23 +171,22 @@ module.exports = class extends Command {
           new discord.MessageEmbed().setColor(client.color.green)
             .setDescription(`${language.warnSuccessful
 
-            .replace("{emoji}", client.emoji.success)
-            .replace("{user}", `**${mentionedMember.user.tag}** `)}
-      ${
-        logging && logging.moderation.include_reason === "true"
-          ? `\n\n**Reason:** ${reason}`
-          : ``
-      }\n\n**Expires in ${formattedTime}**`),
+              .replace("{emoji}", client.emoji.success)
+              .replace("{user}", `**${mentionedMember.user.tag}** `)}
+      ${logging && logging.moderation.include_reason === "true"
+                ? `\n\n**Reason:** ${reason}`
+                : ``
+              }\n\n**Duration: ${formattedTime}**`),
         ],
       })
       .then(async (s) => {
         if (logging && logging.moderation.delete_reply === "true") {
           setTimeout(() => {
-            s.delete().catch(() => {});
+            s.delete().catch(() => { });
           }, 5000);
         }
       })
-      .catch(() => {});
+      .catch(() => { });
 
     if (logging && logging.moderation.auto_punish.toggle === "true") {
       if (
@@ -207,7 +203,7 @@ module.exports = class extends Command {
             .ban({
               reason: `Auto Punish / Responsible user: ${message.author.tag}`,
             })
-            .catch(() => {});
+            .catch(() => { });
         } else if (punishment === "2") {
           action = `kicked`;
 
@@ -215,7 +211,7 @@ module.exports = class extends Command {
             .kick({
               reason: `Auto Punish / Responsible user: ${message.author.tag}`,
             })
-            .catch(() => {});
+            .catch(() => { });
         } else if (punishment === "3") {
           action = `softbanned`;
 
@@ -260,7 +256,7 @@ module.exports = class extends Command {
     }
     if (logging) {
       if (logging.moderation.delete_after_executed === "true") {
-        message.delete().catch(() => {});
+        message.delete().catch(() => { });
       }
 
       const role = message.guild.roles.cache.get(
@@ -301,12 +297,12 @@ module.exports = class extends Command {
                   .setTimestamp()
                   .setColor(color);
 
-                channel.send({ embeds: [logEmbed] }).catch((e) => {
+                send(channel, { username: `${this.client.user.username}`, embeds: [logEmbed] }).catch((e) => {
                   console.log(e);
                 });
 
                 logging.moderation.caseN = logcase + 1;
-                await logging.save().catch(() => {});
+                await logging.save().catch(() => { });
               }
             }
           }

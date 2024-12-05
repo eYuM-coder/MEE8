@@ -127,9 +127,9 @@ module.exports = class extends Command {
           .setColor("RED")
           .setDescription(
             `You have been muted in **${
-              interaction.guild.name
-            }**.\n\n__**Moderator:**__ ${interaction.author} **(${
-              interaction.author.tag
+              message.guild.name
+            }**.\n\n__**Moderator:**__ ${message.author} **(${
+              message.author.tag
             })**\n__**Reason:**__ ${reason || "No Reason Provided"}`
           )
           .setTimestamp();

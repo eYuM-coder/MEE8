@@ -4,6 +4,7 @@ require("moment-duration-format");
 const Logging = require("../../database/schemas/logging");
 const Snipe = require("../../database/schemas/editsnipe");
 const Maintenance = require("../../database/schemas/maintenance");
+const send = require("../../packages/logs/index");
 
 module.exports = class extends Event {
   async run(oldMessage, newMessage) {
@@ -132,7 +133,7 @@ module.exports = class extends Event {
                       .permissionsFor(newMessage.guild.me)
                       .has(["SEND_MESSAGES", "EMBED_LINKS"])
                   ) {
-                    channelEmbed.send({ embeds: [embed] }).catch(() => {});
+                    send(channelEmbed, { username: `${this.client.user.username}`, embeds: [embed] }).catch(() => {});
                   }
                 }
               }

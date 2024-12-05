@@ -8,6 +8,7 @@ const alt = require("../../database/models/altdetector.js");
 const StickyDB = require("../../database/schemas/stickyRole");
 const Logging = require("../../database/schemas/logging");
 const Maintenance = require("../../database/schemas/maintenance");
+const send = require("../../packages/logs/index.js");
 
 module.exports = class extends Event {
   async run(member) {
@@ -70,7 +71,7 @@ module.exports = class extends Event {
                 .permissionsFor(member.guild.me)
                 .has(["SEND_MESSAGES", "EMBED_LINKS"])
             ) {
-              channelEmbed.send({ embeds: [embed] }).catch(() => {});
+              send(channelEmbed, { username: `${this.client.user.username}`, embeds: [embed] }).catch(() => {});
             }
           }
         }
@@ -121,7 +122,7 @@ module.exports = class extends Event {
                       member.user.createdAt
                     ).format("MMMM Do YYYY, h:mm:ss a")}`
                   );
-                altLog.send({ embeds: [embedAlt] }).catch(() => {});
+                  send(altLog, { username: `${this.client.user.username}`, embeds: [embedAlt] }).catch(() => {});
               }
             }
           }

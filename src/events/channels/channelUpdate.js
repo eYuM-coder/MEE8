@@ -2,6 +2,7 @@ const Event = require("../../structures/Event");
 const Logging = require("../../database/schemas/logging");
 const discord = require("discord.js");
 const Maintenance = require("../../database/schemas/maintenance");
+const send = require("../../packages/logs/index.js");
 const cooldown = new Set();
 
 module.exports = class extends Event {
@@ -104,11 +105,7 @@ module.exports = class extends Event {
                   .permissionsFor(newChannel.guild.me)
                   .has(["SEND_MESSAGES", "EMBED_LINKS"])
               ) {
-                channelEmbed.send({ embeds: [embed] }).catch(() => {});
-                cooldown.add(newChannel.guild.id);
-                setTimeout(() => {
-                  cooldown.delete(newChannel.guild.id);
-                }, 3000);
+                send(channelEmbed, { username: `${this.client.user.username}`, embeds: [embed] }).catch(() => {});
               }
             }
           }

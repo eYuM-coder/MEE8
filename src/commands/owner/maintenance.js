@@ -3,11 +3,9 @@ const Maintenance = require("../../database/schemas/maintenance");
 module.exports = class extends Command {
   constructor(...args) {
     super(...args, {
-      name: "maintenance",
-      aliases: ["maintenance"],
+      name: "maintenancemode",
       description: "Sets the bot to maintenance",
       category: "Owner",
-      ownerOnly: true,
     });
   }
 

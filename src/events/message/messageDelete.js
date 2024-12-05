@@ -6,6 +6,7 @@ const reactionTicket = require("../../database/models/tickets.js");
 const Logging = require("../../database/schemas/logging");
 const Snipe = require("../../database/schemas/snipe");
 const Maintenance = require("../../database/schemas/maintenance");
+const send = require("../../packages/logs/index.js");
 module.exports = class extends Event {
   async run(message) {
     if (!message.guild) return;
@@ -150,7 +151,7 @@ module.exports = class extends Event {
                 .permissionsFor(message.guild.me)
                 .has(["SEND_MESSAGES", "EMBED_LINKS"])
             ) {
-              channelEmbed.send({ embeds: [embed] }).catch(() => {});
+              send(channelEmbed, { username: `${this.client.user.username}`, embeds: [embed] }).catch(() => {});
             }
           }
         }

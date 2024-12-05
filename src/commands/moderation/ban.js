@@ -2,6 +2,7 @@ const Command = require("../../structures/Command");
 const { MessageEmbed } = require("discord.js");
 const Guild = require("../../database/schemas/Guild.js");
 const Logging = require("../../database/schemas/logging.js");
+const send = require("../../packages/logs/index.js");
 
 module.exports = class extends Command {
   constructor(...args) {
@@ -112,7 +113,7 @@ module.exports = class extends Command {
                         .setTimestamp()
                         .setColor(color);
 
-                      channel.send({ embeds: [logEmbed] }).catch((e) => {
+                      send(channel, { username: `${this.client.user.username}`, embeds: [logEmbed] }).catch((e) => {
                         console.log(e);
                       });
 

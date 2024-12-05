@@ -2,6 +2,7 @@ const Command = require("../../structures/Command");
 const { MessageEmbed } = require("discord.js");
 const Logging = require("../../database/schemas/logging.js");
 const logger = require("../../utils/logger.js");
+const send = require("../../packages/logs/index.js");
 
 module.exports = class extends Command {
   constructor(...args) {
@@ -165,7 +166,7 @@ module.exports = class extends Command {
                     .setFooter({ text: `Responsible ID: ${message.author.id}` })
                     .setColor(color);
 
-                  channel.send({ embeds: [logEmbed] }).catch(() => {});
+                  send(channel, { username: `${this.client.user.username}`, embeds: [logEmbed] }).catch(() => {});
 
                   logging.moderation.caseN = logcase + 1;
                   await logging.save().catch(() => {});

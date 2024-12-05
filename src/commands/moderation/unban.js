@@ -1,7 +1,7 @@
 const Command = require("../../structures/Command");
 const { MessageEmbed } = require("discord.js");
 const Guild = require("../../database/schemas/Guild.js");
-
+const send = require("../../packages/logs/index.js");
 const Logging = require("../../database/schemas/logging.js");
 module.exports = class extends Command {
   constructor(...args) {
@@ -360,9 +360,9 @@ module.exports = class extends Command {
                     .setTimestamp()
                     .setColor(color);
 
-                  channel.send({ embeds: [logEmbed] }).catch((e) => {
-                    console.log(e);
-                  });
+                    send(channel, { username: `${this.client.user.username}`, embeds: [logEmbed] }).catch((e) => {
+                      console.log(e);
+                    });
 
                   logging.moderation.caseN = logcase + 1;
                   await logging.save().catch(() => {});

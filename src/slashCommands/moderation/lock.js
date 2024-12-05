@@ -2,6 +2,7 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageEmbed } = require("discord.js");
 const Guild = require("../../database/schemas/Guild.js");
 const Logging = require("../../database/schemas/logging.js");
+const send = require("../../packages/logs/index.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -107,7 +108,7 @@ module.exports = {
                   let logcase = logging.moderation.caseN;
                   if (!logcase) logcase = `1`;
 
-                  let reason = args.slice(1).join(" ");
+                  let reason = interaction.options.getString("reason");
                   if (!reason) reason = `${language.noReasonProvided}`;
                   if (reason.length > 1024)
                     reason = reason.slice(0, 1021) + "...";
@@ -124,7 +125,7 @@ module.exports = {
                     .setTimestamp()
                     .setColor(color);
 
-                  channel.send({ embeds: [logEmbed] }).catch(() => { });
+                    send(channel, { username: `${this.client.user.username}`, embeds: [logEmbed] }).catch(() => {});
 
                   logging.moderation.caseN = logcase + 1;
                   await logging.save().catch(() => { });

@@ -2,6 +2,7 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageEmbed } = require("discord.js");
 const Logging = require("../../database/schemas/logging.js");
 const logger = require("../../utils/logger.js");
+const send = require("../../packages/logs/index.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -151,7 +152,7 @@ module.exports = {
                     })
                     .setColor(color);
 
-                  loggingChannel.send({ embeds: [logEmbed] }).catch(() => {});
+                    send(loggingChannel, { username: `${this.client.user.username}`, embeds: [logEmbed] }).catch(() => {});
 
                   logging.moderation.caseN = logcase + 1;
                   await logging.save().catch(() => {});

@@ -18,7 +18,7 @@ module.exports = class extends Command {
       new MessageButton()
         .setLabel("Dashboard")
         .setStyle("LINK")
-        .setURL("https://v2.pogy.xyz")
+        .setURL(`${process.env.AUTH_DOMAIN}/dashboard`)
     );
 
     const dashembed = new MessageEmbed()

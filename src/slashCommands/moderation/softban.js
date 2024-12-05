@@ -30,7 +30,7 @@ module.exports = {
       const language = require(`../../data/language/${guildDB.language}.json`);
 
       const member = interaction.options.getMember("member");
-      const reason =
+      let reason =
         interaction.options.getString("reason") || "No Reason Provided";
 
       if (!interaction.member.permissions.has("BAN_MEMBERS"))

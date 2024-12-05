@@ -3,7 +3,7 @@ const Nickname = require("../../database/schemas/nicknames");
 const discord = require("discord.js");
 const Logging = require("../../database/schemas/logging");
 const Maintenance = require("../../database/schemas/maintenance");
-const cooldown = new Set();
+const send = require("../../packages/logs/index");
 
 module.exports = class extends Event {
   async run(oldMember, newMember) {
@@ -52,11 +52,7 @@ module.exports = class extends Event {
                   .permissionsFor(newMember.guild.me)
                   .has(["SEND_MESSAGES", "EMBED_LINKS"])
               ) {
-                channelEmbed.send({ embeds: [roleAddembed] }).catch(() => {});
-                cooldown.add(newMember.guild.id);
-                setTimeout(() => {
-                  cooldown.delete(newMember.guild.id);
-                }, 3000);
+                send(channelEmbed, { username: `${this.client.user.username}`, embeds: [roleAddembed] }).catch(() => {});
               }
             }
 
@@ -80,11 +76,7 @@ module.exports = class extends Event {
                   .permissionsFor(newMember.guild.me)
                   .has(["SEND_MESSAGES", "EMBED_LINKS"])
               ) {
-                channelEmbed.send({embeds: [roleRemoveembed]}).catch(() => {});
-                cooldown.add(newMember.guild.id);
-                setTimeout(() => {
-                  cooldown.delete(newMember.guild.id);
-                }, 3000);
+                send(channelEmbed, { username: `${this.client.user.username}`, embeds: [roleRemoveembed] }).catch(() => {});
               }
             }
           }
@@ -117,11 +109,7 @@ module.exports = class extends Event {
                   .permissionsFor(newMember.guild.me)
                   .has(["SEND_MESSAGES", "EMBED_LINKS"])
               ) {
-                channelEmbed.send({ embeds: [nicknameEmbed] }).catch(() => {});
-                cooldown.add(newMember.guild.id);
-                setTimeout(() => {
-                  cooldown.delete(newMember.guild.id);
-                }, 3000);
+                send(channelEmbed, { username: `${this.client.user.username}`, embeds: [nicknameEmbed] }).catch(() => {});
               }
             }
           }

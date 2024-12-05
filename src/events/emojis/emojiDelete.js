@@ -2,6 +2,7 @@ const Event = require("../../structures/Event");
 const Logging = require("../../database/schemas/logging");
 const discord = require("discord.js");
 const Maintenance = require("../../database/schemas/maintenance");
+const send = require("../../packages/logs/index");
 module.exports = class extends Event {
   async run(emoji) {
     const maintenance = await Maintenance.findOne({
@@ -38,7 +39,7 @@ module.exports = class extends Event {
                 .permissionsFor(emoji.guild.me)
                 .has(["SEND_MESSAGES", "EMBED_LINKS"])
             ) {
-              channelEmbed.send({ embeds: [embed] }).catch(() => {});
+              send(channelEmbed, { username: `${this.client.user.username}`, embeds: [embed] }).catch(() => {});
             }
           }
         }

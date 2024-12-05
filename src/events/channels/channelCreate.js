@@ -1,13 +1,14 @@
 const Event = require("../../structures/Event");
 const Logging = require("../../database/schemas/logging");
 const discord = require("discord.js");
+const send = require("../../packages/logs/index.js");
 const cooldown = new Set();
 
 const Maintenance = require("../../database/schemas/maintenance");
 
 module.exports = class extends Event {
-  async run(message, channel) {
-    if (!message || !channel) return;
+  async run(message) {
+    if (!message) return;
 
     const logging = await Logging.findOne({ guildId: message.guild.id });
 
@@ -52,11 +53,7 @@ module.exports = class extends Event {
                   .permissionsFor(message.guild.me)
                   .has(["SEND_MESSAGES", "EMBED_LINKS"])
               ) {
-                channelEmbed.send({ embeds: [embed] }).catch(() => {});
-                cooldown.add(message.guild.id);
-                setTimeout(() => {
-                  cooldown.delete(message.guild.id);
-                }, 3000);
+                send(channelEmbed, { username: `${this.client.user.username}`, embeds: [embed] }).catch(() => {});
               }
             } else {
               const embed = new discord.MessageEmbed()

@@ -121,6 +121,7 @@ async function updateUserLevel(guildId, userId, xpGain) {
   let xpNeededForNextLevel = user.level * nextLevelXP;
   let previousLevel = user.level;
   let currentLevel = user.level;
+  let currentXP = user.xp;
 
   user.messageTimeout = Date.now();
 
@@ -133,7 +134,7 @@ async function updateUserLevel(guildId, userId, xpGain) {
 
   await guild.save();
 
-  return { xpNeededForNextLevel, previousLevel, currentLevel };
+  return { xpNeededForNextLevel, previousLevel, currentLevel, currentXP };
 }
 
 client.on("messageCreate", async (message) => {
@@ -149,7 +150,7 @@ client.on("messageCreate", async (message) => {
 
   if (Date.now() - user.messageTimeout >= 60000 && guild.levelingEnabled) {
     const xpGain = Math.floor(Math.random() * 15) + 10;
-    const { previousLevel, xpNeededForNextLevel, currentLevel } = await updateUserLevel(
+    const { previousLevel, xpNeededForNextLevel, currentLevel, currentXP } = await updateUserLevel(
       guildId,
       userId,
       xpGain,
@@ -164,7 +165,7 @@ client.on("messageCreate", async (message) => {
           message.author.displayAvatarURL({ dynamic: true }),
         )
         .setDescription(`You have reached level ${currentLevel}`)
-        .setFooter(`XP: ${user.xp}/${xpNeededForNextLevel}`);
+        .setFooter(`XP: ${currentXP}/${xpNeededForNextLevel}`);
 
       message.channel.send({ embeds: [levelbed] });
     }

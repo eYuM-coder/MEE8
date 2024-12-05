@@ -73,13 +73,13 @@ module.exports = class extends Event {
           settings.prefix || "!"
         }help    ]\`\`\``;
         const embed = new MessageEmbed()
-          .setTitle("Hello, I'm Pogy. What's Up?")
+          .setTitle(`Hello, I'm ${config.botName}. What's Up?`)
           .addField(`Prefix`, proofita, true)
           .addField(`Usage`, proofitaa, true)
           .setDescription(
-            `\nIf you like Pogy, Consider [voting](https://top.gg/bot/767705905235099658), or [inviting](${config.invite_link}) it to your server! Thank you for using Pogy, we hope you enjoy it, as we always look forward to improve the bot`,
+            `\nIf you like ${config.botName}, Consider [voting](https://top.gg/bot/767705905235099658), or [inviting](${config.invite_link}) it to your server! Thank you for using Pogy, we hope you enjoy it, as we always look forward to improve the bot`,
           )
-          .setFooter("Thank you for using Pogy!!")
+          .setFooter(`Thank you for using ${config.botName}!!`)
           .setColor("#FF2C98");
         message.channel.sendCustom(embed);
       }
@@ -117,7 +117,7 @@ module.exports = class extends Event {
 
       // maintenance mode
 
-      if (!this.client.config.developers.includes(message.author.id)) {
+      if (!this.client.config.developers.includes(message.author.id) && !this.client.config.owner.includes(message.author.id)) {
         if (maintenance && maintenance.toggle == "true") {
           if (maintenanceCooldown.has(message.author.id)) return;
 

@@ -9,7 +9,9 @@ module.exports = {
   .addStringOption((option) => option.setName("option").setDescription("You can toggle suggestions and approve or decline them with this option.").setRequired(true))
     .addStringOption((option) => option.setName("message").setDescription("The message ID"))
     .addChannelOption((option) => option.setName("channel").setDescription("Optional channel."))
-    .addStringOption((option) => option.setName("reason").setDescription("The reason..")),
+    .addStringOption((option) => option.setName("reason").setDescription("The reason.."))
+    .setContexts(0)
+    .setIntegrationTypes(0),
   async execute(interaction) {
     const guildDB = await Guild.findOne({
       guildId: interaction.guild.id,

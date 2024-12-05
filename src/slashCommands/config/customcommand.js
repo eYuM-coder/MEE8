@@ -8,7 +8,9 @@ module.exports = {
   .setName("createcommand")
   .setDescription("Create a custom command")
   .addStringOption((option) => option.setName("command").setDescription("The command name").setRequired(true))
-  .addStringOption((option) => option.setName("reply").setDescription("The reply").setRequired(true)),
+  .addStringOption((option) => option.setName("reply").setDescription("The reply").setRequired(true))
+  .setContexts(0)
+  .setIntegrationTypes(0),
   async execute(interaction) {
     const guildDB = await Guild.findOne({
       guildId: interaction.guild.id

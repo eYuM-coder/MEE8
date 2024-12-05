@@ -8,7 +8,9 @@ module.exports = {
   data: new SlashCommandBuilder()
   .setName("tempvc")
   .setDescription(" Enable/disable tempvc")
-  .addStringOption((option) => option.setName("toggle").setDescription("Enable or disable tempvc").setRequired(true)),
+  .addStringOption((option) => option.setName("toggle").setDescription("Enable or disable tempvc").setRequired(true))
+  .setContexts(0)
+  .setIntegrationTypes(0),
   async execute(interaction) {
     const guildDB = await Guild.findOne({
       guildId: interaction.guild.id,

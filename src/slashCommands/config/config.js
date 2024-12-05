@@ -5,7 +5,9 @@ const { MessageEmbed } = require("discord.js");
 module.exports = {
   data: new SlashCommandBuilder()
   .setName("settings")
-  .setDescription("Show's the current settings for this guild"),
+  .setDescription("Show's the current settings for this guild")
+  .setContexts(0)
+  .setIntegrationTypes(0),
   async execute(interaction) {
     const guildDB = await Guild.findOne({
       guildId: interaction.guild.id,

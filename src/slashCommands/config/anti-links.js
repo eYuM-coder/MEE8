@@ -5,9 +5,11 @@ const { MessageEmbed } = require("discord.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
-  .setName("anit-links")
+  .setName("anti-links")
   .setDescription("Sets anti-links if the message contains a link")
-  .addStringOption((option) => option.setName("toggle").setDescription("Toggle between enable/disable").setRequired(true)),
+  .addStringOption((option) => option.setName("toggle").setDescription("Toggle between enable/disable").setRequired(true))
+  .setContexts(0)
+  .setIntegrationTypes(0),
   async execute(interaction) {
     const guildDB = await Guild.findOne({
       guildId: interaction.guild.id,
@@ -48,7 +50,7 @@ module.exports = {
           }
         })
         .catch(() => {})
-      };
+      }
 
       await Guild.findOne(
         {

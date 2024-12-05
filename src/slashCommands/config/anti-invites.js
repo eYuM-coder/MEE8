@@ -7,7 +7,9 @@ module.exports = {
   data: new SlashCommandBuilder()
   .setName("anti-invites")
   .setDescription("Block invites from the current server!")
-  .addStringOption((option) => option.setName("toggle").setDescription("Enable or Disable").setRequired(true)),
+  .addStringOption((option) => option.setName("toggle").setDescription("Enable or Disable").setRequired(true))
+  .setContexts(0)
+  .setIntegrationTypes(0),
   async execute(interaction) {
     const guildDB = await Guild.findOne({
       guildId: interaction.guild.id,

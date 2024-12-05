@@ -37,7 +37,7 @@ module.exports = {
           }\`\`\``;
       }
 
-      interaction.reply(embed);
+      interaction.reply({ content: embed, ephemeral: true });
     } else {
       interaction.reply("Bruh you tryina steal my token huh?");
     }

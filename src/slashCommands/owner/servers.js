@@ -26,11 +26,11 @@ module.exports = {
     const embed = new MessageEmbed()
       .setTitle("Server List")
       .setFooter({
-        text: interaction.member.displayName,
-        iconURL: interaction.member.displayAvatarURL({ dynamic: true })
+        text: interaction.user.displayName,
+        iconURL: interaction.user.displayAvatarURL({ dynamic: true })
       })
       .setTimestamp()
-      .setColor(interaction.guild.me.displayHexColor)
+      .setColor("RANDOM")
 
     if (servers.length <= 50) {
       const range = servers.length == 1 ? "[1]" : `[1 - ${servers.length}]`;
@@ -41,7 +41,7 @@ module.exports = {
       new ReactionMenu(
         interaction.client,
         interaction.channel,
-        interaction.member,
+        interaction.user,
         embed,
         servers
       );

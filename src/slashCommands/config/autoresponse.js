@@ -9,7 +9,9 @@ module.exports = {
   .setName("autoresponse")
   .setDescription("Create a auto response which is triggered without prefix!")
   .addStringOption((option) => option.setName("command").setDescription("The name of the command").setRequired(true))
-  .addStringOption((option) => option.setName("reply").setDescription("The reply when the command is triggered").setRequired(true)),
+  .addStringOption((option) => option.setName("reply").setDescription("The reply when the command is triggered").setRequired(true))
+  .setContexts(0)
+  .setIntegrationTypes(0),
   async execute(interaction) {
     const guildDB = await Guild.findOne({
       guildId: interaction.guild.id,

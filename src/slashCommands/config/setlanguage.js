@@ -6,7 +6,9 @@ module.exports = {
   data: new SlashCommandBuilder()
   .setName("setlanguage")
   .setDescription("Set a guild language")
-  .addStringOption((option) => option.setName("language").setDescription("The language to set").setRequired(true)),
+  .addStringOption((option) => option.setName("language").setDescription("The language to set").setRequired(true))
+  .setContexts(0)
+  .setIntegrationTypes(0),
   async execute(interaction) {
     const guildDB = await Guild.findOne({
       guildId: interaction.guild.id,

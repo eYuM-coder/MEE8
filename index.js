@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 // Imports lol
 
 const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
@@ -12,7 +13,6 @@ const color = require("./src/data/colors");
 const jointocreate = require("./src/structures/jointocreate");
 const emoji = require("./src/data/emoji");
 const warnModel = require("./src/database/models/moderation.js");
-const userData = require("./src/data/users.json");
 const sharder = require("./shards.js");
 const deploy = require("./src/deployCommands.js");
 // lets

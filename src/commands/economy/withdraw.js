@@ -28,7 +28,18 @@ module.exports = class extends Command {
       });
     } else {
       const amount = args[0];
-      if (amount > profile.bank) {
+      if (amount === "all") {
+        await Profile.updateOne({
+          userID: message.author.id, guildId: message.guild.id
+        }, { $inc: { wallet: profile.bank, bank: -profile.bank }})
+        await message.channel.sendCustom({
+          embeds: [
+            new MessageEmbed()
+              .setColor("BLURPLE")
+              .setDescription(`Withdrawn $${profile.bank} from your bank.`)
+          ]
+        });
+      } else if (amount > profile.bank) {
         await message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
@@ -45,7 +56,7 @@ module.exports = class extends Command {
           embeds: [
             new MessageEmbed()
               .setColor("BLURPLE")
-              .setDescription(`Withdrawn $${amount} from the bank.`)
+              .setDescription(`Withdrawn $${amount} from your bank.`)
           ]
         });
       }

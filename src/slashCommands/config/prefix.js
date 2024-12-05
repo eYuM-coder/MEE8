@@ -6,7 +6,9 @@ module.exports = {
   data: new SlashCommandBuilder()
   .setName("setprefix")
   .setDescription("Set's the new prefix")
-  .addStringOption((option) => option.setName("prefix").setDescription("The new prefix to set").setRequired(true)),
+  .addStringOption((option) => option.setName("prefix").setDescription("The new prefix to set").setRequired(true))
+  .setContexts(0)
+  .setIntegrationTypes(0),
   async execute(interaction) {
     const settings = await Guild.findOne(
       {

@@ -7,7 +7,9 @@ module.exports = {
   data: new SlashCommandBuilder()
   .setName("afk")
   .setDescription("Set an AFK message!")
-  .addStringOption((option) => option.setName("reason").setDescription("The reason to go AFK (if this is blank then the message will be 'AFK')")),
+  .addStringOption((option) => option.setName("reason").setDescription("The reason to go AFK (if this is blank then the message will be 'AFK')"))
+  .setContexts(0)
+  .setIntegrationTypes(0),
   async execute(interaction) {
     const guildDB = await Guild.findOne({
       guildId: interaction.guild.id,

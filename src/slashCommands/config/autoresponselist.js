@@ -6,7 +6,9 @@ const Guild = require("../../database/schemas/Guild");
 module.exports = {
   data: new SlashCommandBuilder()
   .setName("autoresponselist")
-  .setDescription("Show's a list of auto responses"),
+  .setDescription("Show's a list of auto responses")
+  .setContexts(0)
+  .setIntegrationTypes(0),
   async execute(interaction) {
     const guildDB = await Guild.findOne({
       guildId: interaction.guild.id

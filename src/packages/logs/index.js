@@ -2,9 +2,9 @@
 /* eslint-disable no-constant-condition */
 module.exports = async function (channel, message, options) {
   const init = new Promise(async (resolve) => {
-    // Create Promise
+    // Helper function to send messages through a webhook
     async function sendHook(hook, message, options) {
-      // Check for Embed
+      // Check if the message is an embed
       if (
         typeof message !== "string" &&
         ["RichEmbed", "MessageEmbed"].includes(message.constructor.name)
@@ -13,65 +13,52 @@ module.exports = async function (channel, message, options) {
         message = null;
       }
 
-      // Send Webhook
-      if ((options.mentions || true) !== false) {
-        let callback = await hook.send(message, {
-          username: options.name,
-          avatarURL: options.icon,
-          embeds: options.embeds,
-        });
-
-        resolve(callback);
-      } else {
-        let callback = await hook.send(message, {
-          username: options.name,
-          avatarURL: options.icon,
-          embeds: options.embeds,
-          allowedMentions: { parse: [] },
-        });
-        resolve(callback);
-      }
-    }
-
-    async function fallback(channel, message, timer) {
-      // Configure Channel
-      channel = channel.channel || channel;
-
-      // Send Embed
-      let callback = await channel.send(message);
-
-      // Run Options
-      if (timer)
-        callback.delete({
-          timeout: timer,
-        });
+      // Send Webhook with or without mentions
+      const callback = await hook.send(message, {
+        username: options.name,
+        avatarURL: options.icon,
+        embeds: options.embeds,
+        allowedMentions:
+          (options.mentions || true) !== false ? undefined : { parse: [] },
+      });
 
       resolve(callback);
     }
 
-    // Verify Input
+    // Fallback to normal channel messages if webhook fails
+    async function fallback(channel, message, timer) {
+      channel = channel.channel || channel; // Ensure proper channel object
+      const callback = await channel.send(message);
+
+      if (timer)
+        setTimeout(() => {
+          callback.delete();
+        }, timer);
+
+      resolve(callback);
+    }
+
+    // Validate input
     if (!channel)
       return console.log("HOOK: Please read the NPM page for documentation.");
-
-    // Configure Channel
     channel = channel.channel || channel;
 
-    // Return Statements
     if (!channel.send || !channel.fetchWebhooks)
       return console.log("HOOK: Invalid Channel.");
     if (!message) return console.log("HOOK: Invalid Message.");
 
-    // Configure Settings
-    if (!options) options = {};
+    // Default options setup
     options = {
-      delete: options.delete || false,
-      color: options.color || null,
-      name: options.name || "Message",
-      icon: options.icon || undefined,
+      delete: options?.delete || false,
+      color: options?.color || null,
+      name: options?.name || "Message",
+      icon: options?.icon || undefined,
+      username: options?.username || "Default Hook",
+      embeds: options?.embeds || [],
     };
     if (isNaN(options.delete)) options.delete = false;
 
-    // Fetch Webhooks
+    // Fetch webhooks
     let sended = false;
     let webhooks = await channel.fetchWebhooks().catch(() => {
       sended = true;
@@ -79,21 +66,22 @@ module.exports = async function (channel, message, options) {
     });
     if (sended) return;
 
-    // Assign Webhook
-    let hook = webhooks.find((w) => w.name === `${process.env.AUTH_DOMAIN}`);
+    // Find or create webhook
+    let hook = webhooks.find((w) => w.name === options.username);
     if (!hook) {
       try {
-        hook = await channel.createWebhook(`${process.env.AUTH_DOMAIN}`, {
-          avatar: `https://v2.pogy.xyz/logo.png`,
+        hook = await channel.createWebhook(options.username, {
+          avatar: options.icon || null,
         });
       } catch (e) {
-        hook = await channel.createWebhook(
-          `${process.env.AUTH_DOMAIN}`,
-          `https://v2.pogy.xyz/logo.png`
-        );
+        console.error("Failed to create webhook:", e);
+        fallback(channel, message, options.delete);
+        return;
       }
       return sendHook(hook, message, options);
     }
+
+    // Send the message via webhook
     sendHook(hook, message, options);
   });
   return init;

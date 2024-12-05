@@ -6,7 +6,9 @@ module.exports = {
   data: new SlashCommandBuilder()
   .setName("deleteresponse")
   .setDescription("Deletes an auto response")
-  .addStringOption((option) => option.setName("command").setDescription("The command to delete").setRequired(true)),
+  .addStringOption((option) => option.setName("command").setDescription("The command to delete").setRequired(true))
+  .setContexts(0)
+  .setIntegrationTypes(0),
   async execute(interaction) {
     const guildDB = await Guild.findOne({
       guildId: interaction.guild.id,

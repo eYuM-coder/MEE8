@@ -2,6 +2,7 @@ const Event = require("../../structures/Event");
 const Logging = require("../../database/schemas/logging");
 const discord = require("discord.js");
 const Maintenance = require("../../database/schemas/maintenance");
+const send = require("../../packages/logs/index.js");
 const cooldown = new Set();
 
 module.exports = class extends Event {
@@ -26,10 +27,10 @@ module.exports = class extends Event {
 
         if (channelEmbed) {
           let colorGreen = logging.server_events.color;
-          if (colorGreen === "#000000") colorGreen = "GREEN";
+          if (colorGreen === "#000000") colorGreen = newState.client.color.green;
 
           let colorRed = logging.server_events.color;
-          if (colorRed === "#000000") colorRed = "RED";
+          if (colorRed === "#000000") colorRed = "#FF0000";
 
           let colorYellow = logging.server_events.color;
           if (colorYellow === "#000000") colorYellow = "YELLOW";
@@ -91,7 +92,7 @@ module.exports = class extends Event {
                 `${newState.member.user.tag} | Voice Channel Joined!`,
                 newState.member.user.displayAvatarURL()
               )
-              .addField("member", `${newState.member}`, true)
+              .addField("Member", `${newState.member}`, true)
               .addField("Channel", `${newChannelName}`, true)
               .setColor(colorGreen)
               .setTimestamp()
@@ -105,11 +106,7 @@ module.exports = class extends Event {
                   .permissionsFor(newState.guild.me)
                   .has(["SEND_MESSAGES", "EMBED_LINKS"])
               ) {
-                channelEmbed.send({ embeds: [joinembed] }).catch(() => {});
-                cooldown.add(newState.guild.id);
-                setTimeout(() => {
-                  cooldown.delete(newState.guild.id);
-                }, 3000);
+                send(channelEmbed, { username: `${this.client.user.username}`, embeds: [joinembed]}).catch(() => {});
               }
             }
           }
@@ -121,7 +118,7 @@ module.exports = class extends Event {
                 `${newState.member.user.tag} | Voice Channel Left!`,
                 newState.member.user.displayAvatarURL()
               )
-              .addField("member", `${newState.member}`, true)
+              .addField("Member", `${newState.member}`, true)
               .addField("Channel", `${oldChannelName}`, true)
               .setColor(colorRed)
               .setTimestamp()
@@ -135,11 +132,7 @@ module.exports = class extends Event {
                   .permissionsFor(newState.guild.me)
                   .has(["SEND_MESSAGES", "EMBED_LINKS"])
               ) {
-                channelEmbed.send({ embeds: [leaveembed] }).catch(() => {});
-                cooldown.add(newState.guild.id);
-                setTimeout(() => {
-                  cooldown.delete(newState.guild.id);
-                }, 3000);
+                send(channelEmbed, { username: `${this.client.user.username}`, embeds: [leaveembed]}).catch(() => {});
               }
             }
           }
@@ -166,11 +159,7 @@ module.exports = class extends Event {
                     .permissionsFor(newState.guild.me)
                     .has(["SEND_MESSAGES", "EMBED_LINKS"])
                 ) {
-                  channelEmbed.send({ embeds: [moveembed] }).catch(() => {});
-                  cooldown.add(newState.guild.id);
-                  setTimeout(() => {
-                    cooldown.delete(newState.guild.id);
-                  }, 3000);
+                  send(channelEmbed, { username: `${this.client.user.username}`, embeds: [moveembed] }).catch(() => {});
                 }
               }
             }

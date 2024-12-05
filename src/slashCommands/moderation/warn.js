@@ -5,6 +5,11 @@ const warnModel = require("../../database/models/moderation.js");
 const discord = require("discord.js");
 const randoStrings = require("../../packages/randostrings.js");
 const ms = require("ms");
+async function usePrettyMs(ms) {
+  const { default: prettyMilliseconds } = await import("pretty-ms");
+  const time = prettyMilliseconds(ms);
+  return time;
+}
 /**
  * Instantiates a new randoStrings object to generate random strings.
  */
@@ -43,7 +48,9 @@ module.exports = {
       const mentionedMember = interaction.options.getMember("member");
       const reason =
         interaction.options.getString("reason") || "No Reason Provided";
-      const time = ms(interaction.options.getString("time") !== null ? interaction.options.getString("time") : "1d") / 1000;
+      const time = ms(interaction.options.getString("time") !== null ? interaction.options.getString("time") : "1d");
+      const formattedTime = await usePrettyMs(time);
+      const warnTime = (time / 1000);
 
       if (!mentionedMember) {
         let validmention = new MessageEmbed()
@@ -91,7 +98,7 @@ module.exports = {
       });
 
       const expirationTime = new Date();
-      expirationTime.setSeconds(expirationTime.getSeconds() + time);
+      expirationTime.setSeconds(expirationTime.getSeconds() + warnTime);
 
       let warnDoc = await warnModel
         .findOne({
@@ -163,7 +170,7 @@ module.exports = {
             ${logging && logging.moderation.include_reason === "true"
                     ? `\n\n**Reason:** ${reason}`
                     : ``
-                  }`),
+                  }\n\n**Expires in ${formattedTime}**`),
             ],
           })
           .then(async () => {

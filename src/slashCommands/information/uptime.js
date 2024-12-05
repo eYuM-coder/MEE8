@@ -2,6 +2,11 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 const config = require("../../../config.json");
 const { MessageEmbed } = require("discord.js");
 const Guild = require("../../database/schemas/Guild");
+async function usePrettyMs(ms) {
+  const { default: prettyMilliseconds } = await import("pretty-ms");
+  const time = prettyMilliseconds(ms);
+  return time;
+}
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -18,31 +23,11 @@ module.exports = {
     if (uptime instanceof Array) {
       uptime = uptime.reduce((max, cur) => Math.max(max, cur), - Infinity);
     }
-    let seconds = uptime / 1000;
-    let weeks = parseInt(seconds / 604800);
-    seconds = seconds % 604800;
-    let days = parseInt(seconds / 86400);
-    seconds = seconds % 86400;
-    let hours = parseInt(seconds / 3600);
-    seconds = seconds % 3600;
-    let minutes = parseInt(seconds / 60);
-    seconds = parseInt(seconds % 60);
-    uptime = `${seconds}s`;
-    if (weeks) {
-      uptime = `${weeks} weeks, ${hours} hours, ${minutes} minutes, ${seconds} seconds`;
-    } else if (days) {
-      uptime = `${days} days, ${hours} hours, ${minutes} minutes, ${seconds} seconds`;
-    } else if (hours) {
-      uptime = `${hours} hours, ${minutes} minutes, ${seconds} seconds`;
-    } else if (minutes) {
-      uptime = `${minutes} minutes, ${seconds} seconds`;
-    } else if (seconds) {
-      uptime = `${seconds} seconds`;
-    }
+    let formattedUptime = await usePrettyMs(uptime);
     // const date = moment().subtract(days, 'ms').format('dddd, MMMM Do YYYY');
     const embed = new MessageEmbed()
-      .setDescription(`${config.botName} ${language.uptime1} \`${uptime}\`.`)
-      .setFooter({ text: `https://example.com` })
+      .setDescription(`${config.botName} ${language.uptime1} \`${formattedUptime}\`.`)
+      .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
       .setColor(interaction.guild.me.displayHexColor);
     interaction.reply({ embeds: [embed] });
   }

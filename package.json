@@ -78,6 +78,7 @@
     "parse-ms": "^2.1.0",
     "passport": "^0.4.1",
     "passport-oauth2": "^1.6.1",
+    "pretty-ms": "^9.2.0",
     "prodia.js": "^2.1.3",
     "random": "^2.2.0",
     "random-email": "^1.0.3",

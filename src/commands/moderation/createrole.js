@@ -8,7 +8,7 @@ module.exports = class CreateRoleCommand extends Command {
       description: "Create a role with optional settings",
       category: "Moderation",
       cooldown: 5,
-      usage: '"<roleName>" [color] [hoist] [mentionable]',
+      usage: '"<roleName>" <color> [hoist] [mentionable] [position]',
       guildOnly: true,
       permissions: ["MANAGE_ROLES"],
     });

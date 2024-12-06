@@ -54,32 +54,48 @@ module.exports = class extends Command {
       });
     }
 
-    const mentionedPotision = mentionedMember.roles.highest.position;
-    const memberPotision = message.member.roles.highest.position;
-
-    if (memberPotision <= mentionedPotision) {
-      return message.channel.sendCustom({
-        embeds: [
-          new discord.MessageEmbed()
-            .setDescription(client.emoji.fail + " | " + language.warnHigherRole)
-            .setTimestamp(message.createdAt)
-            .setColor(client.color.red),
-        ],
-      });
-    }
-
     // Combine all arguments after the mention into one string
     const fullCommand = args.slice(1).join(" ");
-    let match = fullCommand.match(/"([^"]+)"|(\S+)/g);
+    const input = fullCommand;
+    const regex = /"([^"]+)"|(\d+\s*[a-z]+)|(\S+)/g;
 
-    const parsedArgs = match.map((arg) => arg.replace(/^"|"$/g, "")) || ["1d"];
-    let time = ms(parsedArgs[0]) || ms("1d");
+    let match;
+    const parts = [];
+
+    while ((match = regex.exec(input)) !== null) {
+      // match[1] is for quoted strings
+      // match[2] is for time durations (e.g., "2d", "6h")
+      // match[3] is for any other non-whitespace part
+      if (match[1]) {
+        parts.push({ type: 'quoted', value: match[1] });
+      } else if (match[2]) {
+        parts.push({ type: 'time', value: match[2] });
+      } else if (match[3]) {
+        parts.push({ type: 'other', value: match[3] });
+      }
+    }
+
+    console.log(parts);
+
+
+    let parsedArgs = null;
+    try {
+      parsedArgs = parts.map((arg) => arg.replace(/^"|"$/g, ""));
+    } catch (e) {
+      // do nothing
+    }
+    let time = 0;
+    try {
+      time = ms(parsedArgs[0])
+    } catch (e) {
+      time = ms("1d");
+    }
 
     // If there are time parts, parse them; otherwise, set time to null (infinite)
     let formattedTime = time ? await usePrettyMs(time) : "Infinity";
-    
+
     // Remove the parsed time from the reason
-    let reason = parsedArgs.slice(time ? 1 : 0).join(" ");
+    let reason = parsedArgs !== undefined ? args.slice(match !== undefined ? 1 : 0).join(" ") : parsedArgs.slices(match !== undefined ? 1 : 0).join(" ");
 
     reason = reason || "Not Specified"; // Default reason if none provided
 

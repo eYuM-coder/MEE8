@@ -68,29 +68,6 @@ module.exports = {
           })
           .catch(() => { });
       }
-
-      const mentionedPotision = mentionedMember.roles.highest.position;
-      const memberPotision = interaction.member.roles.highest.position;
-
-      if (
-        memberPotision <=
-        mentionedPotision
-      ) {
-        let rolesmatch = new MessageEmbed()
-          .setColor(client.color.red)
-          .setDescription(`${client.emoji.fail} | ${language.warnHigherRole}`)
-          .setTimestamp();
-        return interaction
-          .reply({ embeds: [rolesmatch] })
-          .then(async () => {
-            if (logging && logging.moderation.delete_reply === "true") {
-              setTimeout(() => {
-                interaction.deleteReply().catch(() => { });
-              }, 5000);
-            }
-          })
-          .catch(() => { });
-      }
       let warnID = random.password({
         length: 18,
         string:

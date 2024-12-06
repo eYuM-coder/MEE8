@@ -71,25 +71,6 @@ module.exports = {
           .catch(() => { });
       }
 
-      if (
-        member.roles.highest.position >=
-        interaction.member.roles.highest.position
-      ) {
-        let rolesmatch = new MessageEmbed()
-          .setDescription(`${client.emoji.fail} | ${language.softbanEqualRole}`)
-          .setColor(client.color.red);
-        return interaction
-          .reply({ embeds: [rolesmatch] })
-          .then(async () => {
-            if (logging && logging.moderation.delete_reply === "true") {
-              setTimeout(() => {
-                interaction.deleteReply().catch(() => { });
-              }, 5000);
-            }
-          })
-          .catch(() => { });
-      }
-
       if (reason.length > 1024) reason = reason.slice(0, 1021) + "...";
       if (member) {
         await member.ban({

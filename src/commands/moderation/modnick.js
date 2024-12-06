@@ -55,13 +55,6 @@ module.exports = class extends Command {
             return message.channel.sendCustom({ embeds: [usernotfound] })
         }
 
-        if(member.roles.highest.position >= message.member.roles.highest.position) {
-            let rolesmatch = new MessageEmbed()
-            .setColor("RED")
-            .setDescription(`${client.emoji.fail} | They have more power than you or have equal power as you do!`)
-            return message.channel.sendCustom({ embeds: [rolesmatch] })
-        }
-
         if(member.id === message.author.id) {
             let modnickerror = new MessageEmbed()
             .setColor("RED")

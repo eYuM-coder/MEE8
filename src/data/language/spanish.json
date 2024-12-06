@@ -125,7 +125,7 @@
 
     "kickMissingPermission":"Necesita el permiso de Kick Members para usar este comando",
     "kickYourself":"No puedes patearte a ti mismo",
-   "kickKickable":"No puedo prohibir a este usuario porque no se puede patear.",
+   "kickKickable":"Este usuario es un mod/admin, no puedo hacer eso.",
     "kickKick":"fue pateado.",
 
    "muteMissingPerms":"No tienes permisos para usar ese comando",

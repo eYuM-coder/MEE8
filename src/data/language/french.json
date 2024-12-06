@@ -129,7 +129,7 @@
 
   "kickMissingPermission":"Vous avez besoin de l'autorisation Kick Members pour utiliser cette commande",
   "kickYourself":"Tu ne peux pas te donner un coup de pied",
-  "kickKickable":"Je ne peux pas interdire cet utilisateur car il n'est pas kickable",
+  "kickKickable":"Cet utilisateur est un mod/administrateur, je ne peux pas faire ça.",
   "kickKick":"a été expulsé.",
   "muteMissingPerms":"Vous ne disposez pas des autorisations nécessaires pour utiliser cette commande",
   "muteMissingPermsBot":"Je n'ai pas l'autorisation d'utiliser cette commande",

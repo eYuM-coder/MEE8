@@ -53,17 +53,6 @@ module.exports = class extends Command {
         ],
       });
 
-    if (member.roles.highest.position >= message.member.roles.highest.position)
-      return message.channel.sendCustom({
-        embeds: [
-          new MessageEmbed()
-            .setDescription(
-              `${client.emoji.fail} | ${language.softbanEqualRole}`
-            )
-            .setColor(client.color.red),
-        ],
-      });
-
     if (!member.bannable)
       return message.channel.sendCustom({
         embeds: [

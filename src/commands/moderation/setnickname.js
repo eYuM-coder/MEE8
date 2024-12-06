@@ -46,26 +46,6 @@ module.exports = class extends Command {
             .setColor(message.guild.me.displayHexColor),
         ],
       });
-    if (
-      member.roles.highest.position >= message.member.roles.highest.position &&
-      member != message.member
-    )
-      return message.channel.sendCustom({
-        embeds: [
-          new MessageEmbed()
-            .setAuthor(
-              `${message.author.tag}`,
-              message.author.displayAvatarURL({ dynamic: true })
-            )
-            .setTitle(`${fail} Set Nickname Error`)
-            .setDescription(
-              "The provided user has either an equal or higher role."
-            )
-            .setTimestamp()
-            .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-            .setColor(message.guild.me.displayHexColor),
-        ],
-      });
 
     if (!args[1])
       return message.channel.sendCustom({

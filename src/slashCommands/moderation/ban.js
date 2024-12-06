@@ -50,26 +50,6 @@ module.exports = {
           .catch(() => { });
       }
 
-      if (
-        member.roles.highest.position >=
-        interaction.member.roles.highest.position
-      ) {
-        let rolesmatch = new MessageEmbed()
-          .setColor("RED")
-          .setDescription(
-            `${client.emoji.fail} | They have more power than you or have equal power as you do!`,
-          );
-        return interaction
-          .reply({ embeds: [rolesmatch] })
-          .then(async () => {
-            if (logging && logging.moderation.delete_reply === "true") {
-              setTimeout(() => {
-                interaction.deleteReply().catch(() => { });
-              }, 5000);
-            }
-          })
-          .catch(() => { });
-      }
       if (member === interaction.author) {
         let banerror = new MessageEmbed()
           .setColor("RED")
@@ -85,9 +65,10 @@ module.exports = {
           })
           .catch(() => { });
       }
+      
+      const response = await member.ban({ reason });
 
-      if (member) {
-        const response = await member.ban({ reason });
+      if (response) {
         let bansuccess = new MessageEmbed()
           .setColor("GREEN")
           .setDescription(
@@ -106,7 +87,7 @@ module.exports = {
           })
           .catch(() => { });
       }
-      if (member) {
+      if (response) {
         let dmEmbed = new MessageEmbed()
           .setColor("RED")
           .setDescription(
@@ -176,7 +157,11 @@ module.exports = {
     } catch (err) {
       console.error(err);
       interaction.reply({
-        content: "This command cannot be used in Direct Messages.",
+        embeds: [
+          new MessageEmbed()
+          .setColor(interaction.client.color.red)
+          .setDescription(`${interaction.client.emoji.fail} | That user is a mod/admin, I can't do that.`)
+        ],
         ephemeral: true,
       });
     }

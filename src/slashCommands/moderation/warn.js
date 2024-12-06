@@ -111,11 +111,16 @@ module.exports = {
       warnDoc.expiresAt.push(expirationTime);
 
       await warnDoc.save().catch((err) => console.log(err));
+
+      if (mentionedMember.permissions.has("ADMINISTRATOR")) {
+        throw new Error();
+      }
+      
       let dmEmbed;
       if (
         logging &&
         logging.moderation.warn_action &&
-        logging.moderation.waran_action !== "1"
+        logging.moderation.warn_action !== "1"
       ) {
         if (logging.moderation.warn_action === "2") {
           dmEmbed = `${interaction.client.emoji.fail} | You were warned in **${interaction.guild.name}**.\n\n**Expires** <t:${Math.floor(expirationTime.getTime() / 1000)}:F>`;
@@ -170,7 +175,11 @@ module.exports = {
     } catch (err) {
       console.error(err);
       interaction.reply({
-        content: "This command cannot be used in Direct Messages.",
+        embeds: [
+          new MessageEmbed()
+          .setColor(interaction.client.color.red)
+          .setDescription(`${interaction.client.emoji.fail} | That user is a mod/admin, I can't do that.`)
+        ],
         ephemeral: true,
       });
     }

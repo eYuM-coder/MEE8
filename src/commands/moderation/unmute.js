@@ -49,26 +49,6 @@ module.exports = class extends Command {
           .catch(() => {});
       }
 
-      if (
-        member.roles.highest.position >= message.member.roles.highest.position
-      ) {
-        let rolesmatch = new MessageEmbed()
-          .setColor("RED")
-          .setDescription(
-            `${client.emoji.fail} | They have more power than you or have equal power as you do!`
-          );
-        return message.channel
-          .send({ embeds: [rolesmatch] })
-          .then(async (s) => {
-            if (logging && logging.moderation.delete_reply === "true") {
-              setTimeout(() => {
-                s.delete().catch(() => {});
-              }, 5000);
-            }
-          })
-          .catch(() => {});
-      }
-
       if (member) {
         const response = await member.timeout(null, reason);
         let unmuteSuccess = new MessageEmbed()
@@ -104,16 +84,19 @@ module.exports = class extends Command {
         let failembed = new MessageEmbed()
           .setColor("RED")
           .setDescription(
-            `${client.emoji.fail} | I cannot unmute that member. Make sure that my role is above their role or that I have sufficient permissions to execute the command.`
+            `${client.emoji.fail} | That person is a mod/admin, I can't do that.`
           )
           .setTimestamp();
         return message.channel.send({ embeds: [failembed] });
       }
     } catch (err) {
       console.error(err);
-      message.reply({
-        content:
-          "This command cannot be used in Direct Messages, or this member is not unmutable.",
+      message.channel.sendCustom({
+        embeds: [
+          new MessageEmbed()
+          .setColor(message.client.color.red)
+          .setDescription(`${message.client.emoji.fail} | This user is a mod/admin, I can't do that.`)
+        ]
       });
     }
   }

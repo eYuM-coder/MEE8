@@ -57,27 +57,6 @@ module.exports = {
           .catch(() => { });
       }
 
-      if (
-        member.roles.highest.position >=
-        interaction.member.roles.highest.position
-      ) {
-        let rolesmatch = new MessageEmbed()
-          .setColor("RED")
-          .setDescription(
-            `${client.emoji.fail} | They have more power than you or have equal power as you do!`,
-          );
-        return interaction
-          .reply({ embeds: [rolesmatch] })
-          .then(async () => {
-            if (logging && logging.moderation.delete_reply === "true") {
-              setTimeout(() => {
-                interaction.deleteReply().catch(() => { });
-              }, 5000);
-            }
-          })
-          .catch(() => { });
-      }
-
       if (!time) {
         let timevalid = new MessageEmbed()
           .setColor("RED")
@@ -93,8 +72,10 @@ module.exports = {
           }
         });
       }
-      if (member) {
-        const response = await member.timeout(time, reason);
+      
+      const response = await member.timeout(time, reason);
+
+      if (response) {
         let timeoutsuccess = new MessageEmbed()
           .setColor("GREEN")
           .setDescription(
@@ -114,7 +95,7 @@ module.exports = {
           })
           .catch(() => { });
       }
-      if (member) {
+      if (response) {
         let dmEmbed = new MessageEmbed()
           .setColor("RED")
           .setDescription(
@@ -128,7 +109,7 @@ module.exports = {
         let failembed = new MessageEmbed()
           .setColor(client.color.red)
           .setDescription(
-            `${client.emoji.fail} | I cannot time out that member. Make sure that my role is above their role or that I have sufficient perms to execute the command.`,
+            `${client.emoji.fail} | That user is a mod/admin, I can't do that.`,
           )
           .setTimestamp();
         return interaction.reply({ embeds: [failembed] });
@@ -136,7 +117,11 @@ module.exports = {
     } catch (err) {
       console.error(err);
       interaction.reply({
-        content: "This command cannot be used in Direct Messages, or this member is not muteable.",
+        embeds: [
+          new MessageEmbed()
+          .setColor(interaction.client.color.red)
+          .setDescription(`${interaction.client.emoji.fail} | That user is a mod/admin, I can't do that.`)
+        ],
         ephemeral: true,
       });
     }

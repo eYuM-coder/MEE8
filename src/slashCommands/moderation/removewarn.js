@@ -58,35 +58,6 @@ module.exports = {
           .catch(() => { });
       }
 
-      const mentionedPosition = mentionedMember.roles.highest.position;
-      const memberPosition = interaction.member.roles.highest.position;
-
-      if (
-        mentionedMember.roles.highest.position >=
-        interaction.member.roles.highest.position
-      ) {
-        let rolesmatch = new MessageEmbed()
-          .setAuthor({
-            name: `${interaction.user.tag}`,
-            iconURL: interaction.member.displayAvatarURL({ dynamic: true }),
-          })
-          .setDescription(
-            `${client.emoji.fail} | They have more power than you or have the same power as you do!`,
-          )
-          .setTimestamp()
-          .setColor(client.color.red);
-        return interaction
-          .reply({ embeds: [rolesmatch] })
-          .then(async () => {
-            if (logging && logging.moderation.delete_reply === "true") {
-              setTimeout(() => {
-                interaction.deleteReply().catch(() => { });
-              }, 5000);
-            }
-          })
-          .catch(() => { });
-      }
-
       const warnDoc = await warnModel
         .findOne({
           guildID: interaction.guild.id,

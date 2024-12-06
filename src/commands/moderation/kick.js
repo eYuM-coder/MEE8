@@ -50,15 +50,6 @@ module.exports = class extends Command {
         ],
       });
 
-    if (member.roles.highest.position >= message.member.roles.highest.position)
-      return message.channel.sendCustom({
-        embeds: [
-          new MessageEmbed()
-            .setDescription(`${client.emoji.fail} | ${language.banHigherRole}`)
-            .setColor(client.color.red),
-        ],
-      });
-
     if (!member.kickable)
       return message.channel.sendCustom({
         embeds: [
@@ -78,11 +69,9 @@ module.exports = class extends Command {
         message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-              .setColor(client.color.red)
-              .setDescription(
-                `${client.emoji.fail} | An error occured: ${err}`
-              ),
-          ],
+            .setColor(message.client.color.red)
+            .setDescription(`${message.client.emoji.fail} | ${language.kickKickable}`)
+          ]
         })
       );
 

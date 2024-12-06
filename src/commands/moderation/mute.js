@@ -66,26 +66,6 @@ module.exports = class extends Command {
           .catch(() => {});
       }
 
-      if (
-        member.roles.highest.position >= message.member.roles.highest.position
-      ) {
-        let rolesmatch = new MessageEmbed()
-          .setColor("RED")
-          .setDescription(
-            `${client.emoji.fail} | They have more power than you or have equal power as you do!`
-          );
-        return message.channel
-          .sendCustom({ embeds: [rolesmatch] })
-          .then(async (s) => {
-            if (logging && logging.moderation.delete_reply === "true") {
-              setTimeout(() => {
-                s.delete().catch(() => {});
-              }, 5000);
-            }
-          })
-          .catch(() => {});
-      }
-
       if (!time) {
         let timevalid = new MessageEmbed()
           .setColor("RED")
@@ -102,9 +82,11 @@ module.exports = class extends Command {
               }, 5000);
             }
           });
-      }
-      if (member) {
-        const response = await member.timeout(time, reason);
+        }
+
+      const response = await member.timeout(time, reason);
+
+      if (response) {
         let timeoutsuccess = new MessageEmbed()
           .setColor("GREEN")
           .setDescription(
@@ -122,7 +104,7 @@ module.exports = class extends Command {
           .catch(() => {});
       }
 
-      if (member) {
+      if (response) {
         let dmEmbed = new MessageEmbed()
           .setColor("RED")
           .setDescription(
@@ -138,16 +120,19 @@ module.exports = class extends Command {
         let failembed = new MessageEmbed()
           .setColor(client.color.red)
           .setDescription(
-            `${client.emoji.fail} | I cannot time out that member. Make sure that my role is above their role or that I have sufficient perms to execute the command.`
+            `${client.emoji.fail} | This user is a mod/admin, I can't do that.`
           )
           .setTimestamp();
         return message.channel.sendCustom({ embeds: [failembed] });
       }
     } catch (err) {
       console.error(err);
-      message.reply({
-        content:
-          "This command cannot be used in Direct Messages, or this member is not muteable.",
+      message.channel.sendCustom({
+        embeds: [
+          new MessageEmbed()
+          .setColor(message.client.color.red)
+          .setDescription(`${message.client.emoji.fail} | This user is a mod/admin, I can't do that.`)
+        ]
       });
     }
   }

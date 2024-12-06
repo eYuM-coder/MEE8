@@ -47,24 +47,6 @@ module.exports = class extends Command {
       });
     }
 
-    const mentionedPotision = mentionedMember.roles.highest.position;
-    const memberPotision = message.member.roles.highest.position;
-
-    if (memberPotision <= mentionedPotision) {
-      return message.channel.sendCustom({
-        embeds: [
-          new discord.MessageEmbed()
-            .setAuthor(
-              `${message.author.tag}`,
-              message.author.displayAvatarURL({ dynamic: true })
-            )
-            .setDescription(`${client.emoji.fail} | ${language.rmPosition}`)
-            .setTimestamp(message.createdAt)
-            .setColor(client.color.red),
-        ],
-      });
-    }
-
     let reason = args.slice(1).join(" ");
     if (!reason) reason = language.softbanNoReason;
     if (reason.length > 1024) reason = reason.slice(0, 1021) + "...";

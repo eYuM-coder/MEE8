@@ -615,7 +615,7 @@ module.exports = {
           iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
         })
         .setDescription(
-          `${fail} | The role is possibly higher than me or you. Please move my role above the role and try again.`,
+          `${fail} | This role is a(n) mod/admin role, I can't do that.`,
         )
         .setTimestamp()
         .setFooter({

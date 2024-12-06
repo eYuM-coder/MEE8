@@ -134,8 +134,8 @@
  "banBan":"was successfully banned.",
 
  "kickMissingPermission":"You need the Kick Members permission to use this command",
- "kickYourself":"You Can't kick yourself",
- "kickKickable":"I am not able to ban this user since he is not kickable",
+ "kickYourself":"You can't kick yourself",
+ "kickKickable":"This user is a mod/admin, I can't do that.",
  "kickKick":"was successfully kicked.",
 
 

@@ -236,7 +236,11 @@ module.exports = {
     } catch (err) {
       console.error(err);
       interaction.reply({
-        content: "This command cannot be used in Direct Messages.",
+        embeds: [
+          new MessageEmbed()
+          .setColor(interaction.client.color.red)
+          .setDescription(`${interaction.client.emoji.fail} | That user is a mod/admin, I can't do that.`)
+        ],
         ephemeral: true,
       });
     }

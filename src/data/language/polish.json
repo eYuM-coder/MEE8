@@ -133,7 +133,7 @@
 
   "kickMissingPermission": "Aby użyć tego polecenia, potrzebujesz uprawnień do wyrzucania członków",
   "kickYourself": "Nie możesz się kopnąć",
-  "kickKickable": "Nie mogę zablokować tego użytkownika, ponieważ nie można go kopnąć",
+  "kickKickable": "Ten użytkownik jest modem/administratorem, nie mogę tego zrobić.",
   "kickKick": "został pomyślnie wyrzucony.", 
 
 

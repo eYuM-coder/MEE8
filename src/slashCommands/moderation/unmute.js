@@ -48,35 +48,15 @@ module.exports = {
           .catch(() => {});
       }
 
-      if (
-        member.roles.highest.position >=
-        interaction.member.roles.highest.position
-      ) {
-        let rolesmatch = new MessageEmbed()
-          .setColor("RED")
-          .setDescription(
-            `${client.emoji.fail} | They have more power than you or have equal power as you do!`
-          );
-        return interaction
-          .reply({ embeds: [rolesmatch] })
-          .then(async () => {
-            if (logging && logging.moderation.delete_reply === "true") {
-              setTimeout(() => {
-                interaction.deleteReply().catch(() => {});
-              }, 5000);
-            }
-          })
-          .catch(() => {});
-      }
+      const response = await member.timeout(0 * 60 * 1000, reason);
 
-      if (member) {
-        const response = await member.timeout(0 * 60 * 1000, reason);
+      if (response) {
         let timeoutsuccess = new MessageEmbed()
           .setColor("GREEN")
           .setDescription(
             `${client.emoji.success} | ${member} has been unmuted.`
           );
-        return interaction
+        interaction
           .reply({ embeds: [timeoutsuccess] })
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
@@ -86,8 +66,6 @@ module.exports = {
             }
           })
           .catch(() => {});
-      }
-      if (member) {
         let dmEmbed = new MessageEmbed()
           .setColor("RED")
           .setDescription(
@@ -103,7 +81,7 @@ module.exports = {
         let failembed = new MessageEmbed()
           .setColor(client.color.red)
           .setDescription(
-            `${client.emoji.fail} | I cannot unmute that member. Make sure that my role is above their role or that I have sufficient perms to execute the command, OR they aren't muted.`
+            `${client.emoji.fail} | Unmute logged for ${member}. I could'nt DM them.`
           )
           .setTimestamp();
         return interaction.reply({ embeds: [failembed] });
@@ -111,7 +89,11 @@ module.exports = {
     } catch (err) {
       console.error(err);
       interaction.reply({
-        content: "This command cannot be used in Direct Messages.",
+        embeds: [
+          new MessageEmbed()
+          .setColor(interaction.client.color.red)
+          .setDescription(`${interaction.client.emoji.fail} | That user is a mod/admin, I can't do that.`)
+        ],
         ephemeral: true,
       });
     }

@@ -92,7 +92,7 @@ module.exports = {
           );
 
           // If fewer than `messagesToFetch` were deleted, stop early
-          if (deletedMessages.size < messagesToFetch) break;
+          if (deletedMessages.size <= messagesToFetch) break;
         } catch (error) {
           logger.error(`Error deleting messages: ${error}`, { label: "ERROR" });
           return interaction.editReply({
@@ -100,7 +100,7 @@ module.exports = {
               "There was an error trying to delete messages in this channel.",
           });
         }
-        await delay(10000);
+        await delay(5000);
       }
 
       const embed = new MessageEmbed()

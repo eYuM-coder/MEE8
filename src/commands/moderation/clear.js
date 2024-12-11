@@ -89,7 +89,7 @@ module.exports = class extends Command {
           );
 
           // If fewer than `messagesToFetch` were deleted, stop early
-          if (deletedMessages.size < messagesToFetch) break;
+          if (deletedMessages.size <= messagesToFetch) break;
         } catch (error) {
           logger.error(`Error deleting messages: ${error}`, { label: "ERROR" });
           return message.channel.send({

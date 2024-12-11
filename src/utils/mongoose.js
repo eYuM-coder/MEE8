@@ -17,7 +17,7 @@ module.exports = {
     });
 
     mongoose.connection.on("connected", () => {
-      logger.info(`Mongoose connection connected`, { label: "Database" });
+      logger.info(`Mongoose connection made and is connected`, { label: "Database" });
     });
 
     mongoose.set("useNewUrlParser", true);

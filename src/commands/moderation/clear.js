@@ -27,8 +27,13 @@ module.exports = class extends Command {
       const fail = client.emoji.fail;
       const success = client.emoji.success;
 
+      const channel = message.mentions.channels.first() || message.channel;
+
+      if (message.mentions.channels.first()) {
+        args.shift();
+      }
+
       const amount = parseInt(args[0]);
-      const channel = message.channel;
       if (isNaN(amount) === true || !amount || amount < 0 || amount > 1000) {
         return message.channel.sendCustom({
           embeds: [
@@ -89,7 +94,11 @@ module.exports = class extends Command {
           );
 
           // If fewer than `messagesToFetch` were deleted, stop early
-          if (deletedMessages.size <= messagesToFetch) break;
+          if (deletedMessages.size < messagesToFetch) {
+            break;
+          } else if (deletedMessages.size !== 100 && deletedMessages.size == messagesToFetch) {
+            break;
+          }
         } catch (error) {
           logger.error(`Error deleting messages: ${error}`, { label: "ERROR" });
           return message.channel.send({
@@ -100,6 +109,7 @@ module.exports = class extends Command {
         await delay(5000);
       }
 
+      if (channel == message.channel) {
       const embed = new MessageEmbed()
 
         .setDescription(
@@ -130,6 +140,38 @@ module.exports = class extends Command {
           }
         })
         .catch(() => {});
+      } else {
+        const embed = new MessageEmbed()
+
+        .setDescription(
+          `
+            ${success} Successfully deleted **${totalDeleted}** ${
+            totalDeleted === 1 ? "message" : "messages"
+          } from ${channel} ${
+            logging && logging.moderation.include_reason === "true"
+              ? `\n\n**Reason:** ${reason}`
+              : ``
+          }
+          `
+        )
+
+        .setColor(message.guild.me.displayHexColor);
+
+      if (logging && logging.moderation.delete_after_executed === "true") {
+        message.delete().catch(() => {});
+      }
+
+      message.channel
+        .send({ embeds: [embed] })
+        .then(async (s) => {
+          if (logging && logging.moderation.delete_reply === "true") {
+            setTimeout(() => {
+              s.delete().catch(() => {});
+            }, 5000);
+          }
+        })
+        .catch(() => {});
+      }
 
       if (logging) {
         const role = message.guild.roles.cache.get(

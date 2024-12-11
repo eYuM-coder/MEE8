@@ -25,7 +25,7 @@
     "leavesPublic": "https://discord.com/api/webhooks/1314738268528443412/EqVg13LvUdTkusHqKCcRYOjPFC0t51Nai4g6Bl_lOXRhtQW5veoaRqf6flwgXPcHHuKQ",
     "leavesPrivate": "https://discord.com/api/webhooks/1314738268528443412/EqVg13LvUdTkusHqKCcRYOjPFC0t51Nai4g6Bl_lOXRhtQW5veoaRqf6flwgXPcHHuKQ"
   },
-  "maintenance": "true",
+  "maintenance": "false",
   "maintenance_threshold": "5",
   "invite_link": "https://discord.com/oauth2/authorize?client_id=1290139203023142962&permissions=1759218604441599&integration_type=0&scope=bot+applications.commands",
   "seo": {

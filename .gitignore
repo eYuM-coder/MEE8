@@ -1,7 +1,7 @@
 
 node_modules
 .env
-config.json
 json.sqlite
 mee8.log
 src/assets/logs/Pogy.log
+config.json

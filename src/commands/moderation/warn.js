@@ -67,16 +67,15 @@ module.exports = class extends Command {
       // match[2] is for time durations (e.g., "2d", "6h")
       // match[3] is for any other non-whitespace part
       if (match[1]) {
-        parts.push({ type: 'quoted', value: match[1] });
+        parts.push({ type: "quoted", value: match[1] });
       } else if (match[2]) {
-        parts.push({ type: 'time', value: match[2] });
+        parts.push({ type: "time", value: match[2] });
       } else if (match[3]) {
-        parts.push({ type: 'other', value: match[3] });
+        parts.push({ type: "other", value: match[3] });
       }
     }
 
     console.log(parts);
-
 
     let parsedArgs = null;
     try {
@@ -86,7 +85,7 @@ module.exports = class extends Command {
     }
     let time = 0;
     try {
-      time = ms(parsedArgs[0])
+      time = ms(parsedArgs[0]);
     } catch (e) {
       time = ms("1d");
     }
@@ -95,7 +94,10 @@ module.exports = class extends Command {
     let formattedTime = time ? await usePrettyMs(time) : "Infinity";
 
     // Remove the parsed time from the reason
-    let reason = parsedArgs !== undefined ? args.slice(match !== undefined ? 1 : 0).join(" ") : parsedArgs.slices(match !== undefined ? 1 : 0).join(" ");
+    let reason =
+      parsedArgs !== undefined
+        ? args.slice(match !== undefined ? 1 : 0).join(" ")
+        : parsedArgs.slices(match !== undefined ? 1 : 0).join(" ");
 
     reason = reason || "Not Specified"; // Default reason if none provided
 
@@ -105,9 +107,7 @@ module.exports = class extends Command {
     });
 
     // Set expiration time only if a duration is provided
-    const expirationTime = time
-      ? new Date(Date.now() + time)
-      : null;
+    const expirationTime = time ? new Date(Date.now() + time) : null;
 
     let warnDoc = await warnModel
       .findOne({
@@ -158,20 +158,24 @@ module.exports = class extends Command {
       logging.moderation.warn_action !== "1"
     ) {
       if (logging.moderation.warn_action === "2") {
-        dmEmbed = `${message.client.emoji.fail} | You were warned in **${message.guild.name
-          }**.\n\n**Expires** <t:${Math.floor(
-            expirationTime.getTime() / 1000
-          )}:F>`;
+        dmEmbed = `${message.client.emoji.fail} | You were warned in **${message.guild.name}**.\n\n**Duration:** ${formattedTime}`;
       } else if (logging.moderation.warn_action === "3") {
-        dmEmbed = `${message.client.emoji.fail} | You were warned in **${message.guild.name
-          }** for ${reason}.\n\n**Duration:** ${formattedTime}`;
+        dmEmbed = `${message.client.emoji.fail} | You were warned in **${message.guild.name}** for ${reason}\n\n**Duration:** ${formattedTime}`;
       } else if (logging.moderation.warn_action === "4") {
-        dmEmbed = `${message.client.emoji.fail} | You were warned in **${message.guild.name
-          }** by **${message.author} (${message.author.tag
-          })** for ${reason}.\n\n**Duration:** ${formattedTime}`;
+        dmEmbed = `${message.client.emoji.fail} | You were warned in **${message.guild.name}** by **${message.author} (${message.author.tag})** for ${reason}\n\n**Duration:** ${formattedTime}`;
       }
 
-      mentionedMember
+      let embed = new MessageEmbed().setColor(message.client.color.green)
+        .setDescription(`${language.warnSuccessful
+
+          .replace("{emoji}", client.emoji.success)
+          .replace("{user}", `**${mentionedMember.user.tag}**`)}
+${logging && logging.moderation.include_reason === "true"
+            ? `\n\n**Reason:** ${reason}`
+            : ``
+          }\n\n**Duration: ${formattedTime}**`);
+
+      await mentionedMember
         .send({
           embeds: [
             new MessageEmbed()
@@ -179,30 +183,24 @@ module.exports = class extends Command {
               .setDescription(dmEmbed),
           ],
         })
+        .catch(() => {
+          embed.setDescription(
+            `${client.emoji.success} | Warning logged for ${mentionedMember}, I couldn't DM them.`
+          );
+        });
+      message.channel
+        .sendCustom({
+          embeds: [embed],
+        })
+        .then(async (s) => {
+          if (logging && logging.moderation.delete_reply === "true") {
+            setTimeout(() => {
+              s.delete().catch(() => { });
+            }, 5000);
+          }
+        })
         .catch(() => { });
     }
-    message.channel
-      .sendCustom({
-        embeds: [
-          new discord.MessageEmbed().setColor(client.color.green)
-            .setDescription(`${language.warnSuccessful
-
-              .replace("{emoji}", client.emoji.success)
-              .replace("{user}", `**${mentionedMember.user.tag}** `)}
-      ${logging && logging.moderation.include_reason === "true"
-                ? `\n\n**Reason:** ${reason}`
-                : ``
-              }\n\n**Duration: ${formattedTime}**`),
-        ],
-      })
-      .then(async (s) => {
-        if (logging && logging.moderation.delete_reply === "true") {
-          setTimeout(() => {
-            s.delete().catch(() => { });
-          }, 5000);
-        }
-      })
-      .catch(() => { });
 
     if (logging && logging.moderation.auto_punish.toggle === "true") {
       if (
@@ -313,7 +311,10 @@ module.exports = class extends Command {
                   .setTimestamp()
                   .setColor(color);
 
-                send(channel, { username: `${this.client.user.username}`, embeds: [logEmbed] }).catch((e) => {
+                send(channel, {
+                  username: `${this.client.user.username}`,
+                  embeds: [logEmbed],
+                }).catch((e) => {
                   console.log(e);
                 });
 

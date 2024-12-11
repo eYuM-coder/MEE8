@@ -50,6 +50,7 @@ module.exports = {
             const embed = new MessageEmbed()
               .setDescription(`Yeah, uh... Let's actually not do that.`)
               .setColor("#FF0000");
+            secondCollector.stop();
             return interaction.channel.send({ embeds: [embed] });
           } else {
             secondCollector.stop();
@@ -57,7 +58,6 @@ module.exports = {
               content: "Glad you made the right choice, bud.",
             });
           }
-          secondCollector.stop();
         });
         secondCollector.on("end", (collected, reason) => {
           if (reason == "time") {

@@ -14,12 +14,11 @@ module.exports = class extends Command {
   async run(message, args) {
     const client = message.client;
 
-    if (message.client.config.owner.includes(message.author.id)) {
-      message.channel.sendCustom(`Access Granted. Welcome owner.`);
-    } else if (
-      message.client.config.developers.includes(message.author.id) ||
-      !message.client.config.owner.includes(message.author.id)
+    if (
+      message.client.config.owner.includes(message.author.id)
     ) {
+      // do nothing
+    } else {
       return message.channel.sendCustom(`You are not the owner of this bot.`);
     }
 

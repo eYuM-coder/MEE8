@@ -25,6 +25,7 @@ module.exports = class extends Command {
     super(...args, {
       name: "rank",
       description: "Display your rank card.",
+      aliases: ["level"],
       category: "Leveling",
       cooldown: 5,
       guildOnly: true,

@@ -7,7 +7,7 @@ module.exports = class extends Command {
   constructor(...args) {
     super(...args, {
       name: "setnickname",
-      aliases: ["nickname", "nick", "nn"],
+      aliases: ["nickname", "nick", "nn", "setnick"],
       description: "Changes the provided user's nickname to the one specified.",
       category: "Moderation",
       usage: "<user> [reason]",

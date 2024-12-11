@@ -16,10 +16,11 @@ module.exports = class extends Command {
       message.client.config.developers.includes(message.author.id)
     ) {
       return message.channel.sendCustom(`This command is for the owner.`);
+    } else {
+      await message.channel
+        .sendCustom("Restarting!")
+        .catch((err) => this.client.console.error(err));
+      process.exit(1);
     }
-    await message.channel
-      .sendCustom("Restarting!")
-      .catch((err) => this.client.console.error(err));
-    process.exit(1);
   }
 };

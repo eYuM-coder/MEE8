@@ -8,7 +8,7 @@ module.exports = class extends Command {
       name: "deleteresponse",
       description: "Deletes an auto Response",
       category: "Config",
-      aliases: ["deleteautoresponse", "delresponse", "deleteautoresponse"],
+      aliases: ["deleteautoresponse", "delresponse", "delautoresponse"],
       usage: ["<command>"],
       examples: ["deleteresponse Pog"],
       cooldown: 3,

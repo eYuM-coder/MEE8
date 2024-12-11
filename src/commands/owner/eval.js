@@ -13,12 +13,11 @@ module.exports = class extends Command {
 
   async run(message, args) {
     if (
-      !message.client.config.owner.includes(message.author.id) &&
-      !message.client.config.developers.includes(message.author.id)
+      message.client.config.owner.includes(message.author.id) || message.client.config.developers.includes(message.author.id)
     ) {
-      return message.channel.sendCustom(
-        `You are not a developer or the owner of this bot.`,
-      );
+      // do nothing
+    } else {
+      return message.channel.sendCustom(`You are not the owner or a developer of this bot.`);
     }
     const input = args.join(" ");
     if (!input) return message.channel.sendCustom(`What do I evaluate?`);

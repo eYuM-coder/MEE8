@@ -70,7 +70,7 @@ module.exports = class extends Command {
           .setEmoji(`${emojis.utility}`)
       );
 
-    const sentMessage = await message.channel.sendCustom({ embeds: [embed], components: [row] });
+    const sentMessage = await message.channel.sendCustom({ embeds: [embed] });
 
     const filter = i => i.customId === 'showServerImage' && i.user.id === message.author.id;
 

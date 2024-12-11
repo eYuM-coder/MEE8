@@ -23,13 +23,13 @@ module.exports = class extends Command {
     const language = require(`../../data/language/${guildDB.language}.json`);
     const closed = new discord.MessageEmbed()
       .setDescription(
-        `${message.client.emoji.fail} | ${language.closedapplay1} `
+        `${message.client.emoji.fail} | Applications are closed.`
       )
       .setColor(message.client.color.red);
 
     const closed2 = new discord.MessageEmbed()
       .setDescription(
-        `${message.client.emoji.fail} | ${language.closedapplay2}.`
+        `${message.client.emoji.fail} | Applications are closed.`
       )
       .setColor(message.client.color.red);
 
@@ -60,7 +60,7 @@ module.exports = class extends Command {
         embeds: [
           new discord.MessageEmbed()
             .setColor(message.client.color.green)
-            .setFooter({ text: "Powered by Pogy.xyz" })
+            .setFooter({ text: `Powered by ${process.env.AUTH_DOMAIN}` })
             .setDescription(
               `${message.client.emoji.success} | ${language.applaydone} **${message.guild.name}** [by clicking here](${process.env.AUTH_DOMAIN}/apply/${message.guild.id})`
             ),

@@ -15,6 +15,7 @@ async function usePrettyMs(ms) {
  */
 const random = new randoStrings();
 const Logging = require("../../database/schemas/logging");
+const { format } = require("path");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -123,11 +124,11 @@ module.exports = {
         logging.moderation.warn_action !== "1"
       ) {
         if (logging.moderation.warn_action === "2") {
-          dmEmbed = `${interaction.client.emoji.fail} | You were warned in **${interaction.guild.name}**.\n\n**Expires** <t:${Math.floor(expirationTime.getTime() / 1000)}:F>`;
+          dmEmbed = `${interaction.client.emoji.fail} | You were warned in **${interaction.guild.name}**.\n\n**Expires in:** ${formattedTime}`;
         } else if (logging.moderation.warn_action === "3") {
-          dmEmbed = `${interaction.client.emoji.fail} | You were warned in **${interaction.guild.name}** for **${reason}**.\n\n**Expires** <t:${Math.floor(expirationTime.getTime() / 1000)}:F>`;
+          dmEmbed = `${interaction.client.emoji.fail} | You were warned in **${interaction.guild.name}** for ${reason}\n\n**Expires in:** ${formattedTime}`;
         } else if (logging.moderation.warn_action === "4") {
-          dmEmbed = `${interaction.client.emoji.fail} | You were warned in **${interaction.guild.name}** by **${interaction.member} (${interaction.member.tag})** for **${reason}**.\n\n**Expires** <t:${Math.floor(expirationTime.getTime() / 1000)}:F>`;
+          dmEmbed = `${interaction.client.emoji.fail} | You were warned in **${interaction.guild.name}** by **${interaction.member} (${interaction.member.tag})** for ${reason}\n\n**Expires in:** ${formattedTime}`;
         }
 
         mentionedMember

@@ -1,116 +1,125 @@
 const Command = require("../../structures/Command");
 const Guild = require("../../database/schemas/Guild");
-const discord = require("discord.js");
+const { MessageEmbed } = require("discord.js");
 
-module.exports = class extends Command {
+module.exports = class ToggleCategoryCommand extends Command {
   constructor(...args) {
     super(...args, {
       name: "togglecategory",
       description: "Disable or enable a category in the guild",
       category: "Config",
-      examples: ["togglecategory currency"],
+      examples: ["togglecategory Economy", "togglecategory Reaction Role"],
       cooldown: 3,
       guildOnly: true,
-      userPermission: ["MANAGE_GUILD"],
+      userPermissions: ["MANAGE_GUILD"],
     });
   }
 
   async run(message, args) {
-    const guildDB = await Guild.findOne({
-      guildId: message.guild.id,
-    });
+    try {
+      // Validate input
+      if (!args.length) {
+        return message.channel.sendCustom("Please specify a category to toggle!");
+      }
 
-    const success = message.client.emoji.success;
-    const fail = message.client.emoji.fail;
+      const guildDB = await Guild.findOne({ guildId: message.guild.id }) || 
+        new Guild({ guildId: message.guild.id });
 
-    if (!args[0])
-      return message.channel.sendCustom(`What category do i disable?`);
+      const { success, fail } = message.client.emoji;
+      
+      // Get full category name, joining all args
+      const inputCategory = args.join(" ");
+      const type = inputCategory.toLowerCase();
 
-    if (args.length === 0 || args[0].toLowerCase() === "Owner")
-      return message.channel.sendCustom("Please, provide a valid category!");
+      // Prevent disabling config category
+      if (type === "config") {
+        return message.channel.sendCustom(
+          `${fail} You may not disable the Configuration Category.`
+        );
+      }
 
-    const type = args.slice(0).join(" ").toString().toLowerCase();
-    let description;
-
-    if (type === "config")
-      return message.channel.sendCustom(
-        `${fail} You may not disable the Configuration Category.`
+      // Get valid categories
+      const validCategories = message.client.utils.removeDuplicates(
+        message.client.botCommands
+          .filter((cmd) => cmd.category !== "Owner")
+          .map((cmd) => cmd.category)
       );
 
-    const typesMain = message.client.utils.removeDuplicates(
-      message.client.botCommands
-        .filter((cmd) => cmd.category !== "Owner")
-        .map((cmd) => cmd.category)
-    );
+      // Find matching category (case-insensitive)
+      const matchedCategory = validCategories.find(
+        cat => cat.toLowerCase() === type
+      );
 
-    const types = typesMain.map((item) => item.toLowerCase());
-
-    const commands = message.client.botCommands
-      .array()
-      .filter((c) => c.category.toLowerCase() === type);
-
-    let disabledCommands = guildDB.disabledCommands;
-    if (typeof disabledCommands === "string")
-      disabledCommands = disabledCommands.split(" ");
-
-    if (types.includes(type)) {
-      if (commands.every((c) => disabledCommands.includes(c.name || c))) {
-        for (const cmd of commands) {
-          if (disabledCommands.includes(cmd.name || cmd))
-            removeA(disabledCommands, cmd.name || cmd);
-        }
-        description = `All \`${type}\` commands have been successfully **enabled**. ${success}`;
-      } else {
-        for (const cmd of commands) {
-          if (!disabledCommands.includes(cmd.name || cmd)) {
-            guildDB.disabledCommands.push(cmd.name || cmd);
-          }
-        }
-        description = `All ${type} commands have been successfully **disabled**. ${fail}`;
+      // Validate category
+      if (!matchedCategory) {
+        return message.channel.sendCustom(
+          `Please provide a valid category.\n\n**Available Categories:**\n${validCategories.join(" - ")}`
+        );
       }
-      await guildDB.save().catch(() => {});
-      const disabledd =
-        disabledCommands.map((c) => `\`${c}\``).join(" ") || "`None`";
 
-      const embed = new discord.MessageEmbed()
-        .setAuthor(message.author.tag, message.guild.iconURL({ dynamic: true }))
+      // Find commands in the specified category
+      const categoryCommands = message.client.botCommands
+        .filter((cmd) => cmd.category === matchedCategory);
+
+      // Ensure disabledCommands is an array
+      let disabledCommands = Array.isArray(guildDB.disabledCommands) 
+        ? guildDB.disabledCommands 
+        : (guildDB.disabledCommands || '').split(' ').filter(Boolean);
+
+      let description;
+      const allDisabled = categoryCommands.every((cmd) => 
+        disabledCommands.includes(cmd.name)
+      );
+
+      if (allDisabled) {
+        // Enable all commands in the category
+        disabledCommands = disabledCommands.filter(
+          (cmd) => !categoryCommands.some((catCmd) => catCmd.name === cmd)
+        );
+        description = `All \`${matchedCategory}\` commands have been successfully **enabled**. ${success}`;
+      } else {
+        // Disable all commands in the category
+        categoryCommands.forEach((cmd) => {
+          if (!disabledCommands.includes(cmd.name)) {
+            disabledCommands.push(cmd.name);
+          }
+        });
+        description = `All \`${matchedCategory}\` commands have been successfully **disabled**. ${fail}`;
+      }
+
+      // Save updated disabled commands
+      guildDB.disabledCommands = disabledCommands;
+      await guildDB.save().catch((error) => {
+        console.error("Failed to save guild settings:", error);
+      });
+
+      // Prepare disabled commands list
+      const disabledList = 
+        disabledCommands.length > 0
+          ? disabledCommands.map((cmd) => `\`${cmd}\``).join(" ")
+          : "`None`";
+
+      // Create embed
+      const embed = new MessageEmbed()
+        .setAuthor({
+          name: message.author.tag,
+          iconURL: message.guild.iconURL({ dynamic: true }) || undefined,
+        })
         .setDescription(description)
-        .addField("Disabled Commands", disabledd, true)
+        .addField(
+          "Disabled Commands", 
+          disabledList.length > 1024 ? "[Too Large to Display]" : disabledList,
+          true
+        )
         .setFooter({ text: "https://v2.pogy.xyz/" })
         .setTimestamp()
         .setColor(message.client.color.green);
 
-      message.channel.sendCustom({ embeds: [embed] }).catch(() => {
-        const errorEmbed = new discord.MessageEmbed()
-          .setAuthor(
-            message.author.tag,
-            message.guild.iconURL({ dynamic: true })
-          )
-          .setDescription(description)
-          .addField("Disabled Commands", `[Too Large to Display]`, true)
-          .setFooter({ text: "https://v2.pogy.xyz/" })
-          .setTimestamp()
-          .setColor(message.client.color.green);
-        message.channel.sendCustom(errorEmbed).catch(() => {});
-      });
-    } else
-      return message.channel.sendCustom(
-        `Please, provide a valid category\n\n**Available Categories:**\n${typesMain.join(
-          " - "
-        )}`
-      );
-  }
-};
-function removeA(arr) {
-  var what,
-    a = arguments,
-    L = a.length,
-    ax;
-  while (L > 1 && arr.length) {
-    what = a[--L];
-    while ((ax = arr.indexOf(what)) !== -1) {
-      arr.splice(ax, 1);
+      // Send embed
+      await message.channel.sendCustom({ embeds: [embed] });
+    } catch (error) {
+      console.error("Error in togglecategory command:", error);
+      message.channel.sendCustom("An unexpected error occurred while processing the command.");
     }
   }
-  return arr;
-}
+};

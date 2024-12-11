@@ -9,7 +9,7 @@ module.exports = class extends Command {
       description: "Deletes a custom command",
       category: "Config",
       userPermission: "MANAGE_MESSAGES",
-      aliases: ["delcommand", "removecommand"],
+      aliases: ["delcommand", "removecommand", "deletecmd", "delcmd", "dc"],
       usage: ["<command>"],
       examples: ["deletecommand Pog"],
       cooldown: 3,

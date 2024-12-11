@@ -126,10 +126,10 @@
  "urlshortnerSuccessful":"Successfully created the link, click here: https://url.pogy.xyz/{shortUrl}",
 
  "banError":"You need the Ban Members permission to use this command",
- "banUserValid":"Please provide a Valid User mention / ID",
- "banYourselfError":"You Can't ban yourself",
+ "banUserValid":"Please provide a valid user mention / ID",
+ "banYourselfError":"You can't ban yourself",
  "banHigherRole":"The provided user has an equal or higher role than you.",
- "banBannable":"I am not able to ban this user since he is not bannable",
+ "banBannable":"This user is a mod/admin, I can't do that.",
  "noReasonProvided":"No Reason Provided",
  "banBan":"was successfully banned.",
 

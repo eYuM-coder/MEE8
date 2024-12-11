@@ -11,10 +11,11 @@ module.exports = class extends Command {
 
   async run(message, args) {
     if (
-      !message.client.config.owner.includes(message.author.id) &&
-      message.client.config.developers.includes(message.author.id)
+      message.client.config.owner.includes(message.author.id)
     ) {
-      return message.channel.sendCustom(`This command is for the owner ONLY.`);
+      // do nothing
+    } else {
+      return message.channel.sendCustom(`You are not the owner of this bot.`);
     }
     if (!args[0])
       return message.channel.sendCustom(

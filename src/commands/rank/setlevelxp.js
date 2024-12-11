@@ -6,6 +6,7 @@ module.exports = class extends Command {
   constructor(...args) {
     super(...args, {
       name: "setlevelxp",
+      aliases: ["setlevel", "addlevel"],
       description: "Adds experience points to a user.",
       category: "Leveling",
       cooldown: 3,

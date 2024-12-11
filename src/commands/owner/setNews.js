@@ -12,10 +12,7 @@ module.exports = class extends Command {
   }
 
   async run(message, args) {
-    if (
-      !message.client.config.owner.includes(message.author.id) &&
-      message.client.config.developers.includes(message.author.id)
-    ) {
+    if (message.client.config.developers.includes(message.author.id)) {
       return message.channel.sendCustom(`This command is for the owner.`);
     }
     let news = args.join(" ").split("").join("");

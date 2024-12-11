@@ -223,13 +223,12 @@ client.on("interactionCreate", async (interaction) => {
   const subcommand = interaction.options.getSubcommand(false);
 
   try {
-    await slashCommand.execute(interaction);
     try {
-      await logger.info(`/${slashCommand.data.name} (${subcommand ? `${subcommand}` : 'No subcommand executed'}) ran by "${interaction.user.username}" (${interaction.user.id}) on guild "${interaction.guild.name}" (${interaction.guild.id}) in channel "${interaction.channel.name}" (${interaction.channel.id})`, { label: "Slash Commmand" });
+      await logger.info(`"${interaction}" (${slashCommand.data.name}${subcommand ? ` ${subcommand}` : ''}) ran by "${interaction.user.username}" (${interaction.user.id}) on guild "${interaction.guild.name}" (${interaction.guild.id}) in channel "${interaction.channel.name}" (${interaction.channel.id})`, { label: "Slash Commmand" });
     } catch (error) {
-      console.error(error);
-      await logger.info(`${slashCommand.data.name} (${subcommand ? `${subcommand}` : "No subcommand executed"}) ran by "${interaction.user.username}" (${interaction.user.id}) in a DM.`);
+      await logger.info(`"${interaction}" (${slashCommand.data.name}${subcommand ? ` ${subcommand}` : ""}) ran by "${interaction.user.username}" (${interaction.user.id}) in a DM.`, { label: "Slash Commmand" });
     }
+    await slashCommand.execute(interaction);
   } catch (error) {
     await interaction.reply({
       content: "There was an error while executing this command!",

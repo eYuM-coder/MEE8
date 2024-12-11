@@ -17,6 +17,7 @@ module.exports = {
     .addStringOption((option) =>
       option.setName("reason").setDescription("The reason for the purge")
     )
+    .addChannelOption((option) => option.setName("channel").setDescription("The optional channel."))
     .setContexts(0)
     .setIntegrationTypes(0),
   async execute(interaction) {
@@ -29,7 +30,7 @@ module.exports = {
       const success = client.emoji.success;
 
       const amount = parseInt(interaction.options.getString("amount"));
-      const channel = interaction.channel;
+      const channel = interaction.options.getChannel("channel") || interaction.channel;
       let reason = interaction.options.getString("reason");
       if (!reason) {
         reason = "No reason provided.";
@@ -85,14 +86,17 @@ module.exports = {
           totalDeleted += deletedMessages.size;
 
           logger.info(
-            `Deleted ${deletedMessages.size} ${
-              deletedMessages.size === 1 ? "message" : "messages"
+            `Deleted ${deletedMessages.size} ${deletedMessages.size === 1 ? "message" : "messages"
             }.`,
             { label: "Purge" }
           );
 
           // If fewer than `messagesToFetch` were deleted, stop early
-          if (deletedMessages.size <= messagesToFetch) break;
+          if (deletedMessages.size < messagesToFetch) {
+            break;
+          } else if (deletedMessages.size !== 100 && deletedMessages.size == messagesToFetch) {
+            break;
+          }
         } catch (error) {
           logger.error(`Error deleting messages: ${error}`, { label: "ERROR" });
           return interaction.editReply({
@@ -103,17 +107,36 @@ module.exports = {
         await delay(5000);
       }
 
-      const embed = new MessageEmbed()
+      if (channel == interaction.channel) {
+        if (totalDeleted > 100) {
+          const embed = new MessageEmbed()
+            .setDescription(`${success} | ***Found and purged ${totalDeleted} ${totalDeleted === 1 ? "message" : "messages"}.* || ${reason}**`)
+            .setColor(interaction.client.color.green);
+          interaction.editReply({ embeds: [embed], ephemeral: true });
+        } else {
+          const embed = new MessageEmbed()
 
-        .setDescription(
-          `${success} | ***Successfully deleted ${totalDeleted} ${
-            totalDeleted === 1 ? "message" : "messages"
-          }.* || ${reason}**`
-        )
+            .setDescription(
+              `${success} | ***Successfully deleted ${totalDeleted} ${totalDeleted === 1 ? "message" : "messages"
+              }.* || ${reason}**`
+            )
 
-        .setColor(interaction.client.color.green);
+            .setColor(interaction.client.color.green);
 
-      interaction.editReply({ embeds: [embed], ephemeral: true });
+          interaction.editReply({ embeds: [embed], ephemeral: true });
+        }
+      } else {
+        const embed = new MessageEmbed()
+
+          .setDescription(
+            `${success} | ***Found and purged ${totalDeleted} ${totalDeleted === 1 ? "message" : "messages"
+            } in ${channel}.* || ${reason}**`
+          )
+
+          .setColor(interaction.client.color.green);
+
+        interaction.editReply({ embeds: [embed], ephemeral: true });
+      }
 
       if (logging) {
         const role = interaction.guild.roles.cache.get(
@@ -152,10 +175,10 @@ module.exports = {
                     })
                     .setColor(color);
 
-                    send(loggingChannel, { username: `${this.client.user.username}`, embeds: [logEmbed] }).catch(() => {});
+                  send(loggingChannel, { username: `${this.client.user.username}`, embeds: [logEmbed] }).catch(() => { });
 
                   logging.moderation.caseN = logcase + 1;
-                  await logging.save().catch(() => {});
+                  await logging.save().catch(() => { });
                 }
               }
             }

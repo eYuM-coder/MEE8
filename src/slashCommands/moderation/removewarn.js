@@ -167,7 +167,7 @@ module.exports = {
 
       const removeembed = new MessageEmbed()
         .setDescription(
-          `${interaction.client.emoji.success} | Cleared Warn **#${warnID}** from **${mentionedMember.user.tag}**`,
+          `${interaction.client.emoji.success} | Cleared warning **#${warnID}** from **${mentionedMember.user.tag}**`,
         )
         .setColor(interaction.client.color.green);
       interaction

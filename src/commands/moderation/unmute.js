@@ -9,6 +9,8 @@ module.exports = class extends Command {
       description: "",
       category: "Moderation",
       cooldown: 5,
+      userPermission: ["MODERATE_MEMBERS"],
+      botPermission: ["MODERATE_MEMBERS"],
     });
   }
   async run(message, args) {

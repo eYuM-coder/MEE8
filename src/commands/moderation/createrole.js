@@ -10,7 +10,8 @@ module.exports = class CreateRoleCommand extends Command {
       cooldown: 5,
       usage: '"<roleName>" <color> [hoist] [mentionable] [position]',
       guildOnly: true,
-      permissions: ["MANAGE_ROLES"],
+      userPermission: ["MANAGE_ROLES"],
+      botPermission: ["MANAGE_ROLES"],
     });
   }
 

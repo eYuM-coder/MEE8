@@ -24,7 +24,6 @@ module.exports = class extends Command {
       usage: "<user> [time] [reason]",
       examples: ["warn @user Please do not swear."],
       guildOnly: true,
-      userPermission: ["KICK_MEMBERS"],
     });
   }
 
@@ -55,51 +54,17 @@ module.exports = class extends Command {
     }
 
     // Combine all arguments after the mention into one string
-    const fullCommand = args.slice(1).join(" ");
-    const input = fullCommand;
-    const regex = /"([^"]+)"|(\d+\s*[a-z]+)|(\S+)/g;
+    const allArgs = args.slice(1).join(" ");
 
-    let match;
-    const parts = [];
+    const timeRegex = /\d+\s*[a-z]+/g;
 
-    while ((match = regex.exec(input)) !== null) {
-      // match[1] is for quoted strings
-      // match[2] is for time durations (e.g., "2d", "6h")
-      // match[3] is for any other non-whitespace part
-      if (match[1]) {
-        parts.push({ type: "quoted", value: match[1] });
-      } else if (match[2]) {
-        parts.push({ type: "time", value: match[2] });
-      } else if (match[3]) {
-        parts.push({ type: "other", value: match[3] });
-      }
-    }
+    const timeMatches = allArgs.match(timeRegex).join(" ");
 
-    console.log(parts);
+    let time = timeMatches ? ms(timeMatches) : ms("6h");
+    let formattedTime = await usePrettyMs(time);
 
-    let parsedArgs = null;
-    try {
-      parsedArgs = parts.map((arg) => arg.replace(/^"|"$/g, ""));
-    } catch (e) {
-      // do nothing
-    }
-    let time = 0;
-    try {
-      time = ms(parsedArgs[0]);
-    } catch (e) {
-      time = ms("1d");
-    }
-
-    // If there are time parts, parse them; otherwise, set time to null (infinite)
-    let formattedTime = time ? await usePrettyMs(time) : "Infinity";
-
-    // Remove the parsed time from the reason
-    let reason =
-      parsedArgs !== undefined
-        ? args.slice(match !== undefined ? 1 : 0).join(" ")
-        : parsedArgs.slices(match !== undefined ? 1 : 0).join(" ");
-
-    reason = reason || "Not Specified"; // Default reason if none provided
+    let reason = allArgs.replace(timeMatches ? timeMatches : "", "").trim();
+    reason = reason || "No Reason Specified";
 
     let warnID = random.password({
       length: 16,

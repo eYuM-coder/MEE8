@@ -15,7 +15,6 @@ module.exports = class extends Command {
       usage: "<user> [reason]",
       examples: ["resetwarns @Peter Warnings have been reset"],
       guildOnly: true,
-      userPermission: ["MANAGE_ROLES"],
     });
   }
 

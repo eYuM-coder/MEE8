@@ -112,10 +112,6 @@ module.exports = {
       warnDoc.expiresAt.push(expirationTime);
 
       await warnDoc.save().catch((err) => console.log(err));
-
-      if (mentionedMember.permissions.has("ADMINISTRATOR")) {
-        throw new Error();
-      }
       
       let dmEmbed;
       if (

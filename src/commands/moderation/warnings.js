@@ -17,7 +17,6 @@ module.exports = class extends Command {
       examples: ["warnings @Peter"],
       guildOnly: true,
       botPermission: ["ADD_REACTIONS"],
-      userPermissions: ["KICK_MEMBERS"],
     });
   }
 

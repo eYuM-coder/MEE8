@@ -58,57 +58,6 @@ module.exports = {
           .catch(() => { });
       }
 
-      if (member.id === interaction.member.id) {
-        const setnickerror = new MessageEmbed()
-          .setAuthor({
-            name: `${interaction.user.tag}`,
-            iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
-          })
-          .setTitle(`${fail} | Set Nickname Error`)
-          .setDescription("You can't change your own nickname!")
-          .setTimestamp()
-          .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-          .setColor(client.color.red);
-        return interaction
-          .reply({ embeds: [setnickerror] })
-          .then(async () => {
-            if (logging && logging.moderation.delete_reply === "true") {
-              setTimeout(() => {
-                interaction.deleteReply().catch(() => { });
-              }, 5000);
-            }
-          })
-          .catch(() => { });
-      }
-
-      if (
-        member.roles.highest.position >=
-        interaction.member.roles.highest.position
-      ) {
-        const rolesmatch = new MessageEmbed()
-          .setAuthor({
-            name: `${interaction.user.tag}`,
-            iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
-          })
-          .setTitle(`${fail} | Set Nickname Error`)
-          .setDescription(
-            "The provided user has either an equal or higher role.",
-          )
-          .setTimestamp()
-          .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-          .setColor(client.color.red);
-        return interaction
-          .reply({ embeds: [rolesmatch] })
-          .then(async () => {
-            if (logging && logging.moderation.delete_reply === "true") {
-              setTimeout(() => {
-                interaction.deleteReply().catch(() => { });
-              }, 5000);
-            }
-          })
-          .catch(() => { });
-      }
-
       if (!nickname) {
         const oldNickname = member.nickname;
         await member.setNickname("");

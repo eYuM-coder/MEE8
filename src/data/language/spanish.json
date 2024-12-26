@@ -187,11 +187,11 @@
 "softbanResponsible": "Usuario responsable",
 "softbanSuccess": "He realizado softbanned exitosamente",
 
-"unbanNoPerm": "Necesita el permiso de Prohibir miembros para usar este comando",
-"unbanInvalidID": "Este no es un ID de usuario válido",
-"unbanNoReason": "No se proporcionó ningún motivo",
-"unbanResponsible": "Usuario responsable",
-"unbanSuccess": "Desactivado correctamente",
+"unbanNoPerm": "No tiene permiso para utilizar este comando.",
+"unbanInvalidID": "El usuario especificado no está bloqueado o la entrada no es válida.",
+"unbanNoReason": "No se proporcionó ningún motivo.",
+"unbanResponsible": "Usuario Responsable",
+"unbanSuccess": "ha sido desbaneado.",
 
 "kill1":"Vaya, eso fue genial ... ¿Pero a quién mato?",
 "kill2":"Bruh, pareces deprimido .. ¿Cómo puedo ayudar?",

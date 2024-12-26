@@ -4,6 +4,7 @@ const Discord = require("discord.js");
 const url = require("url");
 const path = require("path");
 let uniqid = require("uniqid");
+const config = require("../../config.json");
 const cooldownNickname = new Set();
 const express = require("express");
 const passport = require("passport");
@@ -285,38 +286,39 @@ module.exports = async (client) => {
 
   // commands
   app.get("/commands", (req, res) => {
-    renderTemplate(res, req, "commands.ejs"); // made comamnds page work
+    renderTemplate(res, req, "commands.ejs", { botName: config.botName }); // made comamnds page work
   });
 
   app.get("/color", (req, res) => {
     var url = req.protocol + "://" + req.get("host") + req.originalUrl;
     renderTemplate(res, req, "color.ejs", {
       urlSite: url,
+      botName: config.botName,
     });
   });
 
   app.get("/faq", (req, res) => {
-    renderTemplate(res, req, "faq.ejs");
+    renderTemplate(res, req, "faq.ejs", { botName: config.botName });
   });
   app.get("/docs", (req, res) => {
-    renderTemplate(res, req, "docs.ejs");
+    renderTemplate(res, req, "docs.ejs", { botName: config.botName });
   });
 
   app.get("/stats", (req, res) => {
-    renderTemplate(res, req, "stats.ejs");
+    renderTemplate(res, req, "stats.ejs", { botName: config.botName });
   });
 
   app.get("/variables", (req, res) => {
-    renderTemplate(res, req, "variables.ejs");
+    renderTemplate(res, req, "variables.ejs", { botName: config.botName });
   });
   app.get("/transcript", (req, res) => {
-    renderTemplate(res, req, "maintranscript.ejs");
+    renderTemplate(res, req, "maintranscript.ejs", { botName: config.botName });
   });
   app.get("/manage", (req, res) => {
-    renderTemplate(res, req, "manage.ejs");
+    renderTemplate(res, req, "manage.ejs", { botName: config.botName });
   });
   app.get("/embeds", (req, res) => {
-    renderTemplate(res, req, "embeds.ejs");
+    renderTemplate(res, req, "embeds.ejs", { botName: config.botName });
   });
 
   app.get("/support", (req, res) => {
@@ -332,15 +334,15 @@ module.exports = async (client) => {
   });
 
   app.get("/thanks", function (req, res) {
-    renderTemplate(res, req, "thanks.ejs");
+    renderTemplate(res, req, "thanks.ejs", { botName: config.botName });
   });
 
   app.get("/team", (req, res) => {
-    renderTemplate(res, req, "team.ejs");
+    renderTemplate(res, req, "team.ejs", { botName: config.botName });
   });
 
   app.get("/policy", (req, res) => {
-    renderTemplate(res, req, "policy.ejs");
+    renderTemplate(res, req, "policy.ejs", { botName: config.botName });
   });
 
   // Logout endpoint.
@@ -374,24 +376,25 @@ module.exports = async (client) => {
     });
   });
   app.get("/window", (req, res) => {
-    renderTemplate(res, req, "window.ejs");
+    renderTemplate(res, req, "window.ejs", { botName: config.botName });
   });
 
   app.get("/premium", (req, res) => {
-    renderTemplate(res, req, "premium.ejs");
+    renderTemplate(res, req, "premium.ejs", { botName: config.botName });
   });
   app.get("/changelog", (req, res) => {
-    renderTemplate(res, req, "changelog.ejs");
+    renderTemplate(res, req, "changelog.ejs", { botName: config.botName });
   });
 
   // Index endpoint.
   app.get("/", (req, res) => {
-    renderTemplate(res, req, "index.ejs");
+    renderTemplate(res, req, "index.ejs", { botName: config.botName });
   });
 
   app.get("/apply", checkAuth, (req, res) => {
     renderTemplate(res, req, "appeal.ejs", {
       perms: Discord.Permissions,
+      botName: config.botName,
     });
   });
   app.get("/paste", (req, res) => {
@@ -409,11 +412,12 @@ module.exports = async (client) => {
   });
 
   app.get("/url", async (req, res) => {
-    renderTemplate(res, req, "url.ejs");
+    renderTemplate(res, req, "url.ejs", { botName: config.botName });
   });
 
   const pastes = await Paste.find({
     type: "ticket",
+    botName: config.botName,
   });
 
   for (const pasteE of pastes) {
@@ -682,6 +686,7 @@ module.exports = async (client) => {
       return renderTemplate(res, req, "dashboard.ejs", {
         perms: Discord.Permissions,
         userExists: false,
+        botName: config.botName,
       });
     }
 
@@ -1155,19 +1160,19 @@ module.exports = async (client) => {
   async function getDashboardData(req, guildId) {
     const guild = client.guilds.cache.get(guildId);
     if (!guild) return { redirect: "/dashboard" };
-  
+
     const member = await guild.members.fetch(req.user.id);
     if (!member || !member.permissions.has("MANAGE_GUILD"))
       return { redirect: "/dashboard" };
-  
+
     const maintenance = await Maintenance.findOne({
       maintenance: "maintenance",
     });
-  
+
     if (maintenance && maintenance.toggle == "true") {
       return { template: "maintenance.ejs" };
     }
-  
+
     let storedSettings = await GuildSettings.findOne({ guildId: guild.id });
     if (!storedSettings) {
       const newSettings = new GuildSettings({
@@ -1176,11 +1181,11 @@ module.exports = async (client) => {
       await newSettings.save().catch(() => {});
       storedSettings = await GuildSettings.findOne({ guildId: guild.id });
     }
-  
+
     // Fetch default bot commands
     const commands = client.botCommands
-      .filter(cmd => cmd.category !== "dev") // Exclude commands you don't want to show
-      .map(cmd => ({
+      .filter((cmd) => cmd.category !== "dev") // Exclude commands you don't want to show
+      .map((cmd) => ({
         name: cmd.name,
         description: cmd.description || "No description provided.",
         category: cmd.category || "General",
@@ -1193,56 +1198,58 @@ module.exports = async (client) => {
     const maxDescriptionLength = 100;
 
     const customCommands = await customCommand.find({ guildId: guild.id });
-    const customCommandsMapped = customCommands.map(customCmd => ({
+    const customCommandsMapped = customCommands.map((customCmd) => ({
       name: customCmd.name,
       description: customCmd.content
-        ? (customCmd.content.length > maxDescriptionLength
-            ? customCmd.content.substring(0, maxDescriptionLength) + "..." 
-            : customCmd.content)
+        ? customCmd.content.length > maxDescriptionLength
+          ? customCmd.content.substring(0, maxDescriptionLength) + "..."
+          : customCmd.content
         : "No description provided.",
       category: "Custom", // Mark it as a custom command
       usage: "Custom Command", // You can change this if necessary
       aliases: ["None"], // Assuming custom commands don't have aliases
       cooldown: 0, // You can modify this based on your need
-      content: customCmd.content // Add any custom fields you want to display
+      content: customCmd.content, // Add any custom fields you want to display
     }));
-  
+
     const allCommands = [...commands, ...customCommandsMapped];
-  
+
     return {
       guild,
       storedSettings,
-      commands: allCommands
+      commands: allCommands,
     };
   }
-  
+
   // GET Route for commands
   app.get("/dashboard/:guildID/commands", checkAuth, async (req, res) => {
     const dashboardData = await getDashboardData(req, req.params.guildID);
-    
+
     if (dashboardData.redirect) return res.redirect(dashboardData.redirect);
-    if (dashboardData.template) return renderTemplate(res, req, dashboardData.template);
-  
+    if (dashboardData.template)
+      return renderTemplate(res, req, dashboardData.template);
+
     renderTemplate(res, req, "./new/maincommands.ejs", {
       guild: dashboardData.guild,
       alert: null,
       settings: dashboardData.storedSettings,
-      commands: dashboardData.commands
+      commands: dashboardData.commands,
     });
   });
-  
+
   // POST Route for commands (similar handling)
   app.post("/dashboard/:guildID/commands", checkAuth, async (req, res) => {
     const dashboardData = await getDashboardData(req, req.params.guildID);
-    
+
     if (dashboardData.redirect) return res.redirect(dashboardData.redirect);
-    if (dashboardData.template) return renderTemplate(res, req, dashboardData.template);
-  
+    if (dashboardData.template)
+      return renderTemplate(res, req, dashboardData.template);
+
     renderTemplate(res, req, "./new/maincommands.ejs", {
       guild: dashboardData.guild,
       alert: null,
       settings: dashboardData.storedSettings,
-      commands: dashboardData.commands
+      commands: dashboardData.commands,
     });
   });
 

@@ -15,7 +15,6 @@ module.exports = class extends Command {
       usage: "<user> [ID]",
       examples: ["rw @peter iasdjas"],
       guildOnly: true,
-      userPermission: ["MANAGE_ROLES"],
     });
   }
 

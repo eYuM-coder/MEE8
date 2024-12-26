@@ -112,7 +112,7 @@ module.exports = class extends Command {
                         .awaitMessages({
                           filter: (m) => m.author.id === message.author.id,
                           max: 1,
-                          time: 30000,
+                          time: 180000,
                         })
                         .then((collected) => {
                           if (

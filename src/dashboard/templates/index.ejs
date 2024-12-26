@@ -1,4 +1,4 @@
-<%- include("partials/head", {bot, user, path, description, title: "MEE8 - Home" , url, image }) %>
+<%- include("partials/head", {bot, user, path, description, title: `${botName} - Home` , url, image }) %>
   <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
@@ -39,9 +39,9 @@
             <div class="container">
               <div class="row">
                 <div class="col-12 text-center parallax-fade-top">
-                  <p>POGY</p>
+                  <p>MEE8</p>
 
-                  <h1>The best Multipurpose <br>Discord Bot</h1>
+                  <h1>The best Multipurpose <br>Discord Bot offering an alternative to MEE6.</h1>
                   <p style="font-size: 13px">Serving <b id="odometer" class="odometer">
                       <%= bot.guilds.cache.reduce((a, g)=> a + g.memberCount, 0) %>
                     </b> members in <b id="odometer2" class="odometer">

@@ -194,11 +194,11 @@
   "softbanResponsible": "Odpowiedzialny użytkownik",
   "softbanSuccess": "Udało mi się softzbanować",
 
-  "unbanNoPerm": "Aby użyć tego polecenia, potrzebujesz uprawnienia do blokowania członków",
-  "unbanInvalidID": "To nie jest poprawny identyfikator użytkownika",
-  "unbanNoReason": "Nie podano powodu",
-  "unbanResponsible": "Użytkownik odpowiedzialny",
-  "unbanSuccess": "Pomyślnie odblokowano",
+  "unbanNoPerm": "Nie masz uprawnień do korzystania z tego polecenia.",
+  "unbanInvalidID": "Określony użytkownik nie jest zablokowany lub dane wejściowe są nieprawidłowe.",
+  "unbanNoReason": "Nie podano powodu.",
+  "unbanResponsible": "Odpowiedzialny użytkownik",
+  "unbanSuccess": "został odblokowany.",
 
   "kill1": "Wow, było świetnie .. Ale kogo mam zabić?",
   "kill2": "Bruh, wyglądasz na przygnębionego .. Jak mogę pomóc?",

@@ -9,8 +9,8 @@ module.exports = class FindMessagesCommand extends Command {
       description: "Find messages from a user containing a keyword in a given time range",
       category: "Moderation", // Adjust the category as needed
       cooldown: 5,
-      usage: "/findmessages <@user> <keyword> <time>",
-      permissions: ["MANAGE_MESSAGES"], // Add any required permissions
+      usage: "findmessages <@user> <keyword> <time>",
+      userPermission: ["MANAGE_MESSAGES"], // Add any required permissions
     });
   }
 

@@ -7,7 +7,7 @@ const send = require("../../packages/logs/index.js");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("clear")
-    .setDescription("Purges a channels messages (limit: 1000)")
+    .setDescription("Purges a channels messages (limit: 10000)")
     .addStringOption((option) =>
       option
         .setName("amount")
@@ -39,14 +39,14 @@ module.exports = {
         reason = reason.slice(0, 1021) + "...";
       }
 
-      if (isNaN(amount) || amount < 0 || amount > 1000) {
+      if (isNaN(amount) || amount < 0 || amount > 10000) {
         let invalidamount = new MessageEmbed()
           .setAuthor({
             name: `${interaction.user.tag}`,
             iconURL: interaction.member.displayAvatarURL({ dynamic: true }),
           })
           .setTitle(`${fail} | Purge Error`)
-          .setDescription(`Please Provide a message count between 1 and 1000!`)
+          .setDescription(`Please provide a message count between 1 and 10000!`)
           .setTimestamp()
           .setFooter({
             text: `${process.env.AUTH_DOMAIN}`,
@@ -175,7 +175,7 @@ module.exports = {
                     })
                     .setColor(color);
 
-                  send(loggingChannel, { username: `${this.client.user.username}`, embeds: [logEmbed] }).catch(() => { });
+                  send(loggingChannel, { username: `${interaction.client.user.username}`, embeds: [logEmbed] }).catch(() => { });
 
                   logging.moderation.caseN = logcase + 1;
                   await logging.save().catch(() => { });
@@ -186,7 +186,7 @@ module.exports = {
         }
       }
     } catch (err) {
-      logger.info(`An error occurred: ${err}`, { label: "ERROR" });
+      console.log(err);
       interaction.editReply({
         content: "This command cannot be used in Direct Messages.",
         ephemeral: true,

@@ -191,11 +191,11 @@
 "softbanResponsible": "Utilisateur responsable",
 "softbanSuccess": "J'ai réussi le softbanned",
 
-"unbanNoPerm": "Vous avez besoin de l'autorisation d'interdire les membres pour utiliser cette commande",
-"unbanInvalidID": "Ceci n'est pas un ID utilisateur valide",
-"unbanNoReason": "Aucune raison fournie",
-"unbanResponsible": "Utilisateur responsable",
-"unbanSuccess": "Désinscription réussie",
+"unbanNoPerm": "Vous n’êtes pas autorisé à utiliser cette commande.",
+"unbanInvalidID": "L’utilisateur spécifié n’est pas banni ou l’entrée n’est pas valide.",
+"unbanNoReason": "Aucune raison fournie.",
+"unbanResponsible": "Utilisateur Responsable",
+"unbanSuccess": "a été débanni.",
 
 "kill1":"Wow, c'était super ... Mais qui dois-je tuer?",
 "kill2":"Bruh, tu sembles déprimé. Comment puis-je aider?",

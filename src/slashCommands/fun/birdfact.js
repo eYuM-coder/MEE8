@@ -10,7 +10,7 @@ module.exports = {
   .setContexts([0, 1, 2])
   .setIntegrationTypes([0, 1]),
   async execute(interaction) {
-    const res = await fetch("https://some-random-api.ml/facts/bird").catch(() => {});
+    const res = await fetch("https://some-random-api.com/facts/bird").catch(() => {});
 
     const fact = (await res.json()).fact;
 

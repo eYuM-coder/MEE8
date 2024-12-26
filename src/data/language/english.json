@@ -196,11 +196,11 @@
 "softbanResponsible":"Responsible user",
 "softbanSuccess":"I have successfully softbanned",
 
-"unbanNoPerm":"You need the Ban Members permission to use this command",
-"unbanInvalidID":"This is not a valid user ID",
-"unbanNoReason":"No Reason Provided",
-"unbanResponsible":"Responsible user",
-"unbanSuccess":"Successfully unbanned",
+"unbanNoPerm":"You do not have permission to use this command.",
+"unbanInvalidID":"The specified user is not banned, or the input is invalid.",
+"unbanNoReason":"No Reason Provided.",
+"unbanResponsible":"Responsible User",
+"unbanSuccess":"has been unbanned.",
 
 "kill1":"Wow, that was great..But who do I kill?",
 "kill2":"Bruh, you seem depressed.. How can I help?",

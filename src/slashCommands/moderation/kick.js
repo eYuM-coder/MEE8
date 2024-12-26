@@ -157,7 +157,7 @@ module.exports = {
                     .setTimestamp()
                     .setColor(color);
 
-                    send(channel, { username: `${this.client.user.username}`, embeds: [logEmbed] }).catch(() => {});
+                    send(channel, { username: `${interaction.client.user.username}`, embeds: [logEmbed] }).catch(() => {});
 
                   logging.moderation.caseN = logcase + 1;
                   await logging.save().catch(() => { });

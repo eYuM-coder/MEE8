@@ -9,7 +9,7 @@ module.exports = class extends Command {
     super(...args, {
       name: "clear",
       aliases: ["cls", "purge"],
-      description: "Delete the specified amount of messages (limit: 1000)",
+      description: "Delete the specified amount of messages (limit: 10000)",
       category: "Moderation",
       usage: "purge <message-count> [reason]",
       examples: ["purge 20", "cls 50", "clear 125"],
@@ -34,7 +34,7 @@ module.exports = class extends Command {
       }
 
       const amount = parseInt(args[0]);
-      if (isNaN(amount) === true || !amount || amount < 0 || amount > 1000) {
+      if (isNaN(amount) === true || !amount || amount < 0 || amount > 10000) {
         return message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
@@ -43,7 +43,7 @@ module.exports = class extends Command {
                 message.author.displayAvatarURL({ dynamic: true })
               )
               .setTitle(`${fail} Clear Error`)
-              .setDescription(`I can only purge between 1 - 1000 messages.`)
+              .setDescription(`I can only purge between 1 - 10000 messages.`)
               .setTimestamp()
               .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
               .setColor(message.guild.me.displayHexColor),

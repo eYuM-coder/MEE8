@@ -24,7 +24,7 @@ module.exports = class CalculatorCommand extends Command {
         embed: {
           title: 'Calculator ',
           color: '#5865F2',
-          footer: 'Pogy.xyz',
+          footer: 'mee8.net',
           timestamp: true,
         },
         disabledQuery: 'Calculator is disabled!',

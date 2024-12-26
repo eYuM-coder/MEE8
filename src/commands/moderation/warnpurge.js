@@ -18,12 +18,9 @@ module.exports = class extends Command {
       examples: ["warnpurge @Peter_ 10"],
       guildOnly: true,
       botPermission: [
-        "SEND_MESSAGES",
-        "EMBED_LINKS",
-        "KICK_MEMBERS",
         "MANAGE_MESSAGES",
       ],
-      userPermission: ["KICK_MEMBERS", "MANAGE_MESSAGES"],
+      userPermission: ["MANAGE_MESSAGES"],
     });
   }
 

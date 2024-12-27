@@ -1,5 +1,5 @@
 # the Discord Bot [DJS V13] 🤖
-
+![Alt](https://repobeats.axiom.co/api/embed/82d16a2aa6e1e68fe51bd39d7609a46735d40732.svg "Repobeats analytics image")
 <p align="center">
   <br>
   <a href="https://github.com/peterhanania"><img src="https://dev.pogy.gg/favicon.ico"></a>

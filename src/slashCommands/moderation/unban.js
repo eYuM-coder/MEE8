@@ -85,7 +85,11 @@ module.exports = {
               }
             }
 
-            ban.user.send({ embeds: [dmEmbed]})
+            ban.user.send({ embeds: [
+              new MessageEmbed()
+              .setColor(interaction.client.color.green)
+              .setDescription(dmEmbed)
+            ] })
           } catch (error) {
             logger.error(`Failed to unban ${ban.user.tag}:` + error, {
               label: "ERROR",

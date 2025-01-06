@@ -11,7 +11,7 @@ module.exports = class extends Command {
     super(...args, {
       name: "closeticket",
       aliases: ["close", "ticketclose", "tclose"],
-      description: "Close an Opened Ticket!",
+      description: "Close an opened ticket!",
       category: "Tickets",
       cooldown: 3,
       botPermission: ["MANAGE_CHANNELS"],
@@ -50,7 +50,7 @@ module.exports = class extends Command {
         let channelReact = message.guild.channels.cache.get(db.ticketModlogID);
 
         let reason = args.slice(0).join(" ");
-        if (!reason) reason = "No reason Was Provided";
+        if (!reason) reason = "No reason was provided.";
 
         const role = message.guild.roles.cache.get(db.supportRoleID);
         if (db.ticketClose == "false") {
@@ -68,7 +68,7 @@ module.exports = class extends Command {
                       message.author.displayAvatarURL({ format: "png" })
                     )
                     .setDescription(
-                      `${message.client.emoji.fail} Only users with the support team role Can Close this Ticket`
+                      `${message.client.emoji.fail} | Only users with the support team role can close this ticket.`
                     )
                     .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
                     .setTimestamp()
@@ -136,7 +136,7 @@ module.exports = class extends Command {
           await paste.save();
         });
 
-        message.channel.send("closing ticket...");
+        message.channel.send("Closing ticket...");
         setTimeout(() => {
           message.channel.delete();
         }, 2000);

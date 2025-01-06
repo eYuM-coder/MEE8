@@ -5,3 +5,4 @@ json.sqlite
 mee8.log
 src/assets/logs/Pogy.log
 config.json
+env.backups

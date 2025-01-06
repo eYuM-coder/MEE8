@@ -86,7 +86,7 @@ module.exports = class extends Command {
         let everyone = message.guild.roles.everyone;
 
         message.channel.permissionOverwrites
-          .edit(pogy, {
+          .edit(MEE8, {
             VIEW_CHANNEL: true,
 
             SEND_MESSAGES: true,

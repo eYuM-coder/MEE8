@@ -29,7 +29,7 @@ module.exports = {
       .catch((err) => console.error(err));
 
     // Run deployment command first
-    exec("mee8 deploy", (error, stdout, stderr) => {
+    exec("mee8", (error, stdout, stderr) => {
       if (error) {
         console.error(`Deployment error: ${error.message}`);
         return interaction.editReply({

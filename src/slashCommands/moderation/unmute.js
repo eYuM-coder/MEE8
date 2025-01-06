@@ -9,11 +9,11 @@ module.exports = {
     .addUserOption((option) =>
       option
         .setName("member")
-        .setDescription("Person who you want to put in timeout.")
+        .setDescription("Person who you want to unmute.")
         .setRequired(true)
     )
     .addStringOption((option) =>
-      option.setName("reason").setDescription("The reason of the timeout")
+      option.setName("reason").setDescription("The reason for unmuting")
     )
     .setContexts(0)
     .setIntegrationTypes(0),
@@ -23,6 +23,8 @@ module.exports = {
       const logging = await Logging.findOne({
         guildId: interaction.guild.id,
       });
+      
+      // Check if the user has permission to use this command
       if (!interaction.member.permissions.has("MODERATE_MEMBERS"))
         return interaction.followUp({
           content: "You do not have permission to use this command.",
@@ -32,6 +34,7 @@ module.exports = {
       const reason =
         interaction.options.getString("reason") || "No reason provided";
 
+      // Check if the member is valid
       if (!member) {
         let usernotfound = new MessageEmbed()
           .setColor("RED")
@@ -48,51 +51,50 @@ module.exports = {
           .catch(() => {});
       }
 
-      const response = await member.timeout(0 * 60 * 1000, reason);
+      // Remove timeout (unmute the member)
+      await member.timeout(null, reason); // This will remove the timeout
 
-      if (response) {
-        let timeoutsuccess = new MessageEmbed()
-          .setColor("GREEN")
-          .setDescription(
-            `${client.emoji.success} | ${member} has been unmuted.`
-          );
-        interaction
-          .reply({ embeds: [timeoutsuccess] })
-          .then(async () => {
-            if (logging && logging.moderation.delete_reply === "true") {
-              setTimeout(() => {
-                interaction.deleteReply().catch(() => {});
-              }, 5000);
-            }
-          })
-          .catch(() => {});
-        let dmEmbed = new MessageEmbed()
-          .setColor("RED")
-          .setDescription(
-            `You have been unmuted in **${
-              interaction.guild.name
-            }**.\n\n__**Moderator:**__ ${interaction.author} **(${
-              interaction.author.tag
-            })**\n__**Reason:**__ ${reason || "No Reason Provided"}`
-          )
-          .setTimestamp();
-        member.send({ embeds: [dmEmbed] });
-      } else {
-        let failembed = new MessageEmbed()
-          .setColor(client.color.red)
-          .setDescription(
-            `${client.emoji.fail} | Unmute logged for ${member}. I could'nt DM them.`
-          )
-          .setTimestamp();
-        return interaction.reply({ embeds: [failembed] });
-      }
+      let timeoutsuccess = new MessageEmbed()
+        .setColor("GREEN")
+        .setDescription(
+          `${client.emoji.success} | ${member} has been unmuted.`
+        );
+      await interaction
+        .reply({ embeds: [timeoutsuccess] })
+        .then(async () => {
+          if (logging && logging.moderation.delete_reply === "true") {
+            setTimeout(() => {
+              interaction.deleteReply().catch(() => {});
+            }, 5000);
+          }
+        })
+        .catch(() => {});
+
+      // DM the user about the unmute
+      let dmEmbed = new MessageEmbed()
+        .setColor("GREEN")
+        .setDescription(
+          `You have been unmuted in **${interaction.guild.name}**.\n\n__**Moderator:**__ ${interaction.user} **(${interaction.user.tag})**\n__**Reason:**__ ${reason || "No Reason Provided"}`
+        )
+        .setTimestamp();
+
+      return member
+        .send({ embeds: [dmEmbed] })
+        .catch(() => {
+          // Handle the case where the user has DMs disabled
+          interaction.followUp({
+            content: `I couldn't send a DM to ${member}, they might have DMs disabled.`,
+            ephemeral: true,
+          });
+        });
+      
     } catch (err) {
       console.error(err);
       interaction.reply({
         embeds: [
           new MessageEmbed()
-          .setColor(interaction.client.color.red)
-          .setDescription(`${interaction.client.emoji.fail} | That user is a mod/admin, I can't do that.`)
+            .setColor(interaction.client.color.red)
+            .setDescription(`${interaction.client.emoji.fail} | An error occurred.`)
         ],
         ephemeral: true,
       });

@@ -11,7 +11,7 @@ module.exports = class extends Command {
             description: "Hack someone! (fake)",
             category: "Fun",
             usage: "<user>",
-            examples: [ "hack @Pogy" ],
+            examples: [ "hack @john" ],
             cooldown: 3,
         });
     }

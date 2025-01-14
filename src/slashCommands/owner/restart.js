@@ -4,48 +4,88 @@ const { exec } = require("child_process");
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("restart")
-    .setDescription("Restarts the bot.")
-    .setContexts([0, 1, 2])
-    .setIntegrationTypes([0, 1]),
+    .setName("stop")
+    .setDescription("Stops the bot")
+    .addBooleanOption(option =>
+      option
+        .setName("force")
+        .setDescription("Force stop without graceful shutdown")
+        .setRequired(false)
+    )
+    .addBooleanOption(option =>
+      option
+        .setName("silent")
+        .setDescription("Stop without logging")
+        .setRequired(false)
+    ),
+
   async execute(interaction) {
-    if (
-      !interaction.client.config.owner.includes(interaction.user.id) &&
-      !interaction.client.config.developers.includes(interaction.user.id)
-    ) {
+    const client = interaction.client;
+    const userId = interaction.user.id;
+
+    if (!client.config.owner.includes(userId) && !client.config.developers.includes(userId)) {
       return interaction.reply({
         embeds: [
           new MessageEmbed()
-            .setColor(interaction.client.color.red)
-            .setDescription(
-              `${interaction.client.emoji.fail} | This command is for the owner.`
-            )
+            .setColor(client.color.red)
+            .setTitle("Access Denied")
+            .setDescription("You do not have permission to execute this command.")
         ],
-        ephemeral: true,
+        ephemeral: true
       });
     }
 
-    await interaction.reply({ content: "Deploying and restarting...", ephemeral: true })
-      .catch((err) => console.error(err));
+    const force = interaction.options.getBoolean("force") ?? false;
+    const silent = interaction.options.getBoolean("silent") ?? false;
 
-    // Run deployment command first
-    exec("mee8", (error, stdout, stderr) => {
-      if (error) {
-        console.error(`Deployment error: ${error.message}`);
-        return interaction.editReply({
-          content: `Deployment failed:\n\`\`\`${stderr || error.message}\`\`\``,
-          ephemeral: true,
-        });
+    const embed = new MessageEmbed()
+      .setColor("#36393f")
+      .setTitle("Stop Command Initiated")
+      .addField("Executor", interaction.user.tag, true)
+      .addField("Mode", force ? "Force Stop" : "Graceful Shutdown", true)
+      .setTimestamp();
+
+    await interaction.reply({ embeds: [embed], ephemeral: true });
+
+    const shutdown = async () => {
+      if (!silent) {
+        console.log(`Stop command executed by ${interaction.user.tag}`);
+        console.log(`Options: force=${force}, silent=${silent}`);
       }
 
-      console.log(`Deployment output:\n${stdout}`);
-      interaction.editReply({
-        content: `Deployment successful:\n\`\`\`${stdout}\`\`\`\nRestarting...`,
-        ephemeral: true,
-      });
+      exec("lsof -ti:4000 | xargs kill -9", async (error) => {
+        if (error && !silent) {
+          console.error("Port kill failed:", error);
+          embed.addField("Port Kill Status", "Failed to kill port 4000, proceeding with shutdown");
+        } else if (!silent) {
+          embed.addField("Port Kill Status", "Port 4000 successfully terminated");
+        }
 
-      // Graceful restart after deployment
-      setTimeout(() => process.exit(0), 3000);
+        if (!force) {
+          try {
+            await client.destroy();
+          } catch (err) {
+            if (!silent) {
+              console.error("Error during client destroy:", err);
+              embed.addField("Shutdown Status", "Error during graceful shutdown, forcing exit");
+            }
+          }
+        }
+
+        if (!silent) {
+          embed.addField("Final Status", "Bot shutdown complete");
+          await interaction.editReply({ embeds: [embed] });
+        }
+
+        process.exit(force ? 1 : 0);
+      });
+    };
+
+    shutdown().catch(err => {
+      if (!silent) {
+        console.error("Unexpected shutdown error:", err);
+      }
+      process.exit(1);
     });
   },
 };

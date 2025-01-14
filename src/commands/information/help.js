@@ -72,7 +72,7 @@ module.exports = class extends Command {
 
     const helpinfobutton = new MessageActionRow().addComponents(
       new MessageButton()
-        .setLabel("Invite Pogy")
+        .setLabel("Invite MEE8")
         .setStyle("LINK")
         .setURL(`${process.env.AUTH_DOMAIN}/invite`),
 

@@ -293,7 +293,7 @@ module.exports = class extends Command {
             embed
               .setAuthor(
                 `${language.tempvc12}`,
-                `https://v2.pogy.xyz/logo.png`,
+                `https://mee8.net/logo.png`,
                 `${channelInv}`
               )
               .setDescription(

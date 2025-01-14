@@ -387,8 +387,8 @@ module.exports = async (client) => {
   });
 
   // Index endpoint.
-  app.get("/", (req, res) => {
-    renderTemplate(res, req, "index.ejs", { botName: config.botName });
+  app.get("/", async (req, res) => {
+    renderTemplate(res, req, "index.ejs", { botName: config.botName })
   });
 
   app.get("/apply", checkAuth, (req, res) => {
@@ -694,6 +694,7 @@ module.exports = async (client) => {
     renderTemplate(res, req, "dashboard.ejs", {
       perms: Discord.Permissions,
       userExists: user ? true : false,
+      botName: config.botName,
     });
   });
 
@@ -862,7 +863,7 @@ module.exports = async (client) => {
 
     renderTemplate(res, req, "./new/mainpage.ejs", {
       guild: guild,
-      alert: `Dashboard was made by ${process.env.AUTH_DOMAIN}/`,
+      alert: `Dashboard and bot hosted by Miri (https://www.oncemiri.net)`,
       join1: join1.length || 0,
       join2: join2.length || 0,
       leave1: leave1.length || 0,
@@ -3556,11 +3557,11 @@ send
   });
 
   app.get("/contact", async (req, res) => {
-    renderTemplate(res, req, "contact.ejs");
+    renderTemplate(res, req, "contact.ejs", { botName: config.botName });
   });
 
   app.get("/report", async (req, res) => {
-    renderTemplate(res, req, "report.ejs");
+    renderTemplate(res, req, "report.ejs", { botName: config.botName });
   });
 
   app.post("/report", async (req) => {
@@ -3973,7 +3974,7 @@ In the mean time, please explain your issue below`;
           }
 
           if (storedSettings.isPremium == "false") {
-            ticketSettings.ticketFooter = "Powered by Pogy.xyz";
+            ticketSettings.ticketFooter = "Powered by mee8.net";
           } else {
             let checkFooter2 = req.body["reactionfooterEmbed"];
             if (checkFooter2) {
@@ -3994,9 +3995,9 @@ In the mean time, please explain your issue below`;
           }
 
           let checkFooter = req.body["reactionfooterEmbed"];
-          let reactionFooter = "Powered by Pogy.xyz";
+          let reactionFooter = "Powered by mee8.net";
 
-          let footer = "Powered by Pogy.xyz";
+          let footer = "Powered by mee8.net";
           // eslint-disable-next-line no-unused-vars
           if (storedSettings.isPremium == "true") footer = reactionFooter;
 
@@ -4006,7 +4007,7 @@ In the mean time, please explain your issue below`;
             .setDescription(reactionDescription);
 
           if (storedSettings.isPremium == "false") {
-            ticketEmbed.setFooter({ text: `Powered by Pogy.xyz` });
+            ticketEmbed.setFooter({ text: `Powered by mee8.net` });
           } else {
             if (checkFooter) {
               ticketEmbed.setFooter(data.reactionmbedFooter);
@@ -4839,7 +4840,7 @@ In the mean time, please explain your issue below`;
       .setColor("#7289DA")
       .setTitle(`${apiUser.username} Just Voted`)
       .setDescription(
-        `Thank you **${apiUser.username}#${apiUser.discriminator}** (${apiUser.id}) for voting **Pogy**!`
+        `Thank you **${apiUser.username}#${apiUser.discriminator}** (${apiUser.id}) for voting **MEE8**!`
       );
     Hook.sendCustom(msg);
 
@@ -4864,7 +4865,7 @@ In the mean time, please explain your issue below`;
             .setDescription(
               `Thank you **${apiUser.username}#${apiUser.discriminator}** (${
                 apiUser.id
-              }) for voting **Pogy**! \n\nVote #${voteNumber + 1}`
+              }) for voting **MEE8**! \n\nVote #${voteNumber + 1}`
             ),
         ],
       });

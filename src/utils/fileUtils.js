@@ -11,7 +11,6 @@ function getRoleForLevel(level, guildId, userId, userData) {
 
   const userLevel = userData.guilds[guildId].users[userId].level;
 
-  // Find the role ID for the current user's level
   const roleForLevel = levelUpRoles.find((role) => role.level === userLevel);
 
   return roleForLevel?.roleId || null;

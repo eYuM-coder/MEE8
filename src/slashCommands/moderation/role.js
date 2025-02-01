@@ -97,8 +97,7 @@ module.exports = {
   async execute(interaction) {
     try {
       if (
-        !interaction.member.permissions.has("MANAGE_ROLES") &&
-        !interaction.client.config.owner.includes(interaction.member.id)
+        !interaction.member.permissions.has("MANAGE_ROLES")
       ) {
         return interaction.reply({
           content: `You do not have permission to use this command.`,
@@ -119,7 +118,16 @@ module.exports = {
               rl.name.toLowerCase() === role.slice(1).join(" ").toLowerCase()
           );
         const removerole = interaction.options.getBoolean("remove") || false;
-        const inrole = interaction.options.getRole("inrole") || interaction.guild.roles.cache.get("@everyone");
+        let inrole = interaction.options.getRole("inrole");
+        let inroleoptionspecified;
+        let inroleoptionnotspecified;
+        if (inrole) {
+          inroleoptionspecified = true;
+          inroleoptionnotspecified = false;
+        } else {
+          inroleoptionspecified = false;
+          inroleoptionnotspecified = true;
+        }
 
         let reason = `The current feature doesn't need a reason.`;
         if (!reason) {
@@ -144,10 +152,10 @@ module.exports = {
           let members;
           if (removerole === false) {
             members = interaction.guild.members.cache.filter(
-              (member) => !member.roles.cache.has(role.id) && member.roles.cache.has(inrole.id)
+              (member) => !member.roles.cache.has(role.id) && ((inroleoptionspecified || inroleoptionnotspecified) && member.roles.cache.has(inrole.id))
             );
             let memberstoaddroleto = members.size;
-            interaction
+            await interaction
               .reply({
                 embeds: [
                   new MessageEmbed()
@@ -185,7 +193,7 @@ module.exports = {
               });
           } else {
             members = interaction.guild.members.cache.filter((member) =>
-              member.roles.cache.has(role.id) && member.roles.cache.has(inrole.id)
+              member.roles.cache.has(role.id) && ((inroleoptionspecified || inroleoptionnotspecified) && member.roles.cache.has(inrole.id)) 
             );
             let memberstoaddroleto = members.size;
             interaction
@@ -352,7 +360,16 @@ module.exports = {
               rl.name.toLowerCase() === role.slice(1).join(" ").toLowerCase()
           );
         const removerole = interaction.options.getBoolean("remove") || false;
-        const inrole = interaction.options.getRole("inrole") || interaction.guild.roles.cache.get("@everyone");
+        const inrole = interaction.options.getRole("inrole");
+        let inroleoptionspecified;
+        let inroleoptionnotspecified;
+        if (inrole) {
+          inroleoptionspecified = true;
+          inroleoptionnotspecified = false;
+        } else {
+          inroleoptionspecified = false;
+          inroleoptionnotspecified = true;
+        }
 
         let reason = `The current feature doesn't need a reason.`;
         if (!reason) {
@@ -379,7 +396,7 @@ module.exports = {
           let members;
           if (removerole === false) {
             members = interaction.guild.members.cache.filter(
-              (member) => !member.user.bot && !member.roles.cache.has(role.id) && member.roles.cache.has(inrole.id)
+              (member) => !member.user.bot && !member.roles.cache.has(role.id) && ((inroleoptionspecified || inroleoptionnotspecified) && member.roles.cache.has(inrole.id))
             );
             interaction
               .reply({
@@ -419,7 +436,7 @@ module.exports = {
               });
           } else {
             members = interaction.guild.members.cache.filter(
-              (member) => !member.user.bot && member.roles.cache.has(role.id) && member.roles.cache.has(inrole.id)
+              (member) => !member.user.bot && member.roles.cache.has(role.id) && ((inroleoptionspecified || inroleoptionnotspecified) && member.roles.cache.has(inrole.id))
             );
             interaction
               .reply({

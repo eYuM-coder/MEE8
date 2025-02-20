@@ -23,10 +23,10 @@ module.exports = class extends Command {
     });
 
     const no = new MessageEmbed()
-      .setAuthor(
-        `#${channel.name} | ${message.guild.name}`,
-        message.guild.iconURL()
-      )
+      .setAuthor({
+        name: `#${channel.name} | ${message.guild.name}`,
+        iconURL: message.guild.iconURL(),
+      })
       .setFooter({ text: message.guild.name })
       .setTimestamp()
       .setColor(message.guild.me.displayHexColor)
@@ -48,10 +48,10 @@ module.exports = class extends Command {
     const data = [];
 
     const embed = new MessageEmbed()
-      .setAuthor(
-        `#${channel.name} | ${message.guild.name}`,
-        message.guild.iconURL()
-      )
+      .setAuthor({
+        name: `#${channel.name} | ${message.guild.name}`,
+        iconURL: message.guild.iconURL(),
+      })
       .setFooter({ text: message.guild.name })
       .setTimestamp()
       .setColor(message.guild.me.displayHexColor);
@@ -59,14 +59,14 @@ module.exports = class extends Command {
     for (let i = 0; snipe.oldmessage.length > i; i++) {
       data.push(`**${i + 1}**`);
 
-      embed.addField(
-        `Message #${i + 1}`,
-        `**User:** ${
+      embed.addFields({
+        name: `Message #${i + 1}`,
+        value: `**User:** ${
           (await message.client.users.fetch(snipe.id[i])) || "Unknown"
         }\n**Message:** ${snipe.oldmessage[i] || "None"} ➜ ${
           snipe.newmessage[i]
-        }\n[Jump To Message](${snipe.url[i]})\n`
-      );
+        }\n[Jump To Message](${snipe.url[i]})\n`,
+      });
     }
 
     if (data.length < 1) return message.channel.sendCustom(no);

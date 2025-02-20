@@ -7,7 +7,7 @@ module.exports = class extends Command {
   constructor(...args) {
     super(...args, {
       name: "vote",
-      description: "Pogys vote pages",
+      description: "MEE8s vote pages",
       category: "Utility",
       cooldown: 5,
     });
@@ -45,10 +45,10 @@ module.exports = class extends Command {
                 : "[`Available Now!`](https://top.gg/bot/767705905235099658/vote)"
             }\n\n__**Rewards:**__\n`
           )
-          .setAuthor(
-            message.author.tag,
-            message.author.displayAvatarURL({ dynamic: true })
-          )
+          .setAuthor({
+            name: message.author.tag,
+            iconURL: message.author.displayAvatarURL({ dynamic: true }),
+          })
           .setColor(message.guild.me.displayHexColor)
           .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
           .setTimestamp(),

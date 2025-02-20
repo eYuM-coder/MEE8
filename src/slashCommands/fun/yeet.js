@@ -11,7 +11,10 @@ module.exports = {
       const logging = await Logging.findOne({ guildId: interaction.guild.id });
 
       if (!interaction.member.permissions.has("BAN_MEMBERS")) {
-        return interaction.reply({ content: "You do not have permission to use this command.", ephemeral: true });
+        return interaction.reply({
+          content: "You do not have permission to use this command.",
+          ephemeral: true,
+        });
       }
 
       const members = interaction.guild.members.cache.size;
@@ -57,14 +60,18 @@ module.exports = {
           if (secondInput.toLowerCase() === "yes") {
             const embed = new MessageEmbed()
               .setDescription(
-                `Banning ${members} ${members === 1 ? "member" : "members"}... (0%)`,
+                `Banning ${members} ${
+                  members === 1 ? "member" : "members"
+                }... (0%)`
               )
               .setColor("#FF0000");
             message = await interaction.channel.send({ embeds: [embed] });
             setTimeout(async () => {
               embed
                 .setDescription(
-                  `Banning ${members} ${members === 1 ? "member" : "members"}... (28%)`,
+                  `Banning ${members} ${
+                    members === 1 ? "member" : "members"
+                  }... (28%)`
                 )
                 .setColor("#FF0000");
               await message.edit({ embeds: [embed] });
@@ -73,7 +80,9 @@ module.exports = {
             setTimeout(async () => {
               embed
                 .setDescription(
-                  `Banning ${members} ${members === 1 ? "member" : "members"}... (59%)`,
+                  `Banning ${members} ${
+                    members === 1 ? "member" : "members"
+                  }... (59%)`
                 )
                 .setColor("#FF0000");
               await message.edit({ embeds: [embed] });
@@ -81,7 +90,9 @@ module.exports = {
             setTimeout(async () => {
               embed
                 .setDescription(
-                  `Banning ${members} ${members === 1 ? "member" : "members"}... (82%)`,
+                  `Banning ${members} ${
+                    members === 1 ? "member" : "members"
+                  }... (82%)`
                 )
                 .setColor("#FF0000");
               await message.edit({ embeds: [embed] });
@@ -89,7 +100,9 @@ module.exports = {
             setTimeout(async () => {
               embed
                 .setDescription(
-                  `Banning ${members} ${members === 1 ? "member" : "members"}... (99%)`,
+                  `Banning ${members} ${
+                    members === 1 ? "member" : "members"
+                  }... (99%)`
                 )
                 .setColor("#FF0000");
               await message.edit({ embeds: [embed] });

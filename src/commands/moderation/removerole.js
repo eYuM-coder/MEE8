@@ -33,10 +33,10 @@ module.exports = class extends Command {
       return message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-            .setAuthor(
-              `${message.author.tag}`,
-              message.author.displayAvatarURL({ dynamic: true })
-            )
+            .setAuthor({
+              name: `${message.author.tag}`,
+              iconURL: message.author.displayAvatarURL({ dynamic: true }),
+            })
             .setTitle(`${fail} Remove Role Error`)
             .setDescription("Please provide a valid role")
             .setTimestamp()
@@ -60,10 +60,10 @@ module.exports = class extends Command {
       return message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-            .setAuthor(
-              `${message.author.tag}`,
-              message.author.displayAvatarURL({ dynamic: true })
-            )
+            .setAuthor({
+              name: `${message.author.tag}`,
+              iconURL: message.author.displayAvatarURL({ dynamic: true }),
+            })
             .setTitle(`${fail} Remove Role Error`)
             .setDescription("Please provide a valid role")
             .setTimestamp()
@@ -75,10 +75,10 @@ module.exports = class extends Command {
       return message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-            .setAuthor(
-              `${message.author.tag}`,
-              message.author.displayAvatarURL({ dynamic: true })
-            )
+            .setAuthor({
+              name: `${message.author.tag}`,
+              iconURL: message.author.displayAvatarURL({ dynamic: true }),
+            })
             .setTitle(`${fail} Remove Role Error`)
             .setDescription(`The provided user does not have the role.`)
             .setTimestamp()
@@ -138,19 +138,30 @@ module.exports = class extends Command {
                     if (!logcase) logcase = `1`;
 
                     const logEmbed = new MessageEmbed()
-                      .setAuthor(
-                        `Action: \`Remove Role\` | ${member.user.tag} | Case #${logcase}`,
-                        member.user.displayAvatarURL({ format: "png" })
+                      .setAuthor({
+                        name: `Action: \`Remove Role\` | ${member.user.tag} | Case #${logcase}`,
+                        iconURL: member.user.displayAvatarURL({
+                          format: "png",
+                        }),
+                      })
+                      .addFields(
+                        { name: "User", value: `${member}`, inline: true },
+                        {
+                          name: "Moderator",
+                          value: `${message.member}`,
+                          inline: true,
+                        }
                       )
-                      .addField("User", `${member}`, true)
-                      .addField("Moderator", `${message.member}`, true)
                       .setFooter({ text: `ID: ${member.id}` })
                       .setTimestamp()
                       .setColor(color);
 
-                      send(channel, { username: `${this.client.user.username}`, embeds: [logEmbed] }).catch((e) => {
-                        console.log(e);
-                      });
+                    send(channel, {
+                      username: `${this.client.user.username}`,
+                      embeds: [logEmbed],
+                    }).catch((e) => {
+                      console.log(e);
+                    });
 
                     logging.moderation.caseN = logcase + 1;
                     await logging.save().catch(() => {});
@@ -164,10 +175,10 @@ module.exports = class extends Command {
         message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-              .setAuthor(
-                `${message.author.tag}`,
-                message.author.displayAvatarURL({ dynamic: true })
-              )
+              .setAuthor({
+                name: `${message.author.tag}`,
+                iconURL: message.author.displayAvatarURL({ dynamic: true }),
+              })
               .setTitle(`${fail} Remove Role Error`)
               .setDescription(
                 `Unable to remove the User's Role, please check the role hiarchy and make sure My role is above the provided user.`

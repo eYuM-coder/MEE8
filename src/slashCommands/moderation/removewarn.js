@@ -10,10 +10,10 @@ module.exports = {
     .setName("removewarn")
     .setDescription("Removes a warning from a user")
     .addUserOption((option) =>
-      option.setName("member").setDescription("The member").setRequired(true),
+      option.setName("member").setDescription("The member").setRequired(true)
     )
     .addStringOption((option) =>
-      option.setName("warning").setDescription("The warn ID").setRequired(true),
+      option.setName("warning").setDescription("The warn ID").setRequired(true)
     )
     .setContexts(0)
     .setIntegrationTypes(0),
@@ -51,11 +51,11 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => { });
+                interaction.deleteReply().catch(() => {});
               }, 5000);
             }
           })
-          .catch(() => { });
+          .catch(() => {});
       }
 
       const warnDoc = await warnModel
@@ -72,7 +72,7 @@ module.exports = {
             iconURL: interaction.member.displayAvatarURL({ dynamic: true }),
           })
           .setDescription(
-            `${client.emoji.fail} | No warnings found for ${mentionedMember}`,
+            `${client.emoji.fail} | No warnings found for ${mentionedMember}`
           )
           .setTimestamp()
           .setColor(client.color.red);
@@ -81,11 +81,11 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => { });
+                interaction.deleteReply().catch(() => {});
               }, 5000);
             }
           })
-          .catch(() => { });
+          .catch(() => {});
       }
 
       if (!warnID) {
@@ -102,11 +102,11 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => { });
+                interaction.deleteReply().catch(() => {});
               }, 5000);
             }
           })
-          .catch(() => { });
+          .catch(() => {});
       }
 
       let check = warnDoc.warningID.filter((word) => warnID === word);
@@ -125,11 +125,11 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => { });
+                interaction.deleteReply().catch(() => {});
               }, 5000);
             }
           })
-          .catch(() => { });
+          .catch(() => {});
       }
 
       if (!check) {
@@ -146,11 +146,11 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => { });
+                interaction.deleteReply().catch(() => {});
               }, 5000);
             }
           })
-          .catch(() => { });
+          .catch(() => {});
       }
 
       let toReset = warnDoc.warningID.length;
@@ -167,7 +167,7 @@ module.exports = {
 
       const removeembed = new MessageEmbed()
         .setDescription(
-          `${interaction.client.emoji.success} | Cleared warning **#${warnID}** from **${mentionedMember.user.tag}**`,
+          `${interaction.client.emoji.success} | Cleared warning **#${warnID}** from **${mentionedMember.user.tag}**`
         )
         .setColor(interaction.client.color.green);
       interaction
@@ -175,11 +175,11 @@ module.exports = {
         .then(async () => {
           if (logging && logging.moderation.delete_reply === "true") {
             setTimeout(() => {
-              interaction.deleteReply().catch(() => { });
+              interaction.deleteReply().catch(() => {});
             }, 5000);
           }
         })
-        .catch(() => { });
+        .catch(() => {});
     } catch (err) {
       console.error(err);
       interaction.reply({

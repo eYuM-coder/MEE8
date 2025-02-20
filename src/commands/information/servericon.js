@@ -13,11 +13,11 @@ module.exports = class extends Command {
 
   async run(message) {
     const embed = new MessageEmbed()
-      .setAuthor(
-        `${message.guild.name}'s Server Icon`,
-        " ",
-        message.guild.iconURL({ dynamic: true, size: 512 })
-      )
+      .setAuthor({
+        name: `${message.guild.name}'s Server Icon`,
+        iconURL: " ",
+        url: message.guild.iconURL({ dynamic: true, size: 512 }),
+      })
       .setImage(message.guild.iconURL({ dynamic: true, size: 512 }))
       .setFooter({
         text: message.author.tag,

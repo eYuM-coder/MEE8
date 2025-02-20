@@ -29,10 +29,10 @@ module.exports = class extends Event {
 
           if (logging.message_events.deleted == "true") {
             const embed = new MessageEmbed()
-              .setAuthor(
-                `Messages Cleared`,
-                message.guild.iconURL({ dynamic: true })
-              )
+              .setAuthor({
+                name: `Messages Cleared`,
+                iconURL: message.guild.iconURL({ dynamic: true }),
+              })
               .setTimestamp()
               .setDescription(
                 `**${messages.size} messages** in ${message.channel} were deleted.`
@@ -47,7 +47,10 @@ module.exports = class extends Event {
                 .permissionsFor(message.guild.me)
                 .has(["SEND_MESSAGES", "EMBED_LINKS"])
             ) {
-              send(channelEmbed, { username: `${this.client.user.username}`, embeds: [embed] }).catch(() => {});
+              send(channelEmbed, {
+                username: `${this.client.user.username}`,
+                embeds: [embed],
+              }).catch(() => {});
             }
           }
         }

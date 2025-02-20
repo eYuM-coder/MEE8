@@ -21,14 +21,16 @@ module.exports = {
     const language = require(`../../data/language/${guildDB.language}.json`);
     let uptime = interaction.client.uptime;
     if (uptime instanceof Array) {
-      uptime = uptime.reduce((max, cur) => Math.max(max, cur), - Infinity);
+      uptime = uptime.reduce((max, cur) => Math.max(max, cur), -Infinity);
     }
     let formattedUptime = await usePrettyMs(uptime);
     // const date = moment().subtract(days, 'ms').format('dddd, MMMM Do YYYY');
     const embed = new MessageEmbed()
-      .setDescription(`${config.botName} ${language.uptime1} \`${formattedUptime}\`.`)
+      .setDescription(
+        `${config.botName} ${language.uptime1} \`${formattedUptime}\`.`
+      )
       .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
       .setColor(interaction.guild.me.displayHexColor);
     interaction.reply({ embeds: [embed] });
-  }
+  },
 };

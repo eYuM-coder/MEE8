@@ -35,10 +35,10 @@ module.exports = class extends Command {
       return message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-            .setAuthor(
-              `${message.author.tag}`,
-              message.author.displayAvatarURL({ dynamic: true })
-            )
+            .setAuthor({
+              name: `${message.author.tag}`,
+              iconURL: message.author.displayAvatarURL({ dynamic: true }),
+            })
             .setTitle(`${fail} Set Nickname Error`)
             .setDescription("Please provide a valid user mention / user ID")
             .setTimestamp()
@@ -51,10 +51,10 @@ module.exports = class extends Command {
       return message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-            .setAuthor(
-              `${message.author.tag}`,
-              message.author.displayAvatarURL({ dynamic: true })
-            )
+            .setAuthor({
+              name: `${message.author.tag}`,
+              iconURL: message.author.displayAvatarURL({ dynamic: true }),
+            })
             .setTitle(`${fail} Set Nickname Error`)
             .setDescription("Please provide a new Nickname")
             .setTimestamp()
@@ -70,10 +70,10 @@ module.exports = class extends Command {
         return message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-              .setAuthor(
-                `${message.author.tag}`,
-                message.author.displayAvatarURL({ dynamic: true })
-              )
+              .setAuthor({
+                name: `${message.author.tag}`,
+                iconURL: message.author.displayAvatarURL({ dynamic: true }),
+              })
               .setTitle(`${fail} Set Nickname Error`)
               .setDescription(
                 `Make sure the nickname is surrounded in Quotes, **"text"**`
@@ -88,10 +88,10 @@ module.exports = class extends Command {
         return message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-              .setAuthor(
-                `${message.author.tag}`,
-                message.author.displayAvatarURL({ dynamic: true })
-              )
+              .setAuthor({
+                name: `${message.author.tag}`,
+                iconURL: message.author.displayAvatarURL({ dynamic: true }),
+              })
               .setTitle(`${fail} Set Nickname Error`)
               .setDescription("Provide a Nickname")
               .setTimestamp()
@@ -105,10 +105,10 @@ module.exports = class extends Command {
       return message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-            .setAuthor(
-              `${message.author.tag}`,
-              message.author.displayAvatarURL({ dynamic: true })
-            )
+            .setAuthor({
+              name: `${message.author.tag}`,
+              iconURL: message.author.displayAvatarURL({ dynamic: true }),
+            })
             .setTitle(`${fail} Set Nickname Error`)
             .setDescription("Make sure that nickname is below 32 characters")
             .setTimestamp()
@@ -198,20 +198,31 @@ module.exports = class extends Command {
                       reason = reason.slice(0, 1021) + "...";
 
                     const logEmbed = new MessageEmbed()
-                      .setAuthor(
-                        `Action: \`set Nickname\` | ${member.user.tag} | Case #${logcase}`,
-                        member.user.displayAvatarURL({ format: "png" })
+                      .setAuthor({
+                        name: `Action: \`set Nickname\` | ${member.user.tag} | Case #${logcase}`,
+                        iconURL: member.user.displayAvatarURL({
+                          format: "png",
+                        }),
+                      })
+                      .addFields(
+                        { name: "User", value: `${member}`, inline: true },
+                        {
+                          name: "Moderator",
+                          value: `${message.member}`,
+                          inline: true,
+                        },
+                        { name: "Reason", value: `${reason}`, inline: true }
                       )
-                      .addField("User", `${member}`, true)
-                      .addField("Moderator", `${message.member}`, true)
-                      .addField("Reason", `${reason}`, true)
                       .setFooter({ text: `ID: ${member.id}` })
                       .setTimestamp()
                       .setColor(color);
 
-                      send(channel, { username: `${this.client.user.username}`, embeds: [logEmbed] }).catch((e) => {
-                        console.log(e);
-                      });
+                    send(channel, {
+                      username: `${this.client.user.username}`,
+                      embeds: [logEmbed],
+                    }).catch((e) => {
+                      console.log(e);
+                    });
 
                     logging.moderation.caseN = logcase + 1;
                     await logging.save().catch(() => {});
@@ -226,10 +237,10 @@ module.exports = class extends Command {
         message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-              .setAuthor(
-                `${message.author.tag}`,
-                message.author.displayAvatarURL({ dynamic: true })
-              )
+              .setAuthor({
+                name: `${message.author.tag}`,
+                iconURL: message.author.displayAvatarURL({ dynamic: true }),
+              })
               .setTitle(`${fail} Set Nickname Error`)
               .setDescription(
                 `Please ensure my role is above the provided user's role.`

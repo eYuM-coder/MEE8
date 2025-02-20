@@ -21,17 +21,25 @@ module.exports = {
         });
 
         await newDmSystem.save();
-        const embed = new MessageEmbed()
-          .setDescription(`DM System profile created.`);
-        return interaction.reply({ embeds: [embed] })
+        const embed = new MessageEmbed().setDescription(
+          `DM System profile created.`
+        );
+        return interaction
+          .reply({ embeds: [embed] })
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => { interaction.channel.send({ content: "Error deleting message." }) });
-              }, 5000)
+                interaction.deleteReply().catch(() => {
+                  interaction.channel.send({
+                    content: "Error deleting message.",
+                  });
+                });
+              }, 5000);
             }
           })
-          .catch(() => { interaction.channel.send({ content: "Error deleting message." }) });
+          .catch(() => {
+            interaction.channel.send({ content: "Error deleting message." });
+          });
       } else {
         await dmSystem.updateOne(
           {
@@ -39,21 +47,32 @@ module.exports = {
           },
           { $set: { optedout: "true" } }
         );
-        const dmoptout = new MessageEmbed()
-          .setDescription(`You have opted out of the DM system. To begin recieving DMs again, use /dmoptin.`);
-        return interaction.reply({ embeds: [dmoptout] })
+        const dmoptout = new MessageEmbed().setDescription(
+          `You have opted out of the DM system. To begin recieving DMs again, use /dmoptin.`
+        );
+        return interaction
+          .reply({ embeds: [dmoptout] })
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => { interaction.channel.send({ content: "Error deleting message." }) });
-              }, 5000)
+                interaction.deleteReply().catch(() => {
+                  interaction.channel.send({
+                    content: "Error deleting message.",
+                  });
+                });
+              }, 5000);
             }
           })
-          .catch(() => { interaction.channel.send({ content: "Error deleting message." }) });
+          .catch(() => {
+            interaction.channel.send({ content: "Error deleting message." });
+          });
       }
     } catch (err) {
-      interaction.reply({ content: `This command cannot be used in Direct Messages.`, ephemeral: true });
+      interaction.reply({
+        content: `This command cannot be used in Direct Messages.`,
+        ephemeral: true,
+      });
       console.error(err);
     }
-  }
+  },
 };

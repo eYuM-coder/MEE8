@@ -68,7 +68,7 @@ module.exports = class extends Command {
                           ) {
                             let remindEmbed = new Discord.MessageEmbed()
                               .setColor("0x43f033")
-                              .setAuthor(`${language.remind6}`)
+                              .setAuthor({ name: `${language.remind6}` })
                               .setDescription(
                                 `${language.remind7
                                   .replace("${reminder}", `${reminder}`)
@@ -87,23 +87,29 @@ module.exports = class extends Command {
                               let remindEmbed = new Discord.MessageEmbed()
                                 .setColor("#00e9ff")
 
-                                .setAuthor(`${language.remind8}`)
+                                .setAuthor({ name: `${language.remind8}` })
                                 .setDescription(`${language.remind9}`)
-                                .addField(`${language.remind10}`, `${guild.name}`, true)
-                                .addField(
-                                  `${language.remind11}`,
-                                  `${reminderTime}`,
-                                  true
-                                )
-                                .addField(
-                                  `${language.remind12}`,
-                                  `"${reminder}"`,
-                                  true
+                                .addFields(
+                                  {
+                                    name: `${language.remind10}`,
+                                    value: `${guild.name}`,
+                                    inline: true,
+                                  },
+                                  {
+                                    name: `${language.remind11}`,
+                                    value: `${reminderTime}`,
+                                    inline: true,
+                                  },
+                                  {
+                                    name: `${language.remind12}`,
+                                    value: `"${reminder}"`,
+                                    inline: true,
+                                  }
                                 )
                                 .setTimestamp();
                               reminderstarted.delete(message.author.id);
                               message.author
-                                .send({embeds: [remindEmbed]})
+                                .send({ embeds: [remindEmbed] })
                                 .catch(() => {
                                   message.channel.sendCustom(
                                     `${message.author}, ${language.remind13}`

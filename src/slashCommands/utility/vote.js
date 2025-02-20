@@ -5,21 +5,21 @@ const ms = require("ms");
 
 module.exports = {
   data: new SlashCommandBuilder()
-  .setName("vote")
-  .setDescription("Pogys vote page"),
+    .setName("vote")
+    .setDescription("MEE8s vote page"),
   async execute(interaction) {
     let user = await User.findOne({
-      discordId: interaction.user.id
+      discordId: interaction.user.id,
     });
 
     if (!user) {
       const newUser = new User({
-        discordId: interaction.user.id
+        discordId: interaction.user.id,
       });
 
       await newUser.save().catch(() => {});
       user = await User.findOne({
-        discordId: interaction.user.id
+        discordId: interaction.user.id,
       });
     }
 
@@ -30,15 +30,23 @@ module.exports = {
     await interaction.reply({
       embeds: [
         new MessageEmbed()
-.setDescription(`__**discordbotlist.com**__\n${checkDBLVote ? `\`In ${ms(user.lastVoted - Date.now() + DBL_INTERVAL, { long: true })}\`` : "[`Available Now!`](https://discordbotlist.com/bots/Pogy-3175)"}\n\n__**Rewards:**__\n`)
-        .setAuthor({
-          name: `${interaction.user.tag}`,
-          iconURL: interaction.user.displayAvatarURL({ dynamic: true })
-        })
-        .setColor(interaction.guild.me.displayHexColor)
-        .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-        .setTimestamp(),
+          .setDescription(
+            `__**discordbotlist.com**__\n${
+              checkDBLVote
+                ? `\`In ${ms(user.lastVoted - Date.now() + DBL_INTERVAL, {
+                    long: true,
+                  })}\``
+                : "[`Available Now!`](https://discordbotlist.com/bots/MEE8-3175)"
+            }\n\n__**Rewards:**__\n`
+          )
+          .setAuthor({
+            name: `${interaction.user.tag}`,
+            iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
+          })
+          .setColor(interaction.guild.me.displayHexColor)
+          .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
+          .setTimestamp(),
       ],
     });
-  }
+  },
 };

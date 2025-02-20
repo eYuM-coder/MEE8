@@ -8,7 +8,7 @@ module.exports = class extends Command {
     super(...args, {
       name: "invite",
       aliases: ["inv"],
-      description: "Sends you Pogy's invite link",
+      description: "Sends you MEE8's invite link",
       category: "Utility",
       cooldown: 3,
     });
@@ -23,24 +23,24 @@ module.exports = class extends Command {
 
     const embed = new MessageEmbed()
       .setColor(message.guild.me.displayHexColor)
-      .setTitle("Invite Pogy")
+      .setTitle("Invite MEE8")
       .setURL(`${process.env.AUTH_DOMAIN}/invite`)
       .setThumbnail(message.client.user.displayAvatarURL())
       .setDescription(language.invite)
-      .setFooter(
-        message.client.user.username,
-        message.client.user.displayAvatarURL(),
-      );
+      .setFooter({
+        text: message.client.user.username,
+        iconURL: message.client.user.displayAvatarURL(),
+      });
     const row = new MessageActionRow().addComponents(
       new MessageButton()
-        .setLabel("Invite Pogy")
+        .setLabel("Invite MEE8")
         .setStyle("LINK")
         .setURL(`${process.env.AUTH_DOMAIN}/invite`),
 
       new MessageButton()
         .setCustomId("support")
         .setLabel("More info")
-        .setStyle("SECONDARY"), // can be "PRIMARY", "SECONDARY", "SUCCESS", "DANGER", "LINK", "INFO"
+        .setStyle("SECONDARY") // can be "PRIMARY", "SECONDARY", "SUCCESS", "DANGER", "LINK", "INFO"
     );
 
     await message.channel.send({ embeds: [embed], components: [row] });

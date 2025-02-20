@@ -1,5 +1,10 @@
 const Command = require("../../structures/Command");
-const { MessageEmbed, MessageActionRow, MessageButton, MessageAttachment } = require("discord.js");
+const {
+  MessageEmbed,
+  MessageActionRow,
+  MessageButton,
+  MessageAttachment,
+} = require("discord.js");
 const Guild = require("../../database/schemas/Guild");
 const fs = require("fs");
 const path = require("path");
@@ -32,7 +37,7 @@ module.exports = class extends Command {
     const language = require(`../../data/language/${guildDB.language}.json`);
 
     const embed = new MessageEmbed()
-      .setAuthor(message.guild.name, message.guild.iconURL())
+      .setAuthor({ name: message.guild.name, iconURL: message.guild.iconURL() })
       .addField(`${language.nameS}`, `${message.guild.name}`, true)
       .addField("ID", `${message.guild.id}`, true)
       .addField(
@@ -49,8 +54,16 @@ module.exports = class extends Command {
         message.guild.verificationLevel,
         true
       )
-      .addField(`${language.channels}`, `${message.guild.channels.cache.size}`, true)
-      .addField(`${language.roleCount}`, `${message.guild.roles.cache.size}`, true)
+      .addField(
+        `${language.channels}`,
+        `${message.guild.channels.cache.size}`,
+        true
+      )
+      .addField(
+        `${language.roleCount}`,
+        `${message.guild.roles.cache.size}`,
+        true
+      )
       .addField(
         `Created at`,
         `${message.channel.guild.createdAt
@@ -61,25 +74,29 @@ module.exports = class extends Command {
       .setThumbnail(message.guild.iconURL())
       .setColor(message.guild.me.displayHexColor);
 
-    const row = new MessageActionRow()
-      .addComponents(
-        new MessageButton()
-          .setCustomId('showServerImage')
-          .setLabel('Export to HTML')
-          .setStyle('SUCCESS')
-          .setEmoji(`${emojis.utility}`)
-      );
+    const row = new MessageActionRow().addComponents(
+      new MessageButton()
+        .setCustomId("showServerImage")
+        .setLabel("Export to HTML")
+        .setStyle("SUCCESS")
+        .setEmoji(`${emojis.utility}`)
+    );
 
     const sentMessage = await message.channel.sendCustom({ embeds: [embed] });
 
-    const filter = i => i.customId === 'showServerImage' && i.user.id === message.author.id;
+    const filter = (i) =>
+      i.customId === "showServerImage" && i.user.id === message.author.id;
 
-    const emojisList = message.guild.emojis.cache.map(emoji => `<li>${emoji.name}: <img src="${emoji.url}" /></li>`).join('');
+    const emojisList = message.guild.emojis.cache
+      .map((emoji) => `<li>${emoji.name}: <img src="${emoji.url}" /></li>`)
+      .join("");
 
-    const collector = sentMessage.createMessageComponentCollector({ filter, time: 15000 });
+    const collector = sentMessage.createMessageComponentCollector({
+      filter,
+      time: 15000,
+    });
 
-    collector.on('collect', async i => {
-
+    collector.on("collect", async (i) => {
       const htmlContent = `
         <!DOCTYPE html>
         <html lang="en">
@@ -113,44 +130,110 @@ module.exports = class extends Command {
             <ul>
               <li><strong>Server Name:</strong> ${message.guild.name}</li>
               <li><strong>ID:</strong> ${message.guild.id}</li>
-              <li><strong>Member Count:</strong> ${message.guild.members.cache.size}</li>
-              <li><strong>Bot Count:</strong>  ${message.guild.members.cache.filter((member) => member.user.bot).size}</li>
-              <li><strong>Text Channel Count:</strong> ${message.guild.channels.cache.filter((channel) => channel.type === 'text').size}</li>
-              <li><strong>Voice Channel Count:</strong> ${message.guild.channels.cache.filter((channel) => channel.type === 'voice').size}</li>
-              <li><strong>Role Count:</strong> ${message.guild.roles.cache.size}</li>
-              <li><strong>Created At:</strong> ${message.guild.createdAt.toUTCString().substr(0, 16)} (${checkDays(message.guild.createdAt)})</li>
+              <li><strong>Member Count:</strong> ${
+                message.guild.members.cache.size
+              }</li>
+              <li><strong>Bot Count:</strong>  ${
+                message.guild.members.cache.filter((member) => member.user.bot)
+                  .size
+              }</li>
+              <li><strong>Text Channel Count:</strong> ${
+                message.guild.channels.cache.filter(
+                  (channel) => channel.type === "text"
+                ).size
+              }</li>
+              <li><strong>Voice Channel Count:</strong> ${
+                message.guild.channels.cache.filter(
+                  (channel) => channel.type === "voice"
+                ).size
+              }</li>
+              <li><strong>Role Count:</strong> ${
+                message.guild.roles.cache.size
+              }</li>
+              <li><strong>Created At:</strong> ${message.guild.createdAt
+                .toUTCString()
+                .substr(0, 16)} (${checkDays(message.guild.createdAt)})</li>
               <li><strong>Region:</strong> ${message.guild.region}</li>
-              <li><strong>Verification Level:</strong> ${message.guild.verificationLevel}</li>
-              <li><strong>Boost Count:</strong> ${message.guild.premiumSubscriptionCount}</li>
+              <li><strong>Verification Level:</strong> ${
+                message.guild.verificationLevel
+              }</li>
+              <li><strong>Boost Count:</strong> ${
+                message.guild.premiumSubscriptionCount
+              }</li>
               <li><strong>Boost Tier:</strong> ${message.guild.premiumTier}</li>
-              <li><strong>Boosters:</strong> ${message.guild.premiumSubscriptionCount}</li>
-              <li><strong>Emojis:</strong> ${message.guild.emojis.cache.size}</li>
+              <li><strong>Boosters:</strong> ${
+                message.guild.premiumSubscriptionCount
+              }</li>
+              <li><strong>Emojis:</strong> ${
+                message.guild.emojis.cache.size
+              }</li>
               <li><strong>Roles:</strong> ${message.guild.roles.cache.size}</li>
-              <li><strong>Rules channel:</strong> ${message.guild.rulesChannelID? `<#${message.guild.rulesChannelID}>` : 'None'}</li>
-              <li><strong>Public updates channel:</strong> ${message.guild.publicUpdatesChannelID? `<#${message.guild.publicUpdates.channelID}>` : 'None'}</li>
-              <li><strong>System channel:</strong> ${message.guild.systemChannelID? `<#${message.guild.systemChannelID}>` : 'None'}</li>
-              <li><strong>AFK Channel:</strong> ${message.guild.afkChannelID? `<#${message.guild.afk.channelID}>` : 'None'}</li>
-              <li><strong>AFK Timeout:</strong> ${message.guild.afkTimeout} seconds</li>
+              <li><strong>Rules channel:</strong> ${
+                message.guild.rulesChannelID
+                  ? `<#${message.guild.rulesChannelID}>`
+                  : "None"
+              }</li>
+              <li><strong>Public updates channel:</strong> ${
+                message.guild.publicUpdatesChannelID
+                  ? `<#${message.guild.publicUpdates.channelID}>`
+                  : "None"
+              }</li>
+              <li><strong>System channel:</strong> ${
+                message.guild.systemChannelID
+                  ? `<#${message.guild.systemChannelID}>`
+                  : "None"
+              }</li>
+              <li><strong>AFK Channel:</strong> ${
+                message.guild.afkChannelID
+                  ? `<#${message.guild.afk.channelID}>`
+                  : "None"
+              }</li>
+              <li><strong>AFK Timeout:</strong> ${
+                message.guild.afkTimeout
+              } seconds</li>
               <li><strong>Owner:</strong> ${message.guild.owner}</li>
               <li><strong>Owner ID:</strong> ${message.guild.ownerID}</li>
               <li><strong>Icon:</strong> <img src="${message.guild.iconURL()}" /></li>
               <li><strong>Splash:</strong> <img src="${message.guild.splashURL()}" /></li>
               <li><strong>Banner:</strong> <img src="${message.guild.bannerURL()}" /></li>
-              <li><strong>Default Message Notification:</strong> ${message.guild.defaultMessageNotifications}</li>
-              <li><strong>Explicit Content Filter:</strong> ${message.guild.explicitContentFilter}</li>
+              <li><strong>Default Message Notification:</strong> ${
+                message.guild.defaultMessageNotifications
+              }</li>
+              <li><strong>Explicit Content Filter:</strong> ${
+                message.guild.explicitContentFilter
+              }</li>
               <li><strong>MFA Level:</strong> ${message.guild.mfaLevel}</li>
-              <li><strong>Widget Channel:</strong> ${message.guild.widgetChannelID? `<#${message.guild.widgetChannelID}>` : 'None'}</li>
-              <li><strong>Widget Enabled:</strong> ${message.guild.widgetEnabled? 'Yes' : 'No'}</li>
-              <li><strong>Widget Server:</strong> ${message.guild.widgetEnabled? message.guild.widget.server : 'None'}</li>
-              <li><strong>Widget Channel:</strong> ${message.guild.widgetEnabled? message.guild.widget.channel : 'None'}</li>
-              <li><strong>Widget Role:</strong> ${message.guild.widgetEnabled? message.guild.widget.role : 'None'}</li>
+              <li><strong>Widget Channel:</strong> ${
+                message.guild.widgetChannelID
+                  ? `<#${message.guild.widgetChannelID}>`
+                  : "None"
+              }</li>
+              <li><strong>Widget Enabled:</strong> ${
+                message.guild.widgetEnabled ? "Yes" : "No"
+              }</li>
+              <li><strong>Widget Server:</strong> ${
+                message.guild.widgetEnabled
+                  ? message.guild.widget.server
+                  : "None"
+              }</li>
+              <li><strong>Widget Channel:</strong> ${
+                message.guild.widgetEnabled
+                  ? message.guild.widget.channel
+                  : "None"
+              }</li>
+              <li><strong>Widget Role:</strong> ${
+                message.guild.widgetEnabled ? message.guild.widget.role : "None"
+              }</li>
 
             </ul>
           </body>
         </html>
       `;
 
-      const filePath = path.join(__dirname, `${message.guild.name}_server_stats.html`);
+      const filePath = path.join(
+        __dirname,
+        `${message.guild.name}_server_stats.html`
+      );
 
       fs.writeFileSync(filePath, htmlContent);
 
@@ -158,7 +241,10 @@ module.exports = class extends Command {
         return message.reply("Error: Server stats file not found.");
       }
 
-      const attachment = new MessageAttachment(filePath, `${message.guild.name}_server_stats.html`);
+      const attachment = new MessageAttachment(
+        filePath,
+        `${message.guild.name}_server_stats.html`
+      );
       await message.reply({ files: [attachment] });
 
       fs.unlinkSync(filePath);
@@ -166,7 +252,7 @@ module.exports = class extends Command {
       sentMessage.edit({ components: [] });
     });
 
-    collector.on('end', collected => {
+    collector.on("end", (collected) => {
       if (collected.size === 0) {
         sentMessage.edit({ components: [] });
       }

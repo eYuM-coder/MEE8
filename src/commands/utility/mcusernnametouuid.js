@@ -73,9 +73,9 @@ module.exports = class extends Command {
     } else if (view === "body") {
       embedTitle = `${username}'s Body View`;
       imageUrl = playerData.bodyUrl;
-      } else if (view === "Full") {
-        embedTitle = `${username}'s Full Skin`;
-        imageUrl = playerData.fullskinUrl;
+    } else if (view === "Full") {
+      embedTitle = `${username}'s Full Skin`;
+      imageUrl = playerData.fullskinUrl;
     } else if (view === "chest") {
       embedTitle = `${username}'s Chest View`;
       imageUrl = playerData.chestUrl;
@@ -85,7 +85,7 @@ module.exports = class extends Command {
       .setTitle(embedTitle)
       .setImage(imageUrl)
       .setColor("#00FF00")
-      .setFooter(`UUID: ${playerData.uuid}`);
+      .setFooter({ text: `UUID: ${playerData.uuid}` });
 
     await message.reply({ embeds: [embed] });
   }

@@ -9,7 +9,7 @@ module.exports = class extends Command {
     super(...args, {
       name: "stats",
       aliases: ["statinfo", "botinfo", "botstats"],
-      description: "Displays Pogys Statistics",
+      description: "Displays MEE8s Statistics",
       category: "Information",
       cooldown: 3,
     });
@@ -57,7 +57,7 @@ module.exports = class extends Command {
     const tech = stripIndent`
       Ping -- ${Math.round(message.client.ws.ping)}ms
       Uptime  -- ${uptime}
-      ${language.pogyVersion} -- 2.0
+      ${language.mee8Version} -- 2.0
       Library -- Discord.js v13.6.0
       Environment -- Node.js v16.9.1
       Servers -- ${message.client.guilds.cache.size}
@@ -66,30 +66,30 @@ module.exports = class extends Command {
       0
     )}
       ${language.channels} -- ${message.client.channels.cache.size}
-      ${language.pogyCommands} -- ${message.client.botCommands.size}
+      ${language.mee8Commands} -- ${message.client.botCommands.size}
       Aliases -- ${message.client.aliases.size}
     `;
     const devs = stripIndent`
      -------
-     ${language.pogyOwners}
+     ${language.mee8Owners}
     • Peter_#4444
     • Jano#6969
-     ${language.pogyDevelopers}
+     ${language.mee8Developers}
     • Peter_#4444
     • Jano#6969
     and
-    pogy.xyz/team
+    mee8.eyum.org/team
     -------
     `;
     const embed = new MessageEmbed()
-      .setAuthor(
-        message.member.displayName,
-        message.author.displayAvatarURL({ dynamic: true })
-      )
-      .setTitle(`${language.pogyInfo}`)
-      .addField(`${language.pogyGeneral}`, `\`\`\`css\n${tech}\`\`\``, true)
-      .addField(`${language.pogyTeam}`, `\`\`\`css\n${devs}\`\`\``, true)
-      .addField(`${language.pogyStats}`, `\`\`\`css\n${serverStats}\`\`\``)
+      .setAuthor({
+        name: message.member.displayName,
+        iconURL: message.author.displayAvatarURL({ dynamic: true }),
+      })
+      .setTitle(`${language.mee8Info}`)
+      .addField(`${language.mee8General}`, `\`\`\`css\n${tech}\`\`\``, true)
+      .addField(`${language.mee8Team}`, `\`\`\`css\n${devs}\`\`\``, true)
+      .addField(`${language.mee8Stats}`, `\`\`\`css\n${serverStats}\`\`\``)
       .setFooter({ text: `${process.env.AUTH_DOMAIN}/` })
       .setTimestamp()
       .setColor(message.guild.me.displayHexColor);

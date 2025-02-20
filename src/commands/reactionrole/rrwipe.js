@@ -37,7 +37,10 @@ module.exports = class extends Command {
     if (resultsHeheLol === "0" || !results || !results.length) {
       let wipeEmbed3 = new MessageEmbed()
         .setColor(message.client.color.green)
-        .setAuthor(message.author.tag, message.author.displayAvatarURL())
+        .setAuthor({
+          name: message.author.tag,
+          iconURLL: message.author.displayAvatarURL(),
+        })
         .setDescription(`The Current Guild has no Existing Reaction Roles!`)
         .setFooter({ text: `${process.env.AUTH_DOMAIN}` });
 
@@ -48,7 +51,10 @@ module.exports = class extends Command {
 
     let wipeEmbed = new MessageEmbed()
       .setColor(message.client.color.green)
-      .setAuthor(message.author.tag, message.author.displayAvatarURL())
+      .setAuthor({
+        name: message.author.tag,
+        iconURLL: message.author.displayAvatarURL(),
+      })
       .setDescription(
         `Successfuly deleted **${results.length}** ${resultsHehe}`
       )

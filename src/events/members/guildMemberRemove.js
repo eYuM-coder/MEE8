@@ -30,10 +30,10 @@ module.exports = class extends Event {
           if (logging.server_events.member_join == "true") {
             const embed = new discord.MessageEmbed()
               .setTitle(":outbox_tray: Member Left")
-              .setAuthor(
-                `${member.guild.name}`,
-                member.guild.iconURL({ dynamic: true })
-              )
+              .setAuthor({
+                name: `${member.guild.name}`,
+                iconURL: member.guild.iconURL({ dynamic: true }),
+              })
               .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
               .setDescription(`${member} (**${member.user.tag}**)`)
               .addField(
@@ -42,7 +42,10 @@ module.exports = class extends Event {
               )
               .setTimestamp()
               .setColor(member.guild.me.displayHexColor);
-              send(channelEmbed, { username: `${this.client.user.username}`, embeds: [embed] }).catch(() => {});
+            send(channelEmbed, {
+              username: `${this.client.user.username}`,
+              embeds: [embed],
+            }).catch(() => {});
           }
         }
       }
@@ -148,14 +151,19 @@ module.exports = class extends Event {
             .replace(/{size}/g, `${member.guild.memberCount}`)
             .replace(/{guild}/g, `${member.guild.name}`);
 
-          if (authorName !== null) embed.setAuthor(authorName);
+          if (authorName !== null) embed.setAuthor({ name: authorName });
 
           let authorIcon = leave.embed.author.icon;
-          if (authorIcon !== null) embed.setAuthor(authorName, authorIcon);
+          if (authorIcon !== null)
+            embed.setAuthor({ name: authorName, iconURL: authorIcon });
 
           let authorUrl = leave.embed.author.url;
           if (authorUrl !== null)
-            embed.setAuthor(authorName, authorIcon, authorUrl);
+            embed.setAuthor({
+              name: authorName,
+              iconURL: authorIcon,
+              url: authorUrl,
+            });
 
           let footer = leave.embed.footer;
           if (footer !== null) embed.setFooter(footer);
@@ -253,14 +261,19 @@ module.exports = class extends Event {
                 .replace(/{size}/g, `${member.guild.memberCount}`)
                 .replace(/{guild}/g, `${member.guild.name}`);
 
-              if (authorName !== null) embed.setAuthor(authorName);
+              if (authorName !== null) embed.setAuthor({ name: authorName });
 
               let authorIcon = leave.embed.author.icon;
-              if (authorIcon !== null) embed.setAuthor(authorName, authorIcon);
+              if (authorIcon !== null)
+                embed.setAuthor({ name: authorName, iconURL: authorIcon });
 
               let authorUrl = leave.embed.author.url;
               if (authorUrl !== null)
-                embed.setAuthor(authorName, authorIcon, authorUrl);
+                embed.setAuthor({
+                  name: authorName,
+                  iconURL: authorIcon,
+                  url: authorUrl,
+                });
 
               let footer = leave.embed.footer;
               if (footer !== null) embed.setFooter(footer);

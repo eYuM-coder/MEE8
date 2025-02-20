@@ -43,10 +43,10 @@ module.exports = class extends Command {
       return message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-            .setAuthor(
-              `${message.author.tag}`,
-              message.author.displayAvatarURL({ dynamic: true })
-            )
+            .setAuthor({
+              name: `${message.author.tag}`,
+              iconURL: message.author.displayAvatarURL({ dynamic: true }),
+            })
             .setTitle(`${fail} Slow Mode Error`)
             .setDescription(`I can't view the provided channel`)
             .setTimestamp()
@@ -60,10 +60,10 @@ module.exports = class extends Command {
       return message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-            .setAuthor(
-              `${message.author.tag}`,
-              message.author.displayAvatarURL({ dynamic: true })
-            )
+            .setAuthor({
+              name: `${message.author.tag}`,
+              iconURL: message.author.displayAvatarURL({ dynamic: true }),
+            })
             .setTitle(`${fail} Slow Mode Error`)
             .setDescription(
               ` Please provide a rate limit between 0 and 59 seconds`
@@ -79,10 +79,10 @@ module.exports = class extends Command {
       return message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-            .setAuthor(
-              `${message.author.tag}`,
-              message.author.displayAvatarURL({ dynamic: true })
-            )
+            .setAuthor({
+              name: `${message.author.tag}`,
+              iconURL: message.author.displayAvatarURL({ dynamic: true }),
+            })
             .setTitle(`${fail} Slow Mode Error`)
             .setDescription(
               ` Please provide a rate limit between 0 and 59 seconds`
@@ -98,10 +98,10 @@ module.exports = class extends Command {
       return message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-            .setAuthor(
-              `${message.author.tag}`,
-              message.author.displayAvatarURL({ dynamic: true })
-            )
+            .setAuthor({
+              name: `${message.author.tag}`,
+              iconURL: message.author.displayAvatarURL({ dynamic: true }),
+            })
             .setTitle(`${fail} Slow Mode Error`)
             .setDescription(
               ` Please make sure I have the **Manage Channels** Permission`
@@ -201,19 +201,24 @@ module.exports = class extends Command {
                   reason = reason.slice(0, 1021) + "...";
 
                 const logEmbed = new MessageEmbed()
-                  .setAuthor(
-                    `Action: \`Slow Mode\` | ${message.author.tag} | Case #${logcase}`,
-                    message.author.displayAvatarURL({ format: "png" })
+                  .setAuthor({
+                    name: `Action: \`Slow Mode\` | ${message.author.tag} | Case #${logcase}`,
+                    iconURL: message.author.displayAvatarURL({ format: "png" }),
+                  })
+                  .addFields(
+                    { name: "User", value: `${message.member}`, inline: true },
+                    { name: "Reason", value: `${reason}`, inline: true }
                   )
-                  .addField("User", `${message.member}`, true)
-                  .addField("Reason", `${reason}`, true)
                   .setFooter({ text: `ID: ${message.author.id}` })
                   .setTimestamp()
                   .setColor(color);
 
-                  send(channel, { username: `${this.client.user.username}`, embeds: [logEmbed] }).catch((e) => {
-                    console.log(e);
-                  });
+                send(channel, {
+                  username: `${this.client.user.username}`,
+                  embeds: [logEmbed],
+                }).catch((e) => {
+                  console.log(e);
+                });
 
                 logging.moderation.caseN = logcase + 1;
                 await logging.save().catch(() => {});

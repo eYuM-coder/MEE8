@@ -13,8 +13,10 @@ module.exports = {
     await interaction.reply({
       embeds: [
         new MessageEmbed()
-          .setDescription(`helo <@1067137336674107453> <:TrollHappy:1058938513946591292>`)
-          .setColor("BLURPLE")
+          .setDescription(
+            `helo <@1067137336674107453> <:TrollHappy:1058938513946591292>`
+          )
+          .setColor("BLURPLE"),
       ],
     });
 

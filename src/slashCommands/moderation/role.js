@@ -24,6 +24,11 @@ module.exports = {
             .setName("inrole")
             .setDescription("Filter out members that are in this role")
         )
+        .addStringOption((option) =>
+          option
+            .setName("reason")
+            .setDescription("The reason for the role update.")
+        )
     )
     .addSubcommand((subcommand) =>
       subcommand
@@ -37,6 +42,11 @@ module.exports = {
         )
         .addBooleanOption((option) =>
           option.setName("remove").setDescription("Remove role or not")
+        )
+        .addStringOption((option) =>
+          option
+            .setName("reason")
+            .setDescription("The reason for the role update.")
         )
     )
     .addSubcommand((subcommand) =>
@@ -57,6 +67,11 @@ module.exports = {
             .setName("inrole")
             .setDescription("Filter out members that are in this role")
         )
+        .addStringOption((option) =>
+          option
+            .setName("reason")
+            .setDescription("The reason for the role update.")
+        )
     )
     .addSubcommand((subcommand) =>
       subcommand
@@ -73,6 +88,11 @@ module.exports = {
             .setName("role")
             .setDescription("The role to add.")
             .setRequired(true)
+        )
+        .addStringOption((option) =>
+          option
+            .setName("reason")
+            .setDescription("The reason for the role update.")
         )
     )
     .addSubcommand((subcommand) =>
@@ -91,14 +111,17 @@ module.exports = {
             .setDescription("The role to remove.")
             .setRequired(true)
         )
+        .addStringOption((option) =>
+          option
+            .setName("reason")
+            .setDescription("The reason for the role update.")
+        )
     )
     .setContexts(0)
     .setIntegrationTypes(0),
   async execute(interaction) {
     try {
-      if (
-        !interaction.member.permissions.has("MANAGE_ROLES")
-      ) {
+      if (!interaction.member.permissions.has("MANAGE_ROLES")) {
         return interaction.reply({
           content: `You do not have permission to use this command.`,
           ephemeral: true,
@@ -127,9 +150,12 @@ module.exports = {
         } else {
           inroleoptionspecified = false;
           inroleoptionnotspecified = true;
+          inrole = interaction.guild.roles.cache.find(
+            (role) => role.name === "@everyone"
+          );
         }
 
-        let reason = `The current feature doesn't need a reason.`;
+        let reason = interaction.options.getString("reason");
         if (!reason) {
           reason = `No Reason Provided`;
         }
@@ -152,7 +178,10 @@ module.exports = {
           let members;
           if (removerole === false) {
             members = interaction.guild.members.cache.filter(
-              (member) => !member.roles.cache.has(role.id) && ((inroleoptionspecified || inroleoptionnotspecified) && member.roles.cache.has(inrole.id))
+              (member) =>
+                !member.roles.cache.has(role.id) &&
+                (inroleoptionspecified || inroleoptionnotspecified) &&
+                member.roles.cache.has(inrole.id)
             );
             let memberstoaddroleto = members.size;
             await interaction
@@ -160,23 +189,26 @@ module.exports = {
                 embeds: [
                   new MessageEmbed()
                     .setDescription(
-                      `${success} | Adding ${role} to ${memberstoaddroleto} ${memberstoaddroleto === 1 ? "member" : "members"
+                      `${success} | Adding ${role} to ${memberstoaddroleto} ${
+                        memberstoaddroleto === 1 ? "member" : "members"
                       }. This may take a while!`
                     )
                     .setColor(interaction.client.color.green),
                 ],
               })
               .then(async () => {
-                await members.forEach((member) =>
-                  member.roles.add(role, [
-                    `Role Add / Responsible User: ${interaction.user.tag}`,
-                  ])
+                await members.forEach(
+                  async (member) =>
+                    await member.roles.add(role, [
+                      `Role Add / Responsible User: ${interaction.user.tag}, Reason: ${reason}`,
+                    ])
                 );
               })
               .then(() => {
                 const embed = new MessageEmbed()
                   .setDescription(
-                    `${success} | Added **${role}** to **${memberstoaddroleto}** ${memberstoaddroleto === 1 ? "member" : "members"
+                    `${success} | Added **${role}** to **${memberstoaddroleto}** ${
+                      memberstoaddroleto === 1 ? "member" : "members"
                     }.`
                   )
                   .setColor(interaction.client.color.green);
@@ -185,15 +217,18 @@ module.exports = {
                   .then(async () => {
                     if (logging && logging.moderation.delete_reply === "true") {
                       setTimeout(() => {
-                        interaction.deleteReply().catch(() => { });
+                        interaction.deleteReply().catch(() => {});
                       }, 5000);
                     }
                   })
-                  .catch(() => { });
+                  .catch(() => {});
               });
           } else {
-            members = interaction.guild.members.cache.filter((member) =>
-              member.roles.cache.has(role.id) && ((inroleoptionspecified || inroleoptionnotspecified) && member.roles.cache.has(inrole.id)) 
+            members = interaction.guild.members.cache.filter(
+              (member) =>
+                member.roles.cache.has(role.id) &&
+                (inroleoptionspecified || inroleoptionnotspecified) &&
+                member.roles.cache.has(inrole.id)
             );
             let memberstoaddroleto = members.size;
             interaction
@@ -201,7 +236,8 @@ module.exports = {
                 embeds: [
                   new MessageEmbed()
                     .setDescription(
-                      `${success} | Removing ${role} from ${memberstoaddroleto} ${memberstoaddroleto === 1 ? "member" : "members"
+                      `${success} | Removing ${role} from ${memberstoaddroleto} ${
+                        memberstoaddroleto === 1 ? "member" : "members"
                       }. This may take a while!`
                     )
                     .setColor(interaction.client.color.green),
@@ -217,7 +253,8 @@ module.exports = {
               .then(() => {
                 const embed = new MessageEmbed()
                   .setDescription(
-                    `${success} | Removed **${role}** from **${memberstoaddroleto}** ${memberstoaddroleto === 1 ? "member" : "members"
+                    `${success} | Removed **${role}** from **${memberstoaddroleto}** ${
+                      memberstoaddroleto === 1 ? "member" : "members"
                     }.`
                   )
                   .setColor(interaction.client.color.green);
@@ -226,11 +263,11 @@ module.exports = {
                   .then(async () => {
                     if (logging && logging.moderation.delete_reply === "true") {
                       setTimeout(() => {
-                        interaction.deleteReply().catch(() => { });
+                        interaction.deleteReply().catch(() => {});
                       }, 5000);
                     }
                   })
-                  .catch(() => { });
+                  .catch(() => {});
               });
           }
         }
@@ -293,7 +330,8 @@ module.exports = {
               .then(() => {
                 const embed = new MessageEmbed()
                   .setDescription(
-                    `${success} | Added **${role}** to **${memberstoaddroleto}** ${memberstoaddroleto === 1 ? "bot" : "bots"
+                    `${success} | Added **${role}** to **${memberstoaddroleto}** ${
+                      memberstoaddroleto === 1 ? "bot" : "bots"
                     }.`
                   )
                   .setColor(interaction.client.color.green);
@@ -302,11 +340,11 @@ module.exports = {
                   .then(async () => {
                     if (logging && logging.moderation.delete_reply === "true") {
                       setTimeout(() => {
-                        interaction.deleteReply().catch(() => { });
+                        interaction.deleteReply().catch(() => {});
                       }, 5000);
                     }
                   })
-                  .catch(() => { });
+                  .catch(() => {});
               });
           } else {
             members = interaction.guild.members.cache.filter(
@@ -318,7 +356,8 @@ module.exports = {
                 embeds: [
                   new MessageEmbed()
                     .setDescription(
-                      `${success} | Removing ${role} from ${memberstoaddroleto} ${memberstoaddroleto === 1 ? "bot" : "bots"
+                      `${success} | Removing ${role} from ${memberstoaddroleto} ${
+                        memberstoaddroleto === 1 ? "bot" : "bots"
                       }. This may take a while!`
                     )
                     .setColor(interaction.client.color.green),
@@ -334,7 +373,8 @@ module.exports = {
               .then(() => {
                 const embed = new MessageEmbed()
                   .setDescription(
-                    `${success} | Removed **${role}** from **${memberstoaddroleto}** ${memberstoaddroleto === 1 ? "bot" : "bots"
+                    `${success} | Removed **${role}** from **${memberstoaddroleto}** ${
+                      memberstoaddroleto === 1 ? "bot" : "bots"
                     }`
                   )
                   .setColor(interaction.client.color.green);
@@ -343,11 +383,11 @@ module.exports = {
                   .then(async () => {
                     if (logging && logging.moderation.delete_reply === "true") {
                       setTimeout(() => {
-                        interaction.deleteReply().catch(() => { });
+                        interaction.deleteReply().catch(() => {});
                       }, 5000);
                     }
                   })
-                  .catch(() => { });
+                  .catch(() => {});
               });
           }
         }
@@ -396,31 +436,38 @@ module.exports = {
           let members;
           if (removerole === false) {
             members = interaction.guild.members.cache.filter(
-              (member) => !member.user.bot && !member.roles.cache.has(role.id) && ((inroleoptionspecified || inroleoptionnotspecified) && member.roles.cache.has(inrole.id))
+              (member) =>
+                !member.user.bot &&
+                !member.roles.cache.has(role.id) &&
+                (inroleoptionspecified || inroleoptionnotspecified) &&
+                member.roles.cache.has(inrole.id)
             );
             interaction
               .reply({
                 embeds: [
                   new MessageEmbed()
                     .setDescription(
-                      `${success} | Adding ${role.name} to ${members.size
-                      } ${members.size === 1 ? "human" : "humans"}. This may take a while!`
+                      `${success} | Adding ${role.name} to ${members.size} ${
+                        members.size === 1 ? "human" : "humans"
+                      }. This may take a while!`
                     )
                     .setColor(interaction.client.color.green),
                 ],
               })
               .then(async () => {
-                await members.forEach(async (member) =>
+                await members.forEach(
+                  async (member) =>
                     await member.roles.add(role, [
                       `Role Add / Responsible User: ${interaction.user.tag}`,
                     ])
-                  );
+                );
               })
               .then(() => {
                 const embed = new MessageEmbed()
                   .setDescription(
-                    `${success} | Added **${role}** to **${members.size
-                    }** ${members.size === 1 ? "human" : "humans"}.`
+                    `${success} | Added **${role}** to **${members.size}** ${
+                      members.size === 1 ? "human" : "humans"
+                    }.`
                   )
                   .setColor(interaction.client.color.green);
                 interaction
@@ -428,38 +475,47 @@ module.exports = {
                   .then(async () => {
                     if (logging && logging.moderation.delete_reply === "true") {
                       setTimeout(() => {
-                        interaction.deleteReply().catch(() => { });
+                        interaction.deleteReply().catch(() => {});
                       }, 5000);
                     }
                   })
-                  .catch(() => { });
+                  .catch(() => {});
               });
           } else {
             members = interaction.guild.members.cache.filter(
-              (member) => !member.user.bot && member.roles.cache.has(role.id) && ((inroleoptionspecified || inroleoptionnotspecified) && member.roles.cache.has(inrole.id))
+              (member) =>
+                !member.user.bot &&
+                member.roles.cache.has(role.id) &&
+                (inroleoptionspecified || inroleoptionnotspecified) &&
+                member.roles.cache.has(inrole.id)
             );
             interaction
               .reply({
                 embeds: [
                   new MessageEmbed()
                     .setDescription(
-                      `${success} | Removing ${role.name} from ${members.size
-                      } ${members.size === 1 ? "human" : "humans"}. This may take a while!`
+                      `${success} | Removing ${role.name} from ${
+                        members.size
+                      } ${
+                        members.size === 1 ? "human" : "humans"
+                      }. This may take a while!`
                     )
                     .setColor(interaction.client.color.green),
                 ],
               })
               .then(async () => {
-                await members.forEach(async (member) =>
+                await members.forEach(
+                  async (member) =>
                     await member.roles.remove(role, [
                       `Role Remove / Responsible User: ${interaction.user.tag}`,
                     ])
-                  );
+                );
               })
               .then(() => {
                 const embed = new MessageEmbed()
                   .setDescription(
-                    `${success} | Removed **${role}** from **${members.size
+                    `${success} | Removed **${role}** from **${
+                      members.size
                     }** ${members.size === 1 ? "human" : "humans"}.`
                   )
                   .setColor(interaction.client.color.green);
@@ -468,11 +524,11 @@ module.exports = {
                   .then(async () => {
                     if (logging && logging.moderation.delete_reply === "true") {
                       setTimeout(() => {
-                        interaction.deleteReply().catch(() => { });
+                        interaction.deleteReply().catch(() => {});
                       }, 5000);
                     }
                   })
-                  .catch(() => { });
+                  .catch(() => {});
               });
           }
         }
@@ -539,11 +595,11 @@ module.exports = {
                   .then(async () => {
                     if (logging && logging.moderation.delete_reply === "true") {
                       setTimeout(() => {
-                        interaction.deleteReply().catch(() => { });
+                        interaction.deleteReply().catch(() => {});
                       }, 5000);
                     }
                   })
-                  .catch(() => { });
+                  .catch(() => {});
               })
               .catch(() => {
                 let botrolepossiblylow = new MessageEmbed()
@@ -630,11 +686,11 @@ module.exports = {
                   .then(() => {
                     if (logging && logging.moderation.delete_reply === "true") {
                       setTimeout(() => {
-                        interaction.deleteReply().catch(() => { });
+                        interaction.deleteReply().catch(() => {});
                       }, 5000);
                     }
                   })
-                  .catch(() => { });
+                  .catch(() => {});
               })
               .catch(() => {
                 let botrolepossiblylow = new MessageEmbed()
@@ -661,6 +717,7 @@ module.exports = {
         }
       }
     } catch (error) {
+      console.log(error);
       const fail = interaction.client.emoji.fail;
       let botrolepossiblylow = new MessageEmbed()
         .setAuthor({

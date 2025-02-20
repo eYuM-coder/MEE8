@@ -9,11 +9,17 @@ module.exports = {
     .setIntegrationTypes(0),
   async execute(interaction) {
     const embed = new MessageEmbed()
-      .setAuthor(`${interaction.guild.name}'s Server Icon`, interaction.guild.iconURL({ dynamic: true, size: 512 }))
+      .setAuthor({
+        name: `${interaction.guild.name}'s Server Icon`,
+        iconURL: interaction.guild.iconURL({ dynamic: true, size: 512 }),
+      })
       .setImage(interaction.guild.iconURL({ dynamic: true, size: 512 }))
-      .setFooter({ text: interaction.user.tag, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
+      .setFooter({
+        text: interaction.user.tag,
+        iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
+      })
       .setTimestamp()
-      .setColor(interaction.guild.me.displayHexColor)
+      .setColor(interaction.guild.me.displayHexColor);
     interaction.reply({ embeds: [embed] });
-  }
+  },
 };

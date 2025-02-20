@@ -32,7 +32,10 @@ module.exports = class extends Command {
         .sendCustom({
           embeds: [
             new MessageEmbed()
-              .setAuthor(message.author.tag, message.author.displayAvatarURL())
+              .setAuthor({
+                name: message.author.tag,
+                iconURLL: message.author.displayAvatarURL(),
+              })
               .setDescription(`${fail} Provide me with a valid Channel`)
               .setFooter({ text: `${process.env.AUTH_DOMAIN}` }),
           ],
@@ -44,7 +47,10 @@ module.exports = class extends Command {
       return message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-            .setAuthor(message.author.tag, message.author.displayAvatarURL())
+            .setAuthor({
+              name: message.author.tag,
+              iconURLL: message.author.displayAvatarURL(),
+            })
             .setDescription(`${fail} Provide me with a valid message ID`)
             .setFooter({ text: `${process.env.AUTH_DOMAIN}` }),
         ],
@@ -53,7 +59,10 @@ module.exports = class extends Command {
       return message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-            .setAuthor(message.author.tag, message.author.displayAvatarURL())
+            .setAuthor({
+              name: message.author.tag,
+              iconURLL: message.author.displayAvatarURL(),
+            })
             .setDescription(`${fail} I could not find the following ID`)
             .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
             .setColor(client.color.red),
@@ -68,7 +77,10 @@ module.exports = class extends Command {
       return message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-            .setAuthor(message.author.tag, message.author.displayAvatarURL())
+            .setAuthor({
+              name: message.author.tag,
+              iconURLL: message.author.displayAvatarURL(),
+            })
             .setDescription(`${fail} Provide me with a valid Role`)
             .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
             .setColor(client.color.red),
@@ -90,17 +102,23 @@ module.exports = class extends Command {
     message.channel.sendCustom({
       embeds: [
         new MessageEmbed()
-          .setAuthor(
-            "Reaction Roles Edit",
-            message.guild.iconURL(),
-            messageID.url
-          )
+          .setAuthor({
+            name: "Reaction Roles Edit",
+            iconURL: message.guild.iconURL(),
+            url: messageID.url,
+          })
           .setColor(client.color.green)
-          .addField("Channel", `${channel}`, true)
-          .addField("Emoji", `${emoji}`, true)
-          .addField("Message ID", `${IDBCursor}`, true)
-          .addField("Message", `[Jump To Message](${messageID.url})`, true)
-          .addField("Role", `${role}`, true)
+          .addFields(
+            { name: "Channel", value: `${channel}`, inline: true },
+            { name: "Emoji", value: `${emoji}`, inline: true },
+            { name: "Message ID", value: `${IDBCursor}`, inline: true },
+            {
+              name: "Message",
+              value: `[Jump To Message](${messageID.url})`,
+              inline: true,
+            },
+            { name: "Role", value: `${role}`, inline: true }
+          )
           .setFooter({ text: `${process.env.AUTH_DOMAIN}` }),
       ],
     });

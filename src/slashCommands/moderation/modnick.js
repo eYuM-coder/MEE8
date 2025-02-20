@@ -11,12 +11,12 @@ module.exports = {
       option
         .setName("member")
         .setDescription("The user to moderate their nickname")
-        .setRequired(true),
+        .setRequired(true)
     )
     .addStringOption((option) =>
       option
         .setName("reason")
-        .setDescription("The reason for the nickname moderation"),
+        .setDescription("The reason for the nickname moderation")
     )
     .setContexts(0)
     .setIntegrationTypes(0),
@@ -42,24 +42,24 @@ module.exports = {
         let validmention = new MessageEmbed()
           .setColor("RED")
           .setDescription(
-            `${client.emoji.fail} | Please mention a valid member!`,
+            `${client.emoji.fail} | Please mention a valid member!`
           );
         return interaction
           .reply({ embeds: [validmention] })
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => { });
+                interaction.deleteReply().catch(() => {});
               }, 5000);
             }
           })
-          .catch(() => { });
+          .catch(() => {});
       }
       if (member === interaction.author) {
         let modnickerror = new MessageEmbed()
           .setColor("RED")
           .setDescription(
-            `${client.emoji.fail} | You can't moderate your own nickname!`,
+            `${client.emoji.fail} | You can't moderate your own nickname!`
           );
         return interaction
           .reply({ embeds: [modnickerror] })
@@ -67,11 +67,11 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => { });
+                interaction.deleteReply().catch(() => {});
               }, 5000);
             }
           })
-          .catch(() => { });
+          .catch(() => {});
       }
 
       if (
@@ -81,18 +81,18 @@ module.exports = {
         let rolesmatch = new MessageEmbed()
           .setColor("RED")
           .setDescription(
-            `${client.emoji.fail} | They have more power than you or have equal power as you do!`,
+            `${client.emoji.fail} | They have more power than you or have equal power as you do!`
           );
         return interaction
           .reply({ embeds: [rolesmatch] })
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => { });
+                interaction.deleteReply().catch(() => {});
               }, 5000);
             }
           })
-          .catch(() => { });
+          .catch(() => {});
       }
 
       if (member) {
@@ -101,24 +101,24 @@ module.exports = {
         let embed = new MessageEmbed()
           .setColor("BLURPLE")
           .setDescription(
-            `${client.emoji.success} | Moderated ${member}'s nickname for \`${reason}\``,
+            `${client.emoji.success} | Moderated ${member}'s nickname for \`${reason}\``
           );
         return interaction
           .reply({ embeds: [embed] })
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => { });
+                interaction.deleteReply().catch(() => {});
               }, 5000);
             }
           })
-          .catch(() => { });
+          .catch(() => {});
       }
       if (member) {
         let dmEmbed = new MessageEmbed()
           .setColor("RED")
           .setDescription(
-            `**Nickname Moderated**\nYour nickname was moderated in **${interaction.guild.name}**. If you would like to change your nickname to something else, please reach out to a staff member.\n**Possible Reasons**\n• Your name was not typeable on a standard English QWERTY keyboard.\n• Your name contained words that are not suitable for the server.\n• Your name was not mentionable.\n\n__**Moderator:**__ ${interaction.author} **(${interaction.author.tag})**\n__**Reason:**__ ${reason}`,
+            `**Nickname Moderated**\nYour nickname was moderated in **${interaction.guild.name}**. If you would like to change your nickname to something else, please reach out to a staff member.\n**Possible Reasons**\n• Your name was not typeable on a standard English QWERTY keyboard.\n• Your name contained words that are not suitable for the server.\n• Your name was not mentionable.\n\n__**Moderator:**__ ${interaction.author} **(${interaction.author.tag})**\n__**Reason:**__ ${reason}`
           )
           .setTimestamp();
         member.send({ embeds: [dmEmbed] });
@@ -126,7 +126,7 @@ module.exports = {
         let failembed = new MessageEmbed()
           .setColor(client.color.red)
           .setDescription(
-            `${client.emoji.fail} | I can't moderate their nickname, make sure that my role is above their role or that I have sufficient permissions to run the command.`,
+            `${client.emoji.fail} | I can't moderate their nickname, make sure that my role is above their role or that I have sufficient permissions to run the command.`
           )
           .setTimestamp();
         return interaction.reply({ embeds: [failembed], ephemeral: true });

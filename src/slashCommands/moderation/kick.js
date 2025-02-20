@@ -13,10 +13,10 @@ module.exports = {
       option
         .setName("member")
         .setDescription("Person who you want to kick.")
-        .setRequired(true),
+        .setRequired(true)
     )
     .addStringOption((option) =>
-      option.setName("reason").setDescription("The reason of the kick"),
+      option.setName("reason").setDescription("The reason of the kick")
     )
     .setContexts(0)
     .setIntegrationTypes(0),
@@ -31,7 +31,7 @@ module.exports = {
         guildId: interaction.guild.id,
       });
 
-      const language = require(`../../data/language/${guildDB.language}.json`)
+      const language = require(`../../data/language/${guildDB.language}.json`);
       if (!interaction.member.permissions.has("KICK_MEMBERS"))
         return interaction.followUp({
           content: "You do not have permission to use this command.",
@@ -51,11 +51,11 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => { });
+                interaction.deleteReply().catch(() => {});
               }, 5000);
             }
           })
-          .catch(() => { });
+          .catch(() => {});
       }
 
       if (member === interaction.author) {
@@ -67,11 +67,11 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => { });
+                interaction.deleteReply().catch(() => {});
               }, 5000);
             }
           })
-          .catch(() => { });
+          .catch(() => {});
       }
 
       const response = await member.kick({ reason });
@@ -80,28 +80,32 @@ module.exports = {
         let kicksuccess = new MessageEmbed()
           .setColor("GREEN")
           .setDescription(
-            `${client.emoji.success
-            } | ${member} has been kicked. __**Reason:**__ ${reason || "No reason Provided"
-            }`,
+            `${
+              client.emoji.success
+            } | ${member} has been kicked. __**Reason:**__ ${
+              reason || "No reason Provided"
+            }`
           );
         return interaction
           .reply({ embeds: [kicksuccess] })
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => { });
+                interaction.deleteReply().catch(() => {});
               }, 5000);
             }
           })
-          .catch(() => { });
+          .catch(() => {});
       }
       if (response) {
         let dmEmbed = new MessageEmbed()
           .setColor("RED")
           .setDescription(
-            `You have been kicked in **${interaction.guild.name
-            }**.\n\n__**Moderator:**__ ${interaction.author} **(${interaction.author.tag
-            })**\n__**Reason:**__ ${reason || "No Reason Provided"}`,
+            `You have been kicked in **${
+              interaction.guild.name
+            }**.\n\n__**Moderator:**__ ${interaction.author} **(${
+              interaction.author.tag
+            })**\n__**Reason:**__ ${reason || "No Reason Provided"}`
           )
           .setTimestamp();
         member.send({ embeds: [dmEmbed] });
@@ -109,7 +113,7 @@ module.exports = {
         let failembed = new MessageEmbed()
           .setColor(client.color.red)
           .setDescription(
-            `${client.emoji.fail} | That member is a mod/admin, I can't do that.`,
+            `${client.emoji.fail} | That member is a mod/admin, I can't do that.`
           )
           .setTimestamp();
         return interaction.reply({ embeds: [failembed] });
@@ -146,21 +150,30 @@ module.exports = {
                     reason = reason.slice(0, 1021) + "...";
 
                   const logEmbed = new MessageEmbed()
-                    .setAuthor(
-                      `Action: \`Kick\` | ${member.user.tag} | Case #${logcase}`,
-                      member.user.displayAvatarURL({ format: "png" })
+                    .setAuthor({
+                      name: `Action: \`Kick\` | ${member.user.tag} | Case #${logcase}`,
+                      iconURL: member.user.displayAvatarURL({ format: "png" }),
+                    })
+                    .addFields(
+                      { name: "User", value: `${member}`, inline: true },
+                      {
+                        name: "Moderator",
+                        value: `${interaction.user}`,
+                        inline: true,
+                      },
+                      { name: "Reason", value: `${reason}`, inline: true }
                     )
-                    .addField("User", `${member}`, true)
-                    .addField("Moderator", `${interaction.user}`, true)
-                    .addField("Reason", `${reason}`, true)
                     .setFooter({ text: `ID: ${member.id}` })
                     .setTimestamp()
                     .setColor(color);
 
-                    send(channel, { username: `${interaction.client.user.username}`, embeds: [logEmbed] }).catch(() => {});
+                  send(channel, {
+                    username: `${interaction.client.user.username}`,
+                    embeds: [logEmbed],
+                  }).catch(() => {});
 
                   logging.moderation.caseN = logcase + 1;
-                  await logging.save().catch(() => { });
+                  await logging.save().catch(() => {});
                 }
               }
             }
@@ -172,8 +185,10 @@ module.exports = {
       interaction.reply({
         embeds: [
           new MessageEmbed()
-          .setColor(interaction.client.color.red)
-          .setDescription(`${interaction.client.emoji.fail} | That user is a mod/admin, I can't do that.`)
+            .setColor(interaction.client.color.red)
+            .setDescription(
+              `${interaction.client.emoji.fail} | That user is a mod/admin, I can't do that.`
+            ),
         ],
         ephemeral: true,
       });

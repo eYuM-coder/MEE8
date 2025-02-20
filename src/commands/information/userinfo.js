@@ -135,10 +135,10 @@ module.exports = class extends Command {
       roles = `\`None\``;
     const embed = new MessageEmbed()
 
-      .setAuthor(
-        `${member.user.tag}`,
-        member.user.displayAvatarURL({ dynamic: true })
-      )
+      .setAuthor({
+        name: `${member.user.tag}`,
+        iconURL: member.user.displayAvatarURL({ dynamic: true }),
+      })
       .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
       .setFooter({ text: `ID: ${member.id}` })
       .setTimestamp()

@@ -48,32 +48,36 @@ module.exports = class extends Event {
                 .setColor(color);
 
               if (oldChannel.name !== newChannel.name) {
-                embed.addField(
-                  "Name Update",
-                  `${oldChannel.name} --> ${newChannel.name}`,
-                  true
-                );
+                embed.addFields({
+                  name: "Name Update",
+                  value: `${oldChannel.name} --> ${newChannel.name}`,
+                  inline: true,
+                });
               } else {
-                embed.addField("Name Update", `Name not updated`, true);
+                embed.addFields({
+                  name: "Name Update",
+                  value: `Name not updated`,
+                  inline: true,
+                });
               }
 
               if (oldChannel.topic || newChannel.topic) {
                 if (oldChannel.topic !== newChannel.topic) {
-                  embed.addField(
-                    "Topic",
-                    `${oldChannel.topic || "none"} --> ${
+                  embed.addFields({
+                    name: "Topic",
+                    value: `${oldChannel.topic || "none"} --> ${
                       newChannel.topic || "none"
-                    }`
-                  );
+                    }`,
+                  });
                 }
               }
 
               if (oldChannel.nsfw || newChannel.nsfw) {
                 if (oldChannel.nsfw !== newChannel.nsfw) {
-                  embed.addField(
-                    "NSFW",
-                    `${oldChannel.nsfw} --> ${newChannel.nsfw}`
-                  );
+                  embed.addFields({
+                    name: "NSFW",
+                    value: `${oldChannel.nsfw} --> ${newChannel.nsfw}`,
+                  });
                 }
               }
 
@@ -81,10 +85,10 @@ module.exports = class extends Event {
                 if (
                   oldChannel.rateLimitPerUser !== newChannel.rateLimitPerUser
                 ) {
-                  embed.addField(
-                    "Slowmode",
-                    `${oldChannel.rateLimitPerUser} --> ${newChannel.rateLimitPerUser}`
-                  );
+                  embed.addFields({
+                    name: "Slowmode",
+                    value: `${oldChannel.rateLimitPerUser} --> ${newChannel.rateLimitPerUser}`,
+                  });
                 }
               }
 
@@ -105,7 +109,10 @@ module.exports = class extends Event {
                   .permissionsFor(newChannel.guild.me)
                   .has(["SEND_MESSAGES", "EMBED_LINKS"])
               ) {
-                send(channelEmbed, { username: `${this.client.user.username}`, embeds: [embed] }).catch(() => {});
+                send(channelEmbed, {
+                  username: `${this.client.user.username}`,
+                  embeds: [embed],
+                }).catch(() => {});
               }
             }
           }

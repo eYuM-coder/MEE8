@@ -33,13 +33,15 @@ module.exports = class extends Command {
     let fail = message.client.emoji.fail;
     let success = message.client.emoji.success;
 
-    let channel =
-      message.mentions.channels.first() || message.channel;
+    let channel = message.mentions.channels.first() || message.channel;
     if (!channel)
       return message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-            .setAuthor(message.author.tag, message.author.displayAvatarURL())
+            .setAuthor({
+              name: message.author.tag,
+              iconURLL: message.author.displayAvatarURL(),
+            })
             .setDescription(`${fail} Provide me with a valid Channel`)
             .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
             .setColor(client.color.red),
@@ -51,7 +53,10 @@ module.exports = class extends Command {
       return message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-            .setAuthor(message.author.tag, message.author.displayAvatarURL())
+            .setAuthor({
+              name: message.author.tag,
+              iconURLL: message.author.displayAvatarURL(),
+            })
             .setDescription(`${fail} Provide me with a valid message ID`)
             .setFooter({ text: `${process.env.AUTH_DOMAIN}` }),
         ],
@@ -60,7 +65,10 @@ module.exports = class extends Command {
       return message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-            .setAuthor(message.author.tag, message.author.displayAvatarURL())
+            .setAuthor({
+              name: message.author.tag,
+              iconURLL: message.author.displayAvatarURL(),
+            })
             .setDescription(`${fail} I could not find the following ID`)
             .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
             .setColor(client.color.red),
@@ -74,7 +82,10 @@ module.exports = class extends Command {
       return message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-            .setAuthor(message.author.tag, message.author.displayAvatarURL())
+            .setAuthor({
+              name: message.author.tag,
+              iconURLL: message.author.displayAvatarURL(),
+            })
             .setDescription(`${fail} Provide me with a valid Emoji`)
             .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
             .setColor(client.color.red),
@@ -87,7 +98,10 @@ module.exports = class extends Command {
       embeds: [
         new MessageEmbed()
           .setColor(client.color.green)
-          .setAuthor(message.author.tag, message.author.displayAvatarURL())
+          .setAuthor({
+            name: message.author.tag,
+            iconURLL: message.author.displayAvatarURL(),
+          })
           .setDescription(
             `${success} Deleted The [Reaction Role](${messageID.url})`
           )

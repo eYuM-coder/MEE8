@@ -70,10 +70,10 @@ module.exports = class extends Command {
           .sendCustom({
             embeds: [
               new MessageEmbed()
-                .setAuthor(
-                  `${message.author.tag}`,
-                  message.author.displayAvatarURL({ dynamic: true })
-                )
+                .setAuthor({
+                  name: `${message.author.tag}`,
+                  iconURL: message.author.displayAvatarURL({ dynamic: true }),
+                })
                 .setTitle(`${fail} ${language.missingUser} `)
                 .setDescription(`${language.tempvc2}`)
                 .setTimestamp()
@@ -148,10 +148,10 @@ module.exports = class extends Command {
           .sendCustom({
             embeds: [
               new MessageEmbed()
-                .setAuthor(
-                  `${message.author.tag}`,
-                  message.author.displayAvatarURL({ dynamic: true })
-                )
+                .setAuthor({
+                  name: `${message.author.tag}`,
+                  iconURL: message.author.displayAvatarURL({ dynamic: true }),
+                })
                 .setTitle(`${fail} ${language.missingUser} `)
                 .setDescription(`${language.tempvc2}`)
                 .setTimestamp()
@@ -162,10 +162,10 @@ module.exports = class extends Command {
 
       try {
         const embed = new MessageEmbed()
-          .setAuthor(
-            `${language.tempvc5}`,
-            `https://www.creeda.co.in/Images/loader.gif`
-          )
+          .setAuthor({
+            name: `${language.tempvc5}`,
+            iconURL: `https://www.creeda.co.in/Images/loader.gif`,
+          })
           .setDescription(`\`${language.tempvc6}\``)
           .setColor(message.guild.me.displayHexColor);
         const msg = await message.channel.sendCustom({ embeds: [embed] });
@@ -179,7 +179,7 @@ module.exports = class extends Command {
           if (!category) {
             await embed
               .setDescription(`**${language.tempvc7}**`)
-              .setFooter({ text: `${message.client.config.botName} v2.0` })
+              .setFooter({ text: `${message.client.config.botName} v3.0` })
               .setTimestamp();
             msg.edit({ embeds: [embed] }) +
               message.guild.channels.create(`Join to Create`, {
@@ -199,7 +199,7 @@ module.exports = class extends Command {
           } else {
             embed
               .setDescription(`**${language.tempvc8}**\n\nID: ${category.id}`)
-              .setFooter({ text: `{message.client.config.botName} v2.0` })
+              .setFooter({ text: `{message.client.config.botName} v3.0` })
               .setTimestamp();
             msg.edit({ embeds: [embed] });
           }
@@ -214,7 +214,7 @@ module.exports = class extends Command {
           if (!voice) {
             await embed
               .setDescription(`**${language.tempvc9}**`)
-              .setFooter({ text: `{message.client.config.botName} v2.0` })
+              .setFooter({ text: `{message.client.config.botName} v3.0` })
               .setTimestamp();
             msg.edit({ embeds: [embed] });
             +message.guild.channels
@@ -240,7 +240,7 @@ module.exports = class extends Command {
           } else {
             embed
               .setDescription(`**${language.tempvc10}**\n\nID: ${voice.id}`)
-              .setFooter({ text: `{message.client.config.botName} v2.0` })
+              .setFooter({ text: `{message.client.config.botName} v3.0` })
               .setTimestamp();
             msg.edit({ embeds: [embed] });
           }
@@ -249,11 +249,11 @@ module.exports = class extends Command {
         setTimeout(async () => {
           if (!voice || !category) {
             embed
-              .setAuthor(`Setup Fail`)
+              .setAuthor({ name: `Setup Fail` })
               .setDescription(
                 `${language.tempvc11.replace(/{prefix}/g, `${prefix}`)}`
               )
-              .setFooter({ text: `{message.client.config.botName} v2.0` })
+              .setFooter({ text: `{message.client.config.botName} v3.0` })
               .setTimestamp();
             msg.edit({ embeds: [embed] });
             await Vc.findOne(
@@ -291,15 +291,15 @@ module.exports = class extends Command {
               .catch(() => {});
             voice.setParent(category.id);
             embed
-              .setAuthor(
-                `${language.tempvc12}`,
-                `https://mee8.net/logo.png`,
-                `${channelInv}`
-              )
+              .setAuthor({
+                name: `${language.tempvc12}`,
+                iconURL: `https://mee8.eyum.org/logo.png`,
+                url: `${channelInv}`
+              })
               .setDescription(
                 `**${language.tempvc13}** ${category.name}\n**${language.tempvc13} ID:** ${category.id}\n\n**${language.tempvc14}** ${voice.name}\n**${language.tempvc14} ID:** ${voice.id}\n\n${language.tempvc15} \`${prefix}tempvc off\` `
               )
-              .setFooter({ text: `{message.client.config.botName} v2.0` })
+              .setFooter({ text: `{message.client.config.botName} v3.0` })
               .setTimestamp();
             msg.edit({ embeds: [embed] });
             if (channelInv && channelVoice)

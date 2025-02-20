@@ -121,10 +121,10 @@ module.exports = class extends Event {
 
           if (logging.message_events.deleted == "true") {
             const embed = new MessageEmbed()
-              .setAuthor(
-                `${message.author.tag} | Message Deleted`,
-                message.author.displayAvatarURL({ dynamic: true })
-              )
+              .setAuthor({
+                name: `${message.author.tag} | Message Deleted`,
+                iconURL: message.author.displayAvatarURL({ dynamic: true }),
+              })
               .setTimestamp()
               .setFooter({ text: `ID: ${message.id}` })
               .setColor(message.guild.me.displayHexColor);
@@ -151,7 +151,10 @@ module.exports = class extends Event {
                 .permissionsFor(message.guild.me)
                 .has(["SEND_MESSAGES", "EMBED_LINKS"])
             ) {
-              send(channelEmbed, { username: `${this.client.user.username}`, embeds: [embed] }).catch(() => {});
+              send(channelEmbed, {
+                username: `${this.client.user.username}`,
+                embeds: [embed],
+              }).catch(() => {});
             }
           }
         }

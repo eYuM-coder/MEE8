@@ -102,10 +102,10 @@ module.exports = class extends Command {
                         reason = reason.slice(0, 1021) + "...";
 
                       const logEmbed = new MessageEmbed()
-                        .setAuthor(
-                          `Action: \`Ban\` | ${u.tag} | Case #${logcase}`,
-                          u.displayAvatarURL({ format: "png" })
-                        )
+                        .setAuthor({
+                          name: `Action: \`Ban\` | ${u.tag} | Case #${logcase}`,
+                          iconURL: u.displayAvatarURL({ format: "png" }),
+                        })
                         .addField("User", u, true)
                         .addField("Moderator", `${message.member}`, true)
                         .addField("Reason", `${reason}`, true)
@@ -113,7 +113,10 @@ module.exports = class extends Command {
                         .setTimestamp()
                         .setColor(color);
 
-                      send(channel, { username: `${this.client.user.username}`, embeds: [logEmbed] }).catch((e) => {
+                      send(channel, {
+                        username: `${this.client.user.username}`,
+                        embeds: [logEmbed],
+                      }).catch((e) => {
                         console.log(e);
                       });
 
@@ -171,9 +174,11 @@ module.exports = class extends Command {
         message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-            .setColor(message.client.color.red)
-            .setDescription(`${message.client.emoji.fail} | This user is a mod/admin, I can't do that.`)
-          ]
+              .setColor(message.client.color.red)
+              .setDescription(
+                `${message.client.emoji.fail} | This user is a mod/admin, I can't do that.`
+              ),
+          ],
         })
       );
 
@@ -285,13 +290,23 @@ module.exports = class extends Command {
                 if (!logcase) logcase = `1`;
 
                 const logEmbed = new MessageEmbed()
-                  .setAuthor(
-                    `Action: \`Ban\` | ${member.user.tag} | Case #${logcase}`,
-                    member.user.displayAvatarURL({ format: "png" })
+                  .setAuthor({
+                    name: `Action: \`Ban\` | ${member.user.tag} | Case #${logcase}`,
+                    iconURL: member.user.displayAvatarURL({ format: "png" }),
+                  })
+                  .addFields(
+                    {
+                      name: "User",
+                      value: `${member}`,
+                      inline: true,
+                    },
+                    {
+                      name: "Moderator",
+                      value: `${message.member}`,
+                      inline: true,
+                    },
+                    { name: "Reason", value: `${reason}`, inline: true }
                   )
-                  .addField("User", `${member}`, true)
-                  .addField("Moderator", `${message.member}`, true)
-                  .addField("Reason", `${reason}`, true)
                   .setFooter({ text: `ID: ${member.id}` })
                   .setTimestamp()
                   .setColor(color);

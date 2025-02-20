@@ -34,10 +34,10 @@ module.exports = class extends Event {
 
             if (oldMember.roles.cache.size < newMember.roles.cache.size) {
               const roleAddembed = new discord.MessageEmbed()
-                .setAuthor(
-                  `${newMember.user.tag} | Role add`,
-                  newMember.user.displayAvatarURL({ dynamic: true })
-                )
+                .setAuthor({
+                  name: `${newMember.user.tag} | Role add`,
+                  iconURL: newMember.user.displayAvatarURL({ dynamic: true }),
+                })
                 .setTimestamp()
                 .setColor(colorGreen)
                 .setFooter({ text: `ID: ${newMember.id}` })
@@ -52,16 +52,19 @@ module.exports = class extends Event {
                   .permissionsFor(newMember.guild.me)
                   .has(["SEND_MESSAGES", "EMBED_LINKS"])
               ) {
-                send(channelEmbed, { username: `${this.client.user.username}`, embeds: [roleAddembed] }).catch(() => {});
+                send(channelEmbed, {
+                  username: `${this.client.user.username}`,
+                  embeds: [roleAddembed],
+                }).catch(() => {});
               }
             }
 
             if (oldMember.roles.cache.size > newMember.roles.cache.size) {
               const roleRemoveembed = new discord.MessageEmbed()
-                .setAuthor(
-                  `${newMember.user.tag} | Role Remove`,
-                  newMember.user.displayAvatarURL({ dynamic: true })
-                )
+                .setAuthor({
+                  name: `${newMember.user.tag} | Role Remove`,
+                  iconURL: newMember.user.displayAvatarURL({ dynamic: true }),
+                })
                 .setTimestamp()
                 .setColor(colorRed)
                 .setFooter({ text: `ID: ${newMember.id}` })
@@ -76,7 +79,10 @@ module.exports = class extends Event {
                   .permissionsFor(newMember.guild.me)
                   .has(["SEND_MESSAGES", "EMBED_LINKS"])
               ) {
-                send(channelEmbed, { username: `${this.client.user.username}`, embeds: [roleRemoveembed] }).catch(() => {});
+                send(channelEmbed, {
+                  username: `${this.client.user.username}`,
+                  embeds: [roleRemoveembed],
+                }).catch(() => {});
               }
             }
           }
@@ -90,10 +96,10 @@ module.exports = class extends Event {
               const newNickname = newMember.nickname || "`None`";
 
               const nicknameEmbed = new discord.MessageEmbed()
-                .setAuthor(
-                  `${newMember.user.tag} | Nickname Update`,
-                  newMember.user.displayAvatarURL({ dynamic: true })
-                )
+                .setAuthor({
+                  name: `${newMember.user.tag} | Nickname Update`,
+                  iconURL: newMember.user.displayAvatarURL({ dynamic: true }),
+                })
                 .setTimestamp()
                 .setFooter({ text: `ID: ${newMember.id}` })
                 .setColor(colorYellow)
@@ -109,7 +115,10 @@ module.exports = class extends Event {
                   .permissionsFor(newMember.guild.me)
                   .has(["SEND_MESSAGES", "EMBED_LINKS"])
               ) {
-                send(channelEmbed, { username: `${this.client.user.username}`, embeds: [nicknameEmbed] }).catch(() => {});
+                send(channelEmbed, {
+                  username: `${this.client.user.username}`,
+                  embeds: [nicknameEmbed],
+                }).catch(() => {});
               }
             }
           }

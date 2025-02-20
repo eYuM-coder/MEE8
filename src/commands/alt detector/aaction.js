@@ -27,10 +27,10 @@ module.exports = class extends Command {
       return message.channel.sendCustom({
         embeds: [
           new discord.MessageEmbed()
-            .setAuthor(
-              `${message.author.tag}`,
-              message.author.displayAvatarURL({ format: "png" })
-            )
+            .setAuthor({
+              name: `${message.author.tag}`,
+              iconURL: message.author.displayAvatarURL({ format: "png" }),
+            })
             .setDescription(
               `${
                 message.client.emoji.fail
@@ -49,10 +49,10 @@ module.exports = class extends Command {
       return message.channel.sendCustom({
         embeds: [
           new discord.MessageEmbed()
-            .setAuthor(
-              `${message.author.tag}`,
-              message.author.displayAvatarURL({ format: "png" })
-            )
+            .setAuthor({
+              name: `${message.author.tag}`,
+              iconURL: message.author.displayAvatarURL({ format: "png" }),
+            })
             .setDescription(
               `${
                 message.client.emoji.fail
@@ -85,10 +85,10 @@ module.exports = class extends Command {
         return message.channel.sendCustom({
           embeds: [
             new discord.MessageEmbed()
-              .setAuthor(
-                `${message.author.tag}`,
-                message.author.displayAvatarURL({ format: "png" })
-              )
+              .setAuthor({
+                name: `${message.author.tag}`,
+                iconURL: message.author.displayAvatarURL({ format: "png" }),
+              })
               .setDescription(
                 `${
                   message.client.emoji.success
@@ -107,10 +107,10 @@ module.exports = class extends Command {
       return message.channel.sendCustom({
         embeds: [
           new discord.MessageEmbed()
-            .setAuthor(
-              `${message.author.tag}`,
-              message.author.displayAvatarURL({ format: "png" })
-            )
+            .setAuthor({
+              name: `${message.author.tag}`,
+              iconURL: message.author.displayAvatarURL({ format: "png" })
+            })
             .setDescription(
               `${
                 message.client.emoji.success

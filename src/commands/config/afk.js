@@ -51,10 +51,10 @@ module.exports = class extends Command {
       const embed = new discord.MessageEmbed()
         .setDescription(`${language.afk5} ${content}`)
         .setColor(message.guild.me.displayHexColor)
-        .setAuthor(
-          message.author.tag,
-          message.author.displayAvatarURL({ dynamic: true })
-        );
+        .setAuthor({
+          name: `${message.author.tag}`,
+          iconURL: message.author.displayAvatarURL({ dynamic: true }),
+        });
       message.channel.sendCustom({ embeds: [embed] });
       newafk.save().catch((err) => console.error(err));
     }

@@ -64,11 +64,11 @@ module.exports = class extends Event {
           .setColor(message.client.color.red);
 
         let addEmbed = new MessageEmbed()
-          .setAuthor(
-            "Role Added",
-            `https://v2.pogy.xyz/logo.png`,
-            `${message.url}`
-          )
+          .setAuthor({
+            name: "Role Added",
+            iconURL: `https://mee8.eyum.org/logo.png`,
+            url: `${message.url}`,
+          })
           .setDescription(
             `You have recieved the **${rrRole.name}** Role by reacting in ${guildName}`
           )
@@ -76,11 +76,11 @@ module.exports = class extends Event {
           .setColor(message.client.color.green);
 
         let remEmbed = new MessageEmbed()
-          .setAuthor(
-            "Role Removed",
-            `https://v2.pogy.xyz/logo.png`,
-            `${message.url}`
-          )
+          .setAuthor({
+            name: "Role Removed",
+            iconURL: `https://mee8.eyum.org/logo.png`,
+            url: `${message.url}`,
+          })
           .setDescription(
             `You have removed the **${rrRole.name}** Role by reacting in ${guildName}`
           )
@@ -88,11 +88,11 @@ module.exports = class extends Event {
           .setColor(message.client.color.green);
 
         let errorReaction = new MessageEmbed()
-          .setAuthor(
-            "Reaction Role Error",
-            `https://v2.pogy.xyz/logo.png`,
-            `${message.url}`
-          )
+          .setAuthor({
+            name: "Reaction Role Error",
+            iconURL: `https://mee8.eyum.org/logo.png`,
+            url: `${message.url}`,
+          })
           .setDescription(
             `${message.client.emoji.fail} Failed to Add the role, since I'm Missing the Manage Roles Permission.\n\nPlease let an admin Know.`
           )
@@ -424,7 +424,10 @@ module.exports = class extends Event {
                         .setDescription(
                           `You already have ${arraylength} open tickets, as the current guild's ticket limit is ${ticketlimit} `
                         )
-                        .setAuthor(user.tag, user.displayAvatarURL())
+                        .setAuthor({
+                          name: user.tag,
+                          iconURL: user.displayAvatarURL(),
+                        })
                         .setFooter({ text: `${process.env.AUTH_DOMAIN}` }),
                     ],
                   })
@@ -517,7 +520,10 @@ module.exports = class extends Event {
                   chan.send({
                     embeds: [
                       new discord.MessageEmbed()
-                        .setAuthor(user.tag, user.displayAvatarURL())
+                        .setAuthor({
+                          name: user.tag,
+                          iconURL: user.displayAvatarURL(),
+                        })
 
                         .setDescription(
                           db.ticketWelcomeMessage
@@ -551,20 +557,20 @@ module.exports = class extends Event {
                     .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
                     .setTitle("Ticket Created")
                     .setTimestamp()
-                    .addField(
-                      "Information",
-                      `**User:** ${user}\n**Ticket Channel: **${
+                    .addFields({
+                      name: "Information",
+                      value: `**User:** ${user}\n**Ticket Channel: **${
                         chan.name
                       }\n**Ticket:** #${serverCase}\n**Date:** ${moment(
                         new Date()
-                      ).format("dddd, MMMM Do YYYY")} `
-                    );
+                      ).format("dddd, MMMM Do YYYY")} `,
+                    });
 
                   if (ticketLog) {
                     send(ticketLog, {
                       embeds: [embedLog],
                       name: `Ticket Logs`,
-                      icon: `https://v2.pogy.xyz/logo.png`,
+                      icon: `https://mee8.eyum.org/logo.png`,
                     }).catch(() => {});
                   }
                 })

@@ -1,14 +1,21 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const config = require("../../../config.json");
-const { MessageEmbed, MessageActionRow, MessageButton, MessageSelectMenu } = require("discord.js");
+const {
+  MessageEmbed,
+  MessageActionRow,
+  MessageButton,
+  MessageSelectMenu,
+} = require("discord.js");
 const Guild = require("../../database/schemas/Guild");
 
 module.exports = {
   data: new SlashCommandBuilder()
-  .setName("invite")
-  .setDescription(`Sends you the invite to ${config.botName}'s support server or the bots invite link`)
-  .setContexts(0)
-  .setIntegrationTypes(0),
+    .setName("invite")
+    .setDescription(
+      `Sends you the invite to ${config.botName}'s support server or the bots invite link`
+    )
+    .setContexts(0)
+    .setIntegrationTypes(0),
   async execute(interaction) {
     const guildDB = await Guild.findOne({
       guildId: interaction.guild.id,
@@ -18,25 +25,27 @@ module.exports = {
     const client = interaction.client;
     const row = new MessageActionRow().addComponents(
       new MessageSelectMenu()
-      .setCustomId("select")
-      .setPlaceholder("Select your option")
-      .addOptions([
-        {
-          label: "Support Server Invite",
-          description: "Click to get invited to the support server",
-          value: "first"
-        },
-        {
-          label: "Bot Invite",
-          description: "Click to invite the official bot",
-          value: "second"
-        },
-      ])
+        .setCustomId("select")
+        .setPlaceholder("Select your option")
+        .addOptions([
+          {
+            label: "Support Server Invite",
+            description: "Click to get invited to the support server",
+            value: "first",
+          },
+          {
+            label: "Bot Invite",
+            description: "Click to invite the official bot",
+            value: "second",
+          },
+        ])
     );
 
     let embed = new MessageEmbed()
-    .setDescription("Select the option below to view the different invite links")
-    .setColor("RANDOM");
+      .setDescription(
+        "Select the option below to view the different invite links"
+      )
+      .setColor("RANDOM");
 
     let editEmbed = new MessageEmbed();
 
@@ -50,27 +59,33 @@ module.exports = {
     const collector = interaction.channel.createMessageComponentCollector({
       componentType: "SELECT_MENU",
       time: 60000,
-      idle: 60000/2,
+      idle: 60000 / 2,
     });
     collector.on("end", async () => {
-      await interaction.editReply({ components: [] })
-    })
+      await interaction.editReply({ components: [] });
+    });
 
     collector.on("collect", async (collected) => {
-      if(!collected.deffered) await collected.deferUpdate()
+      if (!collected.deffered) await collected.deferUpdate();
       const value = collected.values[0];
 
       if (value === "first") {
-        editEmbed.setDescription("Click [here](https://discord.gg/gGCTeCx2TS) to join the support server")
-        .setColor(client.color.green)
+        editEmbed
+          .setDescription(
+            "Click [here](https://discord.gg/gGCTeCx2TS) to join the support server"
+          )
+          .setColor(client.color.green);
         return await interaction.editReply({ embeds: [editEmbed] });
       }
 
       if (value === "second") {
-        editEmbed.setDescription(`${language.invite}(${config.invite_link}) ${client.emoji.success}`)
-        .setColor(client.color.green)
+        editEmbed
+          .setDescription(
+            `${language.invite}(${config.invite_link}) ${client.emoji.success}`
+          )
+          .setColor(client.color.green);
         return await interaction.editReply({ embeds: [editEmbed] });
       }
     });
-  }
-}
+  },
+};

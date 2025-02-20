@@ -1,4 +1,4 @@
-const { CommandInteraction, MessageEmbed } = require('discord.js');
+const { CommandInteraction, MessageEmbed } = require("discord.js");
 const Quote = require("../../database/models/quote.js");
 const Command = require("../../structures/Command");
 
@@ -28,16 +28,16 @@ module.exports = class ShowQuotesCommand extends Command {
         .setTitle("Saved Quotes");
 
       quotes.forEach((quote) => {
-        embed.addField(
-          `${quote.authorID}`,
-          `*${quote.content}*\n\n[${quote.authorID}](${quote.authorAvatar})`
-        );
+        embed.addFields({
+          name: `${quote.authorID}`,
+          value: `*${quote.content}*\n\n[${quote.authorID}](${quote.authorAvatar})`,
+        });
       });
 
       await interaction.reply({ embeds: [embed] });
     } catch (error) {
       console.error(error);
-      await interaction.reply('An error occurred while fetching quotes.');
+      await interaction.reply("An error occurred while fetching quotes.");
     }
   }
 };

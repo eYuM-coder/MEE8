@@ -11,10 +11,10 @@ module.exports = class LockdownCommand extends Command {
       category: "Moderation",
       usage: "<start/end> [reason]",
       examples: [
-        "lockdown start Staff Day", 
-        "lockdown start Raid Prevention", 
-        "lockdown end Staff Day is over", 
-        "lockdown end Action has been taken against raiders."
+        "lockdown start Staff Day",
+        "lockdown start Raid Prevention",
+        "lockdown end Staff Day is over",
+        "lockdown end Action has been taken against raiders.",
       ],
       guildOnly: true,
       botPermission: ["MANAGE_CHANNELS"],
@@ -45,24 +45,36 @@ module.exports = class LockdownCommand extends Command {
 
     // Handle lockdown start
     if (option === "start") {
-      await this.modifyChannelPermissions(message.guild.channels.cache, message.guild.id, false);
+      await this.modifyChannelPermissions(
+        message.guild.channels.cache,
+        message.guild.id,
+        false
+      );
 
       const embed = new MessageEmbed()
         .setDescription(
           `${success} | Successfully locked down the server.` +
-          (logging?.moderation.include_reason === "true" ? `\n\n**Reason:** ${reason}` : "")
+            (logging?.moderation.include_reason === "true"
+              ? `\n\n**Reason:** ${reason}`
+              : "")
         )
         .setColor(client.color.green);
       return message.channel.sendCustom({ embeds: [embed] });
-    
-    // Handle lockdown end
+
+      // Handle lockdown end
     } else if (option === "end") {
-      await this.modifyChannelPermissions(message.guild.channels.cache, message.guild.id, true);
+      await this.modifyChannelPermissions(
+        message.guild.channels.cache,
+        message.guild.id,
+        true
+      );
 
       const embed = new MessageEmbed()
         .setDescription(
           `${success} | Successfully unlocked the server.` +
-          (logging?.moderation.include_reason === "true" ? `\n\n**Reason:** ${reason}` : "")
+            (logging?.moderation.include_reason === "true"
+              ? `\n\n**Reason:** ${reason}`
+              : "")
         )
         .setColor(client.color.green);
       return message.channel.sendCustom({ embeds: [embed] });
@@ -73,9 +85,14 @@ module.exports = class LockdownCommand extends Command {
   async modifyChannelPermissions(channels, guildId, allowMessages) {
     for (const [_, channel] of channels) {
       try {
-        await channel.permissionOverwrites.edit(guildId, { SEND_MESSAGES: allowMessages });
+        await channel.permissionOverwrites.edit(guildId, {
+          SEND_MESSAGES: allowMessages,
+        });
       } catch (err) {
-        console.error(`Failed to modify permissions for channel ${channel.name}:`, err);
+        console.error(
+          `Failed to modify permissions for channel ${channel.name}:`,
+          err
+        );
       }
     }
   }

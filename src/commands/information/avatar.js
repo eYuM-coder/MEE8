@@ -31,11 +31,11 @@ module.exports = class extends Command {
     if (!member) member = message.member;
 
     const embed = new MessageEmbed()
-      .setAuthor(
-        `${language.pfpAvatar.replace("{user}", `${member.user.tag}`)}`,
-        member.user.displayAvatarURL({ dynamic: true, size: 512 }),
-        member.user.displayAvatarURL({ dynamic: true, size: 512 })
-      )
+      .setAuthor({
+        name: `${language.pfpAvatar.replace("{user}", `${member.user.tag}`)}`,
+        iconURL: member.user.displayAvatarURL({ dynamic: true, size: 512 }),
+        url: member.user.displayAvatarURL({ dynamic: true, size: 512 }),
+      })
       .setImage(member.user.displayAvatarURL({ dynamic: true, size: 512 }))
       .setFooter({
         text: message.member.displayName,

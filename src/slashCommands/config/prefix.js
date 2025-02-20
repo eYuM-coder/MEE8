@@ -4,11 +4,16 @@ const { MessageEmbed } = require("discord.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
-  .setName("setprefix")
-  .setDescription("Set's the new prefix")
-  .addStringOption((option) => option.setName("prefix").setDescription("The new prefix to set").setRequired(true))
-  .setContexts(0)
-  .setIntegrationTypes(0),
+    .setName("setprefix")
+    .setDescription("Set's the new prefix")
+    .addStringOption((option) =>
+      option
+        .setName("prefix")
+        .setDescription("The new prefix to set")
+        .setRequired(true)
+    )
+    .setContexts(0)
+    .setIntegrationTypes(0),
   async execute(interaction) {
     const settings = await Guild.findOne(
       {
@@ -27,12 +32,14 @@ module.exports = {
 
     const pre = interaction.options.getString("prefix");
 
-    if(!pre[0]) {
+    if (!pre[0]) {
       return interaction.reply({
         embeds: [
           new MessageEmbed()
-    .setColor(interaction.client.color.red)
-          .setDescription(`${interaction.client.emoji.fail} ${language.setPrefixMissingArgument}`),
+            .setColor(interaction.client.color.red)
+            .setDescription(
+              `${interaction.client.emoji.fail} ${language.setPrefixMissingArgument}`
+            ),
         ],
       });
     }
@@ -41,8 +48,10 @@ module.exports = {
       return interaction.reply({
         embeds: [
           new MessageEmbed()
-          .setColor(interaction.client.color.red)
-          .setDescription(`${interaction.client.emoji.fail} | ${language.setPrefixLongLength}`),
+            .setColor(interaction.client.color.red)
+            .setDescription(
+              `${interaction.client.emoji.fail} | ${language.setPrefixLongLength}`
+            ),
         ],
       });
     }
@@ -50,14 +59,16 @@ module.exports = {
     interaction.reply({
       embeds: [
         new MessageEmbed()
-        .setColor(interaction.client.color.green)
-        .setDescription(`${interaction.client.emoji.success} ${language.setPrefixChange.replace(
-          "{prefix}", pre
-        )}`),
+          .setColor(interaction.client.color.green)
+          .setDescription(
+            `${
+              interaction.client.emoji.success
+            } ${language.setPrefixChange.replace("{prefix}", pre)}`
+          ),
       ],
     });
     await settings.updateOne({
       prefix: pre,
     });
-  }
+  },
 };

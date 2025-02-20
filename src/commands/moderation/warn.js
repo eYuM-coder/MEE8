@@ -133,12 +133,13 @@ module.exports = class extends Command {
       let embed = new MessageEmbed().setColor(message.client.color.green)
         .setDescription(`${language.warnSuccessful
 
-          .replace("{emoji}", client.emoji.success)
-          .replace("{user}", `**${mentionedMember.user.tag}**`)}
-${logging && logging.moderation.include_reason === "true"
-            ? `\n\n**Reason:** ${reason}`
-            : ``
-          }\n\n**Duration: ${formattedTime}**`);
+        .replace("{emoji}", client.emoji.success)
+        .replace("{user}", `**${mentionedMember.user.tag}**`)}
+${
+  logging && logging.moderation.include_reason === "true"
+    ? `\n\n**Reason:** ${reason}`
+    : ``
+}\n\n**Duration: ${formattedTime}**`);
 
       await mentionedMember
         .send({
@@ -160,11 +161,11 @@ ${logging && logging.moderation.include_reason === "true"
         .then(async (s) => {
           if (logging && logging.moderation.delete_reply === "true") {
             setTimeout(() => {
-              s.delete().catch(() => { });
+              s.delete().catch(() => {});
             }, 5000);
           }
         })
-        .catch(() => { });
+        .catch(() => {});
     }
 
     if (logging && logging.moderation.auto_punish.toggle === "true") {
@@ -182,7 +183,7 @@ ${logging && logging.moderation.include_reason === "true"
             .ban({
               reason: `Auto Punish / Responsible user: ${message.author.tag}`,
             })
-            .catch(() => { });
+            .catch(() => {});
         } else if (punishment === "2") {
           action = `kicked`;
 
@@ -190,7 +191,7 @@ ${logging && logging.moderation.include_reason === "true"
             .kick({
               reason: `Auto Punish / Responsible user: ${message.author.tag}`,
             })
-            .catch(() => { });
+            .catch(() => {});
         } else if (punishment === "3") {
           action = `softbanned`;
 
@@ -235,7 +236,7 @@ ${logging && logging.moderation.include_reason === "true"
     }
     if (logging) {
       if (logging.moderation.delete_after_executed === "true") {
-        message.delete().catch(() => { });
+        message.delete().catch(() => {});
       }
 
       const role = message.guild.roles.cache.get(
@@ -263,13 +264,21 @@ ${logging && logging.moderation.include_reason === "true"
                 if (!logcase) logcase = `1`;
 
                 const logEmbed = new MessageEmbed()
-                  .setAuthor(
-                    `Action: \`Warn\` | ${mentionedMember.user.tag} | Case #${logcase}`,
-                    mentionedMember.user.displayAvatarURL({ format: "png" })
+                  .setAuthor({
+                    name: `Action: \`Warn\` | ${mentionedMember.user.tag} | Case #${logcase}`,
+                    iconURL: mentionedMember.user.displayAvatarURL({
+                      format: "png",
+                    }),
+                  })
+                  .addFields(
+                    { name: "User", value: `${mentionedMember}`, inline: true },
+                    {
+                      name: "Moderator",
+                      value: `${message.member}`,
+                      inline: true,
+                    },
+                    { name: "Reason", value: `${reason}`, inline: true }
                   )
-                  .addField("User", `${mentionedMember}`, true)
-                  .addField("Moderator", `${message.member}`, true)
-                  .addField("Reason", `${reason}`, true)
                   .setFooter({
                     text: `ID: ${mentionedMember.id} | Warn ID: ${warnID}`,
                   })
@@ -284,7 +293,7 @@ ${logging && logging.moderation.include_reason === "true"
                 });
 
                 logging.moderation.caseN = logcase + 1;
-                await logging.save().catch(() => { });
+                await logging.save().catch(() => {});
               }
             }
           }

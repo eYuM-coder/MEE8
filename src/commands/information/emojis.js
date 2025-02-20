@@ -25,7 +25,10 @@ module.exports = class extends Command {
     );
 
     const embed = new MessageEmbed()
-      .setAuthor(`${language.emoji1}`, message.guild.iconURL({ dynamic: true }))
+      .setAuthor({
+        name: `${language.emoji1}`,
+        iconURL: message.guild.iconURL({ dynamic: true }),
+      })
       .setFooter({
         text: message.author.tag,
         iconURL: message.author.displayAvatarURL({ dynamic: true }),
@@ -40,20 +43,20 @@ module.exports = class extends Command {
       const range = emojis.length == 1 ? "[1]" : `[1 - ${emojis.length}]`;
       message.channel.sendCustom(
         embed
-          .setAuthor(
-            `${language.emoji1} ${range}`,
-            message.guild.iconURL({ dynamic: true })
-          )
+          .setAuthor({
+            name: `${language.emoji1} ${range}`,
+            iconURL: message.guild.iconURL({ dynamic: true }),
+          })
           .setDescription(emojis.join("\n"))
       );
 
       // Reaction Menu
     } else {
       embed
-        .setAuthor(
-          `${language.emoji1}`,
-          message.guild.iconURL({ dynamic: true })
-        )
+        .setAuthor({
+          name: `${language.emoji1}`,
+          iconURL: message.guild.iconURL({ dynamic: true }),
+        })
         .setFooter({
           text: message.author.tag,
           iconURL: message.author.displayAvatarURL({ dynamic: true }),

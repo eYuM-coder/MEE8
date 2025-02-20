@@ -23,7 +23,7 @@ module.exports = {
       const logging = await Logging.findOne({
         guildId: interaction.guild.id,
       });
-      
+
       // Check if the user has permission to use this command
       if (!interaction.member.permissions.has("MODERATE_MEMBERS"))
         return interaction.followUp({
@@ -74,27 +74,30 @@ module.exports = {
       let dmEmbed = new MessageEmbed()
         .setColor("GREEN")
         .setDescription(
-          `You have been unmuted in **${interaction.guild.name}**.\n\n__**Moderator:**__ ${interaction.user} **(${interaction.user.tag})**\n__**Reason:**__ ${reason || "No Reason Provided"}`
+          `You have been unmuted in **${
+            interaction.guild.name
+          }**.\n\n__**Moderator:**__ ${interaction.user} **(${
+            interaction.user.tag
+          })**\n__**Reason:**__ ${reason || "No Reason Provided"}`
         )
         .setTimestamp();
 
-      return member
-        .send({ embeds: [dmEmbed] })
-        .catch(() => {
-          // Handle the case where the user has DMs disabled
-          interaction.followUp({
-            content: `I couldn't send a DM to ${member}, they might have DMs disabled.`,
-            ephemeral: true,
-          });
+      return member.send({ embeds: [dmEmbed] }).catch(() => {
+        // Handle the case where the user has DMs disabled
+        interaction.followUp({
+          content: `I couldn't send a DM to ${member}, they might have DMs disabled.`,
+          ephemeral: true,
         });
-      
+      });
     } catch (err) {
       console.error(err);
       interaction.reply({
         embeds: [
           new MessageEmbed()
             .setColor(interaction.client.color.red)
-            .setDescription(`${interaction.client.emoji.fail} | An error occurred.`)
+            .setDescription(
+              `${interaction.client.emoji.fail} | An error occurred.`
+            ),
         ],
         ephemeral: true,
       });

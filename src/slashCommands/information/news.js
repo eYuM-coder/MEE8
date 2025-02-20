@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const config = require("../../../config.json");
-const Guild = require("../../database/schemas/Pogy");
+const Guild = require("../../database/schemas/MEE8");
 const Guildd = require("../../database/schemas/Guild");
 const { MessageEmbed } = require("discord.js");
 const moment = require("moment");
@@ -21,16 +21,26 @@ module.exports = {
 
     const language = require(`../../data/language/${guildDB2.language}.json`);
 
-    if (!guildDB) return interaction.reply({ content: `${language.noNews}`, ephemeral: true });
+    if (!guildDB)
+      return interaction.reply({
+        content: `${language.noNews}`,
+        ephemeral: true,
+      });
 
     let embed = new MessageEmbed()
       .setColor(interaction.guild.me.displayHexColor)
       .setTitle(`${config.botName} News`)
-      .setDescription(`***__${language.datePublished}__ ${moment(guildDB.time).format("dddd, MMMM Do YYYY")}*** *__[\`(${moment(guildDB.time).fromNow()})\`] (https://example.com)__*\n\n${guildDB.news}`)
+      .setDescription(
+        `***__${language.datePublished}__ ${moment(guildDB.time).format(
+          "dddd, MMMM Do YYYY"
+        )}*** *__[\`(${moment(
+          guildDB.time
+        ).fromNow()})\`] (https://example.com)__*\n\n${guildDB.news}`
+      )
       .setFooter({ text: "https://example.com" })
       .setTimestamp();
     interaction.reply({ embeds: [embed] }).catch(() => {
       interaction.reply({ content: `${language.noNews}`, ephemeral: true });
     });
-  }
+  },
 };

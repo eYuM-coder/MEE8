@@ -11,16 +11,16 @@ module.exports = {
       option
         .setName("member")
         .setDescription("Person who you want to put in timeout.")
-        .setRequired(true),
+        .setRequired(true)
     )
     .addStringOption((option) =>
       option
         .setName("time")
         .setDescription("For how much time you want to timeout for")
-        .setRequired(true),
+        .setRequired(true)
     )
     .addStringOption((option) =>
-      option.setName("reason").setDescription("The reason for the timeout"),
+      option.setName("reason").setDescription("The reason for the timeout")
     )
     .setContexts(0)
     .setIntegrationTypes(0),
@@ -62,7 +62,7 @@ module.exports = {
         let timevalid = new MessageEmbed()
           .setColor("RED")
           .setDescription(
-            `${client.emoji.fail} | The time specified is not valid. Please provide a valid time.`,
+            `${client.emoji.fail} | The time specified is not valid. Please provide a valid time.`
           );
         return interaction.reply({ embeds: [timevalid] }).then(async () => {
           if (logging && logging.moderation.delete_reply === "true") {
@@ -81,8 +81,8 @@ module.exports = {
           .setDescription(
             `***${client.emoji.success} | ${member} has been timed out for ${ms(
               time,
-              { long: true },
-            )}* || ${reason}**`,
+              { long: true }
+            )}* || ${reason}**`
           );
         await interaction
           .reply({ embeds: [timeoutsuccess] })
@@ -98,9 +98,11 @@ module.exports = {
         let dmEmbed = new MessageEmbed()
           .setColor("RED")
           .setDescription(
-            `You have been muted in **${interaction.guild.name
-            }**.\n\n__**Moderator:**__ ${interaction.user} **(${interaction.user.tag
-            })**\n__**Reason:**__ ${reason || "No Reason Provided"}`,
+            `You have been muted in **${
+              interaction.guild.name
+            }**.\n\n__**Moderator:**__ ${interaction.user} **(${
+              interaction.user.tag
+            })**\n__**Reason:**__ ${reason || "No Reason Provided"}`
           )
           .setTimestamp();
 
@@ -116,7 +118,7 @@ module.exports = {
         let failembed = new MessageEmbed()
           .setColor(client.color.red)
           .setDescription(
-            `${client.emoji.fail} | That user is a mod/admin, I can't do that.`,
+            `${client.emoji.fail} | That user is a mod/admin, I can't do that.`
           )
           .setTimestamp();
         return interaction.reply({ embeds: [failembed] });
@@ -127,7 +129,9 @@ module.exports = {
         embeds: [
           new MessageEmbed()
             .setColor(interaction.client.color.red)
-            .setDescription(`${interaction.client.emoji.fail} | There was an error.`),
+            .setDescription(
+              `${interaction.client.emoji.fail} | There was an error.`
+            ),
         ],
         ephemeral: true,
       });

@@ -18,14 +18,14 @@
     <img src="https://img.shields.io/badge/discord.js-v13.6.0-blue.svg?logo=npm" alt="discordjs">
   </a>
 
-  <a href="https://github.com/peterhanania/Pogy/blob/main/LICENSE">
+  <a href="https://github.com/eYuM-coder/MEE8/blob/main/LICENSE">
     <img src="https://img.shields.io/badge/license-Apache%202-blue" alt="license">
   </a>
 
 </div>
 
 <p align="center">
-  <a href="#pogy">Pogy</a></a>
+  <a href="#mee8">MEE8</a></a>
   •
   <a href="#funkcje">Funkcje</a>
   •
@@ -40,9 +40,9 @@
   <a href="#autorzy">Autorzy</a>
 </p>
 
-## Pogy
+## MEE8
 
-to bot discord, który jest tworzony od 2 lat. Kod był zepsuty, więc postanowiliśmy naprawić błędy i zrobić z niego wielofunkcyjnego bota w bibliotece discord.js v13! Kliknij [tutaj](https://394wkx-3000.csb.app//invite) aby zaprosić oficjalnego bota na swój serwer! Również możesz dołączyć na officjalny [Serwer wspracia Pogy](https://394wkx-3000.csb.app//support) aby otrzymać pomoc.
+to bot discord, który jest tworzony od 2 lat. Kod był zepsuty, więc postanowiliśmy naprawić błędy i zrobić z niego wielofunkcyjnego bota w bibliotece discord.js v13! Kliknij [tutaj](https://394wkx-3000.csb.app//invite) aby zaprosić oficjalnego bota na swój serwer! Również możesz dołączyć na officjalny [Serwer wspracia MEE8](https://394wkx-3000.csb.app//support) aby otrzymać pomoc.
 
 Jeżeli spodobało ci się repozytorium, zostaw po sobie gwiazdke ⭐
 
@@ -91,7 +91,7 @@ Dzięki możesz nawet zapisywać wszystko za pomocą webhooków bezpośrednio z 
 Najpierw sklonuj repozytorium:
 
 ```
-git clone https://github.com/Pogy-Bot/Pogy.git
+git clone https://github.com/MEE8-Bot/MEE8.git
 ```
 
 Po sklonowaniu, użyj w konsoli
@@ -203,9 +203,9 @@ Wydany na licencji [Apache License](http://www.apache.org/licenses/LICENSE-2.0).
 
 ## Wesprzyj
 
-Możesz przekazać i uczynić ją silniejszą niż kiedykolwiek [klikając tutaj](https://paypal.me/pogybot)!
+Możesz przekazać i uczynić ją silniejszą niż kiedykolwiek [klikając tutaj](https://paypal.me/mee8bot)!
 
 ## Autorzy
-[Stare kredyty](https://github.com/peterhanania/pogy#credits)
+[Stare kredyty](https://github.com/eYuM-coder/MEE8#credits)
 - Peter Hanania [Przepisyawnie DJS] - [github.com/peterhanania](github.com/peterhanania)
 - JANO [Przepisywanie DJS] - [github.com/wlegit](github.com/wlegit)

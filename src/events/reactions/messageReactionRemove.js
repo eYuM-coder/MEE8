@@ -46,11 +46,11 @@ module.exports = class extends Event {
         if (!rrRole) return;
 
         let addEmbed = new MessageEmbed()
-          .setAuthor(
-            "Role Added",
-            `https://v2.pogy.xyz/logo.png`,
-            `${message.url}`
-          )
+          .setAuthor({
+            name: "Role Added",
+            iconURL: `https://mee8.eyum.org/logo.png`,
+            url: `${message.url}`,
+          })
           .setDescription(
             `You have recieved the **${rrRole.name}** Role by reacting in ${guildName}`
           )
@@ -58,11 +58,11 @@ module.exports = class extends Event {
           .setColor(message.client.color.green);
 
         let remEmbed = new MessageEmbed()
-          .setAuthor(
-            "Role Removed",
-            `https://v2.pogy.xyz/logo.png`,
-            `${message.url}`
-          )
+          .setAuthor({
+            name: "Role Removed",
+            iconURL: `https://mee8.eyum.org/logo.png`,
+            url: `${message.url}`,
+          })
           .setDescription(
             `You have removed the **${rrRole.name}** Role by reacting in ${guildName}`
           )
@@ -70,11 +70,11 @@ module.exports = class extends Event {
           .setColor(message.client.color.green);
 
         let errorReaction = new MessageEmbed()
-          .setAuthor(
-            "Reaction Error",
-            `https://v2.pogy.xyz/logo.png`,
-            `${message.url}`
-          )
+          .setAuthor({
+            name: "Reaction Error",
+            iconURL: `https://mee8.eyum.org/logo.png`,
+            url: `${message.url}`,
+          })
           .setDescription(`A reaction error has occured!`)
           .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
           .setColor(message.client.color.green);

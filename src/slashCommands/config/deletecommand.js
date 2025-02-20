@@ -5,11 +5,16 @@ const Guild = require("../../database/schemas/Guild");
 
 module.exports = {
   data: new SlashCommandBuilder()
-  .setName("deletecommand")
-  .setDescription("Deletes a custom command")
-  .addStringOption((option) => option.setName("command").setDescription("The command to delete").setRequired(true))
-  .setContexts(0)
-  .setIntegrationTypes(0),
+    .setName("deletecommand")
+    .setDescription("Deletes a custom command")
+    .addStringOption((option) =>
+      option
+        .setName("command")
+        .setDescription("The command to delete")
+        .setRequired(true)
+    )
+    .setContexts(0)
+    .setIntegrationTypes(0),
   async execute(interaction) {
     const guildDB = await Guild.findOne({
       guildId: interaction.guild.id,
@@ -21,25 +26,33 @@ module.exports = {
 
     const name = interaction.options.getString("command");
 
-    if (!name) return interaction.reply({
-      embeds: [
-        new MessageEmbed()
-        .setAuthor({
-          name: `${interaction.user.tag}`,
-          iconURL: interaction.user.displayAvatarURL({ dynamic: true })
+    if (!name)
+      return interaction
+        .reply({
+          embeds: [
+            new MessageEmbed()
+              .setAuthor({
+                name: `${interaction.user.tag}`,
+                iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
+              })
+              .setDescription(
+                `${language.properusage} \`${prefix}deletecommand <command-name>\`\n\n${language.example} \`${prefix}deletecommand pog\``
+              )
+              .setTimestamp()
+              .setFooter({ text: `${process.env.AUTH_DOMAIN}` }),
+          ],
         })
-        .setDescription(`${language.properusage} \`${prefix}deletecommand <command-name>\`\n\n${language.example} \`${prefix}deletecommand pog\``)
-        .setTimestamp()
-        .setFooter({ text: `${process.env.AUTH_DOMAIN}` }),
-      ],
-    })
-    .setColor(interaction.guild.me.displayHexColor);
+        .setColor(interaction.guild.me.displayHexColor);
 
-  if (name.length > 30) return interaction.reply({ content: `${interaction.client.emoji.fail} | ${language.cc1}` });
+    if (name.length > 30)
+      return interaction.reply({
+        content: `${interaction.client.emoji.fail} | ${language.cc1}`,
+      });
 
     customCommand.findOne(
       {
-        guildId: interaction.guild.id, name
+        guildId: interaction.guild.id,
+        name,
       },
       async (err, data) => {
         if (data) {
@@ -47,21 +60,23 @@ module.exports = {
           interaction.reply({
             embeds: [
               new MessageEmbed()
-              .setColor(interaction.guild.me.displayHexColor)
-              .setAuthor({
-                name: `${interaction.user.tag}`,
-                iconURL: interaction.user.displayAvatarURL({ dynamic: true })
-              })
-              .setTitle(`${interaction.client.emoji.success} Delete Command`)
-              .setDescription(`${language.deletecmd1} **${name}**`)
-              .setTimestamp()
-              .setFooter({ text: `${process.env.AUTH_DOMAIN}` }),
+                .setColor(interaction.guild.me.displayHexColor)
+                .setAuthor({
+                  name: `${interaction.user.tag}`,
+                  iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
+                })
+                .setTitle(`${interaction.client.emoji.success} Delete Command`)
+                .setDescription(`${language.deletecmd1} **${name}**`)
+                .setTimestamp()
+                .setFooter({ text: `${process.env.AUTH_DOMAIN}` }),
             ],
           });
         } else {
-          interaction.reply({ content: `${interaction.client.emoji.fail} | ${language.deletecmd2}` });
+          interaction.reply({
+            content: `${interaction.client.emoji.fail} | ${language.deletecmd2}`,
+          });
         }
       }
     );
-  }
+  },
 };

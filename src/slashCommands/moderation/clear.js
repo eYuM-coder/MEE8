@@ -17,7 +17,9 @@ module.exports = {
     .addStringOption((option) =>
       option.setName("reason").setDescription("The reason for the purge")
     )
-    .addChannelOption((option) => option.setName("channel").setDescription("The optional channel."))
+    .addChannelOption((option) =>
+      option.setName("channel").setDescription("The optional channel.")
+    )
     .setContexts(0)
     .setIntegrationTypes(0),
   async execute(interaction) {
@@ -30,7 +32,8 @@ module.exports = {
       const success = client.emoji.success;
 
       const amount = parseInt(interaction.options.getString("amount"));
-      const channel = interaction.options.getChannel("channel") || interaction.channel;
+      const channel =
+        interaction.options.getChannel("channel") || interaction.channel;
       let reason = interaction.options.getString("reason");
       if (!reason) {
         reason = "No reason provided.";
@@ -86,7 +89,8 @@ module.exports = {
           totalDeleted += deletedMessages.size;
 
           logger.info(
-            `Deleted ${deletedMessages.size} ${deletedMessages.size === 1 ? "message" : "messages"
+            `Deleted ${deletedMessages.size} ${
+              deletedMessages.size === 1 ? "message" : "messages"
             }.`,
             { label: "Purge" }
           );
@@ -94,7 +98,10 @@ module.exports = {
           // If fewer than `messagesToFetch` were deleted, stop early
           if (deletedMessages.size < messagesToFetch) {
             break;
-          } else if (deletedMessages.size !== 100 && deletedMessages.size == messagesToFetch) {
+          } else if (
+            deletedMessages.size !== 100 &&
+            deletedMessages.size == messagesToFetch
+          ) {
             break;
           }
         } catch (error) {
@@ -110,14 +117,19 @@ module.exports = {
       if (channel == interaction.channel) {
         if (totalDeleted > 100) {
           const embed = new MessageEmbed()
-            .setDescription(`${success} | ***Found and purged ${totalDeleted} ${totalDeleted === 1 ? "message" : "messages"}.* || ${reason}**`)
+            .setDescription(
+              `${success} | ***Found and purged ${totalDeleted} ${
+                totalDeleted === 1 ? "message" : "messages"
+              }.* || ${reason}**`
+            )
             .setColor(interaction.client.color.green);
           interaction.editReply({ embeds: [embed], ephemeral: true });
         } else {
           const embed = new MessageEmbed()
 
             .setDescription(
-              `${success} | ***Successfully deleted ${totalDeleted} ${totalDeleted === 1 ? "message" : "messages"
+              `${success} | ***Successfully deleted ${totalDeleted} ${
+                totalDeleted === 1 ? "message" : "messages"
               }.* || ${reason}**`
             )
 
@@ -129,7 +141,8 @@ module.exports = {
         const embed = new MessageEmbed()
 
           .setDescription(
-            `${success} | ***Found and purged ${totalDeleted} ${totalDeleted === 1 ? "message" : "messages"
+            `${success} | ***Found and purged ${totalDeleted} ${
+              totalDeleted === 1 ? "message" : "messages"
             } in ${channel}.* || ${reason}**`
           )
 
@@ -164,21 +177,30 @@ module.exports = {
                   if (!logcase) logcase = `1`;
 
                   const logEmbed = new MessageEmbed()
-                    .setAuthor(
-                      `Action: \`Purge\` | Case #${logcase}`,
-                      interaction.member.displayAvatarURL({ format: "png" })
-                    )
-                    .addField("Moderator", `${interaction.member}`, true)
+                    .setAuthor({
+                      name: `Action: \`Purge\` | Case #${logcase}`,
+                      iconURL: interaction.member.displayAvatarURL({
+                        format: "png",
+                      }),
+                    })
+                    .addFields({
+                      name: "Moderator",
+                      value: `${interaction.member}`,
+                      inline: true,
+                    })
                     .setTimestamp()
                     .setFooter({
                       text: `Responsible ID: ${interaction.member.id}`,
                     })
                     .setColor(color);
 
-                  send(loggingChannel, { username: `${interaction.client.user.username}`, embeds: [logEmbed] }).catch(() => { });
+                  send(loggingChannel, {
+                    username: `${interaction.client.user.username}`,
+                    embeds: [logEmbed],
+                  }).catch(() => {});
 
                   logging.moderation.caseN = logcase + 1;
-                  await logging.save().catch(() => { });
+                  await logging.save().catch(() => {});
                 }
               }
             }

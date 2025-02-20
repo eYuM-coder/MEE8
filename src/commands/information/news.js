@@ -1,5 +1,5 @@
 const Command = require("../../structures/Command");
-const Guild = require("../../database/schemas/Pogy");
+const Guild = require("../../database/schemas/MEE8");
 const config = require("../../../config.json");
 const Guildd = require("../../database/schemas/Guild");
 const { MessageEmbed } = require("discord.js");

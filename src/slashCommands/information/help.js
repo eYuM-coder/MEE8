@@ -69,7 +69,7 @@ module.exports = {
             description: "Click this to go back to the home page",
             value: "home",
           },
-        ]),
+        ])
     );
 
     let embed = new MessageEmbed()
@@ -109,7 +109,7 @@ module.exports = {
             "**[Invite](https://invite.example.com) | " +
             `[Support Server](${process.env.AUTH_DOMAIN}/support) | ` +
             `[Dashboard](${process.env.AUTH_DOMAIN}/dashboard)**`,
-        },
+        }
       )
       .setFooter({
         text: `Requested by ${interaction.user.tag}`,
@@ -162,7 +162,9 @@ module.exports = {
           .setColor("GREEN")
           .setTitle(`${emoji[value]} ${capitalize(value)} Commands`)
           .setFooter({
-            text: `Requested by ${interaction.user.tag} | Total ${capitalize(value)} commands: ${commandFiles.length}`,
+            text: `Requested by ${interaction.user.tag} | Total ${capitalize(
+              value
+            )} commands: ${commandFiles.length}`,
             iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
           });
         return await interaction.editReply({ embeds: [editEmbed] });

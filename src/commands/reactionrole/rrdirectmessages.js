@@ -65,10 +65,10 @@ module.exports = class extends Command {
               .sendCustom({
                 embeds: [
                   new MessageEmbed()
-                    .setAuthor(
-                      message.author.tag,
-                      message.author.displayAvatarURL()
-                    )
+                    .setAuthor({
+                      name: message.author.tag,
+                      iconURL: message.author.displayAvatarURL(),
+                    })
                     .setDescription(`${fail} DMs are already disabled`)
                     .setFooter({ text: `${process.env.AUTH_DOMAIN}` }),
                 ],
@@ -85,7 +85,10 @@ module.exports = class extends Command {
       message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-            .setAuthor(message.author.tag, message.author.displayAvatarURL())
+            .setAuthor({
+              name: message.author.tag,
+              iconURLL: message.author.displayAvatarURL(),
+            })
             .setDescription(`${success} Reaction Role DMs have been disabled!`)
             .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
             .setColor(client.color.red),
@@ -101,10 +104,10 @@ module.exports = class extends Command {
             return message.channel.sendCustom({
               embeds: [
                 new MessageEmbed()
-                  .setAuthor(
-                    message.author.tag,
-                    message.author.displayAvatarURL()
-                  )
+                  .setAuthor({
+                    name: message.author.tag,
+                    iconURL: message.author.displayAvatarURL(),
+                  })
                   .setDescription(`${fail} DMs are already enabled`)
                   .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
                   .setColor(client.color.red),
@@ -119,10 +122,10 @@ module.exports = class extends Command {
           message.channel.sendCustom({
             embeds: [
               new MessageEmbed()
-                .setAuthor(
-                  message.author.tag,
-                  message.author.displayAvatarURL()
-                )
+                .setAuthor({
+                  name: message.author.tag,
+                  iconURL: message.author.displayAvatarURL(),
+                })
                 .setDescription(
                   `${success} Reaction Role DMs have been enabled!`
                 )

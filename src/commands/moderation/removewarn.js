@@ -35,10 +35,10 @@ module.exports = class extends Command {
       return message.channel.sendCustom({
         embeds: [
           new discord.MessageEmbed()
-            .setAuthor(
-              `${message.author.tag}`,
-              message.author.displayAvatarURL({ dynamic: true })
-            )
+            .setAuthor({
+              name: `${message.author.tag}`,
+              iconURL: message.author.displayAvatarURL({ dynamic: true }),
+            })
             .setDescription(`${client.emoji.fail} | ${language.banUserValid}`)
             .setTimestamp(message.createdAt)
             .setColor(client.color.red),
@@ -61,10 +61,10 @@ module.exports = class extends Command {
       return message.channel.sendCustom({
         embeds: [
           new discord.MessageEmbed()
-            .setAuthor(
-              `${message.author.tag}`,
-              message.author.displayAvatarURL({ dynamic: true })
-            )
+            .setAuthor({
+              name: `${message.author.tag}`,
+              iconURL: message.author.displayAvatarURL({ dynamic: true }),
+            })
             .setDescription(`${client.emoji.fail} | ${language.rmNoWarning}`)
             .setTimestamp(message.createdAt)
             .setColor(client.color.red),
@@ -77,10 +77,10 @@ module.exports = class extends Command {
       return message.channel.sendCustom({
         embeds: [
           new discord.MessageEmbed()
-            .setAuthor(
-              `${message.author.tag}`,
-              message.author.displayAvatarURL({ dynamic: true })
-            )
+            .setAuthor({
+              name: `${message.author.tag}`,
+              iconURL: message.author.displayAvatarURL({ dynamic: true }),
+            })
             .setDescription(`${client.emoji.fail} | ${language.rmWarnInvalid} `)
             .setTimestamp(message.createdAt)
             .setColor(client.color.red),
@@ -93,10 +93,10 @@ module.exports = class extends Command {
       return message.channel.sendCustom({
         embeds: [
           new discord.MessageEmbed()
-            .setAuthor(
-              `${message.author.tag}`,
-              message.author.displayAvatarURL({ dynamic: true })
-            )
+            .setAuthor({
+              name: `${message.author.tag}`,
+              iconURL: message.author.displayAvatarURL({ dynamic: true }),
+            })
             .setDescription(`${client.emoji.fail} | ${language.rmWarnInvalid} `)
             .setTimestamp(message.createdAt)
             .setColor(client.color.red),
@@ -107,10 +107,10 @@ module.exports = class extends Command {
       return message.channel.sendCustom({
         embeds: [
           new discord.MessageEmbed()
-            .setAuthor(
-              `${message.author.tag}`,
-              message.author.displayAvatarURL({ dynamic: true })
-            )
+            .setAuthor({
+              name: `${message.author.tag}`,
+              iconURL: message.author.displayAvatarURL({ dynamic: true }),
+            })
             .setDescription(`${client.emoji.fail} | ${language.rmWarnInvalid} `)
             .setTimestamp(message.createdAt)
             .setColor(client.color.red),
@@ -121,10 +121,10 @@ module.exports = class extends Command {
       return message.channel.sendCustom({
         embeds: [
           new discord.MessageEmbed()
-            .setAuthor(
-              `${message.author.tag}`,
-              message.author.displayAvatarURL({ dynamic: true })
-            )
+            .setAuthor({
+              name: `${message.author.tag}`,
+              iconURL: message.author.displayAvatarURL({ dynamic: true }),
+            })
             .setDescription(`${client.emoji.fail} | ${language.rmWarnInvalid} `)
             .setTimestamp(message.createdAt)
             .setColor(client.color.red),
@@ -198,22 +198,33 @@ module.exports = class extends Command {
                 if (!logcase) logcase = `1`;
 
                 const logEmbed = new MessageEmbed()
-                  .setAuthor(
-                    `Action: \`Remove Warn\` | ${mentionedMember.user.tag} | Case #${logcase}`,
-                    mentionedMember.user.displayAvatarURL({ format: "png" })
+                  .setAuthor({
+                    name: `Action: \`Remove Warn\` | ${mentionedMember.user.tag} | Case #${logcase}`,
+                    iconURL: mentionedMember.user.displayAvatarURL({
+                      format: "png",
+                    }),
+                  })
+                  .addFields(
+                    { name: "User", value: `${mentionedMember}`, inline: true },
+                    {
+                      name: "Moderator",
+                      value: `${message.member}`,
+                      inline: true,
+                    },
+                    { name: "Reason", value: `${reason}`, inline: true }
                   )
-                  .addField("User", `${mentionedMember}`, true)
-                  .addField("Moderator", `${message.member}`, true)
-                  .addField("Reason", `${reason}`, true)
                   .setFooter({
                     text: `ID: ${mentionedMember.id} | Warn ID: ${warningID}`,
                   })
                   .setTimestamp()
                   .setColor(color);
 
-                  send(channel, { username: `${this.client.user.username}`, embeds: [logEmbed] }).catch((e) => {
-                    console.log(e);
-                  });
+                send(channel, {
+                  username: `${this.client.user.username}`,
+                  embeds: [logEmbed],
+                }).catch((e) => {
+                  console.log(e);
+                });
 
                 logging.moderation.caseN = logcase + 1;
                 await logging.save().catch(() => {});

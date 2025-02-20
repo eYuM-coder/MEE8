@@ -5,18 +5,18 @@ const { MessageEmbed } = require("discord.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
-  .setName("catfact")
-  .setDescription("Generate random cat facts")
-  .setContexts([0, 1, 2])
-  .setIntegrationTypes([0, 1]),
+    .setName("catfact")
+    .setDescription("Generate random cat facts")
+    .setContexts([0, 1, 2])
+    .setIntegrationTypes([0, 1]),
   async execute(interaction) {
-    const res = await fetch("https://catfact.ninja/fact").catch(() => {})
+    const res = await fetch("https://catfact.ninja/fact").catch(() => {});
     const fact = (await res.json()).fact;
     const embed = new MessageEmbed()
-    .setDescription(`${fact}`)
-    .setFooter({ text: `/catfact.ninja/fact` })
-    .setTimestamp()
-    .setColor(interaction.client.color.blue);
+      .setDescription(`${fact}`)
+      .setFooter({ text: `/catfact.ninja/fact` })
+      .setTimestamp()
+      .setColor(interaction.client.color.blue);
     interaction.reply({ embeds: [embed] }).catch(() => {});
-  }
+  },
 };

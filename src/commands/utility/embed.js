@@ -11,7 +11,7 @@ module.exports = class extends Command {
     super(...args, {
       name: "embed",
       aliases: ["embedify", "MessageEmbed"],
-      description: `Make a custom embed builder with Pogy!`,
+      description: `Make a custom embed builder with MEE8!`,
       category: "Utility",
       guildOnly: true,
       cooldown: 5,
@@ -472,19 +472,24 @@ module.exports = class extends Command {
                                                                           message.channel.sendCustom(
                                                                             new MessageEmbed()
                                                                               .setAuthor(
-                                                                                `${message.author.tag}`,
-                                                                                message.author.displayAvatarURL(
-                                                                                  {
-                                                                                    dynamic: true,
-                                                                                  }
-                                                                                )
+                                                                                {
+                                                                                  name: `${message.author.tag}`,
+                                                                                  iconURL:
+                                                                                    message.author.displayAvatarURL(
+                                                                                      {
+                                                                                        dynamic: true,
+                                                                                      }
+                                                                                    ),
+                                                                                }
                                                                               )
                                                                               .setDescription(
                                                                                 `${language.embedd13} \`${prefix}${name}\``
                                                                               )
                                                                               .setTimestamp()
                                                                               .setFooter(
-                                                                                `${process.env.AUTH_DOMAIN}`
+                                                                                {
+                                                                                  text: `${process.env.AUTH_DOMAIN}`,
+                                                                                }
                                                                               )
                                                                               .setColor(
                                                                                 message
@@ -584,7 +589,9 @@ module.exports = class extends Command {
                                                                         )
 
                                                                         .setFooter(
-                                                                          ``
+                                                                          {
+                                                                            text: ``,
+                                                                          }
                                                                         );
 
                                                                     if (
@@ -607,7 +614,9 @@ module.exports = class extends Command {
                                                                       "none"
                                                                     )
                                                                       embed.setFooter(
-                                                                        mainfooter
+                                                                        {
+                                                                          text: mainfooter,
+                                                                        }
                                                                       );
                                                                     if (
                                                                       timestamp !==

@@ -33,10 +33,10 @@ module.exports = class extends Command {
           return message.channel.sendCustom({
             embeds: [
               new discord.MessageEmbed()
-                .setAuthor(
-                  `${message.author.tag}`,
-                  message.author.displayAvatarURL({ format: "png" })
-                )
+                .setAuthor({
+                  name: `${message.author.tag}`,
+                  iconURL: message.author.displayAvatarURL({ format: "png" }),
+                })
                 .setDescription(
                   `${message.client.emoji.fail} This Feature is disabled in the current guild`
                 )
@@ -50,10 +50,10 @@ module.exports = class extends Command {
           return message.channel.sendCustom({
             embeds: [
               new discord.MessageEmbed()
-                .setAuthor(
-                  `${message.author.tag}`,
-                  message.author.displayAvatarURL({ format: "png" })
-                )
+                .setAuthor({
+                  name: `${message.author.tag}`,
+                  iconURL: message.author.displayAvatarURL({ format: "png" }),
+                })
                 .setDescription(
                   `${message.client.emoji.fail} This Feature is disabled in the current guild`
                 )
@@ -79,10 +79,10 @@ module.exports = class extends Command {
             return message.channel.sendCustom({
               embeds: [
                 new discord.MessageEmbed()
-                  .setAuthor(
-                    `${message.author.tag}`,
-                    message.author.displayAvatarURL({ format: "png" })
-                  )
+                  .setAuthor({
+                    name: `${message.author.tag}`,
+                    iconURL: message.author.displayAvatarURL({ format: "png" }),
+                  })
                   .setDescription(
                     `${message.client.emoji.fail} Please provide a reason`
                   )
@@ -118,10 +118,10 @@ module.exports = class extends Command {
                     .setDescription(
                       `You already have ${arraylength} open tickets, as the current guild's ticket limit is ${ticketlimit} `
                     )
-                    .setAuthor(
-                      message.author.tag,
-                      message.author.displayAvatarURL()
-                    )
+                    .setAuthor({
+                      name: message.author.tag,
+                      iconURL: message.author.displayAvatarURL(),
+                    })
                     .setFooter({ text: `${process.env.AUTH_DOMAIN}` }),
                 ],
               })
@@ -137,8 +137,8 @@ module.exports = class extends Command {
           message.guild.channels
             .create(chann, { type: "GUILD_TEXT" })
             .then(async (chan) => {
-              if (pogy) {
-                chan.permissionOverwrites.edit(pogy, {
+              if (mee8) {
+                chan.permissionOverwrites.edit(mee8, {
                   VIEW_CHANNEL: true,
 
                   SEND_MESSAGES: true,
@@ -188,10 +188,10 @@ module.exports = class extends Command {
                 .send({
                   embeds: [
                     new discord.MessageEmbed()
-                      .setAuthor(
-                        message.author.tag,
-                        message.author.displayAvatarURL()
-                      )
+                      .setAuthor({
+                        name: message.author.tag,
+                        iconURL: message.author.displayAvatarURL(),
+                      })
 
                       .setDescription(
                         db.ticketWelcomeMessage

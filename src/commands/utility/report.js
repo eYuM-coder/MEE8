@@ -55,10 +55,10 @@ module.exports = class extends Command {
           .sendCustom({
             embeds: [
               new MessageEmbed()
-                .setAuthor(
-                  `${message.author.tag}`,
-                  message.author.displayAvatarURL({ dynamic: true })
-                )
+                .setAuthor({
+                  name: `${message.author.tag}`,
+                  iconURL: message.author.displayAvatarURL({ dynamic: true }),
+                })
                 .setTitle(`${fail} ${language.missingUser}`)
                 .setDescription(`${language.missingUser1}`)
                 .setTimestamp()
@@ -104,10 +104,10 @@ module.exports = class extends Command {
           .sendCustom({
             embeds: [
               new MessageEmbed()
-                .setAuthor(
-                  `${message.author.tag}`,
-                  message.author.displayAvatarURL({ dynamic: true })
-                )
+                .setAuthor({
+                  name: `${message.author.tag}`,
+                  iconURL: message.author.displayAvatarURL({ dynamic: true }),
+                })
                 .setTitle(`${fail} ${language.missingUser}`)
                 .setDescription(`${language.missingUser1}`)
                 .setTimestamp()
@@ -163,10 +163,10 @@ module.exports = class extends Command {
         return message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-              .setAuthor(
-                `${message.author.tag}`,
-                message.author.displayAvatarURL({ format: "png" })
-              )
+              .setAuthor({
+                name: `${message.author.tag}`,
+                iconURL: message.author.displayAvatarURL({ format: "png" }),
+              })
               .setDescription(`${fail} ${language.report11}`)
               .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
               .setTimestamp()
@@ -179,10 +179,10 @@ module.exports = class extends Command {
         return message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-              .setAuthor(
-                `${message.author.tag}`,
-                message.author.displayAvatarURL({ format: "png" })
-              )
+              .setAuthor({
+                name: `${message.author.tag}`,
+                iconURL: message.author.displayAvatarURL({ format: "png" }),
+              })
               .setDescription(`${fail} ${language.report12}`)
               .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
               .setTimestamp()
@@ -194,10 +194,10 @@ module.exports = class extends Command {
         return message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-              .setAuthor(
-                `${message.author.tag}`,
-                message.author.displayAvatarURL({ format: "png" })
-              )
+              .setAuthor({
+                name: `${message.author.tag}`,
+                iconURL: message.author.displayAvatarURL({ format: "png" }),
+              })
               .setDescription(`${fail} ${language.report13}`)
               .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
               .setTimestamp()
@@ -209,10 +209,10 @@ module.exports = class extends Command {
         return message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-              .setAuthor(
-                `${message.author.tag}`,
-                message.author.displayAvatarURL({ format: "png" })
-              )
+              .setAuthor({
+                name: `${message.author.tag}`,
+                iconURL: message.author.displayAvatarURL({ format: "png" }),
+              })
               .setDescription(`${fail} ${language.report14}`)
               .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
               .setTimestamp()
@@ -221,33 +221,51 @@ module.exports = class extends Command {
         });
 
       let dmEmbed = new MessageEmbed()
-        .setAuthor(
-          `${message.author.tag}`,
-          message.author.displayAvatarURL({ format: "png" })
-        )
+        .setAuthor({
+          name: `${message.author.tag}`,
+          iconURL: message.author.displayAvatarURL({ format: "png" }),
+        })
         .setDescription(`${language.report15}`)
         .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
         .setTimestamp()
         .setColor(message.client.color.green);
 
       let reportEmbed1 = new MessageEmbed()
-        .setAuthor(`${language.report16} (Issue)`)
+        .setAuthor({ name: `${language.report16} (Issue)` })
         .setDescription(`**${language.report17}**`)
-        .addField(`${language.report18}`, `${message.member}`, true)
-        .addField(`${language.report19}`, `${message.member.id}`, true)
-        .addField(`${language.report20}`, `${message.author.tag}`, true)
-        .addField(`${language.report24}`, `${message.channel}`, true)
-        .addField(
-          `${language.report25}`,
-          `${moment(new Date()).format("dddd, MMMM Do YYYY")}`,
-          true
+        .addFields(
+          {
+            name: `${language.report18}`,
+            value: `${message.member}`,
+            inline: true,
+          },
+          {
+            name: `${language.report19}`,
+            value: `${message.member.id}`,
+            inline: true,
+          },
+          {
+            name: `${language.report20}`,
+            value: `${message.author.tag}`,
+            inline: true,
+          },
+          {
+            name: `${language.report24}`,
+            value: `${message.channel}`,
+            inline: true,
+          },
+          {
+            name: `${language.report25}`,
+            value: `${moment(new Date()).format("dddd, MMMM Do YYYY")}`,
+            inline: true,
+          },
+          {
+            name: `${language.report26}`,
+            value: `${language.report29} #${serverCase}`,
+            inline: true,
+          },
+          { name: `${language.report27}`, value: `\`\`\`${acceptReason}\`\`\`` }
         )
-        .addField(
-          `${language.report26}`,
-          `${language.report29} #${serverCase}`,
-          true
-        )
-        .addField(`${language.report27}`, `\`\`\`${acceptReason}\`\`\``)
         .setFooter({
           text: message.author.tag,
           iconURL: message.author.displayAvatarURL({ dynamic: true }),
@@ -307,10 +325,10 @@ module.exports = class extends Command {
         return message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-              .setAuthor(
-                `${message.author.tag}`,
-                message.author.displayAvatarURL({ format: "png" })
-              )
+              .setAuthor({
+                name: `${message.author.tag}`,
+                iconURL: message.author.displayAvatarURL({ format: "png" }),
+              })
               .setDescription(`${fail} ${language.report8}`)
               .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
               .setTimestamp()
@@ -322,10 +340,10 @@ module.exports = class extends Command {
         return message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-              .setAuthor(
-                `${message.author.tag}`,
-                message.author.displayAvatarURL({ format: "png" })
-              )
+              .setAuthor({
+                name: `${message.author.tag}`,
+                iconURL: message.author.displayAvatarURL({ format: "png" }),
+              })
               .setDescription(`${fail} ${language.report9}`)
               .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
               .setTimestamp()
@@ -340,10 +358,10 @@ module.exports = class extends Command {
         return message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-              .setAuthor(
-                `${message.author.tag}`,
-                message.author.displayAvatarURL({ format: "png" })
-              )
+              .setAuthor({
+                name: `${message.author.tag}`,
+                iconURL: message.author.displayAvatarURL({ format: "png" }),
+              })
               .setDescription(`${fail} ${language.report10}`)
               .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
               .setTimestamp()
@@ -357,10 +375,10 @@ module.exports = class extends Command {
         return message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-              .setAuthor(
-                `${message.author.tag}`,
-                message.author.displayAvatarURL({ format: "png" })
-              )
+              .setAuthor({
+                name: `${message.author.tag}`,
+                iconURL: message.author.displayAvatarURL({ format: "png" }),
+              })
               .setDescription(`${fail} ${language.report11}`)
               .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
               .setTimestamp()
@@ -373,10 +391,10 @@ module.exports = class extends Command {
         return message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-              .setAuthor(
-                `${message.author.tag}`,
-                message.author.displayAvatarURL({ format: "png" })
-              )
+              .setAuthor({
+                name: `${message.author.tag}`,
+                iconURL: message.author.displayAvatarURL({ format: "png" }),
+              })
               .setDescription(`${fail} ${language.report12}`)
               .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
               .setTimestamp()
@@ -388,10 +406,10 @@ module.exports = class extends Command {
         return message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-              .setAuthor(
-                `${message.author.tag}`,
-                message.author.displayAvatarURL({ format: "png" })
-              )
+              .setAuthor({
+                name: `${message.author.tag}`,
+                iconURL: message.author.displayAvatarURL({ format: "png" }),
+              })
               .setDescription(`${fail} ${language.report13}`)
               .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
               .setTimestamp()
@@ -403,10 +421,10 @@ module.exports = class extends Command {
         return message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-              .setAuthor(
-                `${message.author.tag}`,
-                message.author.displayAvatarURL({ format: "png" })
-              )
+              .setAuthor({
+                name: `${message.author.tag}`,
+                iconURL: message.author.displayAvatarURL({ format: "png" }),
+              })
               .setDescription(`${fail} ${language.report14}`)
               .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
               .setTimestamp()
@@ -415,36 +433,54 @@ module.exports = class extends Command {
         });
 
       let dmEmbed = new MessageEmbed()
-        .setAuthor(
-          `${message.author.tag}`,
-          message.author.displayAvatarURL({ format: "png" })
-        )
+        .setAuthor({
+          name: `${message.author.tag}`,
+          iconURL: message.author.displayAvatarURL({ format: "png" }),
+        })
         .setDescription(`${language.report15}`)
         .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
         .setTimestamp()
         .setColor(message.client.color.green);
 
       let reportEmbed1 = new MessageEmbed()
-        .setAuthor(`${language.report16} (User)`)
+        .setAuthor({ name: `${language.report16} (User)` })
         .setDescription(`**${language.report17}**`)
-        .addField(`${language.report18}`, `${message.member}`, true)
-        .addField(`${language.report19}`, `${message.member.id}`, true)
-        .addField(`${language.report20}`, `${message.author.tag}`, true)
-        .addField(`${language.report21}`, `${user}`, true)
-        .addField(`${language.report22}`, `${user.id}`, true)
-        .addField(`${language.report23}`, `${user.tag}`, true)
-        .addField(`${language.report24}`, `${message.channel}`, true)
-        .addField(
-          `${language.report25}`,
-          `${moment(new Date()).format("dddd, MMMM Do YYYY")}`,
-          true
+        .addFields(
+          {
+            name: `${language.report18}`,
+            value: `${message.member}`,
+            inline: true,
+          },
+          {
+            name: `${language.report19}`,
+            value: `${message.member.id}`,
+            inline: true,
+          },
+          {
+            name: `${language.report20}`,
+            value: `${message.author.tag}`,
+            inline: true,
+          },
+          { name: `${language.report21}`, value: `${user}`, inline: true },
+          { name: `${language.report22}`, value: `${user.id}`, inline: true },
+          { name: `${language.report23}`, value: `${user.tag}`, inline: true },
+          {
+            name: `${language.report24}`,
+            value: `${message.channel}`,
+            inline: true,
+          },
+          {
+            name: `${language.report25}`,
+            value: `${moment(new Date()).format("dddd, MMMM Do YYYY")}`,
+            inline: true,
+          },
+          {
+            name: `${language.report26}`,
+            value: `${language.report29} #${serverCase}`,
+            inline: true,
+          },
+          { name: `${language.report27}`, value: `\`\`\`${acceptReason}\`\`\`` }
         )
-        .addField(
-          `${language.report26}`,
-          `${language.report29} #${serverCase}`,
-          true
-        )
-        .addField(`${language.report27}`, `\`\`\`${acceptReason}\`\`\``)
         .setFooter({
           text: message.author.tag,
           iconURL: message.author.displayAvatarURL({ dynamic: true }),

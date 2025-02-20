@@ -48,14 +48,14 @@ const { MessageEmbed } = require("discord.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
-  .setName("pickupline")
-  .setDescription("Send a funny pickup line")
-  .setContexts([0, 1, 2])
-  .setIntegrationTypes([0, 1]),
+    .setName("pickupline")
+    .setDescription("Send a funny pickup line")
+    .setContexts([0, 1, 2])
+    .setIntegrationTypes([0, 1]),
   async execute(interaction) {
     const embed = new MessageEmbed()
-    .setDescription(`${line[Math.round(Math.random() * (line.length - 1))]}`)
-    .setColor(interaction.client.color.pink);
-  return interaction.reply({ embeds: [embed] }).catch(() => {});
-  }
+      .setDescription(`${line[Math.round(Math.random() * (line.length - 1))]}`)
+      .setColor(interaction.client.color.pink);
+    return interaction.reply({ embeds: [embed] }).catch(() => {});
+  },
 };

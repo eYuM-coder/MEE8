@@ -30,10 +30,10 @@ module.exports = class extends Command {
       return message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-            .setAuthor(
-              `${message.author.tag}`,
-              message.author.displayAvatarURL({ dynamic: true })
-            )
+            .setAuthor({
+              name: `${message.author.tag}`,
+              iconURL: message.author.displayAvatarURL({ dynamic: true })
+            })
             .setDescription(
               `${language.properusage} \`${prefix}customcommand <command-name> <text-reply>\`\n\n${language.example} \`${prefix}customcommand ping pong\``
             )
@@ -49,10 +49,10 @@ module.exports = class extends Command {
       return message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-            .setAuthor(
-              `${message.author.tag}`,
-              message.author.displayAvatarURL({ dynamic: true })
-            )
+            .setAuthor({
+              name: `${message.author.tag}`,
+              iconURL: message.author.displayAvatarURL({ dynamic: true })
+            })
             .setDescription(
               `${language.properusage} \`${prefix}customcommand <command-name> <text-reply>\`\n\n${language.example} \`${prefix}customcommand ping pong\``
             )
@@ -108,10 +108,10 @@ module.exports = class extends Command {
           message.channel.sendCustom({
             embeds: [
               new MessageEmbed()
-                .setAuthor(
-                  `${message.author.tag}`,
-                  message.author.displayAvatarURL({ dynamic: true })
-                )
+                .setAuthor({
+                  name: `${message.author.tag}`,
+                  iconURL: message.author.displayAvatarURL({ dynamic: true })
+                })
                 .setDescription(
                   `**${language.cc3}** ${name}\n\nDelete the following command using \`${prefix}deletecommand <command-name>\``
                 )

@@ -1,8 +1,7 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageEmbed } = require("discord.js");
-const ms = require("ms");
 const Logging = require("../../database/schemas/logging.js");
-const send = require("../../packages/logs/index.js");
+const Guild = require("../../database/schemas/Guild");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -11,157 +10,128 @@ module.exports = {
     .addUserOption((option) =>
       option
         .setName("member")
-        .setDescription("Person who you want to ban.")
-        .setRequired(true),
+        .setDescription("Person you want to ban.")
+        .setRequired(true)
     )
     .addStringOption((option) =>
-      option.setName("reason").setDescription("The reason of the ban"),
+      option.setName("reason").setDescription("Reason for the ban.")
     )
     .setContexts(0)
     .setIntegrationTypes(0),
+
   async execute(interaction) {
     try {
-      const client = interaction.client;
-      const logging = await Logging.findOne({
-        guildId: interaction.guild.id,
-      });
-      if (!interaction.member.permissions.has("BAN_MEMBERS"))
-        return interaction.followUp({
+      if (!interaction.member.permissions.has("BAN_MEMBERS")) {
+        return interaction.reply({
           content: "You do not have permission to use this command.",
+          ephemeral: true,
         });
-
-      const member = interaction.options.getMember("member");
-      const reason =
-        interaction.options.getString("reason") || "No reason provided";
-
-      if (!member) {
-        let usernotfound = new MessageEmbed()
-          .setColor("RED")
-          .setDescription(`${client.emoji.fail} | I can't find that member`);
-        return interaction
-          .reply({ embeds: [usernotfound] })
-          .then(async () => {
-            if (logging && logging.moderation.delete_reply === "true") {
-              setTimeout(() => {
-                interaction.deleteReply().catch(() => { });
-              }, 5000);
-            }
-          })
-          .catch(() => { });
       }
 
-      if (member === interaction.author) {
-        let banerror = new MessageEmbed()
-          .setColor("RED")
-          .setDescription(`${client.emoji.fail} | You can't ban yourself!`);
-        return interaction
-          .reply({ embeds: [banerror] })
-          .then(async () => {
-            if (logging && logging.moderation.delete_reply === "true") {
-              setTimeout(() => {
-                interaction.deleteReply().catch(() => { });
-              }, 5000);
-            }
-          })
-          .catch(() => { });
+      const client = interaction.client;
+      const guildDb = await Guild.findOne({ guildId: interaction.guild.id });
+      const logging = await Logging.findOne({ guildId: interaction.guild.id });
+      const language = require(`../../data/language/${guildDb.language}.json`);
+
+      const targetUser = interaction.options.getUser("member");
+      if (!targetUser) {
+        return interaction.reply({
+          content: "User not found.",
+          ephemeral: true,
+        });
       }
-      
-      const response = await member.ban({ reason });
+
+      if (targetUser.id === interaction.user.id) {
+        return interaction.reply({
+          content: `${client.emoji.fail} | ${language.banYourselfError}!`,
+          ephemeral: true,
+        });
+      }
+
+      let reason =
+        interaction.options.getString("reason") || "No reason provided.";
+      if (reason.length > 512) reason = reason.slice(0, 509) + "...";
+
+      // **DM the user before banning**
+      let dmEmbed;
+      if (
+        logging &&
+        logging.moderation.ban_action &&
+        logging.moderation.ban_message.toggle === "false" &&
+        logging.moderation.ban_action !== "1"
+      ) {
+        if (logging.moderation.ban_action === "2") {
+          dmEmbed = `${interaction.client.emoji.fail} You've been banned in **${interaction.guild.name}**`;
+        } else if (logging.moderation.ban_action === "3") {
+          dmEmbed = `${interaction.client.emoji.fail} You've been banned in **${interaction.guild.name}**. | ${reason}`;
+        } else if (logging.moderation.ban_action === "4") {
+          dmEmbed = `${interaction.client.emoji.fail} You've been banned in **${interaction.guild.name}**. | ${reason}\n\n-# __**Moderator:**__ ${interaction.user} (${interaction.user.tag})`;
+        }
+
+        targetUser
+          .send({
+            embeds: [
+              new MessageEmbed()
+                .setColor(interaction.client.color.red)
+                .setDescription(dmEmbed),
+            ],
+          })
+          .catch(() => {});
+      }
+
+      try {
+        await targetUser.send({ embeds: [dmEmbed] });
+      } catch {
+        console.log(`Could not send DM to ${targetUser.tag}.`);
+      }
+
+      // **Ban the user**
+      const response = await interaction.guild.bans
+        .create(targetUser.id, { reason })
+        .catch(() => null);
 
       if (response) {
-        let bansuccess = new MessageEmbed()
+        const banEmbed = new MessageEmbed()
           .setColor("GREEN")
           .setDescription(
-            `${client.emoji.success
-            } | ${member} has been banned. __**Reason:**__ ${reason || "No reason Provided"
-            }`,
+            `${client.emoji.success} | **${targetUser.tag}** has been banned.\n**Reason:** ${reason}`
           );
-        return interaction
-          .reply({ embeds: [bansuccess] })
-          .then(async () => {
-            if (logging && logging.moderation.delete_reply === "true") {
-              setTimeout(() => {
-                interaction.deleteReply().catch(() => { });
-              }, 5000);
-            }
-          })
-          .catch(() => { });
-      }
-      if (response) {
-        let dmEmbed = new MessageEmbed()
-          .setColor("RED")
-          .setDescription(
-            `You have been banned in **${interaction.guild.name
-            }**.\n\n__**Moderator:**__ ${interaction.author} **(${interaction.author.tag
-            })**\n__**Reason:**__ ${reason || "No Reason Provided"}`,
-          )
-          .setTimestamp();
-        member.send({ embeds: [dmEmbed] });
-      } else {
-        let failembed = new MessageEmbed()
-          .setColor(client.color.red)
-          .setDescription(
-            `${client.emoji.fail} | I cannot ban that member. Make sure my role is above their role or that I have sufficient perms to execute the command.`,
-          )
-          .setTimestamp();
-        return interaction.reply({ embeds: [failembed] });
-      }
 
-      if (logging) {
-        const role = interaction.guild.roles.cache.get(
-          logging.moderation.ignore_role
-        );
-        const channel = interaction.guild.channels.cache.get(
-          logging.moderation.channel
-        );
+        interaction.reply({ embeds: [banEmbed] }).then(async () => {
+          if (logging && logging.moderation.delete_reply === "true") {
+            setTimeout(() => {
+              interaction.deleteReply().catch(() => {});
+            }, 5000);
+          }
+        });
 
-        if (logging.moderation.toggle == "true") {
-          if (channel) {
-            if (interaction.channel.id !== logging.moderation.ignore_channel) {
-              if (
-                !role ||
-                (role &&
-                  !interaction.member.roles.cache.find(
-                    (r) => r.name.toLowerCase() === role.name
-                  ))
-              ) {
-                if (logging.moderation.ban == "true") {
-                  let color = logging.moderation.color;
-                  if (color == "#000000") color = interaction.client.color.red;
+        // **Logging System**
+        if (logging) {
+          const logChannel = interaction.guild.channels.cache.get(
+            logging.moderation.channel
+          );
+          if (logging.moderation.toggle === "true" && logChannel) {
+            const logEmbed = new MessageEmbed()
+              .setTitle("User Banned")
+              .setColor("RED")
+              .addField("User", `${targetUser.tag} (${targetUser.id})`, true)
+              .addField("Moderator", `${interaction.user.tag}`, true)
+              .addField("Reason", reason, true)
+              .setTimestamp();
 
-                  let logcase = logging.moderation.caseN;
-                  if (!logcase) logcase = `1`;
-
-                  const logEmbed = new MessageEmbed()
-                    .setAuthor(
-                      `Action: \`Ban\` | ${member.user.tag} | Case #${logcase}`,
-                      member.user.displayAvatarURL({ format: "png" })
-                    )
-                    .addField("User", `${member}`, true)
-                    .addField("Moderator", `${interaction.user}`, true)
-                    .addField("Reason", `${reason}`, true)
-                    .setFooter({ text: `ID: ${member.id}` })
-                    .setTimestamp()
-                    .setColor(color);
-
-                    send(channel, { username: `${interaction.client.user.username}`, embeds: [logEmbed] }).catch(() => {});
-
-                  logging.moderation.caseN = logcase + 1;
-                  await logging.save().catch(() => { });
-                }
-              }
-            }
+            logChannel.send({ embeds: [logEmbed] }).catch(console.error);
           }
         }
+      } else {
+        return interaction.reply({
+          content: `${client.emoji.fail} | I couldn't ban this user. Make sure I have the correct permissions.`,
+          ephemeral: true,
+        });
       }
     } catch (err) {
       console.error(err);
       interaction.reply({
-        embeds: [
-          new MessageEmbed()
-          .setColor(interaction.client.color.red)
-          .setDescription(`${interaction.client.emoji.fail} | That user is a mod/admin, I can't do that.`)
-        ],
+        content: `${client.emoji.fail} | An error occurred while trying to ban the user.`,
         ephemeral: true,
       });
     }

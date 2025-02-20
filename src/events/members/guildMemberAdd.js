@@ -51,16 +51,18 @@ module.exports = class extends Event {
           if (logging.server_events.member_join == "true") {
             const embed = new discord.MessageEmbed()
               .setTitle("📥 Member Joined")
-              .setAuthor(
-                `${member.guild.name}`,
-                member.guild.iconURL({ dynamic: true })
-              )
+              .setAuthor({
+                name: `${member.guild.name}`,
+                iconURL: member.guild.iconURL({ dynamic: true }),
+              })
               .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
               .setDescription(`${member} (**${member.user.tag}**)`)
-              .addField(
-                "Account created on",
-                moment(member.user.createdAt).format("dddd, MMMM Do YYYY")
-              )
+              .addFields({
+                name: "Account created on",
+                value: moment(member.user.createdAt).format(
+                  "dddd, MMMM Do YYYY"
+                ),
+              })
               .setTimestamp()
               .setColor(member.guild.me.displayHexColor);
 
@@ -71,7 +73,10 @@ module.exports = class extends Event {
                 .permissionsFor(member.guild.me)
                 .has(["SEND_MESSAGES", "EMBED_LINKS"])
             ) {
-              send(channelEmbed, { username: `${this.client.user.username}`, embeds: [embed] }).catch(() => {});
+              send(channelEmbed, {
+                username: `${this.client.user.username}`,
+                embeds: [embed],
+              }).catch(() => {});
             }
           }
         }
@@ -122,7 +127,10 @@ module.exports = class extends Event {
                       member.user.createdAt
                     ).format("MMMM Do YYYY, h:mm:ss a")}`
                   );
-                  send(altLog, { username: `${this.client.user.username}`, embeds: [embedAlt] }).catch(() => {});
+                send(altLog, {
+                  username: `${this.client.user.username}`,
+                  embeds: [embedAlt],
+                }).catch(() => {});
               }
             }
           }
@@ -215,14 +223,19 @@ module.exports = class extends Event {
             .replace(/{size}/g, `${member.guild.memberCount}`)
             .replace(/{guild}/g, `${member.guild.name}`);
 
-          if (authorName !== null) embed.setAuthor(authorName);
+          if (authorName !== null) embed.setAuthor({ name: authorName });
 
           let authorIcon = welcome.embed.author.icon;
-          if (authorIcon !== null) embed.setAuthor(authorName, authorIcon);
+          if (authorIcon !== null)
+            embed.setAuthor({ name: authorName, iconURL: authorIcon });
 
           let authorUrl = welcome.embed.author.url;
           if (authorUrl !== null)
-            embed.setAuthor(authorName, authorIcon, authorUrl);
+            embed.setAuthor({
+              name: authorName,
+              iconURL: authorIcon,
+              url: authorUrl,
+            });
 
           let footer = welcome.embed.footer;
           if (footer !== null) embed.setFooter(footer);
@@ -333,14 +346,19 @@ module.exports = class extends Event {
                 .replace(/{size}/g, `${member.guild.memberCount}`)
                 .replace(/{guild}/g, `${member.guild.name}`);
 
-              if (authorName !== null) embed.setAuthor(authorName);
+              if (authorName !== null) embed.setAuthor({ name: authorName });
 
               let authorIcon = welcome.embed.author.icon;
-              if (authorIcon !== null) embed.setAuthor(authorName, authorIcon);
+              if (authorIcon !== null)
+                embed.setAuthor({ name: authorName, iconURL: authorIcon });
 
               let authorUrl = welcome.embed.author.url;
               if (authorUrl !== null)
-                embed.setAuthor(authorName, authorIcon, authorUrl);
+                embed.setAuthor({
+                  name: authorName,
+                  iconURL: authorIcon,
+                  url: authorUrl,
+                });
 
               let footer = welcome.embed.footer;
               if (footer !== null) embed.setFooter(footer);

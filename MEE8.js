@@ -5,7 +5,7 @@ const fs = require('node:fs')
 const path = require('node:path')
 const { status } = config
 
-module.exports = class PogyClient extends Client {
+module.exports = class MEE8Client extends Client {
   constructor(options = {}) {
     super({
       partials: ['MESSAGE', 'CHANNEL', 'REACTION', 'GUILD_MEMBER', 'USER'],
@@ -57,7 +57,6 @@ module.exports = class PogyClient extends Client {
     await this.utils.loadCommands()
     await this.utils.loadEvents()
     await this.mongoose.init()
-    require('./src/handlers/Music_Handler.js')
     this.login(token)
   }
 }

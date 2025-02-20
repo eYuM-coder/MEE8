@@ -38,10 +38,10 @@ module.exports = class extends Command {
         return message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-              .setAuthor(
-                `${message.author.tag}`,
-                message.author.displayAvatarURL({ dynamic: true })
-              )
+              .setAuthor({
+                name: `${message.author.tag}`,
+                iconURL: message.author.displayAvatarURL({ dynamic: true })
+              })
               .setTitle(`${fail} Clear Error`)
               .setDescription(`I can only purge between 1 - 10000 messages.`)
               .setTimestamp()

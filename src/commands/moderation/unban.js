@@ -33,7 +33,10 @@ module.exports = class extends Command {
     const id = args[0];
     if (!id) {
       const embed = new MessageEmbed()
-        .setAuthor(message.author.tag, message.author.displayAvatarURL())
+        .setAuthor({
+          name: message.author.tag,
+          iconURLL: message.author.displayAvatarURL(),
+        })
         .setDescription(
           `**Proper Usage:**\n\n\`1-\` unban peter_#4444 appealed\n\`2-\` unban 710465231779790849 appealed\n\`3-\` unban all`
         )
@@ -124,17 +127,32 @@ module.exports = class extends Command {
                   if (!array || !array.length) bannedUsersLength = "No users";
                   if (array.length === 1) bannedUsersLength = "1 User";
                   const logEmbed = new MessageEmbed()
-                    .setAuthor(
-                      `Action: \`UnBan All\` | ${bannedUsersLength} | Case #${logcase}`,
-                      message.author.displayAvatarURL({ format: "png" })
+                    .setAuthor({
+                      name: `Action: \`UnBan All\` | ${bannedUsersLength} | Case #${logcase}`,
+                      iconURL: message.author.displayAvatarURL({
+                        format: "png",
+                      }),
+                    })
+                    .addFields(
+                      {
+                        name: "Unbanned Users",
+                        value: `${bannedUsersLength}`,
+                        inline: true,
+                      },
+                      {
+                        name: "Moderator",
+                        value: `${message.member}`,
+                        inline: true,
+                      }
                     )
-                    .addField("Unbanned Users", `${bannedUsersLength}`, true)
-                    .addField("Moderator", `${message.member}`, true)
                     .setTimestamp()
                     .setColor(color);
 
                   if (array.length)
-                    logEmbed.addField("**Users:**", array.join(" - "));
+                    logEmbed.addFields({
+                      name: "**Users:**",
+                      value: array.join(" - "),
+                    });
                   channel.send({ embeds: [logEmbed] }).catch(() => {});
 
                   logging.moderation.caseN = logcase + 1;
@@ -225,12 +243,18 @@ module.exports = class extends Command {
                           reason = reason.slice(0, 1021) + "...";
 
                         const logEmbed = new MessageEmbed()
-                          .setAuthor(
-                            `Action: \`UnBan\` | ${userrz.tag} | Case #${logcase}`,
-                            userrz.displayAvatarURL({ format: "png" })
+                          .setAuthor({
+                            name: `Action: \`Unban\` | ${userrz.tag} | Case #${logcase}`,
+                            iconURL: userrz.displayAvatarURL({ format: "png" }),
+                          })
+                          .addFields(
+                            { name: "User", value: `${userrz}`, inline: true },
+                            {
+                              name: "Moderator",
+                              value: `${message.member}`,
+                              inline: true,
+                            }
                           )
-                          .addField("User", `${userrz}`, true)
-                          .addField("Moderator", `${message.member}`, true)
                           .setFooter({ text: `ID: ${userrz.id}` })
                           .setTimestamp()
                           .setColor(color);
@@ -350,19 +374,28 @@ module.exports = class extends Command {
                     reason = reason.slice(0, 1021) + "...";
 
                   const logEmbed = new MessageEmbed()
-                    .setAuthor(
-                      `Action: \`UnBan\` | ${userr.tag} | Case #${logcase}`,
-                      userr.displayAvatarURL({ format: "png" })
+                    .setAuthor({
+                      name: `Action: \`UnBan\` | ${userr.tag} | Case #${logcase}`,
+                      iconURL: userr.displayAvatarURL({ format: "png" }),
+                    })
+                    .addFields(
+                      { name: "User", value: `${userr}`, inline: true },
+                      {
+                        name: "Moderator",
+                        value: `${message.member}`,
+                        inline: true,
+                      }
                     )
-                    .addField("User", `${userr}`, true)
-                    .addField("Moderator", `${message.member}`, true)
                     .setFooter({ text: `ID: ${userr.id}` })
                     .setTimestamp()
                     .setColor(color);
 
-                    send(channel, { username: `${this.client.user.username}`, embeds: [logEmbed] }).catch((e) => {
-                      console.log(e);
-                    });
+                  send(channel, {
+                    username: `${this.client.user.username}`,
+                    embeds: [logEmbed],
+                  }).catch((e) => {
+                    console.log(e);
+                  });
 
                   logging.moderation.caseN = logcase + 1;
                   await logging.save().catch(() => {});

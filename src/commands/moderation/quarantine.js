@@ -25,13 +25,25 @@ module.exports = class RemoveRolesCommand extends Command {
       const missingRolesMessageemebd = new MessageEmbed()
         .setColor("#fe0a0a")
         .setDescription(missingRolesMessage)
-        .setFooter(message.member.displayName, message.author.displayAvatarURL({ dynamic: true }))
-        .setAuthor(message.author.username, message.author.displayAvatarURL({ dynamic: true }));
+        .setFooter({
+          text: message.member.displayName,
+          iconURL: message.author.displayAvatarURL({ dynamic: true })
+        })
+        .setAuthor({
+          name: message.author.username,
+          iconURL: message.author.displayAvatarURL({ dynamic: true })
+        });
       const errorMessageemebd = new MessageEmbed()
         .setColor("#3498db")
         .setDescription(errorMessage)
-        .setFooter(message.member.displayName, message.author.displayAvatarURL({ dynamic: true }))
-        .setAuthor(message.author.username, message.author.displayAvatarURL({ dynamic: true }));
+        .setFooter({
+          text: message.member.displayName,
+          iconURL: message.author.displayAvatarURL({ dynamic: true })
+        })
+        .setAuthor({
+          name: message.author.username,
+          iconURL: message.author.displayAvatarURL({ dynamic: true })
+        });
       const targetUser = message.mentions.members.first();
 
       const { PermissionsBitField } = require("discord.js");
@@ -59,11 +71,15 @@ module.exports = class RemoveRolesCommand extends Command {
       await targetUser.roles.add(quarantineRole);
       const workingbed = new MessageEmbed()
         .setColor("#3498db")
-        .setDescription(
-          `Quarantined ${targetUser.user.tag}`
-        )
-        .setFooter(message.member.displayName, message.author.displayAvatarURL({ dynamic: true }))
-        .setAuthor(message.author.username, message.author.displayAvatarURL({ dynamic: true }));
+        .setDescription(`Quarantined ${targetUser.user.tag}`)
+        .setFooter({
+          text: message.member.displayName,
+          iconURL: message.author.displayAvatarURL({ dynamic: true })
+        })
+        .setAuthor({
+          name: message.author.username,
+          iconURL: message.author.displayAvatarURL({ dynamic: true })
+        });
       message.channel.send({ embeds: [workingbed] });
     } catch (error) {
       console.error("Error in the removeroles command:", error);

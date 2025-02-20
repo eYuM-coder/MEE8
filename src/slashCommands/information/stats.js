@@ -57,40 +57,54 @@ module.exports = {
     const tech = stripIndent`
     Ping -- ${Math.round(interaction.client.ws.ping)}ms
     Uptime -- ${uptime}
-    ${language.pogyVersion} -- 2.5
+    ${language.mee8Version} -- 2.5
     Library -- Discord.js v13.6.0
     Evironment -- Node.js v16.9.0
     Servers -- ${interaction.client.guilds.cache.size}
-    ${language.users} -- ${interaction.client.guilds.cache.reduce((a, b) => a + b.memberCount, 0)}
+    ${language.users} -- ${interaction.client.guilds.cache.reduce(
+      (a, b) => a + b.memberCount,
+      0
+    )}
     ${language.channels} -- ${interaction.client.channels.cache.size}
-    ${language.pogyCommands} -- ${interaction.client.slashCommands.size}
+    ${language.mee8Commands} -- ${interaction.client.slashCommands.size}
     `;
     const devs = stripIndent`
     -------
-    ${language.pogyOwners}
-    • eYuM#7506
-    ${language.pogyDevelopers}
+    ${language.mee8Owners}
+    • the4004whelen
+    ${language.mee8Developers}
     • Peter_#4444
     • Jano#6969
-    • eYuM#7506
+    • the4004whelen
     and
-    pogy.xyz/team
+    mee8.eyum.org/team
     -------
     `;
     const embed = new MessageEmbed()
       .setAuthor({
         name: interaction.member.displayName,
-        iconURL: interaction.member.displayAvatarURL({ dynamic: true })
+        iconURL: interaction.member.displayAvatarURL({ dynamic: true }),
       })
-      .setTitle(`${language.pogyInfo}`)
+      .setTitle(`${language.mee8Info}`)
       .addFields(
-        { name: `${language.pogyGeneral}`, value: `\`\`\`css\n${tech}\`\`\``, inline: true },
-        { name: `${language.pogyTeam}`, value: `\`\`\`css\n${devs}\`\`\``, inline: true },
-        { name: `${language.pogyStats}`, value: `\`\`\`css\n${serverStats}\`\`\`` }
+        {
+          name: `${language.mee8General}`,
+          value: `\`\`\`css\n${tech}\`\`\``,
+          inline: true,
+        },
+        {
+          name: `${language.mee8Team}`,
+          value: `\`\`\`css\n${devs}\`\`\``,
+          inline: true,
+        },
+        {
+          name: `${language.mee8Stats}`,
+          value: `\`\`\`css\n${serverStats}\`\`\``,
+        }
       )
-      .setFooter({ text: `https://example.com` })
+      .setFooter({ text: `https://mee8.eyum.org` })
       .setTimestamp()
       .setColor(interaction.guild.me.displayHexColor);
     interaction.reply({ embeds: [embed] });
-  }
+  },
 };

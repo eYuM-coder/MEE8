@@ -39,7 +39,7 @@ module.exports = class extends Event {
                 const embed = new Discord.MessageEmbed()
                   .setColor(this.client.color.red)
                   .setDescription(
-                    `Hey ${user.username}, Premium in ${guildPremium.name} has Just expired :(\n\n__You can you re-new your server here! [${process.env.AUTH_DOMAIN}/premium](${process.env.AUTH_DOMAIN}/premium)__\n\nThank you for purchasing premium Previously! We hope you enjoyed what you purchased.\n\n**- Pogy**`
+                    `Hey ${user.username}, Premium in ${guildPremium.name} has Just expired :(\n\n__You can you re-new your server here! [${process.env.AUTH_DOMAIN}/premium](${process.env.AUTH_DOMAIN}/premium)__\n\nThank you for purchasing premium Previously! We hope you enjoyed what you purchased.\n\n**- MEE8**`
                   );
 
                 user.send({ embeds: [embed] }).catch(() => {});

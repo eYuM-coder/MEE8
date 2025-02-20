@@ -43,29 +43,35 @@ module.exports = class extends Event {
               .setColor(color);
 
             if (oldRole.name !== newRole.name) {
-              embed.addField(
-                "Name Update",
-                `${oldRole.name} --> ${newRole.name}`,
-                true
-              );
+              embed.addFields({
+                name: "Name Update",
+                value: `${oldRole.name} --> ${newRole.name}`,
+                inline: true,
+              });
             } else {
-              embed.addField("Name Update", `Name not updated`, true);
+              embed.addFields({
+                name: "Name Update",
+                value: `Name not updated`,
+                inline: true,
+              });
             }
 
             if (oldRole.color !== newRole.color) {
-              embed.addField(
-                "Color Update",
-                `#${makehex(oldRole.color)} --> #${makehex(newRole.color)}`,
-                true
-              );
+              embed.addFields({
+                name: "Color Update",
+                value: `#${makehex(oldRole.color)} --> #${makehex(
+                  newRole.color
+                )}`,
+                inline: true,
+              });
             }
 
             if (oldRole.mentionable !== newRole.mentionable) {
-              embed.addField(
-                "mentionable",
-                `${oldRole.mentionable} --> ${newRole.mentionable}`,
-                true
-              );
+              embed.addFields({
+                name: "mentionable",
+                value: `${oldRole.mentionable} --> ${newRole.mentionable}`,
+                inline: true,
+              });
             }
 
             if (
@@ -75,7 +81,10 @@ module.exports = class extends Event {
                 .permissionsFor(newRole.guild.me)
                 .has(["SEND_MESSAGES", "EMBED_LINKS"])
             ) {
-              send(channelEmbed, { username: `${this.client.user.username}`, embeds: [embed] }).catch(() => {});
+              send(channelEmbed, {
+                username: `${this.client.user.username}`,
+                embeds: [embed],
+              }).catch(() => {});
             }
           }
         }

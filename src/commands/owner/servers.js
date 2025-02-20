@@ -17,7 +17,7 @@ module.exports = class extends Command {
       !message.client.config.developers.includes(message.author.id)
     ) {
       return message.channel.sendCustom(
-        `You are not a developer or the owner of this bot.`,
+        `You are not a developer or the owner of this bot.`
       );
     }
     const servers = message.client.guilds.cache.map((guild) => {
@@ -26,12 +26,12 @@ module.exports = class extends Command {
 
     const embed = new MessageEmbed()
       .setTitle("Server List")
-      .setFooter(
-        message.member.displayName,
-        message.author.displayAvatarURL({
+      .setFooter({
+        text: message.member.displayName,
+        iconURL: message.author.displayAvatarURL({
           dynamic: true,
         }),
-      )
+      })
       .setTimestamp()
       .setColor(message.guild.me.displayHexColor);
 
@@ -46,7 +46,7 @@ module.exports = class extends Command {
         message.channel,
         message.member,
         embed,
-        servers,
+        servers
       );
     }
   }

@@ -44,7 +44,10 @@ module.exports = class extends Event {
                 .setColor(color);
 
               if (message.parent && message.type !== "GUILD_CATEGORY")
-                embed.addField(`Parent Name`, message.parent.name);
+                embed.addFields({
+                  name: `Parent Name`,
+                  value: message.parent.name,
+                });
 
               if (
                 channelEmbed &&
@@ -53,7 +56,10 @@ module.exports = class extends Event {
                   .permissionsFor(message.guild.me)
                   .has(["SEND_MESSAGES", "EMBED_LINKS"])
               ) {
-                send(channelEmbed, { username: `${this.client.user.username}`, embeds: [embed] }).catch(() => {});
+                send(channelEmbed, {
+                  username: `${this.client.user.username}`,
+                  embeds: [embed],
+                }).catch(() => {});
               }
             } else {
               const embed = new discord.MessageEmbed()

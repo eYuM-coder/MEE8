@@ -20,7 +20,7 @@ module.exports = class extends Command {
 
     if (!targetUser || isNaN(amount) || amount <= 0) {
       return message.reply(
-        "Please mention a user and provide a valid XP amount.",
+        "Please mention a user and provide a valid XP amount."
       );
     }
 
@@ -57,7 +57,7 @@ module.exports = class extends Command {
       xpNeededForNextLevel = nextLevel * nextLevelXP;
     } else {
       const embed = new MessageEmbed().setDescription(
-        "This is above the max amount of leveld you can add to a user. Please input a number below 999",
+        "This is above the max amount of leveld you can add to a user. Please input a number below 999"
       );
       return message.channel.sendCustom({ embeds: [embed] });
     }
@@ -65,11 +65,14 @@ module.exports = class extends Command {
     const levelbed = new MessageEmbed()
       .setColor("#3498db")
       .setTitle("Level Change")
-      .setAuthor(targetUser.username, targetUser.displayAvatarURL())
+      .setAuthor({
+        name: targetUser.username,
+        iconURL: targetUser.displayAvatarURL(),
+      })
       .setDescription(`Your level has been set to ${amount}.`)
-      .setFooter(
-        `XP: ${user.xp}/${xpNeededForNextLevel}`,
-      );
+      .setFooter({
+        text: `XP: ${user.xp}/${xpNeededForNextLevel}`,
+      });
     message.channel.sendCustom({
       embeds: [levelbed],
     });

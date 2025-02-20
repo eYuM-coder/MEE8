@@ -4,12 +4,25 @@ const { MessageEmbed } = require("discord.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
-  .setName("suggestions")
-  .setDescription("Enable or disable suggestions")
-  .addStringOption((option) => option.setName("option").setDescription("You can toggle suggestions and approve or decline them with this option.").setRequired(true))
-    .addStringOption((option) => option.setName("message").setDescription("The message ID"))
-    .addChannelOption((option) => option.setName("channel").setDescription("Optional channel."))
-    .addStringOption((option) => option.setName("reason").setDescription("The reason.."))
+    .setName("suggestions")
+    .setDescription("Enable or disable suggestions")
+    .addStringOption((option) =>
+      option
+        .setName("option")
+        .setDescription(
+          "You can toggle suggestions and approve or decline them with this option."
+        )
+        .setRequired(true)
+    )
+    .addStringOption((option) =>
+      option.setName("message").setDescription("The message ID")
+    )
+    .addChannelOption((option) =>
+      option.setName("channel").setDescription("Optional channel.")
+    )
+    .addStringOption((option) =>
+      option.setName("reason").setDescription("The reason..")
+    )
     .setContexts(0)
     .setIntegrationTypes(0),
   async execute(interaction) {
@@ -24,9 +37,11 @@ module.exports = {
     let prefix = guildDB.prefix;
     let fail = interaction.client.emoji.fail;
     let properUsage = new MessageEmbed()
-    .setColor(interaction.client.color.red)
-    .setDescription(`${language.suggesting7.replace(/{prefix}/g, `${prefix}`)}`)
-    .setFooter({ text: `${process.env.AUTH_DOMAIN}` });
+      .setColor(interaction.client.color.red)
+      .setDescription(
+        `${language.suggesting7.replace(/{prefix}/g, `${prefix}`)}`
+      )
+      .setFooter({ text: `${process.env.AUTH_DOMAIN}` });
 
     if (option.length < 1) {
       return interaction.reply({ embeds: [properUsage] });
@@ -34,14 +49,17 @@ module.exports = {
 
     if (option.includes("disable")) {
       if (guildDB.suggestion.suggestionChannelID === null)
-      return interaction.reply({
-        embeds: [
-          new MessageEmbed()
-          .setColor(interaction.client.color.red)
-          .setDescription(`${interaction.client.emoji.fail} | ${language.suggesting8}`)
-          .setFooter({ text: `${process.env.AUTH_DOMAIN}` }),
-        ], ephemeral: true
-      });
+        return interaction.reply({
+          embeds: [
+            new MessageEmbed()
+              .setColor(interaction.client.color.red)
+              .setDescription(
+                `${interaction.client.emoji.fail} | ${language.suggesting8}`
+              )
+              .setFooter({ text: `${process.env.AUTH_DOMAIN}` }),
+          ],
+          ephemeral: true,
+        });
       await Guild.findOne(
         {
           guildId: interaction.guild.id,
@@ -53,10 +71,13 @@ module.exports = {
           return interaction.reply({
             embeds: [
               new MessageEmbed()
-              .setColor(interaction.client.color.green)
-              .setDescription(`${interaction.client.emoji.success} | ${language.suggesting9}`)
-              .setFooter({ text: `${process.env.AUTH_DOMAIN}` }),
-            ], ephemeral: true
+                .setColor(interaction.client.color.green)
+                .setDescription(
+                  `${interaction.client.emoji.success} | ${language.suggesting9}`
+                )
+                .setFooter({ text: `${process.env.AUTH_DOMAIN}` }),
+            ],
+            ephemeral: true,
           });
         }
       );
@@ -64,16 +85,18 @@ module.exports = {
     } else if (option.includes("enable")) {
       const channel = interaction.options.getChannel("channel");
 
-      if(!channel) return interaction.reply({ embeds: [properUsage], ephemeral: true });
+      if (!channel)
+        return interaction.reply({ embeds: [properUsage], ephemeral: true });
       if (guildDB.suggestion.suggestionChannelID === channel.id)
-      return interaction.reply({
-        embeds: [
-          new MessageEmbed()
-          .setColor(interaction.client.color.red)
-          .setDescription(`${fail} | ${channel} ${language.suggesting10}`)
-          .setFooter({ text: `${process.env.AUTH_DOMAIN}` }),
-        ], ephemeral: true
-      });
+        return interaction.reply({
+          embeds: [
+            new MessageEmbed()
+              .setColor(interaction.client.color.red)
+              .setDescription(`${fail} | ${channel} ${language.suggesting10}`)
+              .setFooter({ text: `${process.env.AUTH_DOMAIN}` }),
+          ],
+          ephemeral: true,
+        });
       await Guild.findOne(
         {
           guildId: interaction.guild.id,
@@ -85,9 +108,12 @@ module.exports = {
           return interaction.reply({
             embeds: [
               new MessageEmbed()
-              .setColor(interaction.client.color.green)
-              .setDescription(`${interaction.client.emoji.success} | ${language.suggesting11} ${channel}`),
-            ], ephemeral: true
+                .setColor(interaction.client.color.green)
+                .setDescription(
+                  `${interaction.client.emoji.success} | ${language.suggesting11} ${channel}`
+                ),
+            ],
+            ephemeral: true,
           });
         }
       );
@@ -96,64 +122,71 @@ module.exports = {
         return interaction.reply({
           embeds: [
             new MessageEmbed()
-            .setAuthor({
-              name: `${interaction.user.tag}`,
-              iconURL: interaction.user.displayAvatarURL({ format: "png" })
-            })
-            .setDescription(`${fail} Staff can't approve or decline suggestions in this guild.`)
-            .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-            .setTimestamp()
-            .setColor("RED"),
+              .setAuthor({
+                name: `${interaction.user.tag}`,
+                iconURL: interaction.user.displayAvatarURL({ format: "png" }),
+              })
+              .setDescription(
+                `${fail} Staff can't approve or decline suggestions in this guild.`
+              )
+              .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
+              .setTimestamp()
+              .setColor("RED"),
           ],
         });
       }
-      if (!guildDB.suggestion.suggestionChannelID || !guildDB.suggestion.suggestionChannelID === null)
-      return interaction.reply({
-        embeds: [
-          new MessageEmbed()
-          .setAuthor({
-            name: `${interaction.user.tag}`,
-            iconURL: interaction.user.displayAvatarURL({ format: "png" })
-          })
-          .setDescription(`${fail} | ${language.suggesting1}`)
-          .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-          .setTimestamp()
-          .setColor("RED"),
-        ], ephemeral: true
-      });
+      if (
+        !guildDB.suggestion.suggestionChannelID ||
+        !guildDB.suggestion.suggestionChannelID === null
+      )
+        return interaction.reply({
+          embeds: [
+            new MessageEmbed()
+              .setAuthor({
+                name: `${interaction.user.tag}`,
+                iconURL: interaction.user.displayAvatarURL({ format: "png" }),
+              })
+              .setDescription(`${fail} | ${language.suggesting1}`)
+              .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
+              .setTimestamp()
+              .setColor("RED"),
+          ],
+          ephemeral: true,
+        });
 
       let suggestion = guildDB.suggestion.suggestionChannelID;
       let channel = interaction.guild.channels.cache.get(suggestion);
-      if(!channel)
-      return interaction.reply({
-        embeds: [
-          new MessageEmbed()
-          .setAuthor({
-            name: `${interaction.user.tag}`,
-            iconURL: interaction.user.displayAvatarURL({ format: "png" })
-          })
-          .setDescription(`${fail} | ${language.suggesting12}`)
-          .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-          .setTimestamp()
-          .setColor("RED"),
-        ],
-      });
+      if (!channel)
+        return interaction.reply({
+          embeds: [
+            new MessageEmbed()
+              .setAuthor({
+                name: `${interaction.user.tag}`,
+                iconURL: interaction.user.displayAvatarURL({ format: "png" }),
+              })
+              .setDescription(`${fail} | ${language.suggesting12}`)
+              .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
+              .setTimestamp()
+              .setColor("RED"),
+          ],
+        });
 
       let message = interaction.options.getString("message");
       if (!message)
-      return interaction.reply({
-        embeds: [
-          new MessageEmbed()
-          .setAuthor({
-            name: `${interaction.user.tag}`,
-            iconURL: interaction.user.displayAvatarURL({ format: "png" })
-          })
-          .setDescription(`${fail} | ${language.suggesting12}`)
-          .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-          .setTimestamp()
-          .setColor("RED"),
-        ], ephemeral: true
-      });
+        return interaction.reply({
+          embeds: [
+            new MessageEmbed()
+              .setAuthor({
+                name: `${interaction.user.tag}`,
+                iconURL: interaction.user.displayAvatarURL({ format: "png" }),
+              })
+              .setDescription(`${fail} | ${language.suggesting12}`)
+              .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
+              .setTimestamp()
+              .setColor("RED"),
+          ],
+          ephemeral: true,
+        });
 
       try {
         var suggestionMsg = await channel.messages.fetch(message);
@@ -161,15 +194,16 @@ module.exports = {
         interaction.reply({
           embeds: [
             new MessageEmbed()
-            .setAuthor({
-              name: `${interaction.user.tag}`,
-              iconURL: interaction.user.displayAvatarURL({ format: "png" })
-            })
-            .setDescription(`${fail} | ${language.suggesting13}`)
-            .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-            .setTimestamp()
-            .setColor("RED"),
-          ], ephemeral: true
+              .setAuthor({
+                name: `${interaction.user.tag}`,
+                iconURL: interaction.user.displayAvatarURL({ format: "png" }),
+              })
+              .setDescription(`${fail} | ${language.suggesting13}`)
+              .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
+              .setTimestamp()
+              .setColor("RED"),
+          ],
+          ephemeral: true,
         });
         return;
       }
@@ -180,106 +214,120 @@ module.exports = {
         if (suggestionMsg.embeds[0].title === `${language.suggesting14}`) {
           interaction.reply({
             embeds: [
-            new MessageEmbed()
-              .setAuthor({
-                name: `${interaction.user.tag}`,
-                iconURL: interaction.user.displayAvatarURL({ format: "png" })
-              })
-              .setDescription(`${fail} | ${language.suggesting15}`)
-              .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-              .setTimestamp()
-              .setColor("RED"),
-            ], ephemeral: true
+              new MessageEmbed()
+                .setAuthor({
+                  name: `${interaction.user.tag}`,
+                  iconURL: interaction.user.displayAvatarURL({ format: "png" }),
+                })
+                .setDescription(`${fail} | ${language.suggesting15}`)
+                .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
+                .setTimestamp()
+                .setColor("RED"),
+            ],
+            ephemeral: true,
           });
         } else {
           interaction.reply({
             embeds: [
               new MessageEmbed()
-              .setAuthor({
-                name: `${interaction.user.tag}`,
-                iconURL: interaction.user.displayAvatarURL({ format: "png" })
-              })
-              .setDescription(`${fail} | ${language.suggesting16}`)
-              .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-              .setTimestamp()
-              .setColor("RED"),
-            ], ephemeral: true
+                .setAuthor({
+                  name: `${interaction.user.tag}`,
+                  iconURL: interaction.user.displayAvatarURL({ format: "png" }),
+                })
+                .setDescription(`${fail} | ${language.suggesting16}`)
+                .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
+                .setTimestamp()
+                .setColor("RED"),
+            ],
+            ephemeral: true,
           });
         }
 
         return;
       }
-      let reason = interaction.options.getString("reason") || `${language.noReasonProvided}`;
+      let reason =
+        interaction.options.getString("reason") ||
+        `${language.noReasonProvided}`;
       var acceptReason = reason;
       if (!acceptReason) acceptReason = `${language.noReasonProvided}`;
       if (reason.length > 600)
         return interaction.reply({
           embeds: [
             new MessageEmbed()
-            .setAuthor({
-              name: `${interaction.user.tag}`,
-              iconURL: interaction.user.displayAvatarURL({ format: "png" })
-            })
-            .setDescription(`${fail} | ${language.suggesting17}`)
-            .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-            .setTimestamp()
-            .setColor("RED"),
+              .setAuthor({
+                name: `${interaction.user.tag}`,
+                iconURL: interaction.user.displayAvatarURL({ format: "png" }),
+              })
+              .setDescription(`${fail} | ${language.suggesting17}`)
+              .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
+              .setTimestamp()
+              .setColor("RED"),
           ],
         });
 
       const editedEmbed = new MessageEmbed()
-      .setColor("#2bff80")
-      .setTitle(`${language.suggesting14}`)
-      .setDescription(`${description}\n\n**${language.suggesting18}**\n__**${language.reason}**__ ${acceptReason}\n__**${language.suggesting19}*__ ${interaction.user}`);
+        .setColor("#2bff80")
+        .setTitle(`${language.suggesting14}`)
+        .setDescription(
+          `${description}\n\n**${language.suggesting18}**\n__**${language.reason}**__ ${acceptReason}\n__**${language.suggesting19}*__ ${interaction.user}`
+        );
 
       suggestionMsg.edit({ embeds: [editedEmbed] });
       suggestionMsg.reactions.removeAll();
-      interaction.reply({
-        embeds: [
-          new MessageEmbed()
-          .setAuthor({
-            name: `${interaction.user.tag}`,
-            iconURL: interaction.user.displayAvatarURL({ format: "png" })
-          })
-          .setDescription(`${interaction.client.emoji.success} | ${language.suggesting20} ${channel}\n\n__**${language.reason}**__ ${acceptReason}`)
-          .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-          .setTimestamp()
-          .setColor("GREEN"),
-        ],
-      })
-      .then(() => {
-        setTimeout(() => {
-          interaction.deleteReply().catch(() => {})
-        }, 10000);
-      });
+      interaction
+        .reply({
+          embeds: [
+            new MessageEmbed()
+              .setAuthor({
+                name: `${interaction.user.tag}`,
+                iconURL: interaction.user.displayAvatarURL({ format: "png" }),
+              })
+              .setDescription(
+                `${interaction.client.emoji.success} | ${language.suggesting20} ${channel}\n\n__**${language.reason}**__ ${acceptReason}`
+              )
+              .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
+              .setTimestamp()
+              .setColor("GREEN"),
+          ],
+        })
+        .then(() => {
+          setTimeout(() => {
+            interaction.deleteReply().catch(() => {});
+          }, 10000);
+        });
     } else if (option.includes("decline") || option.includes("deny")) {
       if (guildDB.suggestion.decline == "false") {
         return interaction.reply({
           embeds: [
             new MessageEmbed()
-            .setAuthor({
-              name: `${interaction.user.tag}`,
-              iconURL: interaction.user.displayAvatarURL({ format: "png" })
-            })
-            .setDescription(`${fail} | Staff con't approve or decline suggestions in this guild.`)
-            .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-            .setTimestamp()
-            .setColor("RED"),
+              .setAuthor({
+                name: `${interaction.user.tag}`,
+                iconURL: interaction.user.displayAvatarURL({ format: "png" }),
+              })
+              .setDescription(
+                `${fail} | Staff con't approve or decline suggestions in this guild.`
+              )
+              .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
+              .setTimestamp()
+              .setColor("RED"),
           ],
         });
       }
-      if (!guildDB.suggestion.suggestionChannelID || !guildDB.suggestion.suggestChannelID === null)
+      if (
+        !guildDB.suggestion.suggestionChannelID ||
+        !guildDB.suggestion.suggestChannelID === null
+      )
         return interaction.reply({
           embeds: [
             new MessageEmbed()
-            .setAuthor({
-              name: `${interaction.user.tag}`,
-              iconURL: interaction.user.displayAvatarURL({ format: "png" })
-            })
-            .setDescription(`${fail} | ${language.suggesting1}`)
-            .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-            .setTimestamp()
-            .setColor("RED"),
+              .setAuthor({
+                name: `${interaction.user.tag}`,
+                iconURL: interaction.user.displayAvatarURL({ format: "png" }),
+              })
+              .setDescription(`${fail} | ${language.suggesting1}`)
+              .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
+              .setTimestamp()
+              .setColor("RED"),
           ],
         });
 
@@ -289,30 +337,30 @@ module.exports = {
         return interaction.reply({
           embeds: [
             new MessageEmbed()
-            .setAuthor({
-              name: `${interaction.user.tag}`,
-              iconURL: interaction.user.displayAvatarURL({ format: "png" })
-            })
-            .setDescription(`${fail} | ${language.suggesting2}`)
-            .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-            .setTimestamp()
-            .setColor("RED"),
+              .setAuthor({
+                name: `${interaction.user.tag}`,
+                iconURL: interaction.user.displayAvatarURL({ format: "png" }),
+              })
+              .setDescription(`${fail} | ${language.suggesting2}`)
+              .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
+              .setTimestamp()
+              .setColor("RED"),
           ],
         });
 
-          let message = interaction.options.getString("message");
+      let message = interaction.options.getString("message");
       if (!message)
         return interaction.reply({
           embeds: [
             new MessageEmbed()
-            .setAuthor({
-              name: `${interaction.user.tag}`,
-              iconURL: interaction.user.displayAvatarURL({ format: "png" })
-            })
-            .setDescription(`${fail} | ${language.suggesting12}`)
-            .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-            .setTimestamp()
-            .setColor("RED"),
+              .setAuthor({
+                name: `${interaction.user.tag}`,
+                iconURL: interaction.user.displayAvatarURL({ format: "png" }),
+              })
+              .setDescription(`${fail} | ${language.suggesting12}`)
+              .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
+              .setTimestamp()
+              .setColor("RED"),
           ],
         });
 
@@ -322,53 +370,55 @@ module.exports = {
         interaction.reply({
           embeds: [
             new MessageEmbed()
-            .setAuthor({
-              name: `${interaction.user.tag}`,
-              iconURL: interaction.user.displayAvatarURL({ format: "png" })
-            })
-            .setDescription(`${fail} | ${language.suggesting13}`)
-            .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-            .setTimestamp()
-            .setColor("RED"),
+              .setAuthor({
+                name: `${interaction.user.tag}`,
+                iconURL: interaction.user.displayAvatarURL({ format: "png" }),
+              })
+              .setDescription(`${fail} | ${language.suggesting13}`)
+              .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
+              .setTimestamp()
+              .setColor("RED"),
           ],
         });
         return;
       }
 
       if (suggestionMsg.embeds[0].title !== `${language.suggesting3}`) {
-         if (suggestionMsg.embeds[0].title === `${language.suggesting14}`) {
-           interaction.reply({
+        if (suggestionMsg.embeds[0].title === `${language.suggesting14}`) {
+          interaction.reply({
             embeds: [
               new MessageEmbed()
-              .setAuthor({
-                name: `${interaction.user.tag}`,
-                iconURL: interaction.user.displayAvatarURL({ format: "png" })
-              })
-              .setDescription(`${fail} | ${language.suggesting15}`)
-              .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-              .setTimestamp()
-              .setColor("RED"),
+                .setAuthor({
+                  name: `${interaction.user.tag}`,
+                  iconURL: interaction.user.displayAvatarURL({ format: "png" }),
+                })
+                .setDescription(`${fail} | ${language.suggesting15}`)
+                .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
+                .setTimestamp()
+                .setColor("RED"),
             ],
           });
         } else {
           interaction.reply({
             embeds: [
               new MessageEmbed()
-              .setAuthor({
-                name: `${interaction.user.tag}`,
-                iconURL: interaction.user.displayAvatarURL({ format: "png" })
-              })
-              .setDescription(`${fail} | ${language.suggesting16}`)
-              .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-              .setTimestamp()
-              .setColor("RED"),
+                .setAuthor({
+                  name: `${interaction.user.tag}`,
+                  iconURL: interaction.user.displayAvatarURL({ format: "png" }),
+                })
+                .setDescription(`${fail} | ${language.suggesting16}`)
+                .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
+                .setTimestamp()
+                .setColor("RED"),
             ],
           });
         }
 
         return;
       }
-      let reason = interaction.options.getString("reason") || `${language.noReasonProvided}`;
+      let reason =
+        interaction.options.getString("reason") ||
+        `${language.noReasonProvided}`;
       acceptReason = reason;
       if (!acceptReason) acceptReason = `${language.noReasonProvided}`;
 
@@ -376,40 +426,43 @@ module.exports = {
         return interaction.reply({
           embeds: [
             new MessageEmbed()
-            .setAuthor({
-              name: `${interaction.user.tag}`,
-              iconURL: interaction.user.displayAvatarURL({ format: "png" })
-            })
-            .setDescription(`${fail} | ${language.suggesting17}`)
-            .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-            .setTimestamp()
-            .setColor("RED"),
+              .setAuthor({
+                name: `${interaction.user.tag}`,
+                iconURL: interaction.user.displayAvatarURL({ format: "png" }),
+              })
+              .setDescription(`${fail} | ${language.suggesting17}`)
+              .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
+              .setTimestamp()
+              .setColor("RED"),
           ],
         });
 
       suggestionMsg.reactions.removeAll();
-      interaction.reply({
-        embeds: [
-          new MessageEmbed()
-          .setAuthor({
-            name: `${interaction.user.tag}`,
-            iconURL: interaction.user.displayAvatarURL({ format: "png" })
-          })
-          .setDescription(`${interaction.client.emoji.success} | ${language.suggesting24} ${channel}\n\n__**${language.reason}**__ ${acceptReason}`)
-          .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-          .setTimestamp()
-          .setColor("GREEN"),
-        ],
-      })
-      .then(() => {
-        setTimeout(() => {
-          interaction.deleteReply().catch(() => {});
-        }, 10000);
-      });
+      interaction
+        .reply({
+          embeds: [
+            new MessageEmbed()
+              .setAuthor({
+                name: `${interaction.user.tag}`,
+                iconURL: interaction.user.displayAvatarURL({ format: "png" }),
+              })
+              .setDescription(
+                `${interaction.client.emoji.success} | ${language.suggesting24} ${channel}\n\n__**${language.reason}**__ ${acceptReason}`
+              )
+              .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
+              .setTimestamp()
+              .setColor("GREEN"),
+          ],
+        })
+        .then(() => {
+          setTimeout(() => {
+            interaction.deleteReply().catch(() => {});
+          }, 10000);
+        });
     } else if (option) {
       interaction.reply({ embeds: [properUsage] });
     } else {
       interaction.reply({ embeds: [properUsage] });
     }
-  }
+  },
 };

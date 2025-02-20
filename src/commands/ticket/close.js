@@ -63,10 +63,12 @@ module.exports = class extends Command {
               return message.channel.sendCustom({
                 embeds: [
                   new discord.MessageEmbed()
-                    .setAuthor(
-                      `${message.author.tag}`,
-                      message.author.displayAvatarURL({ format: "png" })
-                    )
+                    .setAuthor({
+                      name: `${message.author.tag}`,
+                      iconURL: message.author.displayAvatarURL({
+                        format: "png",
+                      }),
+                    })
                     .setDescription(
                       `${message.client.emoji.fail} | Only users with the support team role can close this ticket.`
                     )
@@ -126,7 +128,9 @@ module.exports = class extends Command {
                   message.channel.name
                 }\n**Reason:** ${reason}\n**Date:** ${moment(new Date()).format(
                   "dddd, MMMM Do YYYY"
-                )}\n**Transcript:** [here](${process.env.AUTH_DOMAIN}/paste/${ticketID})`
+                )}\n**Transcript:** [here](${
+                  process.env.AUTH_DOMAIN
+                }/paste/${ticketID})`
               );
 
             channelReact.send({ embeds: [closeEmbed] });

@@ -12,10 +12,10 @@ module.exports = {
       option
         .setName("rate")
         .setDescription("The rate of messages/second")
-        .setRequired(true),
+        .setRequired(true)
     )
     .addChannelOption((option) =>
-      option.setName("channel").setDescription("The channel"),
+      option.setName("channel").setDescription("The channel")
     )
     .setContexts(0)
     .setIntegrationTypes(0),
@@ -59,11 +59,11 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => { });
+                interaction.deleteReply().catch(() => {});
               }, 5000);
             }
           })
-          .catch(() => { });
+          .catch(() => {});
       }
 
       const rate = ms(interaction.options.getString("rate"));
@@ -74,7 +74,7 @@ module.exports = {
             iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
           })
           .setDescription(
-            `${fail} | Please provide a rate limit between 0 seconds and 6 hours.`,
+            `${fail} | Please provide a rate limit between 0 seconds and 6 hours.`
           )
           .setTimestamp()
           .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
@@ -84,11 +84,11 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => { });
+                interaction.deleteReply().catch(() => {});
               }, 5000);
             }
           })
-          .catch(() => { });
+          .catch(() => {});
       }
 
       const number = parseInt(rate);
@@ -99,7 +99,7 @@ module.exports = {
             iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
           })
           .setDescription(
-            `${fail} | Please provide a rate limit between 0 seconds and 6 hours`,
+            `${fail} | Please provide a rate limit between 0 seconds and 6 hours`
           )
           .setTimestamp()
           .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
@@ -109,11 +109,11 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => { });
+                interaction.deleteReply().catch(() => {});
               }, 5000);
             }
           })
-          .catch(() => { });
+          .catch(() => {});
       }
 
       await channel.setRateLimitPerUser(rate);
@@ -124,7 +124,7 @@ module.exports = {
             embeds: [
               new MessageEmbed()
                 .setDescription(
-                  `${success} | Slow Mode has been disabled, good luck!`,
+                  `${success} | Slow Mode has been disabled, good luck!`
                 )
                 .setColor(interaction.guild.me.displayHexColor),
             ],
@@ -132,11 +132,11 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => { });
+                interaction.deleteReply().catch(() => {});
               }, 5000);
             }
           })
-          .catch(() => { });
+          .catch(() => {});
       } else {
         interaction
           .reply({
@@ -145,8 +145,8 @@ module.exports = {
                 .setDescription(
                   `${success} | Slow Mode was successfully set to **1 msg/${ms(
                     rate,
-                    { long: false },
-                  )}**`,
+                    { long: false }
+                  )}**`
                 )
                 .setColor(interaction.guild.me.displayHexColor),
             ],
@@ -154,11 +154,11 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => { });
+                interaction.deleteReply().catch(() => {});
               }, 5000);
             }
           })
-          .catch(() => { });
+          .catch(() => {});
       }
     } catch (err) {
       console.error(err);

@@ -6,12 +6,22 @@ const Logging = require("../../database/schemas/logging");
 
 module.exports = {
   data: new SlashCommandBuilder()
-  .setName("autoresponse")
-  .setDescription("Create a auto response which is triggered without prefix!")
-  .addStringOption((option) => option.setName("command").setDescription("The name of the command").setRequired(true))
-  .addStringOption((option) => option.setName("reply").setDescription("The reply when the command is triggered").setRequired(true))
-  .setContexts(0)
-  .setIntegrationTypes(0),
+    .setName("autoresponse")
+    .setDescription("Create a auto response which is triggered without prefix!")
+    .addStringOption((option) =>
+      option
+        .setName("command")
+        .setDescription("The name of the command")
+        .setRequired(true)
+    )
+    .addStringOption((option) =>
+      option
+        .setName("reply")
+        .setDescription("The reply when the command is triggered")
+        .setRequired(true)
+    )
+    .setContexts(0)
+    .setIntegrationTypes(0),
   async execute(interaction) {
     const guildDB = await Guild.findOne({
       guildId: interaction.guild.id,
@@ -21,56 +31,70 @@ module.exports = {
 
     const language = require(`../../data/language/${guildDB.language}.json`);
 
-      const logging = await Logging.findOne({ guildId: interaction.guild.id });
+    const logging = await Logging.findOne({ guildId: interaction.guild.id });
 
     const namee = interaction.options.getString("command");
 
     if (!namee) {
       let embed = new MessageEmbed()
-      .setAuthor({
-        name: `${interaction.user.tag}`,
-        iconURL: interaction.user.displayAvatarURL({ dynamic: true })
-      })
-      .setDescription(`${language.properusage} \`${prefix}autoresponse <command-name> <text-reply>\`\n\n${language.example} \`${prefix}autoresponse ping pong\``)
-      .setTimestamp()
-      .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-      .setColor(interaction.guild.me.displayHexColor)
-      return interaction.reply({ embeds: [embed] })
-      .then(async () => {
-        if (logging && logging.moderation.delete_reply === "true") {
-          setTimeout(() => {
-            interaction.deleteReply().catch(() => {});
-          }, 5000);
-        }
-      })
-      .catch(() => {});
+        .setAuthor({
+          name: `${interaction.user.tag}`,
+          iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
+        })
+        .setDescription(
+          `${language.properusage} \`${prefix}autoresponse <command-name> <text-reply>\`\n\n${language.example} \`${prefix}autoresponse ping pong\``
+        )
+        .setTimestamp()
+        .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
+        .setColor(interaction.guild.me.displayHexColor);
+      return interaction
+        .reply({ embeds: [embed] })
+        .then(async () => {
+          if (logging && logging.moderation.delete_reply === "true") {
+            setTimeout(() => {
+              interaction.deleteReply().catch(() => {});
+            }, 5000);
+          }
+        })
+        .catch(() => {});
     }
 
     let name = namee.toLowerCase();
     const content = interaction.options.getString("reply");
     if (!content) {
       let embed = new MessageEmbed()
-      .setAuthor({
-        name: `${interaction.user.tag}`,
-        iconURL: interaction.user.displayAvatarURL({ dynamic: true })
-      })
-      .setDescription(`${language.properusage} \`${prefix}autoresponse <command-name> <text-reply>\`\n\n${language.example} \`${prefix}autoresponse ping pong\``)
-      .setTimestamp()
-      .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-      .setColor(interaction.guild.me.displayHexColor)
-      return interaction.reply({ embeds: [embed] })
-      .then(async () => {
-        if (logging && logging.moderation.delete_reply === "true") {
-          setTimeout(() => {
-            interaction.deleteReply().catch(() => {});
-          }, 5000);
-        }
-      })
-      .catch(() => {});
+        .setAuthor({
+          name: `${interaction.user.tag}`,
+          iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
+        })
+        .setDescription(
+          `${language.properusage} \`${prefix}autoresponse <command-name> <text-reply>\`\n\n${language.example} \`${prefix}autoresponse ping pong\``
+        )
+        .setTimestamp()
+        .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
+        .setColor(interaction.guild.me.displayHexColor);
+      return interaction
+        .reply({ embeds: [embed] })
+        .then(async () => {
+          if (logging && logging.moderation.delete_reply === "true") {
+            setTimeout(() => {
+              interaction.deleteReply().catch(() => {});
+            }, 5000);
+          }
+        })
+        .catch(() => {});
     }
 
-    if (namee.length > 60) return interaction.reply({ content: `${interaction.client.emoji.fail} | ${language.cc1}`, ephemeral: true });
-    if (content.length > 2000) return interaction.reply({ content: `${interaction.client.emoji.fail} | ${language.cc2}`, ephemeral: true });
+    if (namee.length > 60)
+      return interaction.reply({
+        content: `${interaction.client.emoji.fail} | ${language.cc1}`,
+        ephemeral: true,
+      });
+    if (content.length > 2000)
+      return interaction.reply({
+        content: `${interaction.client.emoji.fail} | ${language.cc2}`,
+        ephemeral: true,
+      });
 
     if (guildDB.isPremium === "false") {
       const conditional = {
@@ -82,9 +106,12 @@ module.exports = {
         interaction.reply({
           embeds: [
             new MessageEmbed()
-            .setColor(interaction.guild.me.displayHexColor)
-            .setDescription(`${interaction.client.emoji.fail} | Auto Response Limit Reached **(10)**\n\n[Upgrade to Premium here for unlimited commands](${process.env.AUTH_DOMAIN}/premium)`)
-          ], ephemeral: true
+              .setColor(interaction.guild.me.displayHexColor)
+              .setDescription(
+                `${interaction.client.emoji.fail} | Auto Response Limit Reached **(10)**\n\n[Upgrade to Premium here for unlimited commands](${process.env.AUTH_DOMAIN}/premium)`
+              ),
+          ],
+          ephemeral: true,
         });
 
         return;
@@ -93,7 +120,8 @@ module.exports = {
 
     autoResponse.findOne(
       {
-        guildId: interaction.guild.id, name,
+        guildId: interaction.guild.id,
+        name,
       },
       async (err, data) => {
         if (!data) {
@@ -101,20 +129,25 @@ module.exports = {
           interaction.reply({
             embeds: [
               new MessageEmbed()
-              .setAuthor({
-                name: `${interaction.user.tag}`,
-                iconURL: interaction.user.displayAvatarURL({ dynamic: true })
-              })
-              .setDescription(`**${language.cc3}** ${name}\n\nDelete the following auto response using \`${prefix}deleteresponse <command-name>\``)
-              .setTimestamp()
-              .setFooter({ text: "${process.env.AUTH_DOMAIN}" })
-              .setColor(interaction.guild.me.displayHexColor),
-            ], ephemeral: true
+                .setAuthor({
+                  name: `${interaction.user.tag}`,
+                  iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
+                })
+                .setDescription(
+                  `**${language.cc3}** ${name}\n\nDelete the following auto response using \`${prefix}deleteresponse <command-name>\``
+                )
+                .setTimestamp()
+                .setFooter({ text: "${process.env.AUTH_DOMAIN}" })
+                .setColor(interaction.guild.me.displayHexColor),
+            ],
+            ephemeral: true,
           });
         } else {
-          return interaction.reply({ content: `${interaction.client.emoji.fail} | ${language.cc4}` });
+          return interaction.reply({
+            content: `${interaction.client.emoji.fail} | ${language.cc4}`,
+          });
         }
       }
     );
-  }
+  },
 };

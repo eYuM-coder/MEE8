@@ -24,10 +24,10 @@ module.exports = class extends Command {
     if (!args[0]) {
       message.delete().catch(() => {});
       const embed = new discord.MessageEmbed()
-        .setAuthor(
-          `${message.author.username} has paid their respects.`,
-          message.author.displayAvatarURL({ format: "png" })
-        )
+        .setAuthor({
+          name: `${message.author.username} has paid their respects.`,
+          iconURL: message.author.displayAvatarURL({ format: "png" }),
+        })
         .setColor("PURPLE")
         .setFooter({ text: `${language.f3}` });
       message.channel
@@ -37,7 +37,10 @@ module.exports = class extends Command {
     } else {
       message.delete().catch(() => {});
       const embed = new discord.MessageEmbed()
-        .setAuthor("\u2000", message.author.displayAvatarURL({ format: "png" }))
+        .setAuthor({
+          name: "\u2000",
+          iconURL: message.author.displayAvatarURL({ format: "png" }),
+        })
         .setColor("PURPLE")
         .setDescription(`${message.author} ${language.f2} ${target}`)
         .setFooter({ text: `${language.f3}` });

@@ -11,7 +11,7 @@ module.exports = class extends Command {
     super(...args, {
       name: "reportbug",
       aliases: ["bugreport", "bug"],
-      description: "Report bugs to Pogy!",
+      description: "Report bugs to MEE8!",
       category: "Utility",
       usage: ["<text>"],
       cooldown: 60,
@@ -87,7 +87,7 @@ module.exports = class extends Command {
 
     webhookClient.sendCustom({
       username: `${config.botName} Bug Report`,
-      avatarURL: `https://v2.pogy.xyz/logo.png`,
+      avatarURL: `https://mee8.eyum.org/logo.png`,
       embeds: [embed],
     });
 

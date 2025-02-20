@@ -6,7 +6,8 @@ module.exports = class FindMessagesCommand extends Command {
     super(...args, {
       name: "findmessages",
       aliases: ["fm"], // You can add aliases as needed
-      description: "Find messages from a user containing a keyword in a given time range",
+      description:
+        "Find messages from a user containing a keyword in a given time range",
       category: "Moderation", // Adjust the category as needed
       cooldown: 5,
       usage: "findmessages <@user> <keyword> <time>",
@@ -27,7 +28,9 @@ module.exports = class FindMessagesCommand extends Command {
       const time = args[2];
 
       if (!keyword || !time || isNaN(time)) {
-        return message.reply("Please provide a keyword and a valid time in minutes.");
+        return message.reply(
+          "Please provide a keyword and a valid time in minutes."
+        );
       }
 
       // Calculate the timestamp for the start of the time range
@@ -48,12 +51,16 @@ module.exports = class FindMessagesCommand extends Command {
       // Create an embed to display the results
       const embed = new MessageEmbed()
         .setColor("#3498db")
-        .setTitle(`Messages from ${user.tag} containing "${keyword}" in the last ${time} minutes`);
+        .setTitle(
+          `Messages from ${user.tag} containing "${keyword}" in the last ${time} minutes`
+        );
 
       if (matchingMessages.size === 0) {
         embed.setDescription("No matching messages found.");
       } else {
-        embed.setDescription(matchingMessages.map((msg) => `${msg.content}\n`).join("\n"));
+        embed.setDescription(
+          matchingMessages.map((msg) => `${msg.content}\n`).join("\n")
+        );
       }
 
       message.reply({ embeds: [embed] });

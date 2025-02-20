@@ -77,9 +77,9 @@ module.exports = class extends Event {
           .addField(`Prefix`, proofita, true)
           .addField(`Usage`, proofitaa, true)
           .setDescription(
-            `\nIf you like ${config.botName}, Consider [voting](https://top.gg/bot/767705905235099658), or [inviting](${config.invite_link}) it to your server! Thank you for using Pogy, we hope you enjoy it, as we always look forward to improve the bot`,
+            `\nIf you like ${config.botName}, Consider [voting](https://top.gg/bot/767705905235099658), or [inviting](${config.invite_link}) it to your server! Thank you for using MEE8, we hope you enjoy it, as we always look forward to improve the bot`
           )
-          .setFooter(`Thank you for using ${config.botName}!!`)
+          .setFooter({ text: `Thank you for using ${config.botName}!!` })
           .setColor("#FF2C98");
         message.channel.sendCustom(embed);
       }
@@ -117,12 +117,15 @@ module.exports = class extends Event {
 
       // maintenance mode
 
-      if (!this.client.config.developers.includes(message.author.id) && !this.client.config.owner.includes(message.author.id)) {
+      if (
+        !this.client.config.developers.includes(message.author.id) &&
+        !this.client.config.owner.includes(message.author.id)
+      ) {
         if (maintenance && maintenance.toggle == "true") {
           if (maintenanceCooldown.has(message.author.id)) return;
 
           message.channel.sendCustom(
-            `${config.botName} is currently undergoing maintenance, which means no one is allowed to access ${config.botName}'s commands. Feel free to try again later. For updates: ${config.discord}`,
+            `${config.botName} is currently undergoing maintenance, which means no one is allowed to access ${config.botName}'s commands. Feel free to try again later. For updates: ${config.discord}`
           );
 
           maintenanceCooldown.add(message.author.id);
@@ -149,7 +152,7 @@ module.exports = class extends Event {
 
               newUser.save();
             }
-          },
+          }
         );
 
         let disabledCommands = settings.disabledCommands;
@@ -167,7 +170,7 @@ module.exports = class extends Event {
         if (userBlacklistSettings && userBlacklistSettings.isBlacklisted) {
           logger.warn(
             `${message.author.tag} tried to use "${cmd}" command but the user is blacklisted`,
-            { label: "Commands" },
+            { label: "Commands" }
           );
           return;
         }
@@ -176,7 +179,7 @@ module.exports = class extends Event {
         if (guildBlacklistSettings && guildBlacklistSettings.isBlacklisted) {
           logger.warn(
             `${message.author.tag} tried to use "${cmd}" command but the guild is blacklisted`,
-            { label: "Commands" },
+            { label: "Commands" }
           );
           return;
         }
@@ -195,9 +198,9 @@ module.exports = class extends Event {
                   : ""
               }${
                 number === 2
-                  ? "*You can check our top.gg page at `https://vote.pogy.xyz`*"
+                  ? "*You can check our top.gg page at `https://vote.mee8.eyum.org`*"
                   : ""
-              }`,
+              }`
             )
             .then((s) => {
               message.delete().catch(() => {});
@@ -215,20 +218,22 @@ module.exports = class extends Event {
 
           if (missingPermissions.length !== 0) {
             const embed = new MessageEmbed()
-              .setAuthor(
-                `${this.client.user.tag}`,
-                message.client.user.displayAvatarURL({ dynamic: true }),
-              )
+              .setAuthor({
+                name: `${this.client.user.tag}`,
+                iconURL: message.client.user.displayAvatarURL({
+                  dynamic: true,
+                }),
+              })
               .setTitle(`<:fail:1293235307998740480> Missing Bot Permissions`)
               .setDescription(
                 `Command Name: **${
                   command.name
                 }**\nRequired Permission: **${missingPermissions
                   .map((p) => `${p}`)
-                  .join(" - ")}**`,
+                  .join(" - ")}**`
               )
               .setTimestamp()
-              .setFooter(`${process.env.AUTH_DOMAIN}`)
+              .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
               .setColor(message.guild.me.displayHexColor);
             return message.channel.sendCustom(embed).catch(() => {});
           }
@@ -241,20 +246,20 @@ module.exports = class extends Event {
             .map((p) => permissions[p]);
           if (missingPermissions.length !== 0) {
             const embed = new MessageEmbed()
-              .setAuthor(
-                `${message.author.tag}`,
-                message.author.displayAvatarURL({ dynamic: true }),
-              )
+              .setAuthor({
+                name: `${message.author.tag}`,
+                iconURL: message.author.displayAvatarURL({ dynamic: true }),
+              })
               .setTitle(`<:fail:1293235307998740480> Missing User Permissions`)
               .setDescription(
                 `Command Name: **${
                   command.name
                 }**\nRequired Permission: **${missingPermissions
                   .map((p) => `${p}`)
-                  .join("\n")}**`,
+                  .join("\n")}**`
               )
               .setTimestamp()
-              .setFooter(`${process.env.AUTH_DOMAIN}`)
+              .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
               .setColor(message.guild.me.displayHexColor);
             return message.channel.sendCustom(embed).catch(() => {});
           }
@@ -270,7 +275,7 @@ module.exports = class extends Event {
 
         if (command.disabled)
           return message.channel.sendCustom(
-            `The owner has disabled the following command for now. Try again Later!\n\nFor Updates: ${config.discord}`,
+            `The owner has disabled the following command for now. Try again Later!\n\nFor Updates: ${config.discord}`
           );
 
         await this.runCommand(message, cmd, args).catch((error) => {
@@ -288,7 +293,7 @@ module.exports = class extends Event {
       !message.channel.permissionsFor(message.guild.me).has("EMBED_LINKS")
     )
       return message.channel.sendCustom(
-        `${message.client.emoji.fail} Missing bot Permissions - **Embeds Links**`,
+        `${message.client.emoji.fail} Missing bot Permissions - **Embeds Links**`
       );
 
     const command =
@@ -296,7 +301,7 @@ module.exports = class extends Event {
       this.client.botCommands.get(this.client.aliases.get(cmd.toLowerCase()));
     logger.info(
       `"${message.content}" (${command.name}) ran by "${message.author.tag}" (${message.author.id}) on guild "${message.guild.name}" (${message.guild.id}) channel "#${message.channel.name}" (${message.channel.id})`,
-      { label: "Command" },
+      { label: "Command" }
     );
 
     await command.run(message, args);

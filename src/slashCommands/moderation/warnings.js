@@ -10,7 +10,7 @@ module.exports = {
     .setName("warnings")
     .setDescription("Shows the warnings for a user")
     .addUserOption((option) =>
-      option.setName("member").setDescription("The member").setRequired(true),
+      option.setName("member").setDescription("The member").setRequired(true)
     )
     .setContexts(0)
     .setIntegrationTypes(0),
@@ -43,7 +43,7 @@ module.exports = {
           embeds: [
             new MessageEmbed()
               .setDescription(
-                `${interaction.client.emoji.fail} | **${mentionedMember.user.tag}** ${language.warningsNoError}`,
+                `${interaction.client.emoji.fail} | **${mentionedMember.user.tag}** ${language.warningsNoError}`
               )
               .setTimestamp()
               .setColor(client.color.red),
@@ -56,10 +56,14 @@ module.exports = {
       for (let i = 0; warnDoc.warnings.length > i; i++) {
         data.push(
           `**Moderator:** ${await interaction.client.users.fetch(
-            warnDoc.moderator[i],
+            warnDoc.moderator[i]
           )}\n**Reason:** ${warnDoc.warnings[i]}\n**Date:** ${moment(
-            warnDoc.date[i],
-          ).format("dddd, MMMM do YYYY")}\n**Warning ID:** ${i + 1}\n**Expires At:** <t:${Math.floor(warnDoc.expiresAt[i].getTime() / 1000)}:F>`,
+            warnDoc.date[i]
+          ).format("dddd, MMMM do YYYY")}\n**Warning ID:** ${
+            i + 1
+          }\n**Expires At:** <t:${Math.floor(
+            warnDoc.expiresAt[i].getTime() / 1000
+          )}:F>`
         );
       }
 
@@ -78,37 +82,37 @@ module.exports = {
           embed
             .addField(
               "\u200b",
-              `**${language.warnName || "unknown"} \`#${i + 1}\`**`,
+              `**${language.warnName || "unknown"} \`#${i + 1}\`**`
             )
             .addField(
               `${language.warnModerator || "unknown"}`,
               `${interaction.guild.members.cache.get(warnDoc.moderator[i])}`,
-              true,
+              true
             )
 
             .addField(
               `${language.warnAction || "unknown"}`,
               `${warnDoc.modType[i]}`,
-              true,
+              true
             )
 
             .addField(
               `${language.warnReason || "unknown"}`,
               `${warnDoc.warnings[i]}`,
-              true,
+              true
             )
             .addField(
               `${language.warnID || "unknown"}`,
               `${warnDoc.warningID[i]}`,
-              true,
+              true
             )
             .addField(
               `${language.warnDateIssued || "unknown"}`,
-              `${moment(warnDoc.date[i]).format("dddd, MMMM Do YYYY")}`,
+              `${moment(warnDoc.date[i]).format("dddd, MMMM Do YYYY")}`
             )
             .addField(
               `${language.expiresAt || "unknown"}`,
-              `<t:${Math.floor(warnDoc.expiresAt[i].getTime() / 1000)}:F>`,
+              `<t:${Math.floor(warnDoc.expiresAt[i].getTime() / 1000)}:F>`
             );
           amount += 1;
         }
@@ -116,7 +120,7 @@ module.exports = {
         return embed
           .setTitle(`${language.warnList} [${current} - ${max}]`)
           .setDescription(
-            `Showing \`${amount}\` of ${mentionedMember}'s \`${count}\` total warns.`,
+            `Showing \`${amount}\` of ${mentionedMember}'s \`${count}\` total warns.`
           );
       };
 
@@ -175,7 +179,7 @@ module.exports = {
           null,
           null,
           reactions,
-          180000,
+          180000
         );
 
         menu.reactions["⏹️"] = menu.stop.bind(menu);

@@ -45,7 +45,7 @@ module.exports = class extends Command {
         embeds: [
           new discord.MessageEmbed()
             .setAuthor({
-              name: message.author.tag, 
+              name: message.author.tag,
               iconURL: message.author.displayAvatarURL({ dynamic: true }),
             })
             .setDescription(
@@ -90,35 +90,37 @@ module.exports = class extends Command {
         if (warnDoc.warnings[i].length > 1000)
           warnDoc.warnings[i] = warnDoc.warnings[i].slice(0, 1000) + "...";
         embed // Build warning list
-          .addField(
-            "\u200b",
-            `**${language.warnName || "unknown"} \`#${i + 1}\`**`
-          )
-          .addField(
-            `${language.warnModerator || "unknown"}`,
-            `${message.guild.members.cache.get(warnDoc.moderator[i])}`,
-            true
-          )
-
-          .addField(
-            `${language.warnAction || "unknown"}`,
-            `${warnDoc.modType[i]}`,
-            true
-          ) //it says if its mute or warn or ban etc
-
-          .addField(
-            `${language.warnReason || "unknown"}`,
-            `${warnDoc.warnings[i]}`,
-            true
-          )
-          .addField(
-            `${language.warnID || "unknown"}`,
-            `${warnDoc.warningID[i]}`,
-            true
-          )
-          .addField(
-            `${language.warnDateIssued || "unknown"}`,
-            `${moment(warnDoc.date[i]).format("dddd, MMMM Do YYYY")}`
+          .addFields(
+            {
+              name: "\u200b",
+              value: `**${language.warnName || "unknown"} \`#${i + 1}\`**`,
+              inline: false,
+            },
+            {
+              name: `${language.warnModerator || "unknown"}`,
+              value: `${message.guild.members.cache.get(warnDoc.moderator[i])}`,
+              inline: true,
+            },
+            {
+              name: `${language.warnAction || "unknown"}`,
+              value: `${warnDoc.modType[i]}`,
+              inline: true,
+            },
+            {
+              name: `${language.warnReason || "unknown"}`,
+              value: `${warnDoc.warnings[i]}`,
+              inline: true,
+            },
+            {
+              name: `${language.warnID || "unknown"}`,
+              value: `${warnDoc.warningID[i]}`,
+              inline: true,
+            },
+            {
+              name: `${language.warnDateIssued || "unknown"}`,
+              value: `${moment(warnDoc.date[i]).format("dddd, MMMM Do YYYY")}`,
+              inline: false,
+            }
           );
         amount += 1;
       }

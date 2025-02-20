@@ -1,5 +1,5 @@
 const Command = require("../../structures/Command");
-const {MessageEmbed} = require('discord.js');
+const { MessageEmbed } = require("discord.js");
 module.exports = class EmptyCommand extends Command {
   constructor(...args) {
     super(...args, {
@@ -14,7 +14,7 @@ module.exports = class EmptyCommand extends Command {
   async run(message) {
     const { Prodia } = require("prodia.js");
     const prodia = new Prodia("e53c8afb-bf1e-4ca7-a760-ba1fa4083ddd"); // API KEY HERE
-    
+
     (async () => {
       const input2 = message.content.split(" ")[0];
       const cfg_scale2 = message.content.split("")[1];
@@ -34,15 +34,15 @@ module.exports = class EmptyCommand extends Command {
 
         const job = await prodia.getJob(generate.job);
         if (job.status === "succeeded") {
-        const embed = new MessageEmbed()
-        .setAuthor("Requested by " + message.author.username)
-        .setTitle("Image")
-        .setImage(job.imageUrl)
-        .setColor("#FF5733")
+          const embed = new MessageEmbed()
+            .setAuthor({ name: "Requested by " + message.author.username })
+            .setTitle("Image")
+            .setImage(job.imageUrl)
+            .setColor("#FF5733")
 
-        .setFooter("job id: " + job.job)
-        message.channel.send({ embeds: [embed] });
-        break;
+            .setFooter("job id: " + job.job);
+          message.channel.send({ embeds: [embed] });
+          break;
         }
       }
     })();

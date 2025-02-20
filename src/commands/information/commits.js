@@ -22,10 +22,10 @@ module.exports = class EmptyCommand extends Command {
       const getCommits = async () => {
         try {
           const response = await axios.get(
-            "https://api.github.com/repos/hotsu0p/Pogy/commits"
+            "https://api.github.com/repos/hotsu0p/MEE8/commits"
           );
           const commits = response.data;
-          const commitHistory = await getCommitHistory("https://api.github.com/repos/hotsu0p/Pogy/commits");
+          const commitHistory = await getCommitHistory("https://api.github.com/repos/hotsu0p/MEE8/commits");
           console.log(`Total commits: ${commits.length}`);
 
           const embed = new MessageEmbed()

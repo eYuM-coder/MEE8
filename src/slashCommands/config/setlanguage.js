@@ -4,11 +4,16 @@ const { MessageEmbed } = require("discord.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
-  .setName("setlanguage")
-  .setDescription("Set a guild language")
-  .addStringOption((option) => option.setName("language").setDescription("The language to set").setRequired(true))
-  .setContexts(0)
-  .setIntegrationTypes(0),
+    .setName("setlanguage")
+    .setDescription("Set a guild language")
+    .addStringOption((option) =>
+      option
+        .setName("language")
+        .setDescription("The language to set")
+        .setRequired(true)
+    )
+    .setContexts(0)
+    .setIntegrationTypes(0),
   async execute(interaction) {
     const guildDB = await Guild.findOne({
       guildId: interaction.guild.id,
@@ -24,31 +29,43 @@ module.exports = {
       return interaction.reply({
         embeds: [
           new MessageEmbed()
-          .setColor(interaction.client.color.red)
-          .setDescription(`${interaction.client.emoji.fail} | ${language.setLangMissingArgument}`),
+            .setColor(interaction.client.color.red)
+            .setDescription(
+              `${interaction.client.emoji.fail} | ${language.setLangMissingArgument}`
+            ),
         ],
       });
     }
 
-    let setLangInvalidOption = language.setLangInvalidOption.replace("{languages}", languages.join(", "));
+    let setLangInvalidOption = language.setLangInvalidOption.replace(
+      "{languages}",
+      languages.join(", ")
+    );
     if (!languages.includes(e.toLowerCase()))
       return interaction.reply({
         embeds: [
           new MessageEmbed()
-          .setColor(interaction.client.color.red)
-          .setDescription(`${interaction.client.emoji.fail} | ${setLangInvalidOption}`),
+            .setColor(interaction.client.color.red)
+            .setDescription(
+              `${interaction.client.emoji.fail} | ${setLangInvalidOption}`
+            ),
         ],
       });
 
-    let setLangChange = language.setLangChange.replace("{language}", e.toLowerCase());
+    let setLangChange = language.setLangChange.replace(
+      "{language}",
+      e.toLowerCase()
+    );
     interaction.reply({
       embeds: [
         new MessageEmbed()
-        .setColor(interaction.client.color.green)
-        .setDescription(`${interaction.client.emoji.success} | ${setLangChange}`),
+          .setColor(interaction.client.color.green)
+          .setDescription(
+            `${interaction.client.emoji.success} | ${setLangChange}`
+          ),
       ],
     });
 
     await guildDB.updateOne({ language: e.toLowerCase() });
-  }
+  },
 };

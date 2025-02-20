@@ -15,20 +15,20 @@ module.exports = class AdvancementsCommand extends Command {
 
   async run(interaction) {
     try {
-        const userID = interaction.user?.id;
-const serverID = interaction.guild?.id;
+      const userID = interaction.user?.id;
+      const serverID = interaction.guild?.id;
 
-if (!userID || !serverID) {
-  // Log details for debugging
-  console.error("User ID or Server ID is undefined");
-  console.error("interaction.user:", interaction.user);
-  console.error("interaction.guild:", interaction.guild);
-  return;
-}
+      if (!userID || !serverID) {
+        // Log details for debugging
+        console.error("User ID or Server ID is undefined");
+        console.error("interaction.user:", interaction.user);
+        console.error("interaction.guild:", interaction.guild);
+        return;
+      }
 
-// Log details for debugging
-console.log("User ID:", userID);
-console.log("Server ID:", serverID);
+      // Log details for debugging
+      console.log("User ID:", userID);
+      console.log("Server ID:", serverID);
       // Fetch the user's advancements from the database
       const userAdvancements = await Advancement.findOne({
         userID,
@@ -45,7 +45,7 @@ console.log("Server ID:", serverID);
         .setTitle(`${interaction.user.username}'s Advancements`);
 
       userAdvancements.advancements.forEach((advancement) => {
-        embed.addField(advancement, "Unlocked!");
+        embed.addFields({ name: advancement, value: "Unlocked!" });
       });
 
       await interaction.reply({ embeds: [embed] });

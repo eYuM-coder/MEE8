@@ -3,26 +3,32 @@ const Guild = require("../../database/schemas/Guild");
 
 module.exports = {
   data: new SlashCommandBuilder()
-  .setName("kill")
-  .setDescription("Kill someone! (fake)")
-  .addUserOption((option) => option.setName("member").setDescription("The member to (fake) kill").setRequired(true))
-  .setContexts(0)
-  .setIntegrationTypes(0),
+    .setName("kill")
+    .setDescription("Kill someone! (fake)")
+    .addUserOption((option) =>
+      option
+        .setName("member")
+        .setDescription("The member to (fake) kill")
+        .setRequired(true)
+    )
+    .setContexts(0)
+    .setIntegrationTypes(0),
   async execute(interaction) {
     try {
       const guildDB = await Guild.findOne({
         guildId: interaction.guild.id,
-      })
-  
+      });
+
       const language = require(`../../data/language/${guildDB.language}.json`);
       const member = interaction.options.getMember("member");
-  
-      if (!member) return interaction.reply({ content: `${language.kill1}` }).catch(() => {
-        interaction.reply({ content: `${language.kill1}` });
-      });
-  
+
+      if (!member)
+        return interaction.reply({ content: `${language.kill1}` }).catch(() => {
+          interaction.reply({ content: `${language.kill1}` });
+        });
+
       let user = member.user.username;
-  
+
       const answers = [
         `${interaction.user.username} ${language.kill3} ${user}${language.kill4}`,
         `${user} ${language.kill5}`,
@@ -48,16 +54,23 @@ module.exports = {
         `${user} ${language.kill32} `,
         `${user} ${language.kill33} `,
       ];
-  
-      if (member.id === interaction.member.id) return interaction.reply({ content: `${language.kill2}` }).catch(() => {
-        interaction.reply({ content: `${language.kill1}` });
-      });
-  
-      interaction.reply({ content: `${answers[Math.floor(Math.random() * answers.length)]}` }).catch(() => {
-        interaction.reply({ content: `${language.kill1}` });
-      });
+
+      if (member.id === interaction.member.id)
+        return interaction.reply({ content: `${language.kill2}` }).catch(() => {
+          interaction.reply({ content: `${language.kill1}` });
+        });
+
+      interaction
+        .reply({
+          content: `${answers[Math.floor(Math.random() * answers.length)]}`,
+        })
+        .catch(() => {
+          interaction.reply({ content: `${language.kill1}` });
+        });
     } catch {
-      interaction.reply({ content: `This command cannot be used in Direct Messages.`});
+      interaction.reply({
+        content: `This command cannot be used in Direct Messages.`,
+      });
     }
-  }
+  },
 };

@@ -46,10 +46,10 @@ module.exports = class extends Command {
     const embed = new MessageEmbed()
       .setColor(message.guild.me.displayHexColor)
       .setTitle(`${message.guild.name} Invite leaderboard`)
-      .setFooter(
-        message.client.user.username,
-        message.client.user.displayAvatarURL()
-      )
+      .setFooter({
+        text: message.client.user.username,
+        iconURL: message.client.user.displayAvatarURL(),
+      })
       .setDescription(leaderboard);
 
     await message.channel.sendCustom({ embeds: [embed] });

@@ -16,7 +16,9 @@ module.exports = {
     )
     .addStringOption((option) =>
       option.setName("reason").setDescription("The reason for the unban")
-    ),
+    )
+    .setContexts(0)
+    .setIntegrationTypes(0),
   async execute(interaction) {
     try {
       await interaction.deferReply();
@@ -85,11 +87,13 @@ module.exports = {
               }
             }
 
-            ban.user.send({ embeds: [
-              new MessageEmbed()
-              .setColor(interaction.client.color.green)
-              .setDescription(dmEmbed)
-            ] })
+            ban.user.send({
+              embeds: [
+                new MessageEmbed()
+                  .setColor(interaction.client.color.green)
+                  .setDescription(dmEmbed),
+              ],
+            });
           } catch (error) {
             logger.error(`Failed to unban ${ban.user.tag}:` + error, {
               label: "ERROR",
@@ -108,8 +112,7 @@ module.exports = {
 
         if (!banInfo) {
           return interaction.editReply({
-            content:
-              `${language.unbanInvalidId}`,
+            content: `${language.unbanInvalidId}`,
             ephemeral: true,
           });
         }
@@ -121,9 +124,9 @@ module.exports = {
         const unbanSuccessEmbed = new MessageEmbed()
           .setColor("GREEN")
           .setDescription(
-            `${client.emoji?.success || "✅"} | <@${
-              banInfo.user.id
-            }> ${language.unbanSuccess}.\n__**Reason:**__ ${reason}`
+            `${client.emoji?.success || "✅"} | <@${banInfo.user.id}> ${
+              language.unbanSuccess
+            }\n__**Reason:**__ ${reason}`
           );
 
         await interaction.editReply({ embeds: [unbanSuccessEmbed] });

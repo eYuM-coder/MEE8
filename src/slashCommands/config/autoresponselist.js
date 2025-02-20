@@ -5,13 +5,13 @@ const Guild = require("../../database/schemas/Guild");
 
 module.exports = {
   data: new SlashCommandBuilder()
-  .setName("autoresponselist")
-  .setDescription("Show's a list of auto responses")
-  .setContexts(0)
-  .setIntegrationTypes(0),
+    .setName("autoresponselist")
+    .setDescription("Show's a list of auto responses")
+    .setContexts(0)
+    .setIntegrationTypes(0),
   async execute(interaction) {
     const guildDB = await Guild.findOne({
-      guildId: interaction.guild.id
+      guildId: interaction.guild.id,
     });
 
     const language = require(`../../data/language/${guildDB.language}.json`);
@@ -21,14 +21,17 @@ module.exports = {
         guildId: interaction.guild.id,
       },
       (err, data) => {
-        if (!data && !data.name) return interaction.reply({ content: `${interaction.client.emoji.fail} | ${language.cc5}` });
+        if (!data && !data.name)
+          return interaction.reply({
+            content: `${interaction.client.emoji.fail} | ${language.cc5}`,
+          });
         let array = [];
         data.map((d) => array.push(d.name));
 
         let embed = new MessageEmbed()
-        .setColor("PURPLE")
-        .setTitle(`${language.cc6}`)
-        .setFooter({ text: interaction.guild.name });
+          .setColor("PURPLE")
+          .setTitle(`${language.cc6}`)
+          .setFooter({ text: interaction.guild.name });
 
         if (!Array.isArray(array) || !array.length) {
           embed.setDescription(`${language.cc5}`);
@@ -39,5 +42,5 @@ module.exports = {
         interaction.reply({ embeds: [embed] });
       }
     );
-  }
+  },
 };

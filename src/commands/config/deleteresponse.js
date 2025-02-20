@@ -32,10 +32,10 @@ module.exports = class extends Command {
         .sendCustom({
           embeds: [
             new MessageEmbed()
-              .setAuthor(
-                `${message.author.tag}`,
-                message.author.displayAvatarURL({ dynamic: true })
-              )
+              .setAuthor({
+                name: `${message.author.tag}`,
+                iconURL: message.author.displayAvatarURL({ dynamic: true })
+              })
               .setDescription(
                 `${language.properusage} \`${prefix}deleteresponse <command-name>\`\n\n${language.example} \`${prefix}deleteresponse pog\``
               )
@@ -62,10 +62,10 @@ module.exports = class extends Command {
             embeds: [
               new MessageEmbed()
                 .setColor(message.guild.me.displayHexColor)
-                .setAuthor(
-                  `${message.author.tag}`,
-                  message.author.displayAvatarURL({ dynamic: true })
-                )
+                .setAuthor({
+                  name: `${message.author.tag}`,
+                  iconURL: message.author.displayAvatarURL({ dynamic: true })
+                })
                 .setTitle(
                   `${message.client.emoji.success} Delete Auto Response`
                 )

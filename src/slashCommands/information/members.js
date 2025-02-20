@@ -11,7 +11,7 @@ module.exports = {
       option
         .setName("role")
         .setDescription("The role to check")
-        .setRequired(true),
+        .setRequired(true)
     )
     .setContexts(0)
     .setIntegrationTypes(0),
@@ -53,7 +53,7 @@ module.exports = {
             hour: "2-digit",
             minute: "2-digit",
             second: "2-digit",
-          })}`,
+          })}`
       );
 
     const embed = new MessageEmbed()
@@ -70,7 +70,7 @@ module.exports = {
       interaction.reply({
         embeds: [
           embed.setDescription(
-            `${language.members1.replace("{cap}", `${capitalize(role.name)}`)}`,
+            `${language.members1.replace("{cap}", `${capitalize(role.name)}`)}`
           ),
         ],
       });
@@ -105,7 +105,7 @@ module.exports = {
         interaction.member,
         embed,
         members,
-        interval,
+        interval
       );
     }
   },

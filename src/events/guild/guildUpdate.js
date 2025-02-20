@@ -31,75 +31,81 @@ module.exports = class extends Event {
               .setColor(color);
 
             if (oldGuild.name !== newGuild.name) {
-              embed.addField(
-                "Name Update",
-                `${oldGuild.name} --> ${newGuild.name}`,
-                true
-              );
+              embed.addFields({
+                name: "Name Update",
+                value: `${oldGuild.name} --> ${newGuild.name}`,
+                inline: true,
+              });
             } else {
-              embed.addField("Name Update", `Name not updated`, true);
+              embed.addFields({
+                name: "Name Update",
+                value: `Name not updated`,
+                inline: true,
+              });
             }
 
             if (oldGuild.verificationLevel !== newGuild.verificationLevel) {
-              embed.addField(
-                "verification Level",
-                `${oldGuild.verificationLevel || "none"} --> ${
+              embed.addFields({
+                name: "verification Level",
+                value: `${oldGuild.verificationLevel || "none"} --> ${
                   newGuild.verificationLevel || "none"
                 }`,
-                true
-              );
+                inline: true,
+              });
             }
 
             if (oldGuild.icon !== newGuild.icon) {
-              embed.addField(
-                "Icon",
-                `[old Icon](${oldGuild.iconURL({
+              embed.addFields({
+                name: "Icon",
+                value: `[old Icon](${oldGuild.iconURL({
                   dynamic: true,
                   size: 512,
                 })}) --> [new Icon](${newGuild.iconURL({
                   dynamic: true,
                   size: 512,
                 })})`,
-                true
-              );
+                inline: true,
+              });
             }
 
             if (oldGuild.region !== newGuild.region) {
-              embed.addField(
-                "region",
-                `${oldGuild.region || "none"} --> ${newGuild.region || "none"}`,
-                true
-              );
+              embed.addFields({
+                name: "region",
+                value: `${oldGuild.region || "none"} --> ${
+                  newGuild.region || "none"
+                }`,
+                inline: true,
+              });
             }
 
             if (oldGuild.ownerID !== newGuild.ownerID) {
-              embed.addField(
-                "Owner",
-                `<@${oldGuild.ownerID || "none"}> **(${
+              embed.addFields({
+                name: "Owner",
+                value: `<@${oldGuild.ownerID || "none"}> **(${
                   oldGuild.ownerID
                 })** --> <@${newGuild.ownerID}>**(${newGuild.ownerID})**`,
-                true
-              );
+                inrole: true,
+              });
             }
 
             if (oldGuild.afkTimeout !== newGuild.afkTimeout) {
-              embed.addField(
-                "afk Timeout",
-                `${oldGuild.afkTimeout || "none"} --> ${
+              embed.addFields({
+                name: "afk Timeout",
+                value: `${oldGuild.afkTimeout || "none"} --> ${
                   newGuild.afkTimeout || "none"
                 }`,
-                true
-              );
+                inline: true,
+              });
             }
 
             if (oldGuild.afkChannelID !== newGuild.afkChannelID) {
-              embed.addField(
-                "afk Channel",
-                `${oldGuild.afkChannelID || "none"}> --> ${
+              embed.addFields({
+                name: "afk Channel",
+                value: `${oldGuild.afkChannelID || "none"}> --> ${
                   newGuild.afkChannelID || "none"
                 }`,
-                true
-              );
+                inline: true,
+              });
             }
 
             if (
@@ -109,7 +115,10 @@ module.exports = class extends Event {
                 .permissionsFor(newGuild.me)
                 .has(["SEND_MESSAGES", "EMBED_LINKS"])
             ) {
-              send(channelEmbed, { username: `${this.client.user.username}`, embeds: [embed] }).catch(() => {});
+              send(channelEmbed, {
+                username: `${this.client.user.username}`,
+                embeds: [embed],
+              }).catch(() => {});
             }
           }
         }

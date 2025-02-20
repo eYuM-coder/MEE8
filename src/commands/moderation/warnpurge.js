@@ -17,9 +17,7 @@ module.exports = class extends Command {
       usage: "<user> [reason]",
       examples: ["warnpurge @Peter_ 10"],
       guildOnly: true,
-      botPermission: [
-        "MANAGE_MESSAGES",
-      ],
+      botPermission: ["MANAGE_MESSAGES"],
       userPermission: ["MANAGE_MESSAGES"],
     });
   }
@@ -82,10 +80,10 @@ module.exports = class extends Command {
       return message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-            .setAuthor(
-              `${message.author.tag}`,
-              message.author.displayAvatarURL({ dynamic: true })
-            )
+            .setAuthor({
+              name: `${message.author.tag}`,
+              iconURL: message.author.displayAvatarURL({ dynamic: true }),
+            })
             .setTitle(`${fail} Warn Purge Error`)
             .setDescription(
               `Please Provide a message count between 1 - 100 messages`
@@ -264,23 +262,38 @@ module.exports = class extends Command {
                 if (!logcase) logcase = `1`;
 
                 const logEmbed = new MessageEmbed()
-                  .setAuthor(
-                    `Action: \`Warn\` | ${mentionedMember.user.tag} | Case #${logcase}`,
-                    mentionedMember.user.displayAvatarURL({ format: "png" })
+                  .setAuthor({
+                    name: `Action: \`Warn\` | ${mentionedMember.user.tag} | Case #${logcase}`,
+                    iconURL: mentionedMember.user.displayAvatarURL({
+                      format: "png",
+                    }),
+                  })
+                  .addFields(
+                    {
+                      name: "User",
+                      value: `${mentionedMember}`,
+                      inline: true,
+                    },
+                    {
+                      name: "Moderator",
+                      value: `${message.member}`,
+                      inline: true,
+                    },
+                    { name: "Reason", value: `${reason}`, inline: true },
+                    { name: "Message Count", value: `${messages.size}` }
                   )
-                  .addField("User", `${mentionedMember}`, true)
-                  .addField("Moderator", `${message.member}`, true)
-                  .addField("Reason", `${reason}`, true)
-                  .addField("Message Count", `${messages.size}`)
                   .setFooter({
                     text: `ID: ${mentionedMember.id} | Warn ID: ${warnID}`,
                   })
                   .setTimestamp()
                   .setColor(color);
 
-                  send(channel, { username: `${this.client.user.username}`, embeds: [logEmbed] }).catch((e) => {
-                    console.log(e);
-                  });
+                send(channel, {
+                  username: `${this.client.user.username}`,
+                  embeds: [logEmbed],
+                }).catch((e) => {
+                  console.log(e);
+                });
 
                 logging.moderation.caseN = logcase + 1;
                 await logging.save().catch(() => {});

@@ -6,13 +6,13 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName("stop")
     .setDescription("Stops the bot")
-    .addBooleanOption(option =>
+    .addBooleanOption((option) =>
       option
         .setName("force")
         .setDescription("Force stop without graceful shutdown")
         .setRequired(false)
     )
-    .addBooleanOption(option =>
+    .addBooleanOption((option) =>
       option
         .setName("silent")
         .setDescription("Stop without logging")
@@ -23,15 +23,20 @@ module.exports = {
     const client = interaction.client;
     const userId = interaction.user.id;
 
-    if (!client.config.owner.includes(userId) && !client.config.developers.includes(userId)) {
+    if (
+      !client.config.owner.includes(userId) &&
+      !client.config.developers.includes(userId)
+    ) {
       return interaction.reply({
         embeds: [
           new MessageEmbed()
             .setColor(client.color.red)
             .setTitle("Access Denied")
-            .setDescription("You do not have permission to execute this command.")
+            .setDescription(
+              "You do not have permission to execute this command."
+            ),
         ],
-        ephemeral: true
+        ephemeral: true,
       });
     }
 
@@ -56,9 +61,15 @@ module.exports = {
       exec("lsof -ti:4000 | xargs kill -9", async (error) => {
         if (error && !silent) {
           console.error("Port kill failed:", error);
-          embed.addField("Port Kill Status", "Failed to kill port 4000, proceeding with shutdown");
+          embed.addFields({
+            name: "Port Kill Status",
+            value: "Failed to kill port 4000, proceeding with shutdown",
+          });
         } else if (!silent) {
-          embed.addField("Port Kill Status", "Port 4000 successfully terminated");
+          embed.addField({
+            name: "Port Kill Status",
+            value: "Port 4000 successfully terminated",
+          });
         }
 
         if (!force) {
@@ -67,13 +78,19 @@ module.exports = {
           } catch (err) {
             if (!silent) {
               console.error("Error during client destroy:", err);
-              embed.addField("Shutdown Status", "Error during graceful shutdown, forcing exit");
+              embed.addFields({
+                name: "Shutdown Status",
+                value: "Error during graceful shutdown, forcing exit",
+              });
             }
           }
         }
 
         if (!silent) {
-          embed.addField("Final Status", "Bot shutdown complete");
+          embed.addFields({
+            name: "Final Status",
+            value: "Bot shutdown complete",
+          });
           await interaction.editReply({ embeds: [embed] });
         }
 
@@ -81,7 +98,7 @@ module.exports = {
       });
     };
 
-    shutdown().catch(err => {
+    shutdown().catch((err) => {
       if (!silent) {
         console.error("Unexpected shutdown error:", err);
       }

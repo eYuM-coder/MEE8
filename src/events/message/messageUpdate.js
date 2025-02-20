@@ -111,10 +111,12 @@ module.exports = class extends Event {
                       oldMessage.content.slice(0, 1021) + "...";
 
                   const embed = new MessageEmbed()
-                    .setAuthor(
-                      `${newMessage.member.user.tag} | Message Edited`,
-                      newMessage.member.user.displayAvatarURL({ dynamic: true })
-                    )
+                    .setAuthor({
+                      name: `${newMessage.member.user.tag} | Message Edited`,
+                      iconURL: newMessage.member.user.displayAvatarURL({
+                        dynamic: true,
+                      }),
+                    })
                     .setTimestamp()
                     .setDescription(
                       `
@@ -133,7 +135,10 @@ module.exports = class extends Event {
                       .permissionsFor(newMessage.guild.me)
                       .has(["SEND_MESSAGES", "EMBED_LINKS"])
                   ) {
-                    send(channelEmbed, { username: `${this.client.user.username}`, embeds: [embed] }).catch(() => {});
+                    send(channelEmbed, {
+                      username: `${this.client.user.username}`,
+                      embeds: [embed],
+                    }).catch(() => {});
                   }
                 }
               }

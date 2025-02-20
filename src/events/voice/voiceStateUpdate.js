@@ -27,7 +27,8 @@ module.exports = class extends Event {
 
         if (channelEmbed) {
           let colorGreen = logging.server_events.color;
-          if (colorGreen === "#000000") colorGreen = newState.client.color.green;
+          if (colorGreen === "#000000")
+            colorGreen = newState.client.color.green;
 
           let colorRed = logging.server_events.color;
           if (colorRed === "#000000") colorRed = "#FF0000";
@@ -88,12 +89,14 @@ module.exports = class extends Event {
           // JOINED V12
           if (!oldState.channelId && newState.channelId) {
             const joinembed = new discord.MessageEmbed()
-              .setAuthor(
-                `${newState.member.user.tag} | Voice Channel Joined!`,
-                newState.member.user.displayAvatarURL()
+              .setAuthor({
+                name: `${newState.member.user.tag} | Voice Channel Joined!`,
+                iconURL: newState.member.user.displayAvatarURL(),
+              })
+              .addFields(
+                { name: "Member", value: `${newState.member}`, inline: true },
+                { name: "Channel", value: `${newChannelName}`, inline: true }
               )
-              .addField("Member", `${newState.member}`, true)
-              .addField("Channel", `${newChannelName}`, true)
               .setColor(colorGreen)
               .setTimestamp()
               .setFooter({ text: `ID: ${newState.member.user.id}` });
@@ -106,7 +109,10 @@ module.exports = class extends Event {
                   .permissionsFor(newState.guild.me)
                   .has(["SEND_MESSAGES", "EMBED_LINKS"])
               ) {
-                send(channelEmbed, { username: `${this.client.user.username}`, embeds: [joinembed]}).catch(() => {});
+                send(channelEmbed, {
+                  username: `${this.client.user.username}`,
+                  embeds: [joinembed],
+                }).catch(() => {});
               }
             }
           }
@@ -114,12 +120,18 @@ module.exports = class extends Event {
           // LEFT V12
           if (oldState.channelId && !newState.channelId) {
             const leaveembed = new discord.MessageEmbed()
-              .setAuthor(
-                `${newState.member.user.tag} | Voice Channel Left!`,
-                newState.member.user.displayAvatarURL()
+              .setAuthor({
+                name: `${newState.member.user.tag} | Voice Channel Left!`,
+                iconURL: newState.member.user.displayAvatarURL(),
+              })
+              .addFields(
+                {
+                  name: "Member",
+                  value: `${newState.member}`,
+                  inline: true,
+                },
+                { name: "Channel", value: `${oldChannelName}`, inline: true }
               )
-              .addField("Member", `${newState.member}`, true)
-              .addField("Channel", `${oldChannelName}`, true)
               .setColor(colorRed)
               .setTimestamp()
               .setFooter({ text: `ID: ${newState.member.user.id}` });
@@ -132,7 +144,10 @@ module.exports = class extends Event {
                   .permissionsFor(newState.guild.me)
                   .has(["SEND_MESSAGES", "EMBED_LINKS"])
               ) {
-                send(channelEmbed, { username: `${this.client.user.username}`, embeds: [leaveembed]}).catch(() => {});
+                send(channelEmbed, {
+                  username: `${this.client.user.username}`,
+                  embeds: [leaveembed],
+                }).catch(() => {});
               }
             }
           }
@@ -142,12 +157,14 @@ module.exports = class extends Event {
             // False positive check
             if (oldState.channelId !== newState.channelId) {
               const moveembed = new discord.MessageEmbed()
-                .setAuthor(
-                  `${newState.member.user.tag} | Moved Voice Channels`,
-                  newState.member.user.displayAvatarURL()
+                .setAuthor({
+                  name: `${newState.member.user.tag} | Moved Voice Channels`,
+                  iconURL: newState.member.user.displayAvatarURL(),
+                })
+                .addFields(
+                  { name: "Left", value: `${oldChannelName}`, inline: true },
+                  { name: "Joined", value: `${newChannelName}`, inline: true }
                 )
-                .addField("Left", `${oldChannelName}`, true)
-                .addField("Joined", `${newChannelName}`, true)
                 .setColor(colorYellow)
                 .setTimestamp()
                 .setFooter({ text: `ID: ${newState.member.user.id}` });
@@ -159,7 +176,10 @@ module.exports = class extends Event {
                     .permissionsFor(newState.guild.me)
                     .has(["SEND_MESSAGES", "EMBED_LINKS"])
                 ) {
-                  send(channelEmbed, { username: `${this.client.user.username}`, embeds: [moveembed] }).catch(() => {});
+                  send(channelEmbed, {
+                    username: `${this.client.user.username}`,
+                    embeds: [moveembed],
+                  }).catch(() => {});
                 }
               }
             }

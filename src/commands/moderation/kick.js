@@ -69,9 +69,11 @@ module.exports = class extends Command {
         message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-            .setColor(message.client.color.red)
-            .setDescription(`${message.client.emoji.fail} | ${language.kickKickable}`)
-          ]
+              .setColor(message.client.color.red)
+              .setDescription(
+                `${message.client.emoji.fail} | ${language.kickKickable}`
+              ),
+          ],
         })
       );
 
@@ -158,20 +160,29 @@ module.exports = class extends Command {
                   reason = reason.slice(0, 1021) + "...";
 
                 const logEmbed = new MessageEmbed()
-                  .setAuthor(
-                    `Action: \`Kick\` | ${member.user.tag} | Case #${logcase}`,
-                    member.user.displayAvatarURL({ format: "png" })
+                  .setAuthor({
+                    name: `Action: \`Kick\` | ${member.user.tag} | Case #${logcase}`,
+                    iconURL: member.user.displayAvatarURL({ format: "png" }),
+                  })
+                  .addFields(
+                    { name: "User", value: `${member}`, inline: true },
+                    {
+                      name: "Moderator",
+                      value: `${message.member}`,
+                      inline: true,
+                    },
+                    { name: "Reason", value: `${reason}`, inline: true }
                   )
-                  .addField("User", `${member}`, true)
-                  .addField("Moderator", `${message.member}`, true)
-                  .addField("Reason", `${reason}`, true)
                   .setFooter({ text: `ID: ${member.id}` })
                   .setTimestamp()
                   .setColor(color);
 
-                  send(channel, { username: `${this.client.user.username}`, embeds: [logEmbed] }).catch((e) => {
-                    console.log(e);
-                  });
+                send(channel, {
+                  username: `${this.client.user.username}`,
+                  embeds: [logEmbed],
+                }).catch((e) => {
+                  console.log(e);
+                });
 
                 logging.moderation.caseN = logcase + 1;
                 await logging.save().catch(() => {});

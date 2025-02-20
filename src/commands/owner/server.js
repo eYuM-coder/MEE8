@@ -27,24 +27,34 @@ module.exports = class extends Command {
     if (!guild) return message.channel.sendCustom(`Invalid guild ID`);
 
     const embed = new MessageEmbed()
-      .setAuthor(guild.name, guild.iconURL())
-      .addField("Server ID", `${guild.id}`, true)
-      .addField(
-        "Total | Humans | Bots",
-        `${guild.members.cache.size} | ${
-          guild.members.cache.filter((member) => !member.user.bot).size
-        } | ${guild.members.cache.filter((member) => member.user.bot).size}`,
-        true,
-      )
-      .addField("Verification Level", `${guild.verificationLevel}`, true)
-      .addField("Channels", `${guild.channels.cache.size}`, true)
-      .addField("Roles", `${guild.roles.cache.size}`, true)
-      .addField(
-        "Creation Date",
-        `${guild.createdAt.toUTCString().substr(0, 16)} (${checkDays(
-          guild.createdAt,
-        )})`,
-        true,
+      .setAuthor({ name: guild.name, iconURL: guild.iconURL() })
+      .addFields(
+        { name: "Server ID", value: `${guild.id}`, inline: true },
+        {
+          name: "Total | Humans | Bots",
+          value: `${guild.members.cache.size} | ${
+            guild.members.cache.filter((member) => !member.user.bot).size
+          } | ${guild.members.cache.filter((member) => member.user.bot).size}`,
+          inline: true,
+        },
+        {
+          name: "Verification Level",
+          value: `${guild.verificationLevel}`,
+          inline: true,
+        },
+        {
+          name: "Channels",
+          value: `${guild.channels.cache.size}`,
+          inline: true,
+        },
+        { name: "Roles", value: `${guild.roles.cache.size}`, inline: true },
+        {
+          name: "Creation Date",
+          value: `${guild.createdAt.toUTCString().substr(0, 16)} (${checkDays(
+            guild.createdAt
+          )})`,
+          inline: true,
+        }
       )
       .setThumbnail(guild.iconURL())
       .setColor(message.guild.me.displayHexColor);

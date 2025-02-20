@@ -112,7 +112,7 @@ module.exports = class extends Event {
         )
         .addField(
           "\u200b",
-          "**[Invite](https://invite.pogy.xyz) | " +
+          "**[Invite](https://invite.mee8.eyum.org) | " +
             `[Support Server](${process.env.AUTH_DOMAIN}/support) | ` +
             `[Dashboard](${process.env.AUTH_DOMAIN}/dashboard)**`,
         );

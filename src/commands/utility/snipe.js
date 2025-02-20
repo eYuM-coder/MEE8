@@ -22,10 +22,10 @@ module.exports = class extends Command {
     });
 
     const no = new MessageEmbed()
-      .setAuthor(
-        `#${channel.name} | ${message.guild.name}`,
-        message.guild.iconURL()
-      )
+      .setAuthor({
+        name: `#${channel.name} | ${message.guild.name}`,
+        iconURL: message.guild.iconURL(),
+      })
       .setFooter({ text: message.guild.name })
       .setTimestamp()
       .setColor(message.guild.me.displayHexColor)
@@ -44,10 +44,10 @@ module.exports = class extends Command {
     const data = [];
 
     const embed = new MessageEmbed()
-      .setAuthor(
-        `#${channel.name} | ${message.guild.name}`,
-        message.guild.iconURL()
-      )
+      .setAuthor({
+        name: `#${channel.name} | ${message.guild.name}`,
+        iconURL: message.guild.iconURL(),
+      })
       .setFooter({ text: message.guild.name })
       .setTimestamp()
       .setColor(message.guild.me.displayHexColor);
@@ -61,15 +61,15 @@ module.exports = class extends Command {
         }\``
       );
 
-      embed.addField(
-        `Message ${i + 1}`,
-        `**User:** ${
+      embed.addField({
+        name: `Message ${i + 1}`,
+        value: `**User:** ${
           (await message.client.users.fetch(snipe.tag[i])) || "Unknown"
         }\n**Message:** ${snipe.message[i] || "None"}\n**image:** \`${
           snipe.image[i] || "none"
         }\``,
-        true
-      );
+        inline: true,
+      });
     }
 
     if (data.length < 1) return message.channel.sendCustom(no);

@@ -36,10 +36,10 @@ module.exports = class extends Command {
       return message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-            .setAuthor(
-              `${message.author.tag}`,
-              message.author.displayAvatarURL({ format: "png" })
-            )
+            .setAuthor({
+              name: `${message.author.tag}`,
+              iconURL: message.author.displayAvatarURL({ format: "png" })
+            })
             .setDescription(`${fail} ${language.suggesting1}`)
             .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
             .setTimestamp()
@@ -53,10 +53,10 @@ module.exports = class extends Command {
       return message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-            .setAuthor(
-              `${message.author.tag}`,
-              message.author.displayAvatarURL({ format: "png" })
-            )
+            .setAuthor({
+              name: `${message.author.tag}`,
+              iconURL: message.author.displayAvatarURL({ format: "png" })
+            })
             .setDescription(`${fail} ${language.suggesting2}`)
             .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
             .setTimestamp()
@@ -69,10 +69,10 @@ module.exports = class extends Command {
       return message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-            .setAuthor(
-              `${message.author.tag}`,
-              message.author.displayAvatarURL({ format: "png" })
-            )
+            .setAuthor({
+              name: `${message.author.tag}`,
+              iconURL: message.author.displayAvatarURL({ format: "png" })
+            })
             .setDescription(`${fail} ${language.suggest1}`)
             .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
             .setTimestamp()
@@ -84,10 +84,10 @@ module.exports = class extends Command {
       return message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-            .setAuthor(
-              `${message.author.tag}`,
-              message.author.displayAvatarURL({ format: "png" })
-            )
+            .setAuthor({
+              name: `${message.author.tag}`,
+              iconURL: message.author.displayAvatarURL({ format: "png" })
+            })
             .setDescription(`${fail} ${language.suggesting17}`)
             .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
             .setTimestamp()
@@ -122,7 +122,7 @@ module.exports = class extends Command {
         send(channelLog, {
           embeds: [log],
           name: `Suggestion Logs`,
-          icon: `https://v2.pogy.xyz/logo.png`,
+          icon: `https://mee8.eyum.org/logo.png`,
         }).catch(() => {});
       }
     }
@@ -212,10 +212,10 @@ module.exports = class extends Command {
       .sendCustom({
         embeds: [
           new MessageEmbed()
-            .setAuthor(
-              `${message.author.tag}`,
-              message.author.displayAvatarURL({ format: "png" })
-            )
+            .setAuthor({
+              name: `${message.author.tag}`,
+              iconURL: message.author.displayAvatarURL({ format: "png" })
+            })
             .setDescription(`${language.suggesting6} ${channel}`)
             .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
             .setTimestamp()

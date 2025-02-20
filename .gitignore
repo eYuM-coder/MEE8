@@ -3,7 +3,7 @@ node_modules
 .env
 json.sqlite
 mee8.log
-src/assets/logs/Pogy.log
+src/assets/logs/MEE8.log
 config.json
 env.backups
 replit_zip_error_log.txt

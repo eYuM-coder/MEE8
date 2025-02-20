@@ -84,7 +84,7 @@ module.exports = class extends Command {
               }, 5000);
             }
           });
-        }
+      }
 
       const response = await member.timeout(time, reason);
 
@@ -132,9 +132,11 @@ module.exports = class extends Command {
       message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-          .setColor(message.client.color.red)
-          .setDescription(`${message.client.emoji.fail} | This user is a mod/admin, I can't do that.`)
-        ]
+            .setColor(message.client.color.red)
+            .setDescription(
+              `${message.client.emoji.fail} | This user is a mod/admin, I can't do that.`
+            ),
+        ],
       });
     }
   }

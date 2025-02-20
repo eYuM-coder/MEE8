@@ -8,7 +8,12 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName("permissions")
     .setDescription("Gets the permissions of a user.")
-    .addUserOption((option) => option.setName("user").setDescription("The user to get the permissions of.").setRequired(true))
+    .addUserOption((option) =>
+      option
+        .setName("user")
+        .setDescription("The user to get the permissions of.")
+        .setRequired(true)
+    )
     .setContexts(0)
     .setIntegrationTypes(0),
   async execute(interaction) {
@@ -32,5 +37,5 @@ module.exports = {
       .setTimestamp()
       .setColor(interaction.guild.me.displayHexColor);
     interaction.reply({ embeds: [embed], ephemeral: true });
-  }
+  },
 };

@@ -121,20 +121,29 @@ module.exports = class extends Command {
                   reason = reason.slice(0, 1021) + "...";
 
                 const logEmbed = new MessageEmbed()
-                  .setAuthor(
-                    `Action: \`UnLock\` | ${message.author.tag} | Case #${logcase}`,
-                    message.author.displayAvatarURL({ format: "png" })
+                  .setAuthor({
+                    name: `Action: \`Unlock\` | ${message.author.tag} | Case #${logcase}`,
+                    iconURL: message.author.displayAvatarURL({ format: "png" }),
+                  })
+                  .addFields(
+                    { name: "Channel", value: `${channel}`, inline: true },
+                    {
+                      name: "Moderator",
+                      value: `${message.member}`,
+                      inline: true,
+                    },
+                    { name: "Reason", value: `${reason}`, inline: true }
                   )
-                  .addField("Channel", `${channel}`, true)
-                  .addField("Moderator", `${message.member}`, true)
-                  .addField("Reason", `${reason}`, true)
                   .setFooter({ text: `ID: ${message.author.id}` })
                   .setTimestamp()
                   .setColor(color);
 
-                  send(channel, { username: `${this.client.user.username}`, embeds: [logEmbed] }).catch((e) => {
-                    console.log(e);
-                  });
+                send(channel, {
+                  username: `${this.client.user.username}`,
+                  embeds: [logEmbed],
+                }).catch((e) => {
+                  console.log(e);
+                });
 
                 logging.moderation.caseN = logcase + 1;
                 await logging.save().catch(() => {});

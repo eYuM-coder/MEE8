@@ -167,7 +167,7 @@ module.exports = class extends Command {
       let embed = new MessageEmbed();
       embed.setTitle(`Command: ${cmd.name}`);
       embed.setDescription(cmd.description);
-      embed.setThumbnail(`https://v2.pogy.xyz/logo.png`);
+      embed.setThumbnail(`https://mee8.eyum.org/logo.png`);
       embed.setColor("#9C59B6")
       embed.setFooter(
         cmd.disabled ||

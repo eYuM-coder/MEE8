@@ -34,7 +34,10 @@ module.exports = class extends Command {
       );
 
     let embedValid = new MessageEmbed()
-      .setAuthor(message.author.tag, message.author.displayAvatarURL())
+      .setAuthor({
+        name: message.author.tag,
+        iconURL: message.author.displayAvatarURL(),
+      })
       .setDescription(`${language.members2.replace(/{prefix}/g, `${prefix}`)}`)
       .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
       .setColor(message.guild.me.displayHexColor);

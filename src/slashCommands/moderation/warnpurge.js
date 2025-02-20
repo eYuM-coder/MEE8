@@ -14,16 +14,16 @@ module.exports = {
       option
         .setName("member")
         .setDescription("The member to warn")
-        .setRequired(true),
+        .setRequired(true)
     )
     .addIntegerOption((option) =>
       option
         .setName("amount")
         .setDescription("The amount of messages to purge")
-        .setRequired(true),
+        .setRequired(true)
     )
     .addStringOption((option) =>
-      option.setName("reason").setDescription("The reason to warn the user"),
+      option.setName("reason").setDescription("The reason to warn the user")
     )
     .setContexts(0)
     .setIntegrationTypes(0),
@@ -63,11 +63,11 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => { });
+                interaction.deleteReply().catch(() => {});
               }, 5000);
             }
           })
-          .catch(() => { });
+          .catch(() => {});
       }
 
       if (
@@ -83,11 +83,11 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => { });
+                interaction.deleteReply().catch(() => {});
               }, 5000);
             }
           })
-          .catch(() => { });
+          .catch(() => {});
       }
 
       if (amount < 0 || amount > 100) {
@@ -109,11 +109,11 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => { });
+                interaction.deleteReply().catch(() => {});
               }, 5000);
             }
           })
-          .catch(() => { });
+          .catch(() => {});
       }
 
       let warnID = random.password({
@@ -176,7 +176,7 @@ module.exports = {
                 .setDescription(dmEmbed),
             ],
           })
-          .catch(() => { });
+          .catch(() => {});
       }
 
       // Purge
@@ -189,7 +189,7 @@ module.exports = {
       if (mentionedMember) {
         const embed = new MessageEmbed()
           .setDescription(
-            `${success} | **${mentionedMember.user.tag}** has been warned, with **${messages.size}** messages purged.\n\n__**Reason:**__ ${reason}`,
+            `${success} | **${mentionedMember.user.tag}** has been warned, with **${messages.size}** messages purged.\n\n__**Reason:**__ ${reason}`
           )
           .setColor(client.color.green)
           .setTimestamp();
@@ -198,11 +198,11 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => { });
+                interaction.deleteReply().catch(() => {});
               }, 5000);
             }
           })
-          .catch(() => { });
+          .catch(() => {});
       }
     } catch (err) {
       console.error(err);

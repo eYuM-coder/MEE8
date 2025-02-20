@@ -8,34 +8,51 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName("addmoney")
     .setDescription("Add money to a users wallet.")
-    .addUserOption((option) => option.setName("member").setDescription("The member").setRequired(true))
-    .addIntegerOption((option) => option.setName("amount").setDescription("The amount to add").setRequired(true))
+    .addUserOption((option) =>
+      option.setName("member").setDescription("The member").setRequired(true)
+    )
+    .addIntegerOption((option) =>
+      option
+        .setName("amount")
+        .setDescription("The amount to add")
+        .setRequired(true)
+    )
     .setContexts(0)
     .setIntegrationTypes(0),
   async execute(interaction) {
     const user = interaction.options.getMember("member");
     const amount = interaction.options.getInteger("amount");
-    const profile = await Profile.findOne({ userID: user.id, guildId: interaction.guild.id });
+    const profile = await Profile.findOne({
+      userID: user.id,
+      guildId: interaction.guild.id,
+    });
     if (!profile) {
       await createProfile(user, interaction.guild);
       await interaction.reply({
         embeds: [
           new MessageEmbed()
             .setColor("BLURPLE")
-            .setDescription(`Creating profile.\nUse this command again to use it.`)
-        ], ephemeral: true
+            .setDescription(
+              `Creating profile.\nUse this command again to use it.`
+            ),
+        ],
+        ephemeral: true,
       });
     } else {
-      await Profile.updateOne({
-        userID: user.id, guildId: interaction.guild.id
-      }, { $inc: { wallet: amount } });
+      await Profile.updateOne(
+        {
+          userID: user.id,
+          guildId: interaction.guild.id,
+        },
+        { $inc: { wallet: amount } }
+      );
       await interaction.reply({
         embeds: [
           new MessageEmbed()
             .setColor("BLURPLE")
-            .setDescription(`Added $${amount} to ${user}`)
-        ]
+            .setDescription(`Added $${amount} to ${user}`),
+        ],
       });
     }
-  }
+  },
 };

@@ -4,10 +4,10 @@ module.exports = class extends Event {
   async run(permissions, message) {
     if (!message) return;
     const embed = new MessageEmbed()
-      .setAuthor(
-        `${message.author.tag}`,
-        message.author.displayAvatarURL({ dynamic: true })
-      )
+      .setAuthor({
+        name: `${message.author.tag}`,
+        iconURL: message.author.displayAvatarURL({ dynamic: true }),
+      })
       .setTitle(`X Missing User Permissions`)
       .setDescription(
         `Required Permission: \`${permissions.replace("_", " ")}\``

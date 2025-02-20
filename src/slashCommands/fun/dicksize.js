@@ -3,13 +3,15 @@ const { MessageEmbed } = require("discord.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
-  .setName("dicksize")
-  .setDescription("Shows your pp size")
-  .addUserOption((option) => option.setName("member").setDescription("This is optional."))
-  .setContexts([0, 1, 2])
-  .setIntegrationTypes([0, 1]),
+    .setName("dicksize")
+    .setDescription("Shows your pp size")
+    .addUserOption((option) =>
+      option.setName("member").setDescription("This is optional.")
+    )
+    .setContexts([0, 1, 2])
+    .setIntegrationTypes([0, 1]),
   async execute(interaction) {
-    let user = interaction.options.getMember("member")
+    let user = interaction.options.getMember("member");
 
     if (!user) {
       user = interaction.user;
@@ -19,9 +21,9 @@ module.exports = {
     await interaction.reply({
       embeds: [
         new MessageEmbed()
-        .setColor("BLURPLE")
-        .setDescription(`${sizee.toFixed(2)} inch(s)\n8${"=".repeat(size)}D`)
-      ]
-    })
-  }
-}
+          .setColor("BLURPLE")
+          .setDescription(`${sizee.toFixed(2)} inch(s)\n8${"=".repeat(size)}D`),
+      ],
+    });
+  },
+};

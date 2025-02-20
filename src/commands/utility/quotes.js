@@ -3,7 +3,8 @@ const Quote = require("../../database/models/quote.js");
 const Command = require("../../structures/Command");
 const Canvas = require("canvas");
 const Discord = require("discord.js");
-const backgroundImage = "https://cdn.discordapp.com/attachments/1182740493277331468/1195538918855168060/pexels-aleksandar-pasaric-2341830.jpg";
+const backgroundImage =
+  "https://cdn.discordapp.com/attachments/1182740493277331468/1195538918855168060/pexels-aleksandar-pasaric-2341830.jpg";
 
 module.exports = class ShowQuotesCommand extends Command {
   constructor(...args) {
@@ -33,10 +34,10 @@ module.exports = class ShowQuotesCommand extends Command {
         .setTitle("Saved Quotes");
 
       quotes.forEach((quote) => {
-        embed.addField(
-          `${quote.authorID}`,
-          `*${quote.content}*\n\n[${quote.authorID}](${quote.authorAvatar})`
-        );
+        embed.addField({
+          name: `${quote.authorID}`,
+          value: `*${quote.content}*\n\n[${quote.authorID}](${quote.authorAvatar})`,
+        });
       });
 
       const quote = quotes[Math.floor(Math.random() * quotes.length)];
@@ -72,7 +73,7 @@ module.exports = class ShowQuotesCommand extends Command {
       ctx.arc(850, 125, 100, 0, Math.PI * 2, true);
       ctx.closePath();
       ctx.clip();*/
-    /*   const avatarImage = await Canvas.loadImage(quote.authorAvatar); 
+      /*   const avatarImage = await Canvas.loadImage(quote.authorAvatar); 
       ctx.drawImage(avatarImage, 750, 25, 200, 200); */
 
       const attachment = new Discord.MessageAttachment(

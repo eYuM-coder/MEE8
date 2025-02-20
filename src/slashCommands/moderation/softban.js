@@ -11,10 +11,10 @@ module.exports = {
       option
         .setName("member")
         .setDescription("The member to softban")
-        .setRequired(true),
+        .setRequired(true)
     )
     .addStringOption((option) =>
-      option.setName("reason").setDescription("The reason"),
+      option.setName("reason").setDescription("The reason")
     )
     .setContexts(0)
     .setIntegrationTypes(0),
@@ -48,11 +48,11 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => { });
+                interaction.deleteReply().catch(() => {});
               }, 5000);
             }
           })
-          .catch(() => { });
+          .catch(() => {});
       }
 
       if (member === interaction.member) {
@@ -64,11 +64,11 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => { });
+                interaction.deleteReply().catch(() => {});
               }, 5000);
             }
           })
-          .catch(() => { });
+          .catch(() => {});
       }
 
       if (reason.length > 1024) reason = reason.slice(0, 1021) + "...";
@@ -79,16 +79,18 @@ module.exports = {
         });
         await interaction.guild.members.unban(
           member.user,
-          `${reason} / ${language.softbanResponsible}: ${interaction.user.tag}`,
+          `${reason} / ${language.softbanResponsible}: ${interaction.user.tag}`
         );
 
         const embed = new MessageEmbed()
           .setDescription(
-            `${client.emoji.success} | ${language.softbanSuccess} **${member.user.tag
-            }** ${logging && logging.moderation.include_reason === "true"
-              ? `\n\n**Reason:** ${reason}`
-              : ``
-            }`,
+            `${client.emoji.success} | ${language.softbanSuccess} **${
+              member.user.tag
+            }** ${
+              logging && logging.moderation.include_reason === "true"
+                ? `\n\n**Reason:** ${reason}`
+                : ``
+            }`
           )
           .setColor(client.color.green);
         interaction
@@ -96,11 +98,11 @@ module.exports = {
           .then(async () => {
             if (logging && logging.moderation.delete_reply === "true") {
               setTimeout(() => {
-                interaction.deleteReply().catch(() => { });
+                interaction.deleteReply().catch(() => {});
               }, 5000);
             }
           })
-          .catch(() => { });
+          .catch(() => {});
       }
     } catch (err) {
       console.error(err);

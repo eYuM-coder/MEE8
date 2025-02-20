@@ -6,11 +6,16 @@ const mongoose = require("mongoose");
 
 module.exports = {
   data: new SlashCommandBuilder()
-  .setName("tempvc")
-  .setDescription(" Enable/disable tempvc")
-  .addStringOption((option) => option.setName("toggle").setDescription("Enable or disable tempvc").setRequired(true))
-  .setContexts(0)
-  .setIntegrationTypes(0),
+    .setName("tempvc")
+    .setDescription(" Enable/disable tempvc")
+    .addStringOption((option) =>
+      option
+        .setName("toggle")
+        .setDescription("Enable or disable tempvc")
+        .setRequired(true)
+    )
+    .setContexts(0)
+    .setIntegrationTypes(0),
   async execute(interaction) {
     const guildDB = await Guild.findOne({
       guildId: interaction.guild.id,
@@ -45,38 +50,48 @@ module.exports = {
     let fail = interaction.client.emoji.fail;
 
     let properUsage = new MessageEmbed()
-    .setColor(interaction.guild.me.displayHexColor)
-    .setDescription(`${language.tempvc1.replace(/{prefix}/g, `${prefix}`)}`)
-    .setFooter({ text: `${process.env.AUTH_DOMAIN}` });
+      .setColor(interaction.guild.me.displayHexColor)
+      .setDescription(`${language.tempvc1.replace(/{prefix}/g, `${prefix}`)}`)
+      .setFooter({ text: `${process.env.AUTH_DOMAIN}` });
 
     if (toggle.length < 1) {
       return interaction.reply({ embeds: [properUsage] });
     }
 
     if (toggle.includes("disable") || toggle.includes("off")) {
-      if (!interaction.member.permissions.has("MANAGE_CHANNELS")) return interaction.reply({
-        embeds: [
-          new MessageEmbed()
-          .setAuthor({
-            name: `${interaction.user.tag}`,
-            iconURL: interaction.user.displayAvatarURL({ dynamic: true })
+      if (!interaction.member.permissions.has("MANAGE_CHANNELS"))
+        return interaction
+          .reply({
+            embeds: [
+              new MessageEmbed()
+                .setAuthor({
+                  name: `${interaction.user.tag}`,
+                  iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
+                })
+                .setTitle(`${fail} | ${language.missingUser}`)
+                .setDescription(`${language.tempvc2}`)
+                .setTimestamp()
+                .setFooter({ text: `${process.env.AUTH_DOMAIN}` }),
+            ],
           })
-          .setTitle(`${fail} | ${language.missingUser}`)
-          .setDescription(`${language.tempvc2}`)
-          .setTimestamp()
-          .setFooter({ text: `${process.env.AUTH_DOMAIN}` }),
-        ],
-      })
-      .setColor(interaction.guild.me.displayHexColor);
+          .setColor(interaction.guild.me.displayHexColor);
 
-      if (!vcDB.channelId || !vcDB.categoryID || !vcDB.guildId || !vcDB.channelId === null) return interaction.reply({
-        embeds: [
-          new MessageEmbed()
-          .setColor(interaction.client.color.red)
-          .setDescription(`${interaction.client.emoji.fail} | ${language.tempvc3}`)
-          .setFooter({ text: `${process.env.AUTH_DOMAIN}` }),
-        ],
-      });
+      if (
+        !vcDB.channelId ||
+        !vcDB.categoryID ||
+        !vcDB.guildId ||
+        !vcDB.channelId === null
+      )
+        return interaction.reply({
+          embeds: [
+            new MessageEmbed()
+              .setColor(interaction.client.color.red)
+              .setDescription(
+                `${interaction.client.emoji.fail} | ${language.tempvc3}`
+              )
+              .setFooter({ text: `${process.env.AUTH_DOMAIN}` }),
+          ],
+        });
       await Vc.findOne(
         {
           guildId: interaction.guild.id,
@@ -100,118 +115,142 @@ module.exports = {
 
             return;
           } else {
-            guild.updateOne({
-                      channelId: null,
-              categoryID: null,
-            })
-            .catch((err) => console.error(err));
+            guild
+              .updateOne({
+                channelId: null,
+                categoryID: null,
+              })
+              .catch((err) => console.error(err));
           }
 
           return interaction.reply({
             embeds: [
               new MessageEmbed()
-              .setColor(interaction.client.color.green)
-              .setDescription(`${interaction.client.emoji.success} | ${language.tempvc4}`)
-              .setFooter({ text: `${process.env.AUTH_DOMAIN}` }),
-            ], ephemeral: true
+                .setColor(interaction.client.color.green)
+                .setDescription(
+                  `${interaction.client.emoji.success} | ${language.tempvc4}`
+                )
+                .setFooter({ text: `${process.env.AUTH_DOMAIN}` }),
+            ],
+            ephemeral: true,
           });
         }
       );
       return;
     } else if (toggle.includes("enable") || toggle.includes("on")) {
-      if (!interaction.member.permissions.has("MANAGE_CHANNELS")) return interaction.reply({
-        embeds: [
-          new MessageEmbed()
-          .setAuthor({
-            name: `${interaction.user.tag}`,
-            iconURL: interaction.user.displayAvatarURL({ dynamic: true })
+      if (!interaction.member.permissions.has("MANAGE_CHANNELS"))
+        return interaction
+          .reply({
+            embeds: [
+              new MessageEmbed()
+                .setAuthor({
+                  name: `${interaction.user.tag}`,
+                  iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
+                })
+                .setTitle(`${fail} ${language.missingUser}`)
+                .setDescription(`${language.tempvc2}`)
+                .setTimestamp()
+                .setFooter({ text: `${process.env.AUTH_DOMAIN}` }),
+            ],
+            ephemeral: true,
           })
-          .setTitle(`${fail} ${language.missingUser}`)
-          .setDescription(`${language.tempvc2}`)
-          .setTimestamp()
-          .setFooter({ text: `${process.env.AUTH_DOMAIN}` }),
-        ], ephemeral: true
-      })
-      .setColor(interaction.guild.me.displayHexColor);
+          .setColor(interaction.guild.me.displayHexColor);
 
       try {
         const embed = new MessageEmbed()
-        .setAuthor({
-          name: `${language.tempvc5}`,
-          iconURL: `https://www.creeda.co.in/Images/loader.gif`
-        })
-        .setDescription(`\`${language.tempvc6}\``)
-        .setColor(interaction.guild.me.displayHexColor);
+          .setAuthor({
+            name: `${language.tempvc5}`,
+            iconURL: `https://www.creeda.co.in/Images/loader.gif`,
+          })
+          .setDescription(`\`${language.tempvc6}\``)
+          .setColor(interaction.guild.me.displayHexColor);
         const msg = await interaction.reply({ embeds: [embed] });
 
-        let category = interaction.guild.channels.cache.find((c) => c.name.toLowerCase() == "join to create" && c.type == "GUILD_CATEGORY");
+        let category = interaction.guild.channels.cache.find(
+          (c) =>
+            c.name.toLowerCase() == "join to create" &&
+            c.type == "GUILD_CATEGORY"
+        );
         setTimeout(async () => {
           if (!category) {
-            await embed.setDescription(`**${language.tempvc7}**`)
-            .setFooter({ text: `${interaction.client.config.botName} v2.5` })
-            .setTimestamp();
-            interaction.editReply({ embeds: [embed] }) + interaction.guild.channels.create(`Join to Create`, {
-              type: "GUILD_CATEGORY",
-              permissionOverwrites: [
-              {
-                id: interaction.guild.id,
-                allow: ["VIEW_CHANNEL"],
-              },
-                {
-                  id: interaction.user.id,
-                  allow: ["VIEW_CHANNEL"],
-                },
-              ],
-            });
+            await embed
+              .setDescription(`**${language.tempvc7}**`)
+              .setFooter({ text: `${interaction.client.config.botName} v2.5` })
+              .setTimestamp();
+            interaction.editReply({ embeds: [embed] }) +
+              interaction.guild.channels.create(`Join to Create`, {
+                type: "GUILD_CATEGORY",
+                permissionOverwrites: [
+                  {
+                    id: interaction.guild.id,
+                    allow: ["VIEW_CHANNEL"],
+                  },
+                  {
+                    id: interaction.user.id,
+                    allow: ["VIEW_CHANNEL"],
+                  },
+                ],
+              });
             return;
           } else {
-            embed.setDescription(`**${language.tempvc8}**\n\nID: ${category.id}`)
-            .setFooter({ text: `${interaction.client.config.botName} v2.5` })
-            .setTimestamp();
+            embed
+              .setDescription(`**${language.tempvc8}**\n\nID: ${category.id}`)
+              .setFooter({ text: `${interaction.client.config.botName} v2.5` })
+              .setTimestamp();
             interaction.editReply({ embeds: [embed] });
           }
         }, 2000);
 
-        let voice = interaction.guild.channels.cache.find((c) => c.name.toLowerCase() == "join to create" && c.type == "GUILD_VOICE");
+        let voice = interaction.guild.channels.cache.find(
+          (c) =>
+            c.name.toLowerCase() == "join to create" && c.type == "GUILD_VOICE"
+        );
 
         setTimeout(async () => {
           if (!voice) {
-            await embed.setDescription(`**${language.tempvc9}**`)
-            .setFooter({ text: `${interaction.client.config.botName} v2.5` })
-            .setTimestamp();
-            interaction.editReply({ embeds: [embed] }) + interaction.guild.channels.create("Join to create", {
-              type: "GUILD_VOICE",
-              permissionOverwrites: [
-                {
-                  id: interaction.guild.id,
-                  allow: ["VIEW_CHANNEL"],
-                },
-                {
-                  id: interaction.user.id,
-                  allow: ["VIEW_CHANNEL"],
-                },
-              ],
-            })
-            .then(() => {
-               if (!category) return;
-              interaction.setParent(category.id).catch(() => {});
-            });
+            await embed
+              .setDescription(`**${language.tempvc9}**`)
+              .setFooter({ text: `${interaction.client.config.botName} v2.5` })
+              .setTimestamp();
+            interaction.editReply({ embeds: [embed] }) +
+              interaction.guild.channels
+                .create("Join to create", {
+                  type: "GUILD_VOICE",
+                  permissionOverwrites: [
+                    {
+                      id: interaction.guild.id,
+                      allow: ["VIEW_CHANNEL"],
+                    },
+                    {
+                      id: interaction.user.id,
+                      allow: ["VIEW_CHANNEL"],
+                    },
+                  ],
+                })
+                .then(() => {
+                  if (!category) return;
+                  interaction.setParent(category.id).catch(() => {});
+                });
 
             return;
           } else {
-            embed.setDescription(`**${language.tempvc10}**\n\nID: ${voice.id}`)
-            .setFooter({ text: `${interaction.client.config.botName} v2.5` })
-            .setTimestamp();
-            interaction.editReply({ embeds: [embed] })
+            embed
+              .setDescription(`**${language.tempvc10}**\n\nID: ${voice.id}`)
+              .setFooter({ text: `${interaction.client.config.botName} v2.5` })
+              .setTimestamp();
+            interaction.editReply({ embeds: [embed] });
           }
         }, 2000);
 
         setTimeout(async () => {
           if (!voice || !category) {
-            embed.setAuthor(`Setup Fail`)
-            .setDescription(`${language.tempvc11.replace(/{prefix}/g, `${prefix}`)}`)
-            .setFooter({ text: `${interaction.client.config.botName} v2.5` })
-            .setTimestamp();
+            embed
+              .setAuthor({ name: `Setup Fail` })
+              .setDescription(
+                `${language.tempvc11.replace(/{prefix}/g, `${prefix}`)}`
+              )
+              .setFooter({ text: `${interaction.client.config.botName} v2.5` })
+              .setTimestamp();
             interaction.editReply({ embeds: [embed] });
             await Vc.findOne(
               {
@@ -227,11 +266,12 @@ module.exports = {
 
                   return;
                 } else {
-                  guild.updateOne({
-                    channelId: null,
-                    categoryID: null,
-                  })
-                  .catch((err) => console.error(err));
+                  guild
+                    .updateOne({
+                      channelId: null,
+                      categoryID: null,
+                    })
+                    .catch((err) => console.error(err));
                 }
               }
             );
@@ -239,16 +279,24 @@ module.exports = {
             return;
           } else {
             let channelVoice = interaction.client.channels.cache.get(voice.id);
-            let channelInv = await channelVoice.createInvite({
-              maxAge: 0,
-              maxUses: 0,
-            })
-            .catch(() => {});
+            let channelInv = await channelVoice
+              .createInvite({
+                maxAge: 0,
+                maxUses: 0,
+              })
+              .catch(() => {});
             voice.setParent(category.id);
-            embed.setAuthor(`${language.tempvc12}`, `${process.env.AUTH_DOMAIN}/logo.png`, `${channelInv}`)
-            .setDescription(`**${language.tempvc13}** ${category.name}\n**${language.tempvc13} ID:** ${category.id}\n\n**${language.tempvc14}** ${voice.name}\n**${language.tempvc14} ID:** ${voice.id}\n\n${language.tempvc15} \`${prefix}tempvc off\``)
-            .setFooter({ text: `${interaction.client.config.botName} v2.5` })
-            .setTimestamp();
+            embed
+              .setAuthor({
+                name: `${language.tempvc12}`,
+                iconURL: `${process.env.AUTH_DOMAIN}/logo.png`,
+                url: `${channelInv}`,
+              })
+              .setDescription(
+                `**${language.tempvc13}** ${category.name}\n**${language.tempvc13} ID:** ${category.id}\n\n**${language.tempvc14}** ${voice.name}\n**${language.tempvc14} ID:** ${voice.id}\n\n${language.tempvc15} \`${prefix}tempvc off\``
+              )
+              .setFooter({ text: `${interaction.client.config.botName} v2.5` })
+              .setTimestamp();
             interaction.editReply({ embeds: [embed] });
             if (channelInv && channelVoice)
               interaction.followUp({ content: `${channelInv}` });
@@ -266,11 +314,12 @@ module.exports = {
 
                   return;
                 } else {
-                  guild.updateOne({
-                    channelId: voice.id,
-                    categoryID: category.id,
-                  })
-                  .catch((err) => console.error(err));
+                  guild
+                    .updateOne({
+                      channelId: voice.id,
+                      categoryID: category.id,
+                    })
+                    .catch((err) => console.error(err));
                 }
               }
             );
@@ -280,8 +329,8 @@ module.exports = {
         interaction.reply({
           embeds: [
             new MessageEmbed()
-            .setDescription(`${language.tempvc16}`)
-            .setColor(`RED`),
+              .setDescription(`${language.tempvc16}`)
+              .setColor(`RED`),
           ],
         });
         await Vc.findOne(
@@ -298,19 +347,20 @@ module.exports = {
 
               return;
             } else {
-              guild.updateOne({
-                channelId: null,
-                categoryID: null,
-              })
-              .catch((err) => console.error(err));
+              guild
+                .updateOne({
+                  channelId: null,
+                  categoryID: null,
+                })
+                .catch((err) => console.error(err));
             }
           }
         );
       }
     } else if (toggle[0]) {
-      interaction.reply({ embeds: [properUsage] })
+      interaction.reply({ embeds: [properUsage] });
     } else {
-      interaction.reply({ embeds: [properUsage] })
+      interaction.reply({ embeds: [properUsage] });
     }
-  }
+  },
 };

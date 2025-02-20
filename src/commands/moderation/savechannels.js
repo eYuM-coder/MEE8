@@ -1,6 +1,5 @@
 const Command = require("../../structures/Command");
-const { saveGuild } = require('channelsave-discord');
-
+const { saveGuild } = require("channelsave-discord");
 
 // Add any additional dependencies or modules as needed
 
@@ -18,9 +17,10 @@ module.exports = class EmptyCommand extends Command {
 
   async run(message) {
     try {
-     
-      
-      await saveGuild(message.guild, '/home/vboxuser/Pogy-3/src/data/guild_information.json');
+      await saveGuild(
+        message.guild,
+        "/home/vboxuser/MEE8-3/src/data/guild_information.json"
+      );
       message.channel.send("done!");
     } catch (error) {
       console.error("Error in the empty command:", error);

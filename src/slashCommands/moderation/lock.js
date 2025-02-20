@@ -12,10 +12,10 @@ module.exports = {
       option
         .setName("channel")
         .setDescription("The channel to lock")
-        .setRequired(true),
+        .setRequired(true)
     )
     .addStringOption((option) =>
-      option.setName("reason").setDescription("The reason to lock the channel"),
+      option.setName("reason").setDescription("The reason to lock the channel")
     )
     .setContexts(0)
     .setIntegrationTypes(0),
@@ -50,22 +50,23 @@ module.exports = {
 
       channel.permissionOverwrites
         .edit(interaction.guild.me, { SEND_MESSAGES: true })
-        .catch(() => { });
+        .catch(() => {});
 
       channel.permissionOverwrites
         .edit(interaction.guild.id, { SEND_MESSAGES: false })
-        .catch(() => { });
+        .catch(() => {});
 
       channel.permissionOverwrites
         .edit(interaction.member.id, { SEND_MESSAGES: true })
-        .catch(() => { });
+        .catch(() => {});
 
       const embed = new MessageEmbed()
         .setDescription(
-          `${success} | Successfully locked **${channel}** ${logging && logging.moderation.include_reason === "true"
-            ? `\n\n**Reason:** ${reason}`
-            : ``
-          }`,
+          `${success} | Successfully locked **${channel}** ${
+            logging && logging.moderation.include_reason === "true"
+              ? `\n\n**Reason:** ${reason}`
+              : ``
+          }`
         )
         .setColor(client.color.green);
       interaction
@@ -73,22 +74,22 @@ module.exports = {
         .then(() => {
           if (logging && logging.moderation.delete_reply === "true") {
             setTimeout(() => {
-              interaction.deleteReply().catch(() => { });
+              interaction.deleteReply().catch(() => {});
             }, 5000);
           }
         })
-        .catch(() => { });
+        .catch(() => {});
 
       if (logging) {
         if (logging.moderation.delete_after_executed === "true") {
-          interaction.delete().catch(() => { });
+          interaction.delete().catch(() => {});
         }
 
         const role = interaction.guild.roles.cache.get(
-          logging.moderation.ignore_role,
+          logging.moderation.ignore_role
         );
         const channel = interaction.guild.channels.cache.get(
-          logging.moderation.channel,
+          logging.moderation.channel
         );
 
         if (logging.moderation.toggle == "true") {
@@ -98,7 +99,7 @@ module.exports = {
                 !role ||
                 (role &&
                   !interaction.member.roles.cache.find(
-                    (r) => r.name.toLowerCase() === role.name,
+                    (r) => r.name.toLowerCase() === role.name
                   ))
               ) {
                 if (logging.moderation.lock == "true") {
@@ -114,21 +115,32 @@ module.exports = {
                     reason = reason.slice(0, 1021) + "...";
 
                   const logEmbed = new MessageEmbed()
-                    .setAuthor(
-                      `Action: \`Lock\` | ${interaction.user.tag} | Case #${logcase}`,
-                      interaction.user.displayAvatarURL({ format: "png" }),
+                    .setAuthor({
+                      name: `Action: \`Lock\` | ${interaction.user.tag} | Case #${logcase}`,
+                      iconURL: interaction.user.displayAvatarURL({
+                        format: "png",
+                      }),
+                    })
+                    .addField(
+                      { name: "Channel", value: `${channel}`, inline: true },
+                      {
+                        name: "Moderator",
+                        value: `${interaction.user}`,
+                        inline: true,
+                      },
+                      { name: "Reason", value: `${reason}`, inline: true }
                     )
-                    .addField("Channel", `${channel}`, true)
-                    .addField("Moderator", `${interaction.user}`, true)
-                    .addField("Reason", `${reason}`, true)
                     .setFooter({ text: `ID: ${interaction.user.id}` })
                     .setTimestamp()
                     .setColor(color);
 
-                    send(channel, { username: `${interaction.client.user.username}`, embeds: [logEmbed] }).catch(() => {});
+                  send(channel, {
+                    username: `${interaction.client.user.username}`,
+                    embeds: [logEmbed],
+                  }).catch(() => {});
 
                   logging.moderation.caseN = logcase + 1;
-                  await logging.save().catch(() => { });
+                  await logging.save().catch(() => {});
                 }
               }
             }

@@ -20,7 +20,7 @@ module.exports = class extends Command {
 
     if (!targetUser || isNaN(amount) || amount <= 0) {
       return message.reply(
-        "Please mention a user and provide a valid XP amount.",
+        "Please mention a user and provide a valid XP amount."
       );
     }
 
@@ -56,7 +56,7 @@ module.exports = class extends Command {
       user.xp -= amount;
     } else {
       const embed = new MessageEmbed().setDescription(
-        "This is above the max amount of XP you can add. Please input a number below 999,999,999",
+        "This is above the max amount of XP you can add. Please input a number below 999,999,999"
       );
       return message.channel.sendCustom({ embeds: [embed] });
     }
@@ -69,17 +69,22 @@ module.exports = class extends Command {
     const levelbed = new MessageEmbed()
       .setColor("#3498db")
       .setTitle("Level Up!")
-      .setAuthor(targetUser.username, targetUser.displayAvatarURL())
+      .setAuthor({
+        name: targetUser.username,
+        iconURL: targetUser.displayAvatarURL(),
+      })
       .setDescription(
-        `Unbelievable! You lost ${previousLevel - user.level} ${previousLevel - user.level == 1 ? "level!" : "levels!"}`,
+        `Unbelievable! You lost ${previousLevel - user.level} ${
+          previousLevel - user.level == 1 ? "level!" : "levels!"
+        }`
       )
-      .setFooter(`XP: ${user.xp}/${xpNeededForNextLevel}`);
+      .setFooter({ text: `XP: ${user.xp}/${xpNeededForNextLevel}` });
 
     const row = new MessageActionRow().addComponents(
       new MessageButton()
         .setCustomId("levelup")
         .setLabel("Level Up")
-        .setStyle("SUCCESS"),
+        .setStyle("SUCCESS")
     );
     if (previousLevel - user.level >= 1) {
       message.channel.sendCustom({

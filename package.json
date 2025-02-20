@@ -62,6 +62,7 @@
     "lodash": "^4.17.21",
     "logs.chat": "^1.0.3",
     "mathfunctionsforeval.js": "^1.0.2",
+    "mathjs": "^14.2.1",
     "memorystore": "^1.6.5",
     "modmail.djs": "^1.1.0",
     "moment": "^2.27.0",
@@ -70,6 +71,7 @@
     "mongoose": "^5.12.2",
     "moonlink": "^1.0.0",
     "ms": "^2.1.2",
+    "nerdamer": "^1.1.13",
     "node-fetch": "^2.6.1",
     "node-os-utils": "^1.3.2",
     "nodemon": "^2.0.4",
@@ -102,12 +104,12 @@
     "zalgolize": "^1.2.4",
     "zlib": "^1.0.5"
   },
-  "name": "pogy",
+  "name": "mee8",
   "version": "1.0.0",
   "author": "",
   "license": "ISC",
   "keywords": [],
-  "description": "<h1 align=\"center\">  <br>   <a href=\"https://github.com/peterhanania\"><img src=\"https://dev.pogy.gg/favicon.ico\"></a>   <br>   Pogy the Discord Bot [DJS V13]  <br> </h1>",
+  "description": "<h1 align=\"center\">  <br>   <a href=\"https://github.com/peterhanania\"><img src=\"https://mee8.eyum.org/favicon.ico\"></a>   <br>   MEE8 the Discord Bot [DJS V13]  <br> </h1>",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/eYuM-coder/MEE8.git"

@@ -25,15 +25,17 @@ module.exports = class extends Command {
       if (guild.levelingEnabled === false) {
         return message.reply("Leveling is disabled for this server.");
       }
-      
+
       const users = guild.users;
-      const sortedUsers = users.sort((a, b) => b.level - a.level || b.xp - a.xp).slice(0, 10);
+      const sortedUsers = users
+        .sort((a, b) => b.level - a.level || b.xp - a.xp)
+        .slice(0, 10);
 
       const leaderboardEmbed = new Discord.MessageEmbed()
         .setColor("#0099ff")
         .setTitle("Server Leaderboard")
         .setDescription("Top 10 Users based on Levels:")
-        .setFooter("Levels are calculated based on XP.");
+        .setFooter({ text: "Levels are calculated based on XP." });
       for (let i = 0; i < sortedUsers.length; i++) {
         const user = sortedUsers[i];
         let member;
@@ -46,7 +48,7 @@ module.exports = class extends Command {
 
         leaderboardEmbed.addField(
           `#${i + 1} - ${member ? `${member.user.username}` : "Unknown"}`,
-          `Level: ${user.level} | XP: ${user.xp}`,
+          `Level: ${user.level} | XP: ${user.xp}`
         );
       }
 

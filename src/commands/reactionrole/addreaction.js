@@ -30,13 +30,15 @@ module.exports = class extends Command {
     let client = message.client;
     let fail = message.client.emoji.fail;
 
-    let channel =
-      message.mentions.channels.first() || message.channel;
+    let channel = message.mentions.channels.first() || message.channel;
     if (!channel)
       return message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-            .setAuthor(message.author.tag, message.author.displayAvatarURL())
+            .setAuthor({
+              name: message.author.tag,
+              iconURLL: message.author.displayAvatarURL(),
+            })
             .setDescription(`${fail} Provide me with a valid Channel`)
             .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
             .setColor(client.color.red),
@@ -48,7 +50,10 @@ module.exports = class extends Command {
       return message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-            .setAuthor(message.author.tag, message.author.displayAvatarURL())
+            .setAuthor({
+              name: message.author.tag,
+              iconURLL: message.author.displayAvatarURL(),
+            })
             .setDescription(`${fail} Provide me with a valid message ID`)
             .setFooter({ text: `${process.env.AUTH_DOMAIN}` }),
         ],
@@ -57,7 +62,10 @@ module.exports = class extends Command {
       return message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-            .setAuthor(message.author.tag, message.author.displayAvatarURL())
+            .setAuthor({
+              name: message.author.tag,
+              iconURLL: message.author.displayAvatarURL(),
+            })
             .setDescription(`${fail} I could not find the following ID`)
             .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
             .setColor(client.color.red),
@@ -73,7 +81,10 @@ module.exports = class extends Command {
       return message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-            .setAuthor(message.author.tag, message.author.displayAvatarURL())
+            .setAuthor({
+              name: message.author.tag,
+              iconURLL: message.author.displayAvatarURL(),
+            })
             .setDescription(`${fail} Provide me with a valid Role`)
             .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
             .setColor(client.color.red),
@@ -92,7 +103,10 @@ module.exports = class extends Command {
       return message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-            .setAuthor(message.author.tag, message.author.displayAvatarURL())
+            .setAuthor({
+              name: message.author.tag,
+              iconURLL: message.author.displayAvatarURL(),
+            })
             .setDescription(`${fail} Provide me with a valid Emoji`)
             .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
             .setColor(client.color.red),
@@ -105,7 +119,10 @@ module.exports = class extends Command {
       return message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-            .setAuthor(message.author.tag, message.author.displayAvatarURL())
+            .setAuthor({
+              name: message.author.tag,
+              iconURLL: message.author.displayAvatarURL(),
+            })
             .setDescription(`${fail} Please Provide a valid Emoji.`)
             .setColor(client.color.red)
             .setFooter({ text: `${process.env.AUTH_DOMAIN}` }),
@@ -131,14 +148,24 @@ module.exports = class extends Command {
     message.channel.sendCustom({
       embeds: [
         new MessageEmbed()
-          .setAuthor("Reaction Roles", message.guild.iconURL(), messageID.url)
+          .setAuthor({
+            name: "Reaction Roles",
+            iconURL: message.guild.iconURL(),
+            url: messageID.url,
+          })
           .setColor(client.color.green)
-          .addField("Channel", `${channel}`, true)
-          .addField("Emoji", `${emoji}`, true)
-          .addField("Type", `${option}`, true)
-          .addField("Message ID", `${ID}`, true)
-          .addField("Message", `[Jump To Message](${messageID.url})`, true)
-          .addField("Role", `${role}`, true)
+          .addFields(
+            { name: "Channel", value: `${channel}`, inline: true },
+            { name: "Emoji", value: `${emoji}`, inline: true },
+            { name: "Type", value: `${option}`, inline: true },
+            { name: "Message ID", value: `${ID}`, inline: true },
+            {
+              name: "Message",
+              value: `[Jump To Message](${messageID.url})`,
+              inline: true,
+            },
+            { name: "Role", value: `${role}`, inline: true }
+          )
           .setFooter({ text: `${process.env.AUTH_DOMAIN}` }),
       ],
     });

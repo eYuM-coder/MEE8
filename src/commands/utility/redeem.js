@@ -120,7 +120,7 @@ module.exports = class extends Command {
 
       webhookClient.sendCustom({
         username: `${config.botName} Premium`,
-        avatarURL: `https://v2.pogy.xyz/logo.png`,
+        avatarURL: `https://mee8.eyum.org/logo.png`,
         embeds: [embedPremium],
       });
     } else {

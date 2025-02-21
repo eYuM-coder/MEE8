@@ -6,7 +6,7 @@ module.exports = class extends Command {
   constructor(...args) {
     super(...args, {
       name: "support",
-      description: `Sends you MEE8's Support server`,
+      description: `Sends you Neonova's Support server`,
       category: "Utility",
       cooldown: 3,
     });

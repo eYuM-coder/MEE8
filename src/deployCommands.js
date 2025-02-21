@@ -3,6 +3,8 @@ const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v9");
 const { green } = require("colors");
 
+console.clear();
+
 
 const commands = [];
 const commandFolders = fs.readdirSync("./src/slashCommands");

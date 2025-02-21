@@ -67,7 +67,7 @@ module.exports = class extends Command {
         let ticketCategory = message.guild.channels.cache.get(db.categoryID);
         let ticketLog = message.guild.channels.cache.get(db.ticketModlogID);
 
-        let MEE8 = message.guild.me;
+        let Neonova = message.guild.me;
         let everyone = message.guild.roles.everyone;
 
         let user = message.author;
@@ -137,8 +137,8 @@ module.exports = class extends Command {
           message.guild.channels
             .create(chann, { type: "GUILD_TEXT" })
             .then(async (chan) => {
-              if (mee8) {
-                chan.permissionOverwrites.edit(mee8, {
+              if (neonova) {
+                chan.permissionOverwrites.edit(neonova, {
                   VIEW_CHANNEL: true,
 
                   SEND_MESSAGES: true,

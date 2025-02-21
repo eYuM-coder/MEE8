@@ -6,7 +6,7 @@ const ms = require("ms");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("vote")
-    .setDescription("MEE8s vote page"),
+    .setDescription("Neonovas vote page"),
   async execute(interaction) {
     let user = await User.findOne({
       discordId: interaction.user.id,
@@ -36,7 +36,7 @@ module.exports = {
                 ? `\`In ${ms(user.lastVoted - Date.now() + DBL_INTERVAL, {
                     long: true,
                   })}\``
-                : "[`Available Now!`](https://discordbotlist.com/bots/MEE8-3175)"
+                : "[`Available Now!`](https://discordbotlist.com/bots/Neonova-3175)"
             }\n\n__**Rewards:**__\n`
           )
           .setAuthor({

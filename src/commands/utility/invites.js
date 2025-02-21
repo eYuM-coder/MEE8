@@ -44,7 +44,7 @@ module.exports = class extends Command {
     const embed = new MessageEmbed()
       .setColor(message.guild.me.displayHexColor)
       .setAuthor({
-        name: `MEE8.xyz`,
+        name: `Neonova.xyz`,
         iconURL: this.client.user.displayAvatarURL({ dynamic: true }),
       })
       .setDescription(`${member.user.tag} has: **${totalInvites}** invites`)

@@ -2,8 +2,8 @@
 node_modules
 .env
 json.sqlite
-mee8.log
-src/assets/logs/MEE8.log
+neonova.log
+src/assets/logs/Neonova.log
 config.json
 env.backups
 replit_zip_error_log.txt

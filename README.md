@@ -2,13 +2,13 @@
 ![Alt](https://repobeats.axiom.co/api/embed/82d16a2aa6e1e68fe51bd39d7609a46735d40732.svg "Repobeats analytics image")
 <p align="center">
   <br>
-  <a href="https://github.com/peterhanania"><img src="https://mee8.eyum.org/favicon.ico"></a>
+  <a href="https://github.com/peterhanania"><img src="https://neonova.eyum.org/favicon.ico"></a>
   <br>
-  MEE8, a fully customizable bot built with 147 commands, 11 categories, and a dashboard using discord.js v13 🚀
+  Neonova, a fully customizable bot built with 147 commands, 11 categories, and a dashboard using discord.js v13 🚀
   <br>
 </p>
 
-<h3 align=center>Explore the possibilities with MEE8! 🌐</h3>
+<h3 align=center>Explore the possibilities with Neonova! 🌐</h3>
 
 [README-hindi.md](/README-hi-HI.md)
 [README-polish](/README-pl-PL.md)
@@ -23,7 +23,7 @@
     <img src="https://img.shields.io/badge/discord.js-v13.6.0-blue.svg?logo=npm" alt="discordjs">
   </a>
 
-  <a href="https://github.com/eYuM-coder/MEE8/blob/main/LICENSE">
+  <a href="https://github.com/eYuM-coder/Neonova/blob/main/LICENSE">
     <img src="https://img.shields.io/badge/license-Apache%202-blue" alt="license">
   </a>
 
@@ -46,9 +46,9 @@
 </p>
 
 ## Community Updates 🌟
-[+ More dashboard pages and commands by Hotsuop](https://github.com/hotsu0p/MEE8)
+[+ More dashboard pages and commands by Hotsuop](https://github.com/hotsu0p/Neonova)
 
-[+ Slash commands by eYuM](https://github.com/MEE8-Bot/MEE8/tree/eyum-contributions)
+[+ Slash commands by eYuM](https://github.com/Neonova-Bot/Neonova/tree/eyum-contributions)
 ## Latest commit!
 ✨added commands lock and unlock
 *https://394wkx-3000.csb.app/changelog*
@@ -58,7 +58,7 @@ https://394wkx-3000.csb.app/docs
 *will update later*
 ## About 🤔
 
-is a discord bot that we made exactly 2 years ago, the code was broken, so we decided to fix the bugs and make it a multipurpose discord.js v13 bot! You can click [this](https://394wkx-3000.csb.app//invite) link to invite the official Bot! Also, you can join the official [MEE8's Support Server](https://394wkx-3000.csb.app//support) for assistance.
+is a discord bot that we made exactly 2 years ago, the code was broken, so we decided to fix the bugs and make it a multipurpose discord.js v13 bot! You can click [this](https://394wkx-3000.csb.app//invite) link to invite the official Bot! Also, you can join the official [Neonova's Support Server](https://394wkx-3000.csb.app//support) for assistance.
 
 If you liked this repository, feel free to leave a star ⭐
 
@@ -106,7 +106,7 @@ With You can even log everything using webhooks directly from the config file!
 
 First clone the repo:
 
-`git clone https://github.com/MEE8-Bot/MEE8.git`
+`git clone https://github.com/Neonova-Bot/Neonova.git`
 
 Then run `Npm i` or `Npm install`
 ## Setting Up ⚙️
@@ -212,14 +212,14 @@ You can launch the bot with `npm start`
 Released under the [MIT License]() license.
 
 ## Support 🤝
-[Click here for the support server](https://mee8.eyum.org/support)
+[Click here for the support server](https://neonova.eyum.org/support)
 
 ## Donate 💸
 
-You can donate and make it stronger than ever [by clicking here](https://paypal.me/mee8bot)!
+You can donate and make it stronger than ever [by clicking here](https://paypal.me/neonovabot)!
 
 ## Credits 🙌
-[Old Credits](https://github.com/eYuM-coder/MEE8#credits)
+[Old Credits](https://github.com/eYuM-coder/Neonova#credits)
 - Peter Hanania [DJS Rewrite] - [github.com/peterhanania](https://github.com/peterhanania)
 - JANO [DJS Rewrite] - [github.com/wlegit](https://github.com/wlegit)
 - Hotsuop [Added commands & Commands] - [https://github.com/hotsu0p](https://github.com/hotsu0p)

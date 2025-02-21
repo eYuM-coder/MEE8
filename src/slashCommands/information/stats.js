@@ -57,7 +57,7 @@ module.exports = {
     const tech = stripIndent`
     Ping -- ${Math.round(interaction.client.ws.ping)}ms
     Uptime -- ${uptime}
-    ${language.mee8Version} -- 2.5
+    ${language.neonovaVersion} -- 2.5
     Library -- Discord.js v13.6.0
     Evironment -- Node.js v16.9.0
     Servers -- ${interaction.client.guilds.cache.size}
@@ -66,18 +66,18 @@ module.exports = {
       0
     )}
     ${language.channels} -- ${interaction.client.channels.cache.size}
-    ${language.mee8Commands} -- ${interaction.client.slashCommands.size}
+    ${language.neonovaCommands} -- ${interaction.client.slashCommands.size}
     `;
     const devs = stripIndent`
     -------
-    ${language.mee8Owners}
+    ${language.neonovaOwners}
     • the4004whelen
-    ${language.mee8Developers}
+    ${language.neonovaDevelopers}
     • Peter_#4444
     • Jano#6969
     • the4004whelen
     and
-    mee8.eyum.org/team
+    neonova.eyum.org/team
     -------
     `;
     const embed = new MessageEmbed()
@@ -85,24 +85,24 @@ module.exports = {
         name: interaction.member.displayName,
         iconURL: interaction.member.displayAvatarURL({ dynamic: true }),
       })
-      .setTitle(`${language.mee8Info}`)
+      .setTitle(`${language.neonovaInfo}`)
       .addFields(
         {
-          name: `${language.mee8General}`,
+          name: `${language.neonovaGeneral}`,
           value: `\`\`\`css\n${tech}\`\`\``,
           inline: true,
         },
         {
-          name: `${language.mee8Team}`,
+          name: `${language.neonovaTeam}`,
           value: `\`\`\`css\n${devs}\`\`\``,
           inline: true,
         },
         {
-          name: `${language.mee8Stats}`,
+          name: `${language.neonovaStats}`,
           value: `\`\`\`css\n${serverStats}\`\`\``,
         }
       )
-      .setFooter({ text: `https://mee8.eyum.org` })
+      .setFooter({ text: `https://neonova.eyum.org` })
       .setTimestamp()
       .setColor(interaction.guild.me.displayHexColor);
     interaction.reply({ embeds: [embed] });

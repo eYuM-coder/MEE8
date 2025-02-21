@@ -30,7 +30,7 @@ module.exports = {
       .catch((err) => console.error(err));
 
     // Run deployment command first
-    exec("mee8 clearbackups", (error, stdout, stderr) => {
+    exec("neonova clearbackups", (error, stdout, stderr) => {
       if (error) {
         console.error(`Backup removal error: ${error.message}`);
         return interaction.editReply({

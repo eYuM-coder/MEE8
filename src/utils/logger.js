@@ -33,7 +33,7 @@ const logger = createLogger({
   ),
   transports: [
     new transports.Console(),
-    new transports.File({ filename: "./src/assets/logs/MEE8.log" }),
+    new transports.File({ filename: "./src/assets/logs/Neonova.log" }),
   ],
 });
 

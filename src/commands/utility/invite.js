@@ -8,7 +8,7 @@ module.exports = class extends Command {
     super(...args, {
       name: "invite",
       aliases: ["inv"],
-      description: "Sends you MEE8's invite link",
+      description: "Sends you Neonova's invite link",
       category: "Utility",
       cooldown: 3,
     });
@@ -23,7 +23,7 @@ module.exports = class extends Command {
 
     const embed = new MessageEmbed()
       .setColor(message.guild.me.displayHexColor)
-      .setTitle("Invite MEE8")
+      .setTitle("Invite Neonova")
       .setURL(`${process.env.AUTH_DOMAIN}/invite`)
       .setThumbnail(message.client.user.displayAvatarURL())
       .setDescription(language.invite)
@@ -33,7 +33,7 @@ module.exports = class extends Command {
       });
     const row = new MessageActionRow().addComponents(
       new MessageButton()
-        .setLabel("Invite MEE8")
+        .setLabel("Invite Neonova")
         .setStyle("LINK")
         .setURL(`${process.env.AUTH_DOMAIN}/invite`),
 

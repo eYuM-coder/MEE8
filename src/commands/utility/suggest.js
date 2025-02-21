@@ -122,7 +122,7 @@ module.exports = class extends Command {
         send(channelLog, {
           embeds: [log],
           name: `Suggestion Logs`,
-          icon: `https://mee8.eyum.org/logo.png`,
+          icon: `https://neonova.eyum.org/logo.png`,
         }).catch(() => {});
       }
     }

@@ -23,7 +23,7 @@ module.exports = class extends Command {
     try {
       await message.channel.sendCustom("Deploying and restarting...");
 
-      exec("mee8 deploy", (error, stdout) => {
+      exec("neonova deploy", (error, stdout) => {
         const response = error || stdout;
         console.log(response);
 

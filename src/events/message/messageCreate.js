@@ -77,7 +77,7 @@ module.exports = class extends Event {
           .addField(`Prefix`, proofita, true)
           .addField(`Usage`, proofitaa, true)
           .setDescription(
-            `\nIf you like ${config.botName}, Consider [voting](https://top.gg/bot/767705905235099658), or [inviting](${config.invite_link}) it to your server! Thank you for using MEE8, we hope you enjoy it, as we always look forward to improve the bot`
+            `\nIf you like ${config.botName}, Consider [voting](https://top.gg/bot/767705905235099658), or [inviting](${config.invite_link}) it to your server! Thank you for using Neonova, we hope you enjoy it, as we always look forward to improve the bot`
           )
           .setFooter({ text: `Thank you for using ${config.botName}!!` })
           .setColor("#FF2C98");
@@ -198,7 +198,7 @@ module.exports = class extends Event {
                   : ""
               }${
                 number === 2
-                  ? "*You can check our top.gg page at `https://vote.mee8.eyum.org`*"
+                  ? "*You can check our top.gg page at `https://vote.neonova.eyum.org`*"
                   : ""
               }`
             )

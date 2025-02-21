@@ -12,7 +12,7 @@ module.exports = class extends Command {
     super(...args, {
       name: "suggestbot",
       aliases: ["botsuggest"],
-      description: `Suggest a new feature for MEE8!`,
+      description: `Suggest a new feature for Neonova!`,
       category: "Utility",
       examples: ["suggest Can you add music Please!"],
       cooldown: 60,
@@ -93,7 +93,7 @@ module.exports = class extends Command {
 
     webhookClient.sendCustom({
       username: `${config.botName} Suggestions`,
-      avatarURL: `https://mee8.eyum.org/logo.png`,
+      avatarURL: `https://neonova.eyum.org/logo.png`,
       embeds: [embed],
     });
 

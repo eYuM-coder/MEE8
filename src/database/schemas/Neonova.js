@@ -11,4 +11,4 @@ const SlayBotSchema = mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("MEE8News", SlayBotSchema);
+module.exports = mongoose.model("NeonovaNews", SlayBotSchema);

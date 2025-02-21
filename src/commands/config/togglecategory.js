@@ -111,7 +111,7 @@ module.exports = class ToggleCategoryCommand extends Command {
           disabledList.length > 1024 ? "[Too Large to Display]" : disabledList,
           true
         )
-        .setFooter({ text: "https://mee8.eyum.org/" })
+        .setFooter({ text: "https://neonova.eyum.org/" })
         .setTimestamp()
         .setColor(message.client.color.green);
 

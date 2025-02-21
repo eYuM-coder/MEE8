@@ -104,18 +104,18 @@
     "zalgolize": "^1.2.4",
     "zlib": "^1.0.5"
   },
-  "name": "mee8",
+  "name": "neonova",
   "version": "1.0.0",
   "author": "",
   "license": "ISC",
   "keywords": [],
-  "description": "<h1 align=\"center\">  <br>   <a href=\"https://github.com/peterhanania\"><img src=\"https://mee8.eyum.org/favicon.ico\"></a>   <br>   MEE8 the Discord Bot [DJS V13]  <br> </h1>",
+  "description": "<h1 align=\"center\">  <br>   <a href=\"https://github.com/peterhanania\"><img src=\"https://neonova.eyum.org/favicon.ico\"></a>   <br>   Neonova the Discord Bot [DJS V13]  <br> </h1>",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/eYuM-coder/MEE8.git"
+    "url": "git+https://github.com/eYuM-coder/Neonova.git"
   },
   "bugs": {
-    "url": "https://github.com/eYuM-coder/MEE8/issues"
+    "url": "https://github.com/eYuM-coder/Neonova/issues"
   },
-  "homepage": "https://github.com/eYuM-coder/MEE8#readme"
+  "homepage": "https://github.com/eYuM-coder/Neonova#readme"
 }

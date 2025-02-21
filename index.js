@@ -1,11 +1,11 @@
 const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
-const MEE8Client = require("./MEE8.js");
+const NeonovaClient = require("./Neonova.js");
 const Guild = require("./src/database/models/leveling.js");
 const config = require("./config.json");
 const { Collection } = require("discord.js");
 const logger = require("./src/utils/logger");
 const fs = require("node:fs");
-const MEE8 = new MEE8Client(config);
+const Neonova = new NeonovaClient(config);
 const color = require("./src/data/colors");
 const jointocreate = require("./src/structures/jointocreate");
 const emoji = require("./src/data/emoji");
@@ -13,12 +13,12 @@ const warnModel = require("./src/database/models/moderation.js");
 const sharder = require("./shards.js");
 const deploy = require("./src/deployCommands.js");
 
-let client = MEE8;
+let client = Neonova;
 module.exports = client;
 
 jointocreate(client);
-MEE8.color = color;
-MEE8.emoji = emoji;
+Neonova.color = color;
+Neonova.emoji = emoji;
 
 require("dotenv").config();
 
@@ -267,7 +267,7 @@ const moreInfoEmbed = new MessageEmbed()
   )
   .setFooter({
     text: `${config.botName}`,
-    iconURL: `${process.env.AUTH_DOMAIN}/assets/images/mee8.png`,
+    iconURL: `${process.env.AUTH_DOMAIN}/assets/images/neonova.png`,
   })
   .addFields(
     {
@@ -275,7 +275,7 @@ const moreInfoEmbed = new MessageEmbed()
       value: `${process.env.AUTH_DOMAIN}/invite`,
       inline: false,
     },
-    { name: "Support Server", value: "https://discord.gg/mee8", inline: false },
+    { name: "Support Server", value: "https://discord.gg/neonova", inline: false },
     {
       name: `Vote ${config.botName}`,
       value: "https://top.gg/bot/880243836830652958/vote",
@@ -287,7 +287,7 @@ const levelupbutton = new MessageEmbed()
   .setTitle("Level Up")
   .setFooter({
     text: `${config.botName}`,
-    iconURL: `${process.env.AUTH_DOMAIN}/assets/images/mee8.png`,
+    iconURL: `${process.env.AUTH_DOMAIN}/assets/images/neonova.png`,
   })
   .setDescription(
     `Hmmm... This doesnt seem to do much, but you can click it anyways.`
@@ -306,8 +306,8 @@ const infobutton = new MessageEmbed()
   .setDescription(
     "Hello there pogger. If you want more info on this bot, you can check out the github repo or join the support server"
   )
-  .setURL("https://github.com/eYuM-coder/MEE8/")
-  .addField("Github Repo", "https://github.com/eYuM-coder/MEE8/");
+  .setURL("https://github.com/eYuM-coder/Neonova/")
+  .addField("Github Repo", "https://github.com/eYuM-coder/Neonova/");
 
 client.on("interactionCreate", async (interaction) => {
   try {
@@ -828,10 +828,10 @@ async function startTetrisGame(message) {
   }
 }
 
-MEE8.react = new Map();
-MEE8.fetchforguild = new Map();
+Neonova.react = new Map();
+Neonova.fetchforguild = new Map();
 
-MEE8.start(process.env.TOKEN);
+Neonova.start(process.env.TOKEN);
 
 process.on("unhandledRejection", (reason, p) => {
   logger.info(`[unhandledRejection] ${reason.message}`, { label: "ERROR" });

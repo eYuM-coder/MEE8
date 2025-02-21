@@ -5,7 +5,7 @@ const fs = require('node:fs')
 const path = require('node:path')
 const { status } = config
 
-module.exports = class MEE8Client extends Client {
+module.exports = class NeonovaClient extends Client {
   constructor(options = {}) {
     super({
       partials: ['MESSAGE', 'CHANNEL', 'REACTION', 'GUILD_MEMBER', 'USER'],

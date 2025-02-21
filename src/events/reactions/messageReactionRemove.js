@@ -48,7 +48,7 @@ module.exports = class extends Event {
         let addEmbed = new MessageEmbed()
           .setAuthor({
             name: "Role Added",
-            iconURL: `https://mee8.eyum.org/logo.png`,
+            iconURL: `https://neonova.eyum.org/logo.png`,
             url: `${message.url}`,
           })
           .setDescription(
@@ -60,7 +60,7 @@ module.exports = class extends Event {
         let remEmbed = new MessageEmbed()
           .setAuthor({
             name: "Role Removed",
-            iconURL: `https://mee8.eyum.org/logo.png`,
+            iconURL: `https://neonova.eyum.org/logo.png`,
             url: `${message.url}`,
           })
           .setDescription(
@@ -72,7 +72,7 @@ module.exports = class extends Event {
         let errorReaction = new MessageEmbed()
           .setAuthor({
             name: "Reaction Error",
-            iconURL: `https://mee8.eyum.org/logo.png`,
+            iconURL: `https://neonova.eyum.org/logo.png`,
             url: `${message.url}`,
           })
           .setDescription(`A reaction error has occured!`)

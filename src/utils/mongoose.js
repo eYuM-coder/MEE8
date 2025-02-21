@@ -12,6 +12,8 @@ module.exports = {
       });
     });
 
+    console.clear();
+
     mongoose.connection.on("disconnected", () => {
       logger.error(`Mongoose connection lost`, { label: "Database" });
     });

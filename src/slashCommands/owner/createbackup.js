@@ -30,7 +30,7 @@ module.exports = {
       .catch((err) => console.error(err));
 
     // Run deployment command first
-    exec("mee8 backup", (error, stdout, stderr) => {
+    exec("neonova backup", (error, stdout, stderr) => {
       if (error) {
         console.error(`Backup creation error: ${error.message}`);
         return interaction.editReply({

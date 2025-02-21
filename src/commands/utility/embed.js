@@ -11,7 +11,7 @@ module.exports = class extends Command {
     super(...args, {
       name: "embed",
       aliases: ["embedify", "MessageEmbed"],
-      description: `Make a custom embed builder with MEE8!`,
+      description: `Make a custom embed builder with Neonova!`,
       category: "Utility",
       guildOnly: true,
       cooldown: 5,

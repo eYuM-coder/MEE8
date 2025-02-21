@@ -293,7 +293,7 @@ module.exports = class extends Command {
             embed
               .setAuthor({
                 name: `${language.tempvc12}`,
-                iconURL: `https://mee8.eyum.org/logo.png`,
+                iconURL: `https://neonova.eyum.org/logo.png`,
                 url: `${channelInv}`
               })
               .setDescription(

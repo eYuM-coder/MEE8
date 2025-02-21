@@ -3752,7 +3752,7 @@ In the mean time, please explain your issue below`;
           }
 
           if (storedSettings.isPremium == "false") {
-            ticketSettings.ticketFooter = "Powered by mee8.eyum.org";
+            ticketSettings.ticketFooter = "Powered by neonova.eyum.org";
           } else {
             let checkFooter2 = req.body["reactionfooterEmbed"];
             if (checkFooter2) {
@@ -3773,9 +3773,9 @@ In the mean time, please explain your issue below`;
           }
 
           let checkFooter = req.body["reactionfooterEmbed"];
-          let reactionFooter = "Powered by mee8.eyum.org";
+          let reactionFooter = "Powered by neonova.eyum.org";
 
-          let footer = "Powered by mee8.eyum.org";
+          let footer = "Powered by neonova.eyum.org";
 
           if (storedSettings.isPremium == "true") footer = reactionFooter;
 
@@ -3785,7 +3785,7 @@ In the mean time, please explain your issue below`;
             .setDescription(reactionDescription);
 
           if (storedSettings.isPremium == "false") {
-            ticketEmbed.setFooter({ text: `Powered by mee8.eyum.org` });
+            ticketEmbed.setFooter({ text: `Powered by neonova.eyum.org` });
           } else {
             if (checkFooter) {
               ticketEmbed.setFooter({ text: data.reactionmbedFooter });
@@ -4581,7 +4581,7 @@ In the mean time, please explain your issue below`;
       .setColor("#7289DA")
       .setTitle(`${apiUser.username} Just Voted`)
       .setDescription(
-        `Thank you **${apiUser.username}#${apiUser.discriminator}** (${apiUser.id}) for voting **MEE8**!`
+        `Thank you **${apiUser.username}#${apiUser.discriminator}** (${apiUser.id}) for voting **Neonova**!`
       );
     Hook.sendCustom(msg);
 
@@ -4606,7 +4606,7 @@ In the mean time, please explain your issue below`;
             .setDescription(
               `Thank you **${apiUser.username}#${apiUser.discriminator}** (${
                 apiUser.id
-              }) for voting **MEE8**! \n\nVote #${voteNumber + 1}`
+              }) for voting **Neonova**! \n\nVote #${voteNumber + 1}`
             ),
         ],
       });

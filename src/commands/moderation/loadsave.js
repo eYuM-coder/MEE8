@@ -18,7 +18,7 @@ module.exports = class EmptyCommand extends Command {
   async run(message) {
     try {
       if (!message.member.permissions.has("ADMINISTRATOR")) {
-        await loadGuild(message.guild, '/home/vboxuser/MEE8-3/src/data/guild_information.json');
+        await loadGuild(message.guild, '/home/vboxuser/Neonova-3/src/data/guild_information.json');
         message.channel.send("Done!");
       } else {
         return message.channel.send("You do not have permission to use this command.");

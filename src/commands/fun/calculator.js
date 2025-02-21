@@ -24,7 +24,7 @@ module.exports = class CalculatorCommand extends Command {
         embed: {
           title: 'Calculator ',
           color: '#5865F2',
-          footer: 'mee8.eyum.org',
+          footer: 'neonova.eyum.org',
           timestamp: true,
         },
         disabledQuery: 'Calculator is disabled!',

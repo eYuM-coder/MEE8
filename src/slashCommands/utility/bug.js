@@ -10,7 +10,7 @@ const crypto = require("crypto");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("reportbug")
-    .setDescription("Report bugs to MEE8!")
+    .setDescription("Report bugs to Neonova!")
     .addStringOption((option) =>
       option.setName("text").setDescription("The text").setRequired(true)
     ),

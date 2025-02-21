@@ -9,7 +9,7 @@ module.exports = class extends Command {
     super(...args, {
       name: "stats",
       aliases: ["statinfo", "botinfo", "botstats"],
-      description: "Displays MEE8s Statistics",
+      description: "Displays Neonovas Statistics",
       category: "Information",
       cooldown: 3,
     });
@@ -57,7 +57,7 @@ module.exports = class extends Command {
     const tech = stripIndent`
       Ping -- ${Math.round(message.client.ws.ping)}ms
       Uptime  -- ${uptime}
-      ${language.mee8Version} -- 2.0
+      ${language.neonovaVersion} -- 2.0
       Library -- Discord.js v13.6.0
       Environment -- Node.js v16.9.1
       Servers -- ${message.client.guilds.cache.size}
@@ -66,19 +66,19 @@ module.exports = class extends Command {
       0
     )}
       ${language.channels} -- ${message.client.channels.cache.size}
-      ${language.mee8Commands} -- ${message.client.botCommands.size}
+      ${language.neonovaCommands} -- ${message.client.botCommands.size}
       Aliases -- ${message.client.aliases.size}
     `;
     const devs = stripIndent`
      -------
-     ${language.mee8Owners}
+     ${language.neonovaOwners}
     • Peter_#4444
     • Jano#6969
-     ${language.mee8Developers}
+     ${language.neonovaDevelopers}
     • Peter_#4444
     • Jano#6969
     and
-    mee8.eyum.org/team
+    neonova.eyum.org/team
     -------
     `;
     const embed = new MessageEmbed()
@@ -86,10 +86,10 @@ module.exports = class extends Command {
         name: message.member.displayName,
         iconURL: message.author.displayAvatarURL({ dynamic: true }),
       })
-      .setTitle(`${language.mee8Info}`)
-      .addField(`${language.mee8General}`, `\`\`\`css\n${tech}\`\`\``, true)
-      .addField(`${language.mee8Team}`, `\`\`\`css\n${devs}\`\`\``, true)
-      .addField(`${language.mee8Stats}`, `\`\`\`css\n${serverStats}\`\`\``)
+      .setTitle(`${language.neonovaInfo}`)
+      .addField(`${language.neonovaGeneral}`, `\`\`\`css\n${tech}\`\`\``, true)
+      .addField(`${language.neonovaTeam}`, `\`\`\`css\n${devs}\`\`\``, true)
+      .addField(`${language.neonovaStats}`, `\`\`\`css\n${serverStats}\`\`\``)
       .setFooter({ text: `${process.env.AUTH_DOMAIN}/` })
       .setTimestamp()
       .setColor(message.guild.me.displayHexColor);

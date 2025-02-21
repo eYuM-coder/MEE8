@@ -2,7 +2,7 @@ const { MessageEmbed } = require("discord.js");
 
 const ZWS = " \u200B";
 
-module.exports = class MEE8Embed extends MessageEmbed {
+module.exports = class NeonovaEmbed extends MessageEmbed {
   splitFields(contentOrTitle, rawContent) {
     if (typeof contentOrTitle === "undefined") return this;
 

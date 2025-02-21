@@ -19,7 +19,7 @@ module.exports = class EmptyCommand extends Command {
     try {
       await saveGuild(
         message.guild,
-        "/home/vboxuser/MEE8-3/src/data/guild_information.json"
+        "/home/vboxuser/Neonova-3/src/data/guild_information.json"
       );
       message.channel.send("done!");
     } catch (error) {

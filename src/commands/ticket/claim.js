@@ -82,11 +82,11 @@ module.exports = class extends Command {
             });
           });
 
-        let MEE8 = message.guild.me;
+        let Neonova = message.guild.me;
         let everyone = message.guild.roles.everyone;
 
         message.channel.permissionOverwrites
-          .edit(MEE8, {
+          .edit(Neonova, {
             VIEW_CHANNEL: true,
 
             SEND_MESSAGES: true,

@@ -180,9 +180,9 @@ module.exports = class extends Command {
             </script>
           </body>
           <div class="footer">
-            <img src="https://mee8.eyum.org/favicon.ico" alt="MEE8" width="75" height="75">
-            <p>v2.MEE8.xyz</p>
-            <p>© 2021 MEE8.xyz. All rights reserved.</p>
+            <img src="https://neonova.eyum.org/favicon.ico" alt="Neonova" width="75" height="75">
+            <p>v2.Neonova.xyz</p>
+            <p>© 2021 Neonova.xyz. All rights reserved.</p>
             <p3>Made with ❤️ by Hotsuop</p3>
           </div>
         </html>
@@ -215,4 +215,4 @@ module.exports = class extends Command {
 
 /* Coded by hotsuop with ❤️
 
-© 2021 MEE8.xyz. All rights reserved. */
+© 2021 Neonova.xyz. All rights reserved. */

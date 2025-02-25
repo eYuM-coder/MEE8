@@ -59,7 +59,7 @@ module.exports = class extends Event {
 
         let slowDownEmbed = new MessageEmbed()
           .setDescription(
-            `${message.client.emoji.fail} Slow Down There, You're on a cooldown\n\n**Role Name:** ${rrRole.name}\n**Guild Name:** ${guildName}`
+            `${message.client.emoji.fail} | Slow down there, you're on a cooldown!\n\n**Role Name:** ${rrRole.name}\n**Guild Name:** ${guildName}`
           )
           .setColor(message.client.color.red);
 
@@ -70,7 +70,7 @@ module.exports = class extends Event {
             url: `${message.url}`,
           })
           .setDescription(
-            `You have recieved the **${rrRole.name}** Role by reacting in ${guildName}`
+            `You have recieved the **${rrRole.name}** role by reacting in ${guildName}`
           )
           .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
           .setColor(message.client.color.green);
@@ -82,7 +82,7 @@ module.exports = class extends Event {
             url: `${message.url}`,
           })
           .setDescription(
-            `You have removed the **${rrRole.name}** Role by reacting in ${guildName}`
+            `You have removed the **${rrRole.name}** role by reacting in ${guildName}`
           )
           .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
           .setColor(message.client.color.green);
@@ -94,7 +94,7 @@ module.exports = class extends Event {
             url: `${message.url}`,
           })
           .setDescription(
-            `${message.client.emoji.fail} Failed to Add the role, since I'm Missing the Manage Roles Permission.\n\nPlease let an admin Know.`
+            `${message.client.emoji.fail} | Failed to add the role, since I'm missing the **Manage Roles** permission.\n\nPlease let an admin know.`
           )
           .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
           .setColor(message.client.color.green);
@@ -388,7 +388,7 @@ module.exports = class extends Event {
                 .users.remove(user.id)
                 .catch(() => {});
 
-              let id = user.id.toString().substr(0, 4) + user.discriminator;
+              let id = serverCase.padStart(4, "0");
               let chann = `ticket-${id}`;
 
               let array = [];
@@ -567,11 +567,16 @@ module.exports = class extends Event {
                     });
 
                   if (ticketLog) {
-                    send(ticketLog, {
-                      embeds: [embedLog],
-                      name: `Ticket Logs`,
-                      icon: `https://neonova.eyum.org/logo.png`,
-                    }).catch(() => {});
+                    send(
+                      ticketLog,
+                      {
+                        embeds: [embedLog],
+                      },
+                      {
+                        name: `Ticket Logs`,
+                        icon: `https://neonova.eyum.org/logo.png`,
+                      }
+                    ).catch(() => {});
                   }
                 })
                 .catch((e) => {

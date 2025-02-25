@@ -8,7 +8,7 @@ const Guild = require("../../database/schemas/Guild");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("stats")
-    .setDescription("Shows the bots statistics")
+    .setDescription("Shows the bot's statistics")
     .setContexts(0)
     .setIntegrationTypes(0),
   async execute(interaction) {
@@ -54,20 +54,45 @@ module.exports = {
     RAM -- ${totalMemMb}MB
     RAM Usage -- ${(heapUsed / 1024 / 1024).toFixed(2)}MB
     `;
+    
+    // Get all commands, subcommands, and subcommand groups
+    const totalCommands = Array.from(interaction.client.slashCommands.values()).reduce((count, cmd) => {
+      let commandCount = 1; // Count the base command
+      if (cmd.data.options) {
+        cmd.data.options.forEach(option => {
+          console.log(cmd.data.options.filter((option) => option.type === undefined));
+          if (option.type === undefined) { // Subcommand type
+            commandCount++;
+          } else if (option.type === 2) { // Subcommand group type
+            option.options.forEach(subOption => {
+              if (subOption.type === 1) { // Subcommand inside a group
+                commandCount++;
+              }
+            });
+          }
+        });
+      }
+      return count + commandCount;
+    }, 0);
+
+    const response = `${language.neonovaCommands} -- ${totalCommands}`;
+    console.log(response);
+
     const tech = stripIndent`
     Ping -- ${Math.round(interaction.client.ws.ping)}ms
     Uptime -- ${uptime}
     ${language.neonovaVersion} -- 2.5
     Library -- Discord.js v13.6.0
-    Evironment -- Node.js v16.9.0
+    Environment -- Node.js v16.9.0
     Servers -- ${interaction.client.guilds.cache.size}
     ${language.users} -- ${interaction.client.guilds.cache.reduce(
       (a, b) => a + b.memberCount,
       0
     )}
     ${language.channels} -- ${interaction.client.channels.cache.size}
-    ${language.neonovaCommands} -- ${interaction.client.slashCommands.size}
+    ${response}
     `;
+
     const devs = stripIndent`
     -------
     ${language.neonovaOwners}
@@ -80,6 +105,7 @@ module.exports = {
     neonova.eyum.org/team
     -------
     `;
+
     const embed = new MessageEmbed()
       .setAuthor({
         name: interaction.member.displayName,

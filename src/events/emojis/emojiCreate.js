@@ -27,9 +27,15 @@ module.exports = class extends Event {
           if (logging.server_events.emoji_update == "true") {
             const embed = new discord.MessageEmbed()
               .setDescription(`🆕 ***Emoji Created***`)
-              .addField("Emoji Name", `${emoji.name}`, true)
-              .addField("Emoji", `${emoji}`, true)
-              .addField("Full ID", `\`<:${emoji.name}:${emoji.id}>\``, true)
+              .addFields(
+                { name: "Emoji Name", value: `${emoji.name}`, inline: true },
+                { name: "Emoji", value: `${emoji}`, inline: true },
+                {
+                  name: "Full ID",
+                  value: `\`<:${emoji.name}:${emoji.id}>\``,
+                  inline: true,
+                }
+              )
               .setFooter({ text: `Emoji ID: ${emoji.id}` })
               .setTimestamp()
               .setColor(color);
@@ -41,7 +47,16 @@ module.exports = class extends Event {
                 .permissionsFor(emoji.guild.me)
                 .has(["SEND_MESSAGES", "EMBED_LINKS"])
             ) {
-              send(channelEmbed, { username: `${this.client.user.username}`, embeds: [embed] }).catch(() => {});
+              send(
+                channelEmbed,
+                {
+                  embeds: [embed],
+                },
+                {
+                  name: `${this.client.user.username}`,
+                  username: `${this.client.user.username}`,
+                }
+              ).catch(() => {});
             }
           }
         }

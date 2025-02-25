@@ -3,7 +3,6 @@ const Logging = require("../../database/schemas/logging");
 const discord = require("discord.js");
 const Maintenance = require("../../database/schemas/maintenance");
 const send = require("../../packages/logs/index.js");
-const cooldown = new Set();
 
 module.exports = class extends Event {
   async run(oldChannel, newChannel) {
@@ -12,7 +11,6 @@ module.exports = class extends Event {
     });
 
     if (maintenance && maintenance.toggle == "true") return;
-    if (cooldown.has(newChannel.guild.id)) return;
 
     if (
       !oldChannel.name.startsWith("ticket-") ||
@@ -42,7 +40,7 @@ module.exports = class extends Event {
             if (logging.server_events.channel_created == "true") {
               const embed = new discord.MessageEmbed()
                 .setDescription(`:pencil: ***${type} Updated***`)
-                .addField("Channel", `${newChannel}`, true)
+                .addFields({name:"Channel", value:`${newChannel}`, inline:true})
                 .setFooter({ text: `Channel ID: ${newChannel.id}` })
                 .setTimestamp()
                 .setColor(color);
@@ -109,10 +107,20 @@ module.exports = class extends Event {
                   .permissionsFor(newChannel.guild.me)
                   .has(["SEND_MESSAGES", "EMBED_LINKS"])
               ) {
-                send(channelEmbed, {
-                  username: `${this.client.user.username}`,
-                  embeds: [embed],
-                }).catch(() => {});
+                send(
+                  channelEmbed,
+                  {
+                    embeds: [embed],
+                  },
+                  {
+                    name: `${this.client.user.username}`,
+                    username: `${this.client.user.username}`,
+                    icon: this.client.user.displayAvatarURL({
+                      dynamic: true,
+                      format: "png",
+                    }),
+                  }
+                ).catch(() => {});
               }
             }
           }

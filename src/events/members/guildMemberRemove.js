@@ -36,16 +36,26 @@ module.exports = class extends Event {
               })
               .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
               .setDescription(`${member} (**${member.user.tag}**)`)
-              .addField(
-                "Account created on",
-                moment(member.user.createdAt).format("dddd, MMMM Do YYYY")
-              )
+              .addFields({
+                name: "Account created on",
+                value: moment(member.user.createdAt).format(
+                  "dddd, MMMM Do YYYY"
+                ),
+              })
               .setTimestamp()
               .setColor(member.guild.me.displayHexColor);
-            send(channelEmbed, {
-              username: `${this.client.user.username}`,
-              embeds: [embed],
-            }).catch(() => {});
+            send(
+              channelEmbed,
+              { embeds: [embed] },
+              {
+                name: `${this.client.user.username}`,
+                username: `${this.client.user.username}`,
+                icon: this.client.user.displayAvatarURL({
+                  dynamic: true,
+                  format: "png",
+                }),
+              }
+            ).catch(() => {});
           }
         }
       }
@@ -170,7 +180,7 @@ module.exports = class extends Event {
 
           let footerIcon = leave.embed.footerIcon;
           if (footer && footerIcon !== null)
-            embed.setFooter(footer, footerIcon);
+            embed.setFooter({ name: footer, iconURL: footerIcon });
 
           let timestamp = leave.embed.timestamp;
           if (timestamp == "true") embed.setTimestamp();
@@ -280,7 +290,7 @@ module.exports = class extends Event {
 
               let footerIcon = leave.embed.footerIcon;
               if (footer && footerIcon !== null)
-                embed.setFooter(footer, footerIcon);
+                embed.setFooter({ name: footer, iconURL: footerIcon });
 
               let timestamp = leave.embed.timestamp;
               if (timestamp == "true") embed.setTimestamp();

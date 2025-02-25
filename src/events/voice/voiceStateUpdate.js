@@ -109,10 +109,18 @@ module.exports = class extends Event {
                   .permissionsFor(newState.guild.me)
                   .has(["SEND_MESSAGES", "EMBED_LINKS"])
               ) {
-                send(channelEmbed, {
-                  username: `${this.client.user.username}`,
-                  embeds: [joinembed],
-                }).catch(() => {});
+                send(
+                  channelEmbed,
+                  { embeds: [joinembed] },
+                  {
+                    name: `${this.client.user.username}`,
+                    username: `${this.client.user.username}`,
+                    icon: this.client.user.displayAvatarURL({
+                      dynamic: true,
+                      format: "png",
+                    }),
+                  }
+                ).catch(() => {});
               }
             }
           }
@@ -144,10 +152,18 @@ module.exports = class extends Event {
                   .permissionsFor(newState.guild.me)
                   .has(["SEND_MESSAGES", "EMBED_LINKS"])
               ) {
-                send(channelEmbed, {
-                  username: `${this.client.user.username}`,
-                  embeds: [leaveembed],
-                }).catch(() => {});
+                send(
+                  channelEmbed,
+                  { embeds: [leaveembed] },
+                  {
+                    name: `${this.client.user.username}`,
+                    username: `${this.client.user.username}`,
+                    icon: this.client.user.displayAvatarURL({
+                      dynamic: true,
+                      format: "png",
+                    }),
+                  }
+                ).catch(() => {});
               }
             }
           }
@@ -176,10 +192,18 @@ module.exports = class extends Event {
                     .permissionsFor(newState.guild.me)
                     .has(["SEND_MESSAGES", "EMBED_LINKS"])
                 ) {
-                  send(channelEmbed, {
-                    username: `${this.client.user.username}`,
-                    embeds: [moveembed],
-                  }).catch(() => {});
+                  send(
+                    channelEmbed,
+                    { embeds: [moveembed] },
+                    {
+                      name: `${this.client.user.username}`,
+                      username: `${this.client.user.username}`,
+                      icon: this.client.user.displayAvatarURL({
+                        dynamic: true,
+                        format: "png",
+                      }),
+                    }
+                  ).catch(() => {});
                 }
               }
             }

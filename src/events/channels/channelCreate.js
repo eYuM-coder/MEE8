@@ -2,8 +2,6 @@ const Event = require("../../structures/Event");
 const Logging = require("../../database/schemas/logging");
 const discord = require("discord.js");
 const send = require("../../packages/logs/index.js");
-const cooldown = new Set();
-
 const Maintenance = require("../../database/schemas/maintenance");
 
 module.exports = class extends Event {
@@ -17,8 +15,6 @@ module.exports = class extends Event {
     });
 
     if (maintenance && maintenance.toggle == "true") return;
-
-    if (cooldown.has(message.guild.id)) return;
 
     if (message.name.indexOf("Room") >= 0) return;
 
@@ -36,9 +32,7 @@ module.exports = class extends Event {
             if (message.type === "GUILD_TEXT") {
               const embed = new discord.MessageEmbed()
                 .setDescription(`:pencil: ***Channel Created***`)
-                .addField("Channel", `${message}`, true)
-                .addField("Channel Name", `${message.name}`, true)
-                .addField("Channel Type", "Text Channel", true)
+                .addFields({name:"Channel", value:`${message}`, inline:true},{name:"Channel Name", value:`${message.name}`, inline:true},{name:"Channel Type", value:"Text Channel", inline:true})
                 .setFooter({ text: `Channel ID: ${message.id}` })
                 .setTimestamp()
                 .setColor(color);
@@ -56,16 +50,23 @@ module.exports = class extends Event {
                   .permissionsFor(message.guild.me)
                   .has(["SEND_MESSAGES", "EMBED_LINKS"])
               ) {
-                send(channelEmbed, {
-                  username: `${this.client.user.username}`,
-                  embeds: [embed],
-                }).catch(() => {});
+                send(
+                  channelEmbed,
+                  { embeds: [embed] },
+                  {
+                    name: `${this.client.user.username}`,
+                    username: `${this.client.user.username}`,
+                    icon: this.client.user.displayAvatarURL({
+                      dynamic: true,
+                      format: "png",
+                    }),
+                  }
+                ).catch(() => {});
               }
             } else {
               const embed = new discord.MessageEmbed()
                 .setDescription(`🆕 ***Channel Created***`)
-                .addField("Channel Name", `${message.name}`, true)
-                .addField("Channel Type", `${message.type}`, true)
+                .addFields({name:"Channel Name", value:`${message.name}`, inline:true},{name:"Channel Type", value:`${message.type}`, inline:true})
                 .setFooter({ text: `Channel ID: ${message.id}` })
                 .setTimestamp()
                 .setColor(color);
@@ -77,11 +78,18 @@ module.exports = class extends Event {
                   .permissionsFor(message.guild.me)
                   .has(["SEND_MESSAGES", "EMBED_LINKS"])
               ) {
-                channelEmbed.send({ embeds: [embed] }).catch(() => {});
-                cooldown.add(message.guild.id);
-                setTimeout(() => {
-                  cooldown.delete(message.guild.id);
-                }, 3000);
+                send(
+                  channelEmbed,
+                  { embeds: [embed] },
+                  {
+                    name: `${this.client.user.username}`,
+                    username: `${this.client.user.username}`,
+                    icon: this.client.user.displayAvatarURL({
+                      dynamic: true,
+                      format: "png",
+                    }),
+                  }
+                ).catch(() => {});
               }
             }
           }

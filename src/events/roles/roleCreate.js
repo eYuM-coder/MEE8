@@ -30,8 +30,10 @@ module.exports = class extends Event {
           if (logging.server_events.role_create == "true") {
             const embed = new discord.MessageEmbed()
               .setDescription(`🆕 ***Role Created***`)
-              .addField("Role", `${role}`, true)
-              .addField("Role Name", `${role.name}`, true)
+              .addFields(
+                { name: "Role", value: `${role}`, inline: true },
+                { name: "Role Name", value: `${role.name}`, inline: true }
+              )
               .setFooter({ text: `Role ID: ${role.id}` })
               .setTimestamp()
               .setColor(color);
@@ -43,7 +45,18 @@ module.exports = class extends Event {
                 .permissionsFor(role.guild.me)
                 .has(["SEND_MESSAGES", "EMBED_LINKS"])
             ) {
-              send(channelEmbed, { username: `${this.client.user.username}`, embeds: [embed] }).catch(() => {});
+              send(
+                channelEmbed,
+                { embeds: [embed] },
+                {
+                  name: `${this.client.user.username}`,
+                  username: `${this.client.user.username}`,
+                  icon: this.client.user.displayAvatarURL({
+                    dynamic: true,
+                    format: "png",
+                  }),
+                }
+              ).catch(() => {});
             }
           }
         }

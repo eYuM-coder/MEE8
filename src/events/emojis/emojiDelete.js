@@ -3,6 +3,7 @@ const Logging = require("../../database/schemas/logging");
 const discord = require("discord.js");
 const Maintenance = require("../../database/schemas/maintenance");
 const send = require("../../packages/logs/index");
+
 module.exports = class extends Event {
   async run(emoji) {
     const maintenance = await Maintenance.findOne({
@@ -26,8 +27,10 @@ module.exports = class extends Event {
           if (logging.server_events.emoji_update == "true") {
             const embed = new discord.MessageEmbed()
               .setDescription(`🗑️ ***Emoji Delete***`)
-              .addField("Emoji Name", `${emoji.name}`, true)
-              .addField("Emoji", `${emoji}`, true)
+              .addFields(
+                { name: "Emoji Name", value: `${emoji.name}`, inline: true },
+                { name: "Emoji", value: `${emoji}`, inline: true }
+              )
               .setFooter({ text: `Emoji ID: ${emoji.id}` })
               .setTimestamp()
               .setColor(color);
@@ -39,7 +42,14 @@ module.exports = class extends Event {
                 .permissionsFor(emoji.guild.me)
                 .has(["SEND_MESSAGES", "EMBED_LINKS"])
             ) {
-              send(channelEmbed, { username: `${this.client.user.username}`, embeds: [embed] }).catch(() => {});
+              send(
+                channelEmbed,
+                { embeds: [embed] },
+                {
+                  name: `${this.client.user.username}`,
+                  username: `${this.client.user.username}`,
+                }
+              ).catch(() => {});
             }
           }
         }

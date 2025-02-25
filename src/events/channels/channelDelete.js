@@ -2,7 +2,6 @@ const Event = require("../../structures/Event");
 const Logging = require("../../database/schemas/logging");
 const discord = require("discord.js");
 const send = require("../../packages/logs/index.js");
-const cooldown = new Set();
 
 const Maintenance = require("../../database/schemas/maintenance");
 module.exports = class extends Event {
@@ -14,8 +13,6 @@ module.exports = class extends Event {
     if (maintenance && maintenance.toggle == "true") return;
 
     const logging = await Logging.findOne({ guildId: message.guild.id });
-
-    if (cooldown.has(message.guild.id)) return;
 
     if (logging) {
       if (logging.server_events.toggle == "true") {
@@ -32,8 +29,7 @@ module.exports = class extends Event {
           if (logging.server_events.channel_delete == "true") {
             const embed = new discord.MessageEmbed()
               .setDescription(`:wastebasket: ***Channel Deleted***`)
-              .addField("Channel Type", `${message.type}`, true)
-              .addField("Channel Name", `${message.name}`, true)
+              .addFields({name:"Channel Type", value:`${message.type}`, inline:true},{name:"Channel Name", value:`${message.name}`, inline:true})
               .setFooter({ text: `Channel ID: ${message.id}` })
               .setTimestamp()
               .setColor(color);
@@ -45,7 +41,18 @@ module.exports = class extends Event {
                 .permissionsFor(message.guild.me)
                 .has(["SEND_MESSAGES", "EMBED_LINKS"])
             ) {
-              send(channelEmbed, { username: `${this.client.user.username}`, embeds: [embed] }).catch(() => {});
+              send(
+                channelEmbed,
+                { embeds: [embed] },
+                {
+                  name: `${this.client.user.username}`,
+                  username: `${this.client.user.username}`,
+                  icon: this.client.user.displayAvatarURL({
+                    dynamic: true,
+                    format: "png",
+                  }),
+                }
+              ).catch(() => {});
             }
           }
         }

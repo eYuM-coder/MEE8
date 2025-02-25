@@ -30,8 +30,10 @@ module.exports = class extends Event {
       .setTitle("Leave Server")
       .setThumbnail(`${process.env.AUTH_DOMAIN}/logo`)
       .setDescription(`${config.botName} left a server!`)
-      .addField(`Server Name`, `\`${guild.name}\``, true)
-      .addField(`Server ID`, `\`${guild.id}\``, true)
+      .addFields(
+        { name: `Server Name`, value: `\`${guild.name}\``, inline: true },
+        { name: `Server ID`, value: `\`${guild.id}\``, inline: true }
+      )
       .setFooter({
         text: `${this.client.guilds.cache.size} guilds `,
         iconURL: `${process.env.AUTH_DOMAIN}/logo.png`,
@@ -62,10 +64,13 @@ module.exports = class extends Event {
               guild.name
             )}`
       )
-      .addField("Server Owner", `${guild.owner} / ${guild.ownerID}`);
+      .addFields({
+        name: "Server Owner",
+        value: `${guild.owner} / ${guild.ownerID}`,
+      });
 
     webhookClient.sendCustom({
-      username: `${config.botName}`,
+      username: `${this.client.user.username}`,
       avatarURL: `${process.env.AUTH_DOMAIN}/logo.png`,
       embeds: [embed],
     });

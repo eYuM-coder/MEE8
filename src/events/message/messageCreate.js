@@ -10,7 +10,6 @@ const maintenanceCooldown = new Set();
 const metrics = require("datadog-metrics");
 const permissions = require("../../assets/json/permissions.json");
 const Maintenance = require("../../database/schemas/maintenance");
-const config = require("../../../config.json");
 require("moment-duration-format");
 require("dotenv").config();
 
@@ -73,13 +72,17 @@ module.exports = class extends Event {
           settings.prefix || "!"
         }help    ]\`\`\``;
         const embed = new MessageEmbed()
-          .setTitle(`Hello, I'm ${config.botName}. What's Up?`)
-          .addField(`Prefix`, proofita, true)
-          .addField(`Usage`, proofitaa, true)
-          .setDescription(
-            `\nIf you like ${config.botName}, Consider [voting](https://top.gg/bot/767705905235099658), or [inviting](${config.invite_link}) it to your server! Thank you for using Neonova, we hope you enjoy it, as we always look forward to improve the bot`
+          .setTitle(`Hello, I'm ${this.client.user.username}. What's Up?`)
+          .addFields(
+            { name: `Prefix`, value: proofita, inline: true },
+            { name: `Usage`, value: proofitaa, inline: true }
           )
-          .setFooter({ text: `Thank you for using ${config.botName}!!` })
+          .setDescription(
+            `\nIf you like ${this.client.user.username}, Consider [voting](https://top.gg/bot/767705905235099658), or [inviting](${config.invite_link}) it to your server! Thank you for using Neonova, we hope you enjoy it, as we always look forward to improve the bot`
+          )
+          .setFooter({
+            text: `Thank you for using ${this.client.user.username}!`,
+          })
           .setColor("#FF2C98");
         message.channel.sendCustom(embed);
       }
@@ -125,7 +128,7 @@ module.exports = class extends Event {
           if (maintenanceCooldown.has(message.author.id)) return;
 
           message.channel.sendCustom(
-            `${config.botName} is currently undergoing maintenance, which means no one is allowed to access ${config.botName}'s commands. Feel free to try again later. For updates: ${config.discord}`
+            `${this.client.user.username} is currently undergoing maintenance, which means no one is allowed to access ${this.client.user.username}'s commands. Feel free to try again later. For updates: ${config.discord}`
           );
 
           maintenanceCooldown.add(message.author.id);
@@ -194,7 +197,7 @@ module.exports = class extends Event {
                 message.author
               }\n\n${
                 number === 1
-                  ? `*Did You know that ${config.botName} has its own dashboard? \`${process.env.AUTH_DOMAIN}/dashboard\`*`
+                  ? `*Did You know that ${this.client.user.username} has its own dashboard? \`${process.env.AUTH_DOMAIN}/dashboard\`*`
                   : ""
               }${
                 number === 2

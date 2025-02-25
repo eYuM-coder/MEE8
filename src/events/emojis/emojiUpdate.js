@@ -3,6 +3,7 @@ const Logging = require("../../database/schemas/logging");
 const discord = require("discord.js");
 const Maintenance = require("../../database/schemas/maintenance");
 const send = require("../../packages/logs/index");
+
 module.exports = class extends Event {
   async run(oldEmoji, newEmoji) {
     const logging = await Logging.findOne({ guildId: newEmoji.guild.id });
@@ -26,16 +27,18 @@ module.exports = class extends Event {
           if (logging.server_events.emoji_update == "true") {
             const embed = new discord.MessageEmbed()
               .setDescription(`:pencil: ***Emoji Updated***`)
-              .addField(
-                "Emoji Name",
-                `${oldEmoji.name} --> ${newEmoji.name}`,
-                true
-              )
-              .addField("Emoji", newEmoji, true)
-              .addField(
-                "Full ID",
-                `\`<:${oldEmoji.name}:${oldEmoji.id}>\``,
-                true
+              .addFields(
+                {
+                  name: "Emoji Name",
+                  value: `${oldEmoji.name} --> ${newEmoji.name}`,
+                  inline: true,
+                },
+                { name: "Emoji", value: newEmoji, inline: true },
+                {
+                  name: "Full ID",
+                  value: `\`<:${oldEmoji.name}:${oldEmoji.id}>\``,
+                  inline: true,
+                }
               )
               .setFooter({ text: `Emoji ID: ${oldEmoji.id}` })
               .setTimestamp()
@@ -48,7 +51,14 @@ module.exports = class extends Event {
                 .permissionsFor(newEmoji.guild.me)
                 .has(["SEND_MESSAGES", "EMBED_LINKS"])
             ) {
-              send(channelEmbed, { username: `${this.client.user.username}`, embeds: [embed] }).catch(() => {});
+              send(
+                channelEmbed,
+                { embeds: [embed] },
+                {
+                  name: `${this.client.user.username}`,
+                  username: `${this.client.user.username}`,
+                }
+              ).catch(() => {});
             }
           }
         }

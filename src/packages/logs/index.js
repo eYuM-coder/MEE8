@@ -15,7 +15,8 @@ module.exports = async function (channel, message, options) {
 
       // Send Webhook with or without mentions
       const callback = await hook.send(message, {
-        username: options.name,
+        name: options.name,
+        username: options.username,
         avatarURL: options.icon,
         embeds: options.embeds,
         allowedMentions:

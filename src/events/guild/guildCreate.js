@@ -32,17 +32,17 @@ module.exports = class extends Event {
         ch.type === "GUILD_TEXT" &&
         ch
           .permissionsFor(guild.me)
-          .has(["SEND_MESSAGES", "VIEW_CHANNEL", "EMBED_LINKS"]),
+          .has(["SEND_MESSAGES", "VIEW_CHANNEL", "EMBED_LINKS"])
     );
 
     const modLog = guild.channels.cache.find(
       (c) =>
         c.name.replace("-", "").replace("s", "") === "modlog" ||
-        c.name.replace("-", "").replace("s", "") === "moderatorlog",
+        c.name.replace("-", "").replace("s", "") === "moderatorlog"
     );
 
     let muteRole = guild.roles.cache.find(
-      (r) => r.name.toLowerCase() === "muted",
+      (r) => r.name.toLowerCase() === "muted"
     );
     if (!muteRole) {
       try {
@@ -108,14 +108,15 @@ module.exports = class extends Event {
       const embed = new Discord.MessageEmbed()
         .setColor("PURPLE")
         .setDescription(
-          `Hey Poggers! I'm **${config.botName}**.\n\nThank you for inviting me to your server as it means a lot to us! You can get started with [\`p!help\`](${process.env.AUTH_DOMAIN}) & customise your server settings by accessing the Dashboard [\`here\`](${process.env.AUTH_DOMAIN}/dashboard/${guild.id}).\n\n__**Current News**__\n\`\`\`\nWe are currently giving premium to all servers until 1000 guilds! If interested, please visit [this site](${process.env.AUTH_DOMAIN}/redeem).\`\`\`\n\nAgain, thank you for inviting me! (this server is now very pog)\n**- ${config.botName}**`,
+          `Hey Poggers! I'm **${config.botName}**.\n\nThank you for inviting me to your server as it means a lot to us! You can get started with [\`p!help\`](${process.env.AUTH_DOMAIN}) & customise your server settings by accessing the Dashboard [\`here\`](${process.env.AUTH_DOMAIN}/dashboard/${guild.id}).\n\n__**Current News**__\n\`\`\`\nWe are currently giving premium to all servers until 1000 guilds! If interested, please visit [this site](${process.env.AUTH_DOMAIN}/redeem).\`\`\`\n\nAgain, thank you for inviting me! (this server is now very pog)\n**- ${config.botName}**`
         )
-        .addField(
-          "\u200b",
-          "**[Invite](https://invite.neonova.eyum.org) | " +
+        .addFields({
+          name: "\u200b",
+          value:
+            "**[Invite](https://invite.neonova.eyum.org) | " +
             `[Support Server](${process.env.AUTH_DOMAIN}/support) | ` +
             `[Dashboard](${process.env.AUTH_DOMAIN}/dashboard)**`,
-        );
+        });
 
       textChats.send({ embeds: [embed] }).catch(() => {});
     }
@@ -125,8 +126,10 @@ module.exports = class extends Event {
       .setTitle("New Server")
       .setThumbnail(`${process.env.AUTH_DOMAIN}/logo`)
       .setDescription(`${config.botName} was added to a new server!`)
-      .addField(`Server Name`, `\`${guild.name}\``, true)
-      .addField(`Server ID`, `\`${guild.id}\``, true)
+      .addFields(
+        { name: `Server Name`, value: `\`${guild.name}\``, inline: true },
+        { name: `Server ID`, value: `\`${guild.id}\``, inline: true }
+      )
       .setFooter({
         text: `${this.client.guilds.cache.size} guilds `,
         iconURL: `${process.env.AUTH_DOMAIN}/logo.png`,
@@ -141,7 +144,7 @@ module.exports = class extends Event {
     const embed = new Discord.MessageEmbed()
       .setColor("GREEN")
       .setDescription(
-        `I have joined the ${guild.name} server.\n\nID: ${guild.id}`,
+        `I have joined the ${guild.name} server.\n\nID: ${guild.id}`
       )
       .setFooter({
         text: `Gained ${guild.members.cache.size - 1} members • I'm now in ${
@@ -152,12 +155,12 @@ module.exports = class extends Event {
         guild.iconURL({ dynamic: true })
           ? guild.iconURL({ dynamic: true })
           : `https://guild-default-icon.herokuapp.com/${encodeURIComponent(
-              guild.name,
-            )}`,
+              guild.name
+            )}`
       );
 
     webhookClient.sendCustom({
-      username: `${config.botName}`,
+      username: `${this.client.user.username}`,
       avatarURL: `${process.env.AUTH_DOMAIN}/logo.png`,
       embeds: [embed],
     });

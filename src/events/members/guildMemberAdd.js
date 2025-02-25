@@ -73,10 +73,18 @@ module.exports = class extends Event {
                 .permissionsFor(member.guild.me)
                 .has(["SEND_MESSAGES", "EMBED_LINKS"])
             ) {
-              send(channelEmbed, {
-                username: `${this.client.user.username}`,
-                embeds: [embed],
-              }).catch(() => {});
+              send(
+                channelEmbed,
+                { embeds: [embed] },
+                {
+                  name: `${this.client.user.username}`,
+                  username: `${this.client.user.username}`,
+                  icon: this.client.user.displayAvatarURL({
+                    dynamic: true,
+                    format: "png",
+                  }),
+                }
+              ).catch(() => {});
             }
           }
         }
@@ -127,10 +135,18 @@ module.exports = class extends Event {
                       member.user.createdAt
                     ).format("MMMM Do YYYY, h:mm:ss a")}`
                   );
-                send(altLog, {
-                  username: `${this.client.user.username}`,
-                  embeds: [embedAlt],
-                }).catch(() => {});
+                send(
+                  altLog,
+                  { embeds: [embedAlt] },
+                  {
+                    name: `${this.client.user.username}`,
+                    username: `${this.client.user.username}`,
+                    icon: this.client.user.displayAvatarURL({
+                      dynamic: true,
+                      format: "png",
+                    }),
+                  }
+                ).catch(() => {});
               }
             }
           }
@@ -242,7 +258,7 @@ module.exports = class extends Event {
 
           let footerIcon = welcome.embed.footerIcon;
           if (footer && footerIcon !== null)
-            embed.setFooter(footer, footerIcon);
+            embed.setFooter({ name: footer, iconURL: footerIcon });
 
           let timestamp = welcome.embed.timestamp;
           if (timestamp == "true") embed.setTimestamp();
@@ -365,7 +381,7 @@ module.exports = class extends Event {
 
               let footerIcon = welcome.embed.footerIcon;
               if (footer && footerIcon !== null)
-                embed.setFooter(footer, footerIcon);
+                embed.setFooter({ name: footer, iconURL: footerIcon });
 
               let timestamp = welcome.embed.timestamp;
               if (timestamp == "true") embed.setTimestamp();

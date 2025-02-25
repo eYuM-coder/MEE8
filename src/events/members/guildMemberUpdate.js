@@ -52,10 +52,18 @@ module.exports = class extends Event {
                   .permissionsFor(newMember.guild.me)
                   .has(["SEND_MESSAGES", "EMBED_LINKS"])
               ) {
-                send(channelEmbed, {
-                  username: `${this.client.user.username}`,
-                  embeds: [roleAddembed],
-                }).catch(() => {});
+                send(
+                  channelEmbed,
+                  { embeds: [roleAddembed] },
+                  {
+                    name: `${this.client.user.username}`,
+                    username: `${this.client.user.username}`,
+                    icon: this.client.user.displayAvatarURL({
+                      dynamic: true,
+                      format: "png",
+                    }),
+                  }
+                ).catch(() => {});
               }
             }
 
@@ -79,10 +87,14 @@ module.exports = class extends Event {
                   .permissionsFor(newMember.guild.me)
                   .has(["SEND_MESSAGES", "EMBED_LINKS"])
               ) {
-                send(channelEmbed, {
-                  username: `${this.client.user.username}`,
-                  embeds: [roleRemoveembed],
-                }).catch(() => {});
+                send(
+                  channelEmbed,
+                  { embeds: [roleRemoveembed] },
+                  {
+                    name: `${this.client.user.username}`,
+                    username: `${this.client.user.username}`,
+                  }
+                ).catch(() => {});
               }
             }
           }
@@ -106,7 +118,10 @@ module.exports = class extends Event {
                 .setDescription(
                   `**Nickname Update**\n ${newMember}'s **nickname** was changed.`
                 )
-                .addField("Nickname", `${oldNickname} --> ${newNickname}`);
+                .addFields({
+                  name: "Nickname",
+                  value: `${oldNickname} --> ${newNickname}`,
+                });
 
               if (
                 channelEmbed &&
@@ -115,10 +130,14 @@ module.exports = class extends Event {
                   .permissionsFor(newMember.guild.me)
                   .has(["SEND_MESSAGES", "EMBED_LINKS"])
               ) {
-                send(channelEmbed, {
-                  username: `${this.client.user.username}`,
-                  embeds: [nicknameEmbed],
-                }).catch(() => {});
+                send(
+                  channelEmbed,
+                  { embeds: [nicknameEmbed] },
+                  {
+                    name: `${this.client.user.username}`,
+                    username: `${this.client.user.username}`,
+                  }
+                ).catch(() => {});
               }
             }
           }

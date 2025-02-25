@@ -46,7 +46,7 @@ module.exports = class extends Event {
 
             if (oldGuild.verificationLevel !== newGuild.verificationLevel) {
               embed.addFields({
-                name: "verification Level",
+                name: "Verification Level",
                 value: `${oldGuild.verificationLevel || "none"} --> ${
                   newGuild.verificationLevel || "none"
                 }`,
@@ -90,7 +90,7 @@ module.exports = class extends Event {
 
             if (oldGuild.afkTimeout !== newGuild.afkTimeout) {
               embed.addFields({
-                name: "afk Timeout",
+                name: "AFK Timeout",
                 value: `${oldGuild.afkTimeout || "none"} --> ${
                   newGuild.afkTimeout || "none"
                 }`,
@@ -100,7 +100,7 @@ module.exports = class extends Event {
 
             if (oldGuild.afkChannelID !== newGuild.afkChannelID) {
               embed.addFields({
-                name: "afk Channel",
+                name: "AFK Channel",
                 value: `${oldGuild.afkChannelID || "none"}> --> ${
                   newGuild.afkChannelID || "none"
                 }`,
@@ -115,10 +115,18 @@ module.exports = class extends Event {
                 .permissionsFor(newGuild.me)
                 .has(["SEND_MESSAGES", "EMBED_LINKS"])
             ) {
-              send(channelEmbed, {
-                username: `${this.client.user.username}`,
-                embeds: [embed],
-              }).catch(() => {});
+              send(
+                channelEmbed,
+                { embeds: [embed] },
+                {
+                  name: `${this.client.user.username}`,
+                  username: `${this.client.user.username}`,
+                  icon: this.client.user.displayAvatarURL({
+                    dynamic: true,
+                    format: "png",
+                  }),
+                }
+              ).catch(() => {});
             }
           }
         }

@@ -47,10 +47,18 @@ module.exports = class extends Event {
                 .permissionsFor(message.guild.me)
                 .has(["SEND_MESSAGES", "EMBED_LINKS"])
             ) {
-              send(channelEmbed, {
-                username: `${this.client.user.username}`,
-                embeds: [embed],
-              }).catch(() => {});
+              send(
+                channelEmbed,
+                { embeds: [embed] },
+                {
+                  name: `${this.client.user.username}`,
+                  username: `${this.client.user.username}`,
+                  icon: this.client.user.displayAvatarURL({
+                    dynamic: true,
+                    format: "png",
+                  }),
+                }
+              ).catch(() => {});
             }
           }
         }

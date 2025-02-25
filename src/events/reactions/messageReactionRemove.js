@@ -52,7 +52,7 @@ module.exports = class extends Event {
             url: `${message.url}`,
           })
           .setDescription(
-            `You have recieved the **${rrRole.name}** Role by reacting in ${guildName}`
+            `You have recieved the **${rrRole.name}** role by reacting in ${guildName}`
           )
           .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
           .setColor(message.client.color.green);
@@ -64,7 +64,7 @@ module.exports = class extends Event {
             url: `${message.url}`,
           })
           .setDescription(
-            `You have removed the **${rrRole.name}** Role by reacting in ${guildName}`
+            `You have removed the **${rrRole.name}** role by reacting in ${guildName}`
           )
           .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
           .setColor(message.client.color.green);

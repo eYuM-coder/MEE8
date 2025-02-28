@@ -2,6 +2,7 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageEmbed } = require("discord.js");
 const { mem, cpu, os } = require("node-os-utils");
 const { stripIndent } = require("common-tags");
+const { formatFileSize } = require("codeformatterforstrings");
 
 const Guild = require("../../database/schemas/Guild");
 
@@ -51,32 +52,61 @@ module.exports = {
     CPU -- ${cpu.model()}
     Cores -- ${cpu.count()}
     CPU Usage -- ${await cpu.usage()}%
-    RAM -- ${totalMemMb}MB
-    RAM Usage -- ${(heapUsed / 1024 / 1024).toFixed(2)}MB
+    RAM -- ${formatFileSize(totalMemMb * 1024 * 1024)}
+    RAM Usage -- ${formatFileSize(heapUsed)}
     `;
-    
+
     // Get all commands, subcommands, and subcommand groups
-    const totalCommands = Array.from(interaction.client.slashCommands.values()).reduce((count, cmd) => {
-      let commandCount = 1; // Count the base command
-      if (cmd.data.options) {
-        cmd.data.options.forEach(option => {
-          console.log(cmd.data.options.filter((option) => option.type === undefined));
-          if (option.type === undefined) { // Subcommand type
-            commandCount++;
-          } else if (option.type === 2) { // Subcommand group type
-            option.options.forEach(subOption => {
-              if (subOption.type === 1) { // Subcommand inside a group
-                commandCount++;
-              }
-            });
-          }
-        });
+    const commandsList = Array.from(
+      interaction.client.slashCommands.values()
+    ).flatMap((cmd) => {
+      if (
+        !cmd.data.options ||
+        cmd.data.options.every((option) => option.type >= 3)
+      ) {
+        return [];
       }
-      return count + commandCount;
+
+      return cmd.data.options.flatMap((option) => {
+        if (!option.options || option.options.every((sub) => sub.type >= 3)) {
+          // Direct subcommand (e.g., `/command subcommand`)
+          return {
+            type: "subcommand",
+            name: `${cmd.data.name} ${option.name}`,
+          };
+        } else {
+          // Subcommand group (e.g., `/command group subcommand`)
+          return {
+            type: "group",
+            name: `${cmd.data.name} ${option.name}`,
+            subcommands: option.options
+              .filter((sub) => !sub.type)
+              .map((subOption) => subOption.name),
+          };
+        }
+      });
+    });
+
+    const totalCommands = commandsList.reduce((count, item) => {
+      if (item.type === "group") {
+        return count + 1 + item.subcommands.length;
+      } else {
+        return count + 1;
+      }
     }, 0);
 
-    const response = `${language.neonovaCommands} -- ${totalCommands}`;
-    console.log(response);
+    // Filter out commands that contain subcommands
+    const filteredCommands = Array.from(
+      interaction.client.slashCommands.values()
+    ).filter(
+      (cmd) =>
+        !cmd.data.options || // Keep commands without options (regular commands)
+        cmd.data.options.every((option) => option.type >= 3) // Keep commands where all options are arguments
+    ).length;
+
+    const response = `${language.neonovaCommands} -- ${
+      totalCommands + filteredCommands
+    }`;
 
     const tech = stripIndent`
     Ping -- ${Math.round(interaction.client.ws.ping)}ms

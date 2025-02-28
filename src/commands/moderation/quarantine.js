@@ -83,7 +83,7 @@ module.exports = class RemoveRolesCommand extends Command {
       message.channel.send({ embeds: [workingbed] });
     } catch (error) {
       console.error("Error in the removeroles command:", error);
-      message.channel.send({ embeds: [errorMessageembed] });
+      message.channel.send({ embeds: [errorMessageEmbed] });
     }
   }
 };

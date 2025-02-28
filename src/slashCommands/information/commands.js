@@ -16,25 +16,30 @@ module.exports = {
       const commandsList = Array.from(
         interaction.client.slashCommands.values()
       ).flatMap((cmd) => {
-        if (!cmd.data.options) return [];
+        if (
+          !cmd.data.options ||
+          cmd.data.options.every((option) => option.type >= 3)
+        ) {
+          return [];
+        }
 
         return cmd.data.options.flatMap((option) => {
-          if (option.type === undefined && !option.options) {
+          if (!option.options || option.options.every((sub) => sub.type >= 3)) {
             // Direct subcommand (e.g., `/command subcommand`)
             return {
               type: "subcommand",
               name: `${cmd.data.name} ${option.name}`,
             };
-          } else if (option.type === undefined && option.options) {
+          } else {
             // Subcommand group (e.g., `/command group subcommand`)
             return {
               type: "group",
               name: `${cmd.data.name} ${option.name}`,
-              subcommands: option.options.filter((option) => option.type == undefined)
+              subcommands: option.options
+                .filter((sub) => !sub.type)
                 .map((subOption) => subOption.name),
             };
           }
-          return [];
         });
       });
 
@@ -45,10 +50,9 @@ module.exports = {
             return `**${item.name}**\n${item.subcommands
               .map((sub) => `  └ ${sub}`)
               .join("\n")}`;
-          } else if (item.type === "subcommand") {
+          } else {
             return `**${item.name}**`;
           }
-          return "";
         })
         .join("\n");
 

@@ -6,22 +6,16 @@ const discord = require("discord.js");
 const randoStrings = require("../../packages/randostrings.js");
 const random = new randoStrings();
 const Logging = require("../../database/schemas/logging.js");
-const ms = require("ms");
 const send = require("../../packages/logs/index.js");
-async function usePrettyMs(ms) {
-  const { default: prettyMilliseconds } = await import("pretty-ms");
-  const time = prettyMilliseconds(ms);
-  return time;
-}
+
 module.exports = class extends Command {
   constructor(...args) {
     super(...args, {
       name: "warn",
-      aliases: ["w"],
       description:
         "Gives a warning to the specified user from your Discord server.",
       category: "Moderation",
-      usage: "<user> [time] [reason]",
+      usage: "<user> [reason]",
       examples: ["warn @user Please do not swear."],
       guildOnly: true,
     });
@@ -53,26 +47,13 @@ module.exports = class extends Command {
       });
     }
 
-    // Combine all arguments after the mention into one string
-    const allArgs = args.slice(1).join(" ");
-
-    const timeRegex = /\d+\s*[a-z]+/g;
-
-    const timeMatches = allArgs.match(timeRegex).join(" ");
-
-    let time = timeMatches ? ms(timeMatches) : ms("6h");
-    let formattedTime = await usePrettyMs(time);
-
-    let reason = allArgs.replace(timeMatches ? timeMatches : "", "").trim();
+    let reason = args.slice(1).join(" ");
     reason = reason || "No Reason Specified";
 
     let warnID = random.password({
       length: 16,
       string: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890",
     });
-
-    // Set expiration time only if a duration is provided
-    const expirationTime = time ? new Date(Date.now() + time) : null;
 
     let warnDoc = await warnModel
       .findOne({
@@ -90,7 +71,6 @@ module.exports = class extends Command {
         warningID: [],
         moderator: [],
         date: [],
-        expiresAt: [],
       });
 
       await warnDoc.save().catch((err) => console.log(err));
@@ -107,13 +87,6 @@ module.exports = class extends Command {
     warnDoc.moderator.push(message.member.id);
     warnDoc.date.push(Date.now());
 
-    // Only add expiration time if it's not infinite
-    if (expirationTime) {
-      warnDoc.expiresAt.push(expirationTime);
-    } else {
-      warnDoc.expiresAt.push(null); // Represent infinite expiration
-    }
-
     await warnDoc.save().catch((err) => console.log(err));
 
     let dmEmbed;
@@ -123,11 +96,11 @@ module.exports = class extends Command {
       logging.moderation.warn_action !== "1"
     ) {
       if (logging.moderation.warn_action === "2") {
-        dmEmbed = `${message.client.emoji.fail} | You were warned in **${message.guild.name}**.\n\n**Duration:** ${formattedTime}`;
+        dmEmbed = `${message.client.emoji.fail} | You were warned in **${message.guild.name}**.`;
       } else if (logging.moderation.warn_action === "3") {
-        dmEmbed = `${message.client.emoji.fail} | You were warned in **${message.guild.name}** for ${reason}\n\n**Duration:** ${formattedTime}`;
+        dmEmbed = `${message.client.emoji.fail} | You were warned in **${message.guild.name}** for ${reason}`;
       } else if (logging.moderation.warn_action === "4") {
-        dmEmbed = `${message.client.emoji.fail} | You were warned in **${message.guild.name}** by **${message.author} (${message.author.tag})** for ${reason}\n\n**Duration:** ${formattedTime}`;
+        dmEmbed = `${message.client.emoji.fail} | You were warned in **${message.guild.name}** by **${message.author} (${message.author.tag})** for ${reason}`;
       }
 
       let embed = new MessageEmbed().setColor(message.client.color.green)
@@ -139,7 +112,7 @@ ${
   logging && logging.moderation.include_reason === "true"
     ? `\n\n**Reason:** ${reason}`
     : ``
-}\n\n**Duration: ${formattedTime}**`);
+}`);
 
       await mentionedMember
         .send({
@@ -219,9 +192,9 @@ ${
         if (auto.dm && auto.dm !== "1") {
           let dmEmbed;
           if (auto.dm === "2") {
-            dmEmbed = `${message.client.emoji.fail} You've been ${action} from **${message.guild.name}**\n__(Auto Punish Triggered)__`;
+            dmEmbed = `${message.client.emoji.fail} You were ${action} from **${message.guild.name}**. | __(Auto Punish Triggered)__`;
           } else if (auto.dm === "3") {
-            dmEmbed = `${message.client.emoji.fail} You've been ${action} from **${message.guild.name}**\n__(Auto Punish Triggered)__\n\n**Warn Count:** ${warnDoc.warnings.length}`;
+            dmEmbed = `${message.client.emoji.fail} You were ${action} from **${message.guild.name}**. | Warn threshold reached (${warnDoc.warnings.length})`;
           }
 
           mentionedMember.send({

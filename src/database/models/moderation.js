@@ -8,7 +8,6 @@ const warn = mongoose.Schema({
   warningID: { type: Array, default: [] },
   moderator: { type: Array, default: [] },
   date: { type: Array, default: [] },
-  expiresAt: { type: Array, default: [] },
 });
 
 module.exports = mongoose.model("warn", warn);

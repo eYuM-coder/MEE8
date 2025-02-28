@@ -23,46 +23,22 @@ Neonova.emoji = emoji;
 require("dotenv").config();
 
 client.on("ready", () => {
-  async function checkExpiredWarnings() {
-    const now = new Date();
-
+  async function checkEmptyWarnings() {
     try {
-      const userWarnings = await warnModel.find(
-        { expiresAt: { $exists: true, $not: { $size: 0 } } },
-        null,
-        { maxTimeMS: 5000 }
-      );
+      const userWarnings = await warnModel.find({}, null, { maxTimeMS: 5000 });
 
       if (!userWarnings || userWarnings.length === 0) {
         return;
       }
 
       for (const userWarning of userWarnings) {
-        let modified = false;
         const objectId = userWarning._id;
 
-        for (let i = userWarning.expiresAt.length - 1; i >= 0; i--) {
-          if (userWarning.expiresAt[i] <= now) {
-            userWarning.modType.splice(i, 1);
-            userWarning.warnings.splice(i, 1);
-            userWarning.warningID.splice(i, 1);
-            userWarning.moderator.splice(i, 1);
-            userWarning.date.splice(i, 1);
-            userWarning.expiresAt.splice(i, 1);
-            modified = true;
-          }
-        }
-
-        if (modified) {
-          await userWarning.save();
-          logger.info(
-            `Removed expired warnings for user ${userWarning.memberID} in guild ${userWarning.guildID}`,
-            { label: "Database" }
-          );
-        } else if (userWarning.warnings.length === 0) {
+        // If no warnings remain, delete the warn model
+        if (userWarning.warnings.length === 0) {
           await warnModel.findByIdAndDelete(objectId);
           logger.info(
-            `Removed database warning model for user ${userWarning.memberID} in guild ${userWarning.guildID}`,
+            `Removed empty warn model for user ${userWarning.memberID} in guild ${userWarning.guildID}`,
             { label: "Database" }
           );
         }
@@ -76,15 +52,16 @@ client.on("ready", () => {
           }
         );
       } else {
-        logger.error(`Error removing expired warnings: ${error.message}`, {
+        logger.error(`Error checking empty warnings: ${error.message}`, {
           label: "ERROR",
         });
       }
     }
   }
 
-  setInterval(checkExpiredWarnings, 1000);
+  setInterval(checkEmptyWarnings, 1000);
 });
+
 
 async function getGuildData(guildId) {
   let guild = await Guild.findOne({ guildId: guildId });

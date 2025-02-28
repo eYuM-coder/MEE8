@@ -12,12 +12,11 @@ module.exports = {
       option
         .setName("user")
         .setDescription("The user to get the permissions of.")
-        .setRequired(true)
     )
     .setContexts(0)
     .setIntegrationTypes(0),
   async execute(interaction) {
-    const member = interaction.options.getMember("user");
+    const member = interaction.options.getMember("user") || interaction.member;
 
     const memberPermissions = member.permissions.toArray();
     const finalPermissions = [];

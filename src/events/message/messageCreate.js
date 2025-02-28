@@ -10,6 +10,7 @@ const maintenanceCooldown = new Set();
 const metrics = require("datadog-metrics");
 const permissions = require("../../assets/json/permissions.json");
 const Maintenance = require("../../database/schemas/maintenance");
+const config = require("../../../config.json");
 require("moment-duration-format");
 require("dotenv").config();
 

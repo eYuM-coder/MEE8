@@ -28,7 +28,7 @@ module.exports = class extends Command {
   constructor(...args) {
     super(...args, {
       name: "userinfo",
-      aliases: ["ui", "user", "whois"],
+      aliases: ["ui", "user", "whois", "w"],
       description: "Displays information about a provided user.",
       category: "Information",
       usage: "[user]",

@@ -7,6 +7,13 @@ const send = require("../../packages/logs/index.js");
 const ms = require("ms");
 const ReactionMenu = require("../../data/ReactionMenu.js");
 const darkpassword = require("generate-password");
+const randoStrings = require("../../packages/randostrings.js");
+const warnModel = require("../../database/models/moderation.js");
+async function usePrettyMs(ms) {
+  const { default: prettyMilliseconds } = await import("pretty-ms");
+  const time = prettyMilliseconds(ms);
+  return time;
+}
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -36,6 +43,59 @@ module.exports = {
     )
     .addSubcommandGroup((group) =>
       group
+        .setName("channel")
+        .setDescription("Server moderation commands")
+        .addSubcommand((subcommand) =>
+          subcommand
+            .setName("lock")
+            .setDescription("Locks a channel in the server")
+            .addChannelOption((option) =>
+              option
+                .setName("channel")
+                .setDescription("The channel to lock")
+                .setRequired(true)
+            )
+            .addStringOption((option) =>
+              option
+                .setName("reason")
+                .setDescription("The reason to lock the channel")
+            )
+        )
+        .addSubcommand((subcommand) =>
+          subcommand
+            .setName("unlock")
+            .setDescription("Unlocks a channel in the server")
+            .addChannelOption((option) =>
+              option
+                .setName("channel")
+                .setDescription("The channel to unlock")
+                .setRequired(true)
+            )
+            .addStringOption((option) =>
+              option
+                .setName("reason")
+                .setDescription("The reason to unlock the channel")
+            )
+        )
+        .addSubcommand((subcommand) =>
+          subcommand
+            .setName("slowmode")
+            .setDescription(
+              "Enables slowmode in a channel with the specified rate"
+            )
+            .addStringOption((option) =>
+              option
+                .setName("rate")
+                .setDescription("The rate of messages/second")
+                .setRequired(true)
+            )
+            .addChannelOption((option) =>
+              option.setName("channel").setDescription("The channel")
+            )
+        )
+    )
+    .addSubcommandGroup((group) =>
+      group
         .setName("user")
         .setDescription("User moderation commands")
         .addSubcommand((subcommand) =>
@@ -60,6 +120,7 @@ module.exports = {
               option
                 .setName("member")
                 .setDescription("The member you want to kick")
+                .setRequired(true)
             )
             .addStringOption((option) =>
               option.setName("reason").setDescription("The reason for the kick")
@@ -86,7 +147,10 @@ module.exports = {
             .setName("mute")
             .setDescription("Mutes a member in the server")
             .addUserOption((option) =>
-              option.setName("member").setDescription("The member to mute")
+              option
+                .setName("member")
+                .setDescription("The member to mute")
+                .setRequired(true)
             )
             .addStringOption((option) =>
               option
@@ -109,6 +173,117 @@ module.exports = {
                 .setName("warning")
                 .setDescription("The warn ID")
                 .setRequired(true)
+            )
+        )
+        .addSubcommand((subcommand) =>
+          subcommand
+            .setName("setnickname")
+            .setDescription("Changes the nickname of a provided user")
+            .addUserOption((option) =>
+              option
+                .setName("member")
+                .setDescription("The member to change the nickname of")
+                .setRequired(true)
+            )
+            .addStringOption((option) =>
+              option.setName("nickname").setDescription("The nickname")
+            )
+            .addStringOption((option) =>
+              option
+                .setName("reason")
+                .setDescription("The reason for the change")
+            )
+        )
+        .addSubcommand((subcommand) =>
+          subcommand
+            .setName("softban")
+            .setDescription("Softbans a user")
+            .addUserOption((option) =>
+              option
+                .setName("member")
+                .setDescription("The member to softban")
+                .setRequired(true)
+            )
+            .addStringOption((option) =>
+              option.setName("reason").setDescription("The reason")
+            )
+        )
+        .addSubcommand((subcommand) =>
+          subcommand
+            .setName("unban")
+            .setDescription("Unban a person in the server!")
+            .addStringOption((option) =>
+              option
+                .setName("member")
+                .setDescription(
+                  "Mention, tag, or ID of the person you want to unban"
+                )
+                .setRequired(true)
+            )
+            .addStringOption((option) =>
+              option
+                .setName("reason")
+                .setDescription("The reason for the unban")
+            )
+        )
+        .addSubcommand((subcommand) =>
+          subcommand
+            .setName("unmute")
+            .setDescription("Unmute a person in the server!")
+            .addUserOption((option) =>
+              option
+                .setName("member")
+                .setDescription("Person who you want to unmute.")
+                .setRequired(true)
+            )
+            .addStringOption((option) =>
+              option.setName("reason").setDescription("The reason for unmuting")
+            )
+        )
+        .addSubcommand((subcommand) =>
+          subcommand
+            .setName("warn")
+            .setDescription("Warn a user in a specific guild")
+            .addUserOption((option) =>
+              option
+                .setName("member")
+                .setDescription("The member to warn")
+                .setRequired(true)
+            )
+            .addStringOption((option) =>
+              option.setName("reason").setDescription("The reason for the warn")
+            )
+        )
+        .addSubcommand((subcommand) =>
+          subcommand
+            .setName("warnings")
+            .setDescription("Shows the warnings for a user")
+            .addUserOption((option) =>
+              option
+                .setName("member")
+                .setDescription("The member")
+            )
+        )
+        .addSubcommand((subcommand) =>
+          subcommand
+            .setName("warnpurge")
+            .setDescription("Warns a user and removes their messages")
+            .addUserOption((option) =>
+              option
+                .setName("member")
+                .setDescription("The member to warn")
+                .setRequired(true)
+            )
+            .addIntegerOption((option) =>
+              option
+                .setName("amount")
+                .setDescription("The amount of messages to purge")
+                .setRequired(true)
+            )
+            .addStringOption((option) =>
+              option
+                .setName("reason")
+                .setDescription("The reason to warn the user")
             )
         )
     )
@@ -416,10 +591,20 @@ module.exports = {
                       })
                       .setColor(color);
 
-                    send(loggingChannel, {
-                      username: `${interaction.client.user.username}`,
-                      embeds: [logEmbed],
-                    }).catch(() => {});
+                    send(
+                      loggingChannel,
+                      {
+                        embeds: [logEmbed],
+                      },
+                      {
+                        name: `${interaction.client.user.username}`,
+                        username: `${interaction.client.user.username}`,
+                        icon: interaction.client.user.displayAvatarURL({
+                          dynamic: true,
+                          format: "png",
+                        }),
+                      }
+                    ).catch(() => {});
 
                     logging.moderation.caseN = logcase + 1;
                     await logging.save().catch(() => {});
@@ -497,7 +682,7 @@ module.exports = {
 
           let reason = interaction.options.getString("reason");
           if (!reason) {
-            reason = `No Reason Provided`;
+            reason = removerole ? `Role Remove` : `Role Add`;
           }
           if (reason.length > 1024) reason = reason.slice(0, 1021) + "...";
 
@@ -510,7 +695,7 @@ module.exports = {
               .setDescription(`${fail} | Please provide a valid role!`)
               .setTimestamp()
               .setFooter({
-                text: "https://6c7f021b-2514-4460-9d5a-64060cec1990-00-30w9y136gg7mt.riker.replit.dev",
+                text: "https://neonova.eyum.org",
               })
               .setColor(interaction.client.color.red);
             return interaction.reply({
@@ -543,7 +728,7 @@ module.exports = {
                   await members.forEach(
                     async (member) =>
                       await member.roles.add(role, [
-                        `Role Add / Responsible User: ${interaction.user.tag}, Reason: ${reason}`,
+                        `${reason} / Responsible User: ${interaction.user.tag}, Reason: ${reason}`,
                       ])
                   );
                 })
@@ -590,10 +775,11 @@ module.exports = {
                   ],
                 })
                 .then(async () => {
-                  await members.forEach((member) =>
-                    member.roles.remove(role, [
-                      `Role Remove / Responsible User: ${interaction.user.tag}`,
-                    ])
+                  await members.forEach(
+                    async (member) =>
+                      await member.roles.remove(role, [
+                        `${reason} / Responsible User: ${interaction.user.tag}`,
+                      ])
                   );
                 })
                 .then(() => {
@@ -630,9 +816,9 @@ module.exports = {
             );
           const removerole = interaction.options.getBoolean("remove") || false;
 
-          let reason = `The current feature doesn't need a reason.`;
+          let reason = interaction.options.getString("reason");
           if (!reason) {
-            reason = `No Reason Provided`;
+            reason = removerole ? `Role Remove` : `Role Add`;
           }
           if (reason.length > 1024) {
             reason = reason.slice(0, 1021) + "...";
@@ -647,7 +833,7 @@ module.exports = {
               .setDescription(`${fail} | Please provide a valid role!`)
               .setTimestamp()
               .setFooter({
-                text: "https://6c7f021b-2514-4460-9d5a-64060cec1990-00-30w9y136gg7mt.riker.replit.dev",
+                text: "https://neonova.eyum.org",
               })
               .setColor(interaction.client.color.red);
             return interaction.reply({
@@ -675,7 +861,7 @@ module.exports = {
                   await members.forEach(
                     async (member) =>
                       await member.roles.add(role, [
-                        `Role Add / Responsible User: ${interaction.user.tag}`,
+                        `${reason} / Responsible User: ${interaction.user.tag}`,
                       ])
                   );
                 })
@@ -719,10 +905,11 @@ module.exports = {
                   ],
                 })
                 .then(async () => {
-                  await members.forEach((member) =>
-                    member.roles.remove(role, [
-                      `Role Remove / Responsible User: ${interaction.user.tag}`,
-                    ])
+                  await members.forEach(
+                    async (member) =>
+                      await member.roles.remove(role, [
+                        `${reason} / Responsible User: ${interaction.user.tag}`,
+                      ])
                   );
                 })
                 .then(() => {
@@ -769,9 +956,9 @@ module.exports = {
             inroleoptionnotspecified = true;
           }
 
-          let reason = `The current feature doesn't need a reason.`;
+          let reason = interaction.options.getString("reason");
           if (!reason) {
-            reason = `No Reason Provided`;
+            reason = removerole ? `Role Remove` : `Role Add`;
           }
           if (reason.length > 1024) {
             reason = reason.slice(0, 1021) + "...";
@@ -786,7 +973,7 @@ module.exports = {
               .setDescription(`${fail} | Please provide a valid role!`)
               .setTimestamp()
               .setFooter({
-                text: "https://6c7f021b-2514-4460-9d5a-64060cec1990-00-30w9y136gg7mt.riker.replit.dev",
+                text: "https://neonova.eyum.org",
               })
               .setColor(interaction.client.color.red);
             return interaction.reply({
@@ -819,7 +1006,7 @@ module.exports = {
                   await members.forEach(
                     async (member) =>
                       await member.roles.add(role, [
-                        `Role Add / Responsible User: ${interaction.user.tag}`,
+                        `${reason} / Responsible User: ${interaction.user.tag}`,
                       ])
                   );
                 })
@@ -871,7 +1058,7 @@ module.exports = {
                   await members.forEach(
                     async (member) =>
                       await member.roles.remove(role, [
-                        `Role Remove / Responsible User: ${interaction.user.tag}`,
+                        `${reason} / Responsible User: ${interaction.user.tag}`,
                       ])
                   );
                 })
@@ -908,9 +1095,9 @@ module.exports = {
               (rl) =>
                 rl.name.toLowerCase() === role.slice(1).join(" ").toLowerCase()
             );
-          let reason = `The current feature doesn't need a reason.`;
+          let reason = interaction.options.getString("reason");
           if (!reason) {
-            reason = `No Reason Provided`;
+            reason = `Role Add`;
           }
           if (reason.length > 1024) {
             reason = reason.slice(0, 1021) + "...";
@@ -925,7 +1112,7 @@ module.exports = {
               .setDescription(`${fail} | Please provide a valid role!`)
               .setTimestamp()
               .setFooter({
-                text: "https://6c7f021b-2514-4460-9d5a-64060cec1990-00-30w9y136gg7mt.riker.replit.dev",
+                text: "https://neonova.eyum.org",
               })
               .setColor(interaction.client.color.red);
             return interaction.reply({
@@ -944,7 +1131,7 @@ module.exports = {
                 )
                 .setTimestamp()
                 .setFooter({
-                  text: "https://6c7f021b-2514-4460-9d5a-64060cec1990-00-30w9y136gg7mt.riker.replit.dev",
+                  text: "https://neonova.eyum.org",
                 })
                 .setColor(interaction.client.color.red);
               return interaction.reply({
@@ -954,7 +1141,7 @@ module.exports = {
             } else {
               member.roles
                 .add(role, [
-                  `Role Add / Responsible User: ${interaction.user.tag}`,
+                  `${reason} / Responsible User: ${interaction.user.tag}`,
                 ])
                 .then(() => {
                   const embed = new MessageEmbed()
@@ -987,7 +1174,7 @@ module.exports = {
                     )
                     .setTimestamp()
                     .setFooter({
-                      text: "https://6c7f021b-2514-4460-9d5a-64060cec1990-00-30w9y136gg7mt.riker.replit.dev",
+                      text: "https://neonova.eyum.org",
                     })
                     .setColor(interaction.client.color.red);
                   return interaction.reply({
@@ -1006,9 +1193,9 @@ module.exports = {
               (rl) =>
                 rl.name.toLowerCase() === role.slice(1).join(" ").toLowerCase()
             );
-          let reason = `The current feature doesn't need a reason.`;
+          let reason = interaction.options.getString("reason");
           if (!reason) {
-            reason = `No reason provided.`;
+            reason = `Role Remove`;
           }
           if (reason.length > 1024) {
             reason = reason.slice(0, 1021) + "...";
@@ -1023,7 +1210,7 @@ module.exports = {
               .setDescription(`${fail} | Please provide a valid role!`)
               .setTimestamp()
               .setFooter({
-                text: "https://6c7f021b-2514-4460-9d5a-64060cec1990-00-30w9y136gg7mt.riker.replit.dev",
+                text: "https://neonova.eyum.org",
               })
               .setColor(interaction.client.color.red);
             return interaction.reply({
@@ -1042,7 +1229,7 @@ module.exports = {
                 )
                 .setTimestamp()
                 .setFooter({
-                  text: "https://6c7f021b-2514-4460-9d5a-64060cec1990-00-30w9y136gg7mt.riker.replit.dev",
+                  text: "https://neonova.eyum.org",
                 })
                 .setColor(interaction.client.color.red);
               return interaction.reply({
@@ -1052,7 +1239,7 @@ module.exports = {
             } else {
               member.roles
                 .remove(role, [
-                  `Role Remove / Responsible User: ${interaction.user.tag}`,
+                  `${reason} / Responsible User: ${interaction.user.tag}`,
                 ])
                 .then(() => {
                   const embed = new MessageEmbed()
@@ -1087,7 +1274,7 @@ module.exports = {
                     )
                     .setTimestamp()
                     .setFooter({
-                      text: `https://6c7f021b-2514-4460-9d5a-64060cec1990-00-30w9y136gg7mt.riker.replit.dev`,
+                      text: `https://neonova.eyum.org`,
                     })
                     .setColor(interaction.client.color.red);
                   return interaction.reply({
@@ -1111,13 +1298,394 @@ module.exports = {
           )
           .setTimestamp()
           .setFooter({
-            text: `https://6c7f021b-2514-4460-9d5a-64060cec1990-00-30w9y136gg7mt.riker.replit.dev`,
+            text: `https://neonova.eyum.org`,
           })
           .setColor(interaction.client.color.red);
         return interaction.reply({
           embeds: [botrolepossiblylow],
           ephemeral: true,
         });
+      }
+    } else if (subcommandGroup === "channel") {
+      if (subcommand === "lock") {
+        try {
+          const client = interaction.client;
+          const fail = interaction.client.emoji.fail;
+          const success = interaction.client.emoji.success;
+
+          const logging = await Logging.findOne({
+            guildId: interaction.guild.id,
+          });
+          const guildDB = await Guild.findOne({
+            guildId: interaction.guild.id,
+          });
+          const language = require(`../../data/language/${guildDB.language}.json`);
+          let channel = interaction.options.getChannel("channel");
+          let reason = interaction.options.getString("reason");
+
+          if (channel) {
+            reason = reason || "`none`";
+          } else channel = interaction.channel;
+
+          if (
+            channel
+              .permissionsFor(interaction.guild.id)
+              .has("SEND_MESSAGES") === false
+          ) {
+            const lockchannelError2 = new MessageEmbed()
+              .setDescription(`${fail} | ${channel} is already locked`)
+              .setColor(client.color.red);
+            return interaction.reply({
+              embeds: [lockchannelError2],
+              ephemeral: true,
+            });
+          }
+
+          channel.permissionOverwrites
+            .edit(interaction.guild.me, { SEND_MESSAGES: true })
+            .catch(() => {});
+
+          channel.permissionOverwrites
+            .edit(interaction.guild.id, { SEND_MESSAGES: false })
+            .catch(() => {});
+
+          channel.permissionOverwrites
+            .edit(interaction.member.id, { SEND_MESSAGES: true })
+            .catch(() => {});
+
+          const embed = new MessageEmbed()
+            .setDescription(
+              `${success} | Successfully locked **${channel}** ${
+                logging && logging.moderation.include_reason === "true"
+                  ? `\n\n**Reason:** ${reason}`
+                  : ``
+              }`
+            )
+            .setColor(client.color.green);
+          interaction
+            .reply({ embeds: [embed] })
+            .then(() => {
+              if (logging && logging.moderation.delete_reply === "true") {
+                setTimeout(() => {
+                  interaction.deleteReply().catch(() => {});
+                }, 5000);
+              }
+            })
+            .catch(() => {});
+
+          if (logging) {
+            if (logging.moderation.delete_after_executed === "true") {
+              interaction.delete().catch(() => {});
+            }
+
+            const role = interaction.guild.roles.cache.get(
+              logging.moderation.ignore_role
+            );
+            const channel = interaction.guild.channels.cache.get(
+              logging.moderation.channel
+            );
+
+            if (logging.moderation.toggle == "true") {
+              if (channel) {
+                if (
+                  interaction.channel.id !== logging.moderation.ignore_channel
+                ) {
+                  if (
+                    !role ||
+                    (role &&
+                      !interaction.member.roles.cache.find(
+                        (r) => r.name.toLowerCase() === role.name
+                      ))
+                  ) {
+                    if (logging.moderation.lock == "true") {
+                      let color = logging.moderation.color;
+                      if (color == "#000000")
+                        color = interaction.client.color.red;
+
+                      let logcase = logging.moderation.caseN;
+                      if (!logcase) logcase = `1`;
+
+                      let reason = interaction.options.getString("reason");
+                      if (!reason) reason = `${language.noReasonProvided}`;
+                      if (reason.length > 1024)
+                        reason = reason.slice(0, 1021) + "...";
+
+                      const logEmbed = new MessageEmbed()
+                        .setAuthor({
+                          name: `Action: \`Lock\` | ${interaction.user.tag} | Case #${logcase}`,
+                          iconURL: interaction.user.displayAvatarURL({
+                            format: "png",
+                          }),
+                        })
+                        .addFields(
+                          {
+                            name: "Channel",
+                            value: `${channel}`,
+                            inline: true,
+                          },
+                          {
+                            name: "Moderator",
+                            value: `${interaction.user}`,
+                            inline: true,
+                          },
+                          { name: "Reason", value: `${reason}`, inline: true }
+                        )
+                        .setFooter({ text: `ID: ${interaction.user.id}` })
+                        .setTimestamp()
+                        .setColor(color);
+
+                      send(
+                        channel,
+                        {
+                          embeds: [logEmbed],
+                        },
+                        {
+                          name: `${interaction.client.user.username}`,
+                          username: `${interaction.client.user.username}`,
+                          icon: interaction.client.user.displayAvatarURL({
+                            dynamic: true,
+                            format: "png",
+                          }),
+                        }
+                      ).catch(() => {});
+
+                      logging.moderation.caseN = logcase + 1;
+                      await logging.save().catch(() => {});
+                    }
+                  }
+                }
+              }
+            }
+          }
+        } catch (err) {
+          console.error(err);
+          interaction.reply({
+            content: "This command cannot be used in Direct Messages.",
+            ephemeral: true,
+          });
+        }
+      } else if (subcommand === "unlock") {
+        try {
+          const client = interaction.client;
+          const fail = interaction.client.emoji.fail;
+          const success = interaction.client.emoji.success;
+
+          const logging = await Logging.findOne({
+            guildId: interaction.guild.id,
+          });
+          const guildDB = await Guild.findOne({
+            guildId: interaction.guild.id,
+          });
+          const language = require(`../../data/language/${guildDB.language}.json`);
+          let channel = interaction.options.getChannel("channel");
+          let reason = interaction.options.getString("reason");
+
+          if (channel) {
+            reason = reason || "`none`";
+          } else channel = interaction.channel;
+
+          if (
+            channel
+              .permissionsFor(interaction.guild.id)
+              .has("SEND_MESSAGES") === true
+          ) {
+            const lockchannelError2 = new MessageEmbed()
+              .setDescription(`${fail} | ${channel} is already unlocked`)
+              .setColor(client.color.red);
+            return interaction.reply({
+              embeds: [lockchannelError2],
+              ephemeral: true,
+            });
+          }
+
+          channel.permissionOverwrites
+            .edit(interaction.guild.me, { SEND_MESSAGES: true })
+            .catch(() => {});
+
+          channel.permissionOverwrites
+            .edit(interaction.guild.id, { SEND_MESSAGES: true })
+            .catch(() => {});
+
+          channel.permissionOverwrites
+            .edit(interaction.member.id, { SEND_MESSAGES: true })
+            .catch(() => {});
+
+          const embed = new MessageEmbed()
+            .setDescription(
+              `${success} | Successfully unlocked **${channel}** ${
+                logging && logging.moderation.include_reason === "true"
+                  ? `\n\n**Reason:** ${reason}`
+                  : ``
+              }`
+            )
+            .setColor(client.color.green);
+          interaction
+            .reply({ embeds: [embed] })
+            .then(() => {
+              if (logging && logging.moderation.delete_reply === "true") {
+                setTimeout(() => {
+                  interaction.deleteReply().catch(() => {});
+                }, 5000);
+              }
+            })
+            .catch(() => {});
+        } catch (err) {
+          console.error(err);
+          interaction.reply({
+            content: "This command cannot be used in Direct Messages.",
+            ephemeral: true,
+          });
+        }
+      } else if (subcommand === "slowmode") {
+        try {
+          if (!interaction.member.permissions.has("MANAGE_CHANNELS")) {
+            return interaction.reply({
+              content: "You do not have permission to use this command.",
+              ephemeral: true,
+            });
+          }
+          const client = interaction.client;
+          const fail = client.emoji.fail;
+          const success = client.emoji.success;
+
+          const logging = await Logging.findOne({
+            guildId: interaction.guild.id,
+          });
+          const guildDB = await Guild.findOne({
+            guildId: interaction.guild.id,
+          });
+          const language = require(`../../data/language/${guildDB.language}.json`);
+
+          let index = 1;
+          let channel = interaction.options.getChannel("channel");
+          if (!channel) {
+            channel = interaction.channel;
+            index--;
+          }
+
+          if (channel.type != "GUILD_TEXT" || !channel.viewable) {
+            let channelerror = new MessageEmbed()
+              .setAuthor({
+                name: `${interaction.user.tag}`,
+                iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
+              })
+              .setDescription(`${fail} | I can't view the provided channel!`)
+              .setTimestamp()
+              .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
+              .setColor(interaction.guild.me.displayHexColor);
+            return interaction
+              .reply({ embeds: [channelerror] })
+              .then(async () => {
+                if (logging && logging.moderation.delete_reply === "true") {
+                  setTimeout(() => {
+                    interaction.deleteReply().catch(() => {});
+                  }, 5000);
+                }
+              })
+              .catch(() => {});
+          }
+
+          const rate = ms(interaction.options.getString("rate"));
+          if (!rate || rate < 0 || rate > 21600) {
+            let embed = new MessageEmbed()
+              .setAuthor({
+                name: `${interaction.user.tag}`,
+                iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
+              })
+              .setDescription(
+                `${fail} | Please provide a rate limit between 0 seconds and 6 hours.`
+              )
+              .setTimestamp()
+              .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
+              .setColor(interaction.guild.me.displayHexColor);
+            return interaction
+              .reply({ embeds: [embed] })
+              .then(async () => {
+                if (logging && logging.moderation.delete_reply === "true") {
+                  setTimeout(() => {
+                    interaction.deleteReply().catch(() => {});
+                  }, 5000);
+                }
+              })
+              .catch(() => {});
+          }
+
+          const number = parseInt(rate);
+          if (isNaN(number)) {
+            let embed = new MessageEmbed()
+              .setAuthor({
+                name: `${interaction.user.tag}`,
+                iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
+              })
+              .setDescription(
+                `${fail} | Please provide a rate limit between 0 seconds and 6 hours`
+              )
+              .setTimestamp()
+              .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
+              .setColor(interaction.guild.me.displayHexColor);
+            return interaction
+              .reply({ embeds: [embed] })
+              .then(async () => {
+                if (logging && logging.moderation.delete_reply === "true") {
+                  setTimeout(() => {
+                    interaction.deleteReply().catch(() => {});
+                  }, 5000);
+                }
+              })
+              .catch(() => {});
+          }
+
+          await channel.setRateLimitPerUser(rate);
+
+          if (rate === "0") {
+            return interaction
+              .reply({
+                embeds: [
+                  new MessageEmbed()
+                    .setDescription(
+                      `${success} | Slow Mode has been disabled, good luck!`
+                    )
+                    .setColor(interaction.guild.me.displayHexColor),
+                ],
+              })
+              .then(async () => {
+                if (logging && logging.moderation.delete_reply === "true") {
+                  setTimeout(() => {
+                    interaction.deleteReply().catch(() => {});
+                  }, 5000);
+                }
+              })
+              .catch(() => {});
+          } else {
+            interaction
+              .reply({
+                embeds: [
+                  new MessageEmbed()
+                    .setDescription(
+                      `${success} | Slow Mode was successfully set to **1 msg/${ms(
+                        rate,
+                        { long: false }
+                      )}**`
+                    )
+                    .setColor(interaction.guild.me.displayHexColor),
+                ],
+              })
+              .then(async () => {
+                if (logging && logging.moderation.delete_reply === "true") {
+                  setTimeout(() => {
+                    interaction.deleteReply().catch(() => {});
+                  }, 5000);
+                }
+              })
+              .catch(() => {});
+          }
+        } catch (err) {
+          console.error(err);
+          interaction.reply({
+            content: "This command cannot be used in Direct Messages.",
+            ephemeral: true,
+          });
+        }
       }
     } else if (subcommandGroup === "user") {
       if (subcommand === "ban") {
@@ -1234,19 +1802,38 @@ module.exports = {
                   )
                   .setTimestamp();
 
-                logChannel.send({ embeds: [logEmbed] }).catch(console.error);
+                send(
+                  logChannel,
+                  { embeds: [logEmbed] },
+                  {
+                    name: `${interaction.client.user.username}`,
+                    username: `${interaction.client.user.username}`,
+                    icon: interaction.client.user.displayAvatarURL({
+                      dynamic: true,
+                      format: "png",
+                    }),
+                  }
+                ).catch(console.error);
               }
             }
           } else {
             return interaction.reply({
-              content: `${client.emoji.fail} | I couldn't ban this user. Make sure I have the correct permissions.`,
+              emmbeds: [
+                new MessageEmbed().setDescription(
+                  `${client.emoji.fail} | That user is a mod/admin, I can't do that.`
+                ),
+              ],
               ephemeral: true,
             });
           }
         } catch (err) {
           console.error(err);
           interaction.reply({
-            content: `${client.emoji.fail} | An error occurred while trying to ban the user.`,
+            embeds: [
+              new MessageEmbed().setDescription(
+                `${client.emoji.fail} | That user is a mod/admin, I can't do that.`
+              ),
+            ],
             ephemeral: true,
           });
         }
@@ -1314,9 +1901,7 @@ module.exports = {
             let kicksuccess = new MessageEmbed()
               .setColor("GREEN")
               .setDescription(
-                `${
-                  client.emoji.success
-                } | ${member} has been kicked. __**Reason:**__ ${
+                `${client.emoji.success} ***${member} was kicked.*** | ${
                   reason || "No reason Provided"
                 }`
               );
@@ -1347,7 +1932,7 @@ module.exports = {
             let failembed = new MessageEmbed()
               .setColor(client.color.red)
               .setDescription(
-                `${client.emoji.fail} | That member is a mod/admin, I can't do that.`
+                `${client.emoji.fail} | That user is a mod/admin, I can't do that.`
               )
               .setTimestamp();
             return interaction.reply({ embeds: [failembed] });
@@ -1406,10 +1991,18 @@ module.exports = {
                         .setTimestamp()
                         .setColor(color);
 
-                      send(channel, {
-                        username: `${interaction.client.user.username}`,
-                        embeds: [logEmbed],
-                      }).catch(() => {});
+                      send(
+                        channel,
+                        { embeds: [logEmbed] },
+                        {
+                          name: `${interaction.client.user.username}`,
+                          username: `${interaction.client.user.username}`,
+                          icon: interaction.client.user.displayAvatarURL({
+                            dynamic: true,
+                            format: "png",
+                          }),
+                        }
+                      ).catch(() => {});
 
                       logging.moderation.caseN = logcase + 1;
                       await logging.save().catch(() => {});
@@ -1519,7 +2112,7 @@ module.exports = {
             let failembed = new MessageEmbed()
               .setColor(client.color.red)
               .setDescription(
-                `${client.emoji.fail} | I can't moderate their nickname, make sure that my role is above their role or that I have sufficient permissions to run the command.`
+                `${client.emoji.fail} | That user is a mod/admin, I can't do that.`
               )
               .setTimestamp();
             return interaction.reply({ embeds: [failembed], ephemeral: true });
@@ -1823,6 +2416,1056 @@ module.exports = {
               }
             })
             .catch(() => {});
+        } catch (err) {
+          console.error(err);
+          interaction.reply({
+            content: "This command cannot be used in Direct Messages.",
+            ephemeral: true,
+          });
+        }
+      } else if (subcommand === "setnickname") {
+        try {
+          const client = interaction.client;
+          const fail = client.emoji.fail;
+          const success = client.emoji.success;
+          const logging = await Logging.findOne({
+            guildId: interaction.guild.id,
+          });
+
+          const member = interaction.options.getMember("member");
+          const nickname = interaction.options.getString("nickname");
+          const reason =
+            interaction.options.getString("reason") || "No reason provided.";
+
+          if (!interaction.member.permissions.has("MANAGE_NICKNAMES"))
+            return interaction.reply({
+              content: "You do not have permission to use this command.",
+              ephemeral: true,
+            });
+
+          if (!member) {
+            const usernotfound = new MessageEmbed()
+              .setAuthor({
+                name: `${interaction.user.tag}`,
+                iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
+              })
+              .setTitle(`${fail} | Set Nickname Error`)
+              .setDescription("Please provide a valid user")
+              .setTimestamp()
+              .setFooter({
+                text: `${process.env.AUTH_DOMAIN}`,
+              })
+              .setColor(client.color.red);
+            return interaction
+              .reply({ embeds: [usernotfound] })
+              .then(async () => {
+                if (logging && logging.moderation.delete_reply === "true") {
+                  setTimeout(() => {
+                    interaction.deleteReply().catch(() => {});
+                  }, 5000);
+                }
+              })
+              .catch(() => {});
+          }
+
+          if (!member == interaction.guild.members.me) {
+            if (!client.config.owner.includes(interaction.user.id)) {
+              const error = new MessageEmbed()
+                .setAuthor({
+                  name: `${interaction.user.tag}`,
+                  iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
+                })
+                .setTitle(`${fail} | Set Nickname Error`)
+                .setDescription(
+                  `Only an owner of ${client.config.botName} can change the bots nickname for this server.`
+                )
+                .setTimestamp()
+                .setFooter({
+                  text: `${process.env.AUTH_DOMAIN}`,
+                })
+                .setColor(client.color.red);
+              return interaction.reply({ embeds: [error], ephemeral: true });
+            }
+          } else {
+            if (!nickname) {
+              const oldNickname = member.nickname;
+              await member.setNickname("");
+              const embed = new MessageEmbed()
+                .setDescription(
+                  `${success} | Nickname for ${member} was reset.`
+                )
+                .setColor(client.color.green);
+              interaction
+                .reply({ embeds: [embed] })
+                .then(async () => {
+                  if (logging && logging.moderation.delete_reply === "true") {
+                    setTimeout(() => {
+                      interaction.deleteReply().catch(() => {});
+                    }, 5000);
+                  }
+                })
+                .catch(() => {});
+            }
+
+            let nick = nickname;
+            if (nickname && !(nickname.length > 32)) {
+              try {
+                const oldNickname = member.nickname || member.user.username;
+                await member.setNickname(nick);
+                const embed = new MessageEmbed()
+                  .setDescription(
+                    `***${success} | ${oldNickname}'s nickname was set to ${nick}.* || Reason: ${reason}**`
+                  )
+                  .setColor(client.color.green);
+                interaction
+                  .reply({ embeds: [embed] })
+                  .then(async () => {
+                    if (logging && logging.moderation.delete_reply === "true") {
+                      setTimeout(() => {
+                        interaction.deleteReply().catch(() => {});
+                      }, 5000);
+                    }
+                  })
+                  .catch(() => {});
+
+                if (logging) {
+                  const role = interaction.guild.roles.cache.get(
+                    logging.moderation.ignore_role
+                  );
+                  const channel = interaction.guild.channels.cache.get(
+                    logging.moderation.channel
+                  );
+
+                  if (logging.moderation.toggle == "true") {
+                    if (channel) {
+                      if (
+                        interaction.channel.id !==
+                        logging.moderation.ignore_channel
+                      ) {
+                        if (
+                          !role ||
+                          (role &&
+                            !interaction.member.roles.cache.find(
+                              (r) => r.name.toLowerCase() === role.name
+                            ))
+                        ) {
+                          if (logging.moderation.nicknames == "true") {
+                            let color = logging.moderation.color;
+                            if (color == "#000000")
+                              color = interaction.client.color.yellow;
+
+                            let logcase = logging.moderation.caseN;
+                            if (!logcase) logcase = `1`;
+
+                            let reason =
+                              interaction.options.getString("reason");
+
+                            if (!reason) reason = "No reason provided";
+
+                            if (reason.length > 1024)
+                              reason = reason.slice(0, 1021) + "...";
+
+                            const logEmbed = new MessageEmbed()
+                              .setAuthor({
+                                name: `Action: \`Set Nickname\` | ${member.user.tag} | Case #${logcase}`,
+                                iconURL: member.user.displayAvatarURL({
+                                  format: "png",
+                                }),
+                              })
+                              .addFields(
+                                {
+                                  name: "User",
+                                  value: `${member}`,
+                                  inline: true,
+                                },
+                                {
+                                  name: "Moderator",
+                                  value: `${interaction.user}`,
+                                  inline: true,
+                                },
+                                {
+                                  name: "Reason",
+                                  value: `${reason}`,
+                                  inline: true,
+                                }
+                              )
+                              .setFooter({
+                                text: `ID: ${member.id}`,
+                              })
+                              .setTimestamp()
+                              .setColor(color);
+
+                            send(
+                              channel,
+                              { embeds: [logEmbed] },
+                              {
+                                name: `${interaction.client.user.username}`,
+                                username: `${interaction.client.user.username}`,
+                                icon: interaction.client.user.displayAvatarURL({
+                                  dynamic: true,
+                                  format: "png",
+                                }),
+                              }
+                            ).catch(() => {});
+
+                            logging.moderation.caseN = logcase + 1;
+                            await logging.save().catch(() => {});
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              } catch (err) {
+                console.error(err.stack);
+                interaction.reply({
+                  embeds: [
+                    new MessageEmbed()
+                      .setAuthor({
+                        name: `${interaction.user.tag}`,
+                        iconURL: interaction.user.displayAvatarURL({
+                          dynamic: true,
+                        }),
+                      })
+                      .setTitle(`${fail} Set Nickname Error`)
+                      .setDescription(
+                        `Please ensure my role is above the provided user's role.`
+                      )
+                      .setTimestamp()
+                      .setFooter({
+                        text: `${process.env.AUTH_DOMAIN}`,
+                      })
+                      .setColor(client.color.red),
+                  ],
+                });
+              }
+            } else {
+              interaction.reply({
+                embeds: [
+                  new MessageEmbed()
+                    .setAuthor({
+                      name: `${interaction.user.tag}`,
+                      iconURL: interaction.user.displayAvatarURL({
+                        dynamic: true,
+                      }),
+                    })
+                    .setTitle(`${fail} | Set Nickname Error`)
+                    .setDescription(`The nickname is too long!`),
+                ],
+              });
+            }
+          }
+        } catch (err) {
+          console.error(err);
+          interaction.reply({
+            embeds: [
+              new MessageEmbed()
+                .setColor(interaction.client.color.red)
+                .setDescription(
+                  `${interaction.client.emoji.fail} | That user is a mod/admin, I can't do that.`
+                ),
+            ],
+            ephemeral: true,
+          });
+        }
+      } else if (subcommand === "softban") {
+        try {
+          let client = interaction.client;
+
+          const logging = await Logging.findOne({
+            guildId: interaction.guild.id,
+          });
+
+          const guildDB = await Guild.findOne({
+            guildId: interaction.guild.id,
+          });
+          const language = require(`../../data/language/${guildDB.language}.json`);
+
+          const member = interaction.options.getMember("member");
+          let reason =
+            interaction.options.getString("reason") || "No Reason Provided";
+
+          if (!interaction.member.permissions.has("BAN_MEMBERS"))
+            return interaction.reply({
+              content: "You do not have permission to use this command.",
+              ephemeral: true,
+            });
+
+          if (!member) {
+            let embed = new MessageEmbed()
+              .setDescription(
+                `${client.emoji.fail} | ${language.softbanNoUser}`
+              )
+              .setColor(client.color.red);
+            return interaction
+              .reply({ embeds: [embed] })
+              .then(async () => {
+                if (logging && logging.moderation.delete_reply === "true") {
+                  setTimeout(() => {
+                    interaction.deleteReply().catch(() => {});
+                  }, 5000);
+                }
+              })
+              .catch(() => {});
+          }
+
+          if (member === interaction.member) {
+            let embed = new MessageEmbed()
+              .setDescription(
+                `${client.emoji.fail} | ${language.softbanSelfUser}`
+              )
+              .setColor(client.color.red);
+            return interaction
+              .reply({ embeds: [embed] })
+              .then(async () => {
+                if (logging && logging.moderation.delete_reply === "true") {
+                  setTimeout(() => {
+                    interaction.deleteReply().catch(() => {});
+                  }, 5000);
+                }
+              })
+              .catch(() => {});
+          }
+
+          if (reason.length > 1024) reason = reason.slice(0, 1021) + "...";
+          if (member) {
+            await member.ban({
+              reason: `${reason} / ${language.softbanResponsible}: ${interaction.user.tag}`,
+              days: 7,
+            });
+            await interaction.guild.members.unban(
+              member.user,
+              `${reason} / ${language.softbanResponsible}: ${interaction.user.tag}`
+            );
+
+            const embed = new MessageEmbed()
+              .setDescription(
+                `${client.emoji.success} | ${language.softbanSuccess} **${
+                  member.user.tag
+                }** ${
+                  logging && logging.moderation.include_reason === "true"
+                    ? `\n\n**Reason:** ${reason}`
+                    : ``
+                }`
+              )
+              .setColor(client.color.green);
+            interaction
+              .reply({ embeds: [embed] })
+              .then(async () => {
+                if (logging && logging.moderation.delete_reply === "true") {
+                  setTimeout(() => {
+                    interaction.deleteReply().catch(() => {});
+                  }, 5000);
+                }
+              })
+              .catch(() => {});
+          }
+        } catch (err) {
+          console.error(err);
+          interaction.reply({
+            content: "This command cannot be used in Direct Messages.",
+            ephemeral: true,
+          });
+        }
+      } else if (subcommand === "unban") {
+        try {
+          await interaction.deferReply();
+          const client = interaction.client;
+          const logging = await Logging.findOne({
+            guildId: interaction.guild.id,
+          });
+          const guildDB = await Guild.findOne({
+            guildId: interaction.guild.id,
+          });
+
+          const language = require(`../../data/language/${guildDB.language}.json`);
+
+          // Check if the user has proper permissions
+          if (!interaction.member.permissions.has("BAN_MEMBERS")) {
+            return interaction.editReply({
+              content: `${language.unbanNoPerm}`,
+              ephemeral: true,
+            });
+          }
+
+          // Fetch the options
+          const input = interaction.options.getString("member");
+          let reason =
+            interaction.options.getString("reason") ||
+            `${language.unbanNoReason}`;
+
+          // Fetch all bans to find the user
+          const bans = await interaction.guild.bans.fetch();
+          const totalBans = bans.size;
+          let successCount = 0;
+          let failCount = 0;
+
+          if (input === "all") {
+            let reason = `Unban All / ${language.unbanResponsible}: ${interaction.user.username}`;
+            await interaction.editReply(
+              `Beginning mass unban of ${totalBans} ${
+                totalBans === 1 ? "user" : "users"
+              }...`
+            );
+            for (const ban of bans.values()) {
+              try {
+                await interaction.guild.members.unban(ban.user.id, reason);
+                successCount++;
+
+                if (successCount % 1 === 0) {
+                  const progress = successCount + failCount;
+                  const percentage = ((progress / totalBans) * 100).toFixed(2);
+                  await interaction.editReply(
+                    `Progress: ${progress}/${totalBans} (${percentage}%)\n` +
+                      `${client.emoji.success} Successful: ${successCount} | ${client.emoji.fail} Failed: ${failCount}`
+                  );
+                }
+
+                let dmEmbed;
+                if (
+                  logging &&
+                  logging.moderation.warn_action &&
+                  logging.moderation.warn_action !== "1"
+                ) {
+                  if (logging.moderation.warn_action === "2") {
+                    dmEmbed = `${interaction.client.emoji.fail} | You were unbanned in **${interaction.guild.name}**.`;
+                  } else if (logging.moderation.warn_action === "3") {
+                    dmEmbed = `${interaction.client.emoji.fail} | You were unbanned in **${interaction.guild.name}**. | ${reason}`;
+                  } else if (logging.moderation.warn_action === "4") {
+                    dmEmbed = `${interaction.client.emoji.fail} | You were unbanned in **${interaction.guild.name}** by **${interaction.member} (${interaction.member.tag})**. | ${reason}`;
+                  }
+                }
+
+                ban.user.send({
+                  embeds: [
+                    new MessageEmbed()
+                      .setColor(interaction.client.color.green)
+                      .setDescription(dmEmbed),
+                  ],
+                });
+              } catch (error) {
+                logger.error(`Failed to unban ${ban.user.tag}:` + error, {
+                  label: "ERROR",
+                });
+              }
+            }
+          } else {
+            // Try to find the user based on ID, tag, or mention
+            const banInfo = bans.find((ban) => {
+              return (
+                ban.user.id === input || // Match by ID
+                ban.user.tag === input || // Match by tag (username#discriminator)
+                `<@${ban.user.id}>` === input // Match by mention
+              );
+            });
+
+            if (!banInfo) {
+              return interaction.editReply({
+                content: `${language.unbanInvalidId}`,
+                ephemeral: true,
+              });
+            }
+
+            // Unban the user
+            await interaction.guild.bans.remove(banInfo.user.id, reason);
+
+            // Reply with a success message
+            const unbanSuccessEmbed = new MessageEmbed()
+              .setColor("GREEN")
+              .setDescription(
+                `${client.emoji?.success || "✅"} | <@${banInfo.user.id}> ${
+                  language.unbanSuccess
+                }\n__**Reason:**__ ${reason}`
+              );
+
+            await interaction.editReply({ embeds: [unbanSuccessEmbed] });
+
+            // Optional: Delete reply if configured
+            if (logging && logging.moderation?.delete_reply === "true") {
+              setTimeout(() => {
+                interaction.deleteReply().catch(() => {});
+              }, 5000);
+            }
+
+            // Notify the user via DM
+            const dmEmbed = new MessageEmbed()
+              .setColor("GREEN")
+              .setDescription(
+                `You have been unbanned from **${interaction.guild.name}**.\n\n__**Moderator:**__ ${interaction.user.tag}\n__**Reason:**__ ${reason}`
+              );
+
+            banInfo.user.send({ embeds: [dmEmbed] }).catch(() => {
+              console.log(`Could not send DM to ${banInfo.user.tag}`);
+            });
+          }
+        } catch (err) {
+          console.error(err);
+          interaction.reply({
+            content: "An error occurred while trying to unban the user.",
+            ephemeral: true,
+          });
+        }
+      } else if (subcommand === "unmute") {
+        try {
+          const client = interaction.client;
+          const logging = await Logging.findOne({
+            guildId: interaction.guild.id,
+          });
+
+          // Check if the user has permission to use this command
+          if (!interaction.member.permissions.has("MODERATE_MEMBERS"))
+            return interaction.followUp({
+              content: "You do not have permission to use this command.",
+            });
+
+          const member = interaction.options.getMember("member");
+          const reason =
+            interaction.options.getString("reason") || "No reason provided";
+
+          // Check if the member is valid
+          if (!member) {
+            let usernotfound = new MessageEmbed()
+              .setColor("RED")
+              .setDescription(
+                `${client.emoji.fail} | I can't find that member`
+              );
+            return interaction
+              .reply({ embeds: [usernotfound] })
+              .then(async () => {
+                if (logging && logging.moderation.delete_reply === "true") {
+                  setTimeout(() => {
+                    interaction.deleteReply().catch(() => {});
+                  }, 5000);
+                }
+              })
+              .catch(() => {});
+          }
+
+          // Remove timeout (unmute the member)
+          await member.timeout(null, reason); // This will remove the timeout
+
+          let timeoutsuccess = new MessageEmbed()
+            .setColor("GREEN")
+            .setDescription(
+              `${client.emoji.success} | ${member} has been unmuted.`
+            );
+          await interaction
+            .reply({ embeds: [timeoutsuccess] })
+            .then(async () => {
+              if (logging && logging.moderation.delete_reply === "true") {
+                setTimeout(() => {
+                  interaction.deleteReply().catch(() => {});
+                }, 5000);
+              }
+            })
+            .catch(() => {});
+
+          // DM the user about the unmute
+          let dmEmbed = new MessageEmbed()
+            .setColor("GREEN")
+            .setDescription(
+              `You have been unmuted in **${
+                interaction.guild.name
+              }**.\n\n__**Moderator:**__ ${interaction.user} **(${
+                interaction.user.tag
+              })**\n__**Reason:**__ ${reason || "No Reason Provided"}`
+            )
+            .setTimestamp();
+
+          return member.send({ embeds: [dmEmbed] }).catch(() => {
+            // Handle the case where the user has DMs disabled
+            interaction.followUp({
+              content: `I couldn't send a DM to ${member}, they might have DMs disabled.`,
+              ephemeral: true,
+            });
+          });
+        } catch (err) {
+          console.error(err);
+          interaction.reply({
+            embeds: [
+              new MessageEmbed()
+                .setColor(interaction.client.color.red)
+                .setDescription(
+                  `${interaction.client.emoji.fail} | An error occurred.`
+                ),
+            ],
+            ephemeral: true,
+          });
+        }
+      } else if (subcommand === "warn") {
+        try {
+          const client = interaction.client;
+          const logging = await Logging.findOne({
+            guildId: interaction.guild.id,
+          });
+          const guildDB = await Guild.findOne({
+            guildId: interaction.guild.id,
+          });
+          let language = require(`../../data/language/${guildDB.language}.json`);
+
+          const mentionedMember = interaction.options.getMember("member");
+          const reason =
+            interaction.options.getString("reason") || "No reason provided";
+
+          if (!mentionedMember) {
+            let validmention = new MessageEmbed()
+              .setColor(client.color.red)
+              .setDescription(
+                `${client.emoji.fail} | ${language.warnMissingUser}`
+              )
+              .setTimestamp();
+            return interaction
+              .reply({ embeds: [validmention] })
+              .then(async () => {
+                if (logging && logging.moderation.delete_reply === "true") {
+                  setTimeout(() => {
+                    interaction.deleteReply().catch(() => {});
+                  }, 5000);
+                }
+              })
+              .catch(() => {});
+          }
+          let warnID = random.password({
+            length: 18,
+            string:
+              "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890",
+          });
+
+          let warnDoc = await warnModel
+            .findOne({
+              guildID: interaction.guild.id,
+              memberID: mentionedMember.id,
+            })
+            .catch((err) => console.log(err));
+
+          if (!warnDoc) {
+            warnDoc = new warnModel({
+              guildID: interaction.guild.id,
+              memberID: mentionedMember.id,
+              modAction: [],
+              warnings: [],
+              warningsID: [],
+              moderator: [],
+              date: [],
+            });
+
+            await warnDoc.save().catch((err) => console.log(err));
+
+            warnDoc = await warnModel.findOne({
+              guildID: interaction.guild.id,
+              memberID: mentionedMember.id,
+            });
+          }
+          warnDoc.modType.push("warn");
+          warnDoc.warnings.push(reason);
+          warnDoc.warningID.push(warnID);
+          warnDoc.moderator.push(interaction.user.id);
+          warnDoc.date.push(Date.now());
+
+          await warnDoc.save().catch((err) => console.log(err));
+
+          let dmEmbed;
+          if (
+            logging &&
+            logging.moderation.warn_action &&
+            logging.moderation.warn_action !== "1"
+          ) {
+            if (logging.moderation.warn_action === "2") {
+              dmEmbed = `${interaction.client.emoji.fail} | You were warned in **${interaction.guild.name}**.`;
+            } else if (logging.moderation.warn_action === "3") {
+              dmEmbed = `${interaction.client.emoji.fail} | You were warned in **${interaction.guild.name}** for ${reason}`;
+            } else if (logging.moderation.warn_action === "4") {
+              dmEmbed = `${interaction.client.emoji.fail} | You were warned in **${interaction.guild.name}** by **${interaction.member} (${interaction.member.tag})** for ${reason}`;
+            }
+
+            mentionedMember
+              .send({
+                embeds: [
+                  new MessageEmbed()
+                    .setColor(interaction.client.color.red)
+                    .setDescription(dmEmbed),
+                ],
+              })
+              .catch(() => {});
+          }
+
+          if (mentionedMember) {
+            interaction
+              .reply({
+                embeds: [
+                  new MessageEmbed().setColor(client.color.green)
+                    .setDescription(`${language.warnSuccessful
+                    .replace("{emoji}", client.emoji.success)
+                    .replace("{user}", `**${mentionedMember.user.tag}**`)}
+                    ${
+                      logging && logging.moderation.include_reason === "true"
+                        ? `\n\n**Reason:** ${reason}`
+                        : ``
+                    }`),
+                ],
+              })
+              .then(async () => {
+                if (logging && logging.moderation.delete_reply === "true") {
+                  setTimeout(() => {
+                    interaction.deleteReply().catch(() => {});
+                  }, 5000);
+                }
+              })
+              .catch(() => {});
+          } else {
+            let failembed = new MessageEmbed()
+              .setColor(client.color.red)
+              .setDescription(
+                `${client.emoji.fail} | I can't warn that member. Make sure that my role is above their role or that I have sufficient permissions to execute the command.`
+              )
+              .setTimestamp();
+            return interaction.reply({ embeds: [failembed] });
+          }
+        } catch (err) {
+          console.error(err);
+          interaction.reply({
+            embeds: [
+              new MessageEmbed()
+                .setColor(interaction.client.color.red)
+                .setDescription(
+                  `${interaction.client.emoji.fail} | That user is a mod/admin, I can't do that.`
+                ),
+            ],
+            ephemeral: true,
+          });
+        }
+      } else if (subcommand === "warnings") {
+        try {
+          let client = interaction.client;
+
+          const guildDB = await Guild.findOne({
+            guildId: interaction.guild.id,
+          });
+          let language = require(`../../data/language/${guildDB.language}.json`);
+
+          if (!interaction.member.permissions.has("MODERATE_MEMBERS"))
+            return interaction.reply({
+              content: "You do not have permission to use this command.",
+              ephemeral: true,
+            });
+
+          const mentionedMember = interaction.options.getMember("member") || interaction.member;
+
+          const warnDoc = await warnModel
+            .findOne({
+              guildID: interaction.guild.id,
+              memberID: mentionedMember.id,
+            })
+            .catch((err) => console.log(err));
+
+          if (!warnDoc || !warnDoc.warnings.length) {
+            return interaction.reply({
+              embeds: [
+                new MessageEmbed()
+                  .setDescription(
+                    `${interaction.client.emoji.fail} | **${mentionedMember.user.tag}** ${language.warningsNoError}`
+                  )
+                  .setTimestamp()
+                  .setColor(client.color.red),
+              ],
+            });
+          }
+
+          const data = [];
+
+          for (let i = 0; warnDoc.warnings.length > i; i++) {
+            data.push(
+              `**Moderator:** ${await interaction.client.users.fetch(
+                warnDoc.moderator[i]
+              )}\n**Reason:** ${warnDoc.warnings[i]}\n**Date:** ${moment(
+                warnDoc.date[i]
+              ).format("dddd, MMMM do YYYY")}\n**Warning ID:** ${i + 1}`
+            );
+          }
+
+          const count = warnDoc.warnings.length;
+
+          const embed = new MessageEmbed()
+            .setTimestamp()
+            .setColor(client.color.blue);
+
+          const buildEmbed = (current, embed) => {
+            const max = count > current + 4 ? current + 4 : count;
+            let amount = 0;
+            for (let i = current; i < max; i++) {
+              if (warnDoc.warnings[i].length > 1000)
+                warnDoc.warnings[i] =
+                  warnDoc.warnings[i].slice(0, 1000) + "...";
+              embed.addFields(
+                {
+                  name: "\u200b",
+                  value: `**${language.warnName || "unknown"} \`#${i + 1}\`**`,
+                },
+                {
+                  name: `${language.warnModerator || "unknown"}`,
+                  value: `${interaction.guild.members.cache.get(
+                    warnDoc.moderator[i]
+                  )}`,
+                  inline: true,
+                },
+                {
+                  name: `${language.warnAction || "unknown"}`,
+                  value: `${warnDoc.modType[i]}`,
+                  inline: true,
+                },
+                {
+                  name: `${language.warnReason || "unknown"}`,
+                  value: `${warnDoc.warnings[i]}`,
+                  inline: true,
+                },
+                {
+                  name: `${language.warnID || "unknown"}`,
+                  value: `${warnDoc.warningID[i]}`,
+                  inline: true,
+                },
+                {
+                  name: `${language.warnDateIssued || "unknown"}`,
+                  value: `${moment(warnDoc.date[i]).format(
+                    "dddd, MMMM Do YYYY"
+                  )}`,
+                }
+              );
+              amount += 1;
+            }
+
+            return embed
+              .setTitle(`${language.warnList} [${current} - ${max}]`)
+              .setDescription(
+                `Showing \`${amount}\` of ${mentionedMember}'s \`${count}\` total warns.`
+              );
+          };
+
+          if (count < 4) interaction.reply({ embeds: [buildEmbed(0, embed)] });
+          else {
+            let n = 0;
+            const json = embed
+              .setFooter({
+                text:
+                  `${language.warnExpire}\n` + interaction.member.displayName,
+                iconURL: interaction.member.displayAvatarURL({ dynamic: true }),
+              })
+              .toJSON();
+
+            const first = () => {
+              if (n === 0) return;
+              n = 0;
+              return buildEmbed(n, new MessageEmbed(json));
+            };
+
+            const previous = () => {
+              if (n === 0) return;
+              n -= 4;
+              if (n < 0) n = 0;
+              return buildEmbed(n, new MessageEmbed(json));
+            };
+
+            const next = () => {
+              const cap = count - (count % 4);
+              if (n === cap || n + 4 === count) return;
+              n += 4;
+              if (n >= count) n = cap;
+              return buildEmbed(n, new MessageEmbed(json));
+            };
+
+            const last = () => {
+              const cap = count - (count % 4);
+              if (n === cap || n + 4 === count) return;
+              n = cap;
+              if (n === count) n -= 4;
+              return buildEmbed(n, new MessageEmbed(json));
+            };
+
+            const reactions = {
+              "⏪": first,
+              "◀️": previous,
+              "⏹️": null,
+              "▶️": next,
+              "⏩": last,
+            };
+
+            const menu = new ReactionMenu(
+              interaction.client,
+              interaction.channel,
+              interaction.member,
+              buildEmbed(n, new MessageEmbed(json)),
+              null,
+              null,
+              reactions,
+              180000
+            );
+
+            menu.reactions["⏹️"] = menu.stop.bind(menu);
+          }
+        } catch (err) {
+          console.error(err);
+          interaction.reply({
+            content: "This command cannot be used in Direct Messages.",
+            ephemeral: true,
+          });
+        }
+      } else if (subcommand === "warnpurge") {
+        try {
+          const client = interaction.client;
+
+          const logging = await Logging.findOne({
+            guildId: interaction.guild.id,
+          });
+          const guildDB = await Guild.findOne({
+            guildId: interaction.guild.id,
+          });
+          let language = require(`../../data/language/${guildDB.language}.json`);
+
+          if (!interaction.member.permissions.has("MODERATE_MEMBERS"))
+            return interaction.reply({
+              content: "You do not have permission to use this command.",
+              ephemeral: true,
+            });
+
+          const fail = client.emoji.fail;
+          const success = client.emoji.success;
+          const mentionedMember = interaction.options.getMember("member");
+          const amount = interaction.options.getInteger("amount");
+          const reason =
+            interaction.options.getString("reason") || "No Reason Provided";
+
+          if (!mentionedMember) {
+            let usernotfound = new MessageEmbed()
+              .setColor(client.color.red)
+              .setDescription(
+                `${client.emoji.fail} | ${language.warnMissingUser}`
+              )
+              .setTimestamp();
+            return interaction
+              .reply({ embeds: [usernotfound] })
+              .then(async () => {
+                if (logging && logging.moderation.delete_reply === "true") {
+                  setTimeout(() => {
+                    interaction.deleteReply().catch(() => {});
+                  }, 5000);
+                }
+              })
+              .catch(() => {});
+          }
+
+          if (amount < 0 || amount > 100) {
+            let invalidamount = new MessageEmbed();
+            new MessageEmbed()
+              .setAuthor({
+                name: `${interaction.user.tag}`,
+                iconURL: interaction.member.displayAvatarURL({ dynamic: true }),
+              })
+              .setTitle(`${fail} | Warn Purge Error`)
+              .setDescription(`Please Provide a message count between 1 - 100!`)
+              .setTimestamp()
+              .setFooter({
+                text: `${process.env.AUTH_DOMAIN}`,
+              })
+              .setColor(client.color.red);
+            return interaction
+              .reply({ embeds: [invalidamount] })
+              .then(async () => {
+                if (logging && logging.moderation.delete_reply === "true") {
+                  setTimeout(() => {
+                    interaction.deleteReply().catch(() => {});
+                  }, 5000);
+                }
+              })
+              .catch(() => {});
+          }
+
+          let warnID = random.password({
+            length: 18,
+            string:
+              "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890",
+          });
+
+          let warnDoc = await warnModel
+            .findOne({
+              guildID: interaction.guild.id,
+              memberID: mentionedMember.id,
+            })
+            .catch((err) => console.log(err));
+
+          if (!warnDoc) {
+            warnDoc = new warnModel({
+              guildID: interaction.guild.id,
+              memberID: mentionedMember.id,
+              modAction: [],
+              warnings: [],
+              warningID: [],
+              moderator: [],
+              date: [],
+            });
+
+            await warnDoc.save().catch((err) => console.log(err));
+
+            warnDoc = await warnModel.findOne({
+              guildID: interaction.guild.id,
+              memberID: mentionedMember.id,
+            });
+          }
+          warnDoc.modType.push("warn purge");
+          warnDoc.warnings.push(reason);
+          warnDoc.warningID.push(warnID);
+          warnDoc.moderator.push(interaction.member.id);
+          warnDoc.date.push(Date.now());
+
+          await warnDoc.save().catch((err) => console.log(err));
+          let dmEmbed;
+          if (
+            logging &&
+            logging.moderation.warn_action &&
+            logging.moderation.warn_action !== "1"
+          ) {
+            if (logging.moderation.warn_action === "2") {
+              dmEmbed = `${interaction.client.emoji.fail} | You've been warned in **${interaction.guild.name}**.`;
+            } else if (logging.moderation.warn_action === "3") {
+              dmEmbed = `${interaction.client.emoji.fail} | You've been warned in **${interaction.guild.name}** for ${reason}`;
+            } else if (logging.moderation.warn_action === "4") {
+              dmEmbed = `${interaction.client.emoji.fail} | You've been warned in **${interaction.guild.name}** by ${interaction.author} **(${interaction.user.tag})** for ${reason}`;
+            }
+
+            mentionedMember
+              .send({
+                embeds: [
+                  new MessageEmbed()
+                    .setColor(interaction.client.color.red)
+                    .setDescription(dmEmbed),
+                ],
+              })
+              .catch(() => {});
+          }
+
+          // Purge
+          const messages = (
+            await interaction.channel.messages.fetch({ limit: amount })
+          ).filter((m) => m.member.id === mentionedMember.id);
+          if (messages.size > 0)
+            await interaction.channel.bulkDelete(messages, true);
+
+          if (mentionedMember) {
+            const embed = new MessageEmbed()
+              .setDescription(
+                `${success} | **${mentionedMember.user.tag}** has been warned, with **${messages.size}** messages purged.\n\n__**Reason:**__ ${reason}`
+              )
+              .setColor(client.color.green)
+              .setTimestamp();
+            interaction
+              .reply({ embeds: [embed] })
+              .then(async () => {
+                if (logging && logging.moderation.delete_reply === "true") {
+                  setTimeout(() => {
+                    interaction.deleteReply().catch(() => {});
+                  }, 5000);
+                }
+              })
+              .catch(() => {});
+          }
         } catch (err) {
           console.error(err);
           interaction.reply({

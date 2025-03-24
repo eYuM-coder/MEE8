@@ -31,7 +31,7 @@ module.exports = class extends Command {
     let prefix = guildDB.prefix;
     let fail = message.client.emoji.fail;
     let properUsage = new MessageEmbed()
-      .setColor(message.guild.me.displayHexColor)
+      .setColor(message.guild.members.me.displayHexColor)
       .setDescription(
         `${language.suggesting7.replace(/{prefix}/g, `${prefix}`)}`
       )
@@ -46,7 +46,7 @@ module.exports = class extends Command {
         return message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-              .setColor(message.guild.me.displayHexColor)
+              .setColor(message.guild.members.me.displayHexColor)
               .setDescription(
                 `${message.client.emoji.fail} ${language.suggesting8}`
               )
@@ -64,7 +64,7 @@ module.exports = class extends Command {
           return message.channel.sendCustom({
             embeds: [
               new MessageEmbed()
-                .setColor(message.guild.me.displayHexColor)
+                .setColor(message.guild.members.me.displayHexColor)
                 .setDescription(
                   `${message.client.emoji.success} ${language.suggesting9}`
                 )
@@ -82,7 +82,7 @@ module.exports = class extends Command {
         return message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-              .setColor(message.guild.me.displayHexColor)
+              .setColor(message.guild.members.me.displayHexColor)
               .setDescription(`${fail} ${channel} ${language.suggesting10}`)
               .setFooter({ text: `${process.env.AUTH_DOMAIN}` }),
           ],
@@ -98,7 +98,7 @@ module.exports = class extends Command {
           return message.channel.sendCustom({
             embeds: [
               new MessageEmbed()
-                .setColor(message.guild.me.displayHexColor)
+                .setColor(message.guild.members.me.displayHexColor)
                 .setDescription(
                   `${message.client.emoji.success} ${language.suggesting11} ${channel}`
                 ),

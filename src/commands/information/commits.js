@@ -1,6 +1,6 @@
 const Command = require("../../structures/Command");
 const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
-const getCommitHistory = require('git-commits-npm');
+const getCommitHistory = require("git-commits-npm");
 
 module.exports = class EmptyCommand extends Command {
   constructor(...args) {
@@ -25,13 +25,18 @@ module.exports = class EmptyCommand extends Command {
             "https://api.github.com/repos/hotsu0p/Neonova/commits"
           );
           const commits = response.data;
-          const commitHistory = await getCommitHistory("https://api.github.com/repos/hotsu0p/Neonova/commits");
+          const commitHistory = await getCommitHistory(
+            "https://api.github.com/repos/hotsu0p/Neonova/commits"
+          );
           console.log(`Total commits: ${commits.length}`);
 
           const embed = new MessageEmbed()
             .setTitle("Commits")
             .setDescription(`Commit message ${commits[0].commit.message}`)
-            .addField("Commit Author", commits[0].commit.author.name)
+            .addFields({
+              name: "Commit Author",
+              value: commits[0].commit.author.name,
+            })
             .setColor("#FF5733");
 
           const row = new MessageActionRow().addComponents(
@@ -51,9 +56,7 @@ module.exports = class EmptyCommand extends Command {
           });
 
           collector.on("collect", async (i) => {
-            sentMessage.edit(
-              `${commitHistory}`,
-            );
+            sentMessage.edit(`${commitHistory}`);
           });
 
           collector.on("end", (collected) => {

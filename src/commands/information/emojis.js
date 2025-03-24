@@ -34,7 +34,7 @@ module.exports = class extends Command {
         iconURL: message.author.displayAvatarURL({ dynamic: true }),
       })
       .setTimestamp()
-      .setColor(message.guild.me.displayHexColor);
+      .setColor(message.guild.members.me.displayHexColor);
 
     const interval = 25;
     if (emojis.length === 0)

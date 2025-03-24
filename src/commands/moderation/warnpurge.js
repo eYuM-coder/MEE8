@@ -90,7 +90,7 @@ module.exports = class extends Command {
             )
             .setTimestamp()
             .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-            .setColor(message.guild.me.displayHexColor),
+            .setColor(message.guild.members.me.displayHexColor),
         ],
       });
 
@@ -153,7 +153,7 @@ module.exports = class extends Command {
             : ``
         }`
       )
-      .setColor(message.guild.me.displayHexColor);
+      .setColor(message.guild.members.me.displayHexColor);
     message.channel
       .sendCustom({ embeds: [embed] })
       .then(async (s) => {

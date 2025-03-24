@@ -17,9 +17,7 @@ module.exports = class extends Command {
   }
 
   async run(message, args) {
-    if (
-      message.client.config.owner.includes(message.author.id)
-    ) {
+    if (message.client.config.owner.includes(message.author.id)) {
       // do nothing
     } else {
       return message.channel.sendCustom(`You are not the owner of this bot.`);
@@ -30,7 +28,7 @@ module.exports = class extends Command {
     try {
       member = match
         ? message.mentions.members.first() ||
-          message.guild.members.fetch(args[1])
+          message.client.users.fetch(args[1])
         : null;
     } catch {
       return message.channel.sendCustom(`Provide me with a user`);
@@ -41,7 +39,7 @@ module.exports = class extends Command {
 
     if (args.length < 1)
       return message.channel.sendCustom(
-        `Please provide me with a user or guild blacklist [{prefix} blacklist <user | guild> <actual user or guild>. Example: {prefix} blacklist user @user]`,
+        `Please provide me with a user or guild blacklist [{prefix} blacklist <user | guild> <actual user or guild>. Example: {prefix} blacklist user @user]`
       );
     if (args.length < 2)
       return message.channel.sendCustom(`Provide me with a user`);
@@ -72,7 +70,7 @@ module.exports = class extends Command {
               length: null,
             });
           }
-        },
+        }
       );
 
       message.channel.sendCustom({
@@ -86,10 +84,15 @@ module.exports = class extends Command {
       const embed = new MessageEmbed()
         .setColor("BLURPLE")
         .setTitle(`Blacklist Report`)
-        .addField("Status", "Added to the blacklist.")
-        .addField("User", `${member.user.tag} (${member.id})`)
-        .addField("Responsible", `${message.author} (${message.author.id})`)
-        .addField("Reason", `${reason}`);
+        .addFields(
+          { name: "Status", value: "Added to the blacklist." },
+          { name: "User", value: `${member.user.tag} (${member.id})` },
+          {
+            name: "Responsible",
+            value: `${message.author} (${message.author.id})`,
+          },
+          { name: "Reason", value: `${reason}` }
+        );
 
       return webhookClient.sendCustom({
         username: "Neonova",
@@ -122,7 +125,7 @@ module.exports = class extends Command {
               length: null,
             });
           }
-        },
+        }
       );
 
       message.channel.sendCustom({
@@ -136,10 +139,15 @@ module.exports = class extends Command {
       const embed = new MessageEmbed()
         .setColor("BLURPLE")
         .setTitle(`Blacklist Report`)
-        .addField("Status", "Added to the blacklist.")
-        .addField("Server", `${guild.name} (${guild.id})`)
-        .addField("Responsible", `${message.author} (${message.author.id})`)
-        .addField("Reason", reason);
+        .addFields(
+          { name: "Status", value: "Added to the blacklist." },
+          { name: "Server", value: `${guild.name} (${guild.id})` },
+          {
+            name: "Responsible",
+            value: `${message.author} (${message.author.id})`,
+          },
+          { name: "Reason", value: reason }
+        );
 
       return webhookClient.sendCustom({
         username: `${config.botName} Blacklists`,

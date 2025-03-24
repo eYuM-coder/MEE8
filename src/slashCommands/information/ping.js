@@ -38,11 +38,11 @@ module.exports = {
         `;
 
     let color = "";
-    if (latency < 100) {
+    if (latency < 250) {
       color = `#00ff00`;
-    } else if (latency > 100 && latency < 200) {
+    } else if (latency > 250 && latency < 750) {
       color = `#CCCC00`;
-    } else if (latency > 200) {
+    } else if (latency > 750) {
       color = interaction.client.color.red;
     }
 

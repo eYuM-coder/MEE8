@@ -42,7 +42,7 @@ module.exports = {
               .setFooter({ text: `${process.env.AUTH_DOMAIN}` }),
           ],
         })
-        .setColor(interaction.guild.me.displayHexColor);
+        .setColor(interaction.guild.members.me.displayHexColor);
 
     if (name.length > 30)
       return interaction.reply({
@@ -60,7 +60,7 @@ module.exports = {
           interaction.reply({
             embeds: [
               new MessageEmbed()
-                .setColor(interaction.guild.me.displayHexColor)
+                .setColor(interaction.guild.members.me.displayHexColor)
                 .setAuthor({
                   name: `${interaction.user.tag}`,
                   iconURL: interaction.user.displayAvatarURL({ dynamic: true }),

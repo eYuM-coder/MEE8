@@ -22,7 +22,7 @@ module.exports = class extends Command {
 
     const embed = new MessageEmbed()
       .setDescription(`\`${language.pinging}\``)
-      .setColor(message.guild.me.displayHexColor)
+      .setColor(message.guild.members.me.displayHexColor)
       .setFooter({ text: `Powered by ${process.env.AUTH_DOMAIN}` });
 
     const msg = await message.channel.sendCustom({ embeds: [embed] });
@@ -34,14 +34,14 @@ module.exports = class extends Command {
 **${language.discordAPI}** \`${Math.round(this.client.ws.ping)}ms\`
 `;
 
-    let color = message.guild.me.displayHexColor;
-    if (latency < 100) {
+    let color = message.guild.members.me.displayHexColor;
+    if (latency < 250) {
       color = `#00ff00`;
-    } else if (latency > 100 && latency < 200) {
+    } else if (latency > 250 && latency < 750) {
       color = `#CCCC00`;
-    } else if (latency > 200) {
+    } else if (latency > 750) {
       color = message.client.color.red;
-    } else color = message.guild.me.displayHexColor;
+    } else color = message.guild.members.me.displayHexColor;
 
     embed.setDescription(`${koko}`);
     embed.setColor(color);

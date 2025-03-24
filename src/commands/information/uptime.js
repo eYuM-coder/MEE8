@@ -33,7 +33,7 @@ module.exports = class extends Command {
     const embed = new MessageEmbed()
       .setDescription(`${config.botName} ${language.uptime1} \`${formattedTime}\`.`)
       .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-      .setColor(message.guild.me.displayHexColor);
+      .setColor(message.guild.members.me.displayHexColor);
     message.channel.sendCustom({ embeds: [embed] });
   }
 };

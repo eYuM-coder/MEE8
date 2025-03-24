@@ -51,7 +51,7 @@ module.exports = class extends Command {
             .setDescription(`I can't view the provided channel`)
             .setTimestamp()
             .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-            .setColor(message.guild.me.displayHexColor),
+            .setColor(message.guild.members.me.displayHexColor),
         ],
       });
 
@@ -70,7 +70,7 @@ module.exports = class extends Command {
             )
             .setTimestamp()
             .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-            .setColor(message.guild.me.displayHexColor),
+            .setColor(message.guild.members.me.displayHexColor),
         ],
       });
 
@@ -89,12 +89,12 @@ module.exports = class extends Command {
             )
             .setTimestamp()
             .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-            .setColor(message.guild.me.displayHexColor),
+            .setColor(message.guild.members.me.displayHexColor),
         ],
       });
     }
 
-    if (!channel.permissionsFor(message.guild.me).has(["MANAGE_CHANNELS"]))
+    if (!channel.permissionsFor(message.guild.members.me).has(["MANAGE_CHANNELS"]))
       return message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
@@ -108,7 +108,7 @@ module.exports = class extends Command {
             )
             .setTimestamp()
             .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-            .setColor(message.guild.me.displayHexColor),
+            .setColor(message.guild.members.me.displayHexColor),
         ],
       });
 
@@ -130,7 +130,7 @@ module.exports = class extends Command {
                     : ``
                 }`
               )
-              .setColor(message.guild.me.displayHexColor),
+              .setColor(message.guild.members.me.displayHexColor),
           ],
         })
         .then(async (s) => {
@@ -153,7 +153,7 @@ module.exports = class extends Command {
                     : ``
                 }`
               )
-              .setColor(message.guild.me.displayHexColor),
+              .setColor(message.guild.members.me.displayHexColor),
           ],
         })
         .then(async (s) => {

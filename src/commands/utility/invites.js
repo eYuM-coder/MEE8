@@ -42,7 +42,7 @@ module.exports = class extends Command {
     );
 
     const embed = new MessageEmbed()
-      .setColor(message.guild.me.displayHexColor)
+      .setColor(message.guild.members.me.displayHexColor)
       .setAuthor({
         name: `Neonova.xyz`,
         iconURL: this.client.user.displayAvatarURL({ dynamic: true }),

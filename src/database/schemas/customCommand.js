@@ -1,52 +1,33 @@
 const mongoose = require('mongoose');
 
-const customCommandSchema = mongoose.Schema({
+const embedSchema = new mongoose.Schema({
+  title: String,
+  description: String,
+  color: String,
+  footer: String,
+  thumbnail: String,
+  image: String,
+  timestamp: String,
+});
+
+const customCommandSchema = new mongoose.Schema({
   guildId: {
-    type: mongoose.SchemaTypes.String,
+    type: String,
     required: true,
-    unique: false
   },
   name: {
-    type: mongoose.SchemaTypes.String,
+    type: String,
     required: true,
   },
   json: {
-    type: mongoose.SchemaTypes.String,
-    default: false,
+    type: Object, // Change from String to Object
+    default: null, // Set default as null instead of false
   },
   content: {
-    type: mongoose.SchemaTypes.String,
+    type: String,
     required: true,
   },
-  title: {
-    type: mongoose.SchemaTypes.String,
-    required: false,
-  },
-    description: {
-    type: mongoose.SchemaTypes.String,
-    required: false,
-  },
-    color: {
-    type: mongoose.SchemaTypes.String,
-    required: false,
-  },
-    footer: {
-    type: mongoose.SchemaTypes.String,
-    required: false,
-  },
-    thumbnail: {
-    type: mongoose.SchemaTypes.String,
-    required: false,
-  },
-    image: {
-    type: mongoose.SchemaTypes.String,
-    required: false,
-  },
-    timestamp: {
-    type: mongoose.SchemaTypes.String,
-    required: false,
-  },
-
+  embed: embedSchema, // Use a subdocument for embeds
 });
 
-module.exports = mongoose.model('customCommand', customCommandSchema);
+module.exports = mongoose.model('CustomCommand', customCommandSchema);

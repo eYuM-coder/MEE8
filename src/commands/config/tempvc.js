@@ -56,7 +56,7 @@ module.exports = class extends Command {
     let fail = message.client.emoji.fail;
 
     let properUsage = new MessageEmbed()
-      .setColor(message.guild.me.displayHexColor)
+      .setColor(message.guild.members.me.displayHexColor)
       .setDescription(`${language.tempvc1.replace(/{prefix}/g, `${prefix}`)}`)
       .setFooter({ text: `${process.env.AUTH_DOMAIN}` });
 
@@ -80,7 +80,7 @@ module.exports = class extends Command {
                 .setFooter({ text: `${process.env.AUTH_DOMAIN}` }),
             ],
           })
-          .setColor(message.guild.me.displayHexColor);
+          .setColor(message.guild.members.me.displayHexColor);
 
       if (
         !vcDB.channelId ||
@@ -91,7 +91,7 @@ module.exports = class extends Command {
         return message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-              .setColor(message.guild.me.displayHexColor)
+              .setColor(message.guild.members.me.displayHexColor)
               .setDescription(
                 `${message.client.emoji.fail} ${language.tempvc3}`
               )
@@ -132,7 +132,7 @@ module.exports = class extends Command {
           return message.channel.sendCustom({
             embeds: [
               new MessageEmbed()
-                .setColor(message.guild.me.displayHexColor)
+                .setColor(message.guild.members.me.displayHexColor)
                 .setDescription(
                   `${message.client.emoji.success} ${language.tempvc4}`
                 )
@@ -158,7 +158,7 @@ module.exports = class extends Command {
                 .setFooter({ text: `${process.env.AUTH_DOMAIN}` }),
             ],
           })
-          .setColor(message.guild.me.displayHexColor);
+          .setColor(message.guild.members.me.displayHexColor);
 
       try {
         const embed = new MessageEmbed()
@@ -167,7 +167,7 @@ module.exports = class extends Command {
             iconURL: `https://www.creeda.co.in/Images/loader.gif`,
           })
           .setDescription(`\`${language.tempvc6}\``)
-          .setColor(message.guild.me.displayHexColor);
+          .setColor(message.guild.members.me.displayHexColor);
         const msg = await message.channel.sendCustom({ embeds: [embed] });
 
         let category = message.guild.channels.cache.find(

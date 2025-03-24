@@ -30,7 +30,7 @@ module.exports = {
         `${config.botName} ${language.uptime1} \`${formattedUptime}\`.`
       )
       .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-      .setColor(interaction.guild.me.displayHexColor);
+      .setColor(interaction.guild.members.me.displayHexColor);
     interaction.reply({ embeds: [embed] });
   },
 };

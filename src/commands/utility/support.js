@@ -20,7 +20,7 @@ module.exports = class extends Command {
     const language = require(`../../data/language/${guildDB.language}.json`);
 
     const embed = new Discord.MessageEmbed()
-      .setColor(message.guild.me.displayHexColor)
+      .setColor(message.guild.members.me.displayHexColor)
       .setDescription(
         `${language.support}(${config.discord}) ${message.client.emoji.success}`
       );

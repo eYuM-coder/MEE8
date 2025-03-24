@@ -29,7 +29,7 @@ module.exports = class extends Command {
       })
       .setFooter({ text: message.guild.name })
       .setTimestamp()
-      .setColor(message.guild.me.displayHexColor)
+      .setColor(message.guild.members.me.displayHexColor)
       .setDescription(
         `${message.client.emoji.fail} | Couldn't find any edited message in **${channel.name}**`
       );
@@ -54,7 +54,7 @@ module.exports = class extends Command {
       })
       .setFooter({ text: message.guild.name })
       .setTimestamp()
-      .setColor(message.guild.me.displayHexColor);
+      .setColor(message.guild.members.me.displayHexColor);
 
     for (let i = 0; snipe.oldmessage.length > i; i++) {
       data.push(`**${i + 1}**`);

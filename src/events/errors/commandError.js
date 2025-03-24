@@ -11,7 +11,7 @@ module.exports = class extends Event {
       message.channel &&
       message.channel.viewable &&
       message.channel
-        .permissionsFor(message.guild.me)
+        .permissionsFor(message.guild.members.me)
         .has(["SEND_MESSAGES", "EMBED_LINKS"])
     ) {
       message.channel

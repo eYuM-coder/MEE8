@@ -7,3 +7,4 @@ src/assets/logs/Neonova.log
 config.json
 env.backups
 replit_zip_error_log.txt
+.well-known

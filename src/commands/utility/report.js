@@ -35,13 +35,13 @@ module.exports = class extends Command {
 
     let reportColor = guildDB.report.reportcolor;
     if (reportColor == "#000000")
-      reportColor = message.guild.me.displayHexColor;
+      reportColor = message.guild.members.me.displayHexColor;
 
     let user =
       message.mentions.users.first() || client.users.cache.get(args[1]);
 
     let properUsage = new MessageEmbed()
-      .setColor(message.guild.me.displayHexColor)
+      .setColor(message.guild.members.me.displayHexColor)
       .setDescription(`${language.reportt1.replace(/{prefix}/g, `${prefix}`)}`)
       .setFooter({ text: `${process.env.AUTH_DOMAIN}` });
 
@@ -65,13 +65,13 @@ module.exports = class extends Command {
                 .setFooter({ text: `${process.env.AUTH_DOMAIN}` }),
             ],
           })
-          .setColor(message.guild.me.displayHexColor);
+          .setColor(message.guild.members.me.displayHexColor);
 
       if (guildDB.report.reportChannelID === null)
         return message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-              .setColor(message.guild.me.displayHexColor)
+              .setColor(message.guild.members.me.displayHexColor)
               .setDescription(
                 `${message.client.emoji.fail} ${language.report4}`
               )
@@ -89,7 +89,7 @@ module.exports = class extends Command {
           return message.channel.sendCustom({
             embeds: [
               new MessageEmbed()
-                .setColor(message.guild.me.displayHexColor)
+                .setColor(message.guild.members.me.displayHexColor)
                 .setDescription(
                   `${message.client.emoji.success} ${language.report5}`
                 )
@@ -114,7 +114,7 @@ module.exports = class extends Command {
                 .setFooter({ text: `${process.env.AUTH_DOMAIN}` }),
             ],
           })
-          .setColor(message.guild.me.displayHexColor);
+          .setColor(message.guild.members.me.displayHexColor);
 
       const channel = await message.mentions.channels.first();
 
@@ -123,7 +123,7 @@ module.exports = class extends Command {
         return message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-              .setColor(message.guild.me.displayHexColor)
+              .setColor(message.guild.members.me.displayHexColor)
               .setDescription(`${fail} ${channel} ${language.report6}`)
               .setFooter({ text: `${process.env.AUTH_DOMAIN}` }),
           ],
@@ -139,7 +139,7 @@ module.exports = class extends Command {
           return message.channel.sendCustom({
             embeds: [
               new MessageEmbed()
-                .setColor(message.guild.me.displayHexColor)
+                .setColor(message.guild.members.me.displayHexColor)
                 .setDescription(
                   `${message.client.emoji.success} ${language.report7} ${channel}`
                 ),
@@ -150,7 +150,7 @@ module.exports = class extends Command {
     } else if (args.includes("issue")) {
       if (guildDB.report.disableIssue == "true") {
         const embed = new MessageEmbed()
-          .setColor(message.guild.me.displayHexColor)
+          .setColor(message.guild.members.me.displayHexColor)
           .setDescription(
             `Issue Reports are disabled in the current guild ${message.client.emoji.fail}`
           );
@@ -312,7 +312,7 @@ module.exports = class extends Command {
         message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-              .setColor(message.guild.me.displayHexColor)
+              .setColor(message.guild.members.me.displayHexColor)
               .setDescription(
                 `User Reports are disabled in the current guild ${message.client.emoji.fail}`
               ),

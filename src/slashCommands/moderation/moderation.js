@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageEmbed } = require("discord.js");
+const discord = require("discord.js");
 const Logging = require("../../database/schemas/logging.js");
 const Guild = require("../../database/schemas/Guild.js");
 const logger = require("../../utils/logger.js");
@@ -9,10 +10,19 @@ const ReactionMenu = require("../../data/ReactionMenu.js");
 const darkpassword = require("generate-password");
 const randoStrings = require("../../packages/randostrings.js");
 const warnModel = require("../../database/models/moderation.js");
+const fs = require("node:fs");
 async function usePrettyMs(ms) {
   const { default: prettyMilliseconds } = await import("pretty-ms");
   const time = prettyMilliseconds(ms);
   return time;
+}
+
+function makehex(rgb) {
+  var hex = Number(rgb).toString(16);
+  if (hex.length < 2) {
+    hex = "0" + hex;
+  }
+  return hex.padStart(6, "0");
 }
 
 module.exports = {
@@ -59,6 +69,50 @@ module.exports = {
               option
                 .setName("reason")
                 .setDescription("The reason to lock the channel")
+            )
+        )
+        .addSubcommand((subcommand) =>
+          subcommand
+            .setName("overwritepermissions")
+            .setDescription(
+              "Overwrite permissions for a user or role in a channel"
+            )
+            .addStringOption((option) =>
+              option
+                .setName("permissions")
+                .setDescription(
+                  "The permissions to overwrite, separated by commas."
+                )
+                .setRequired(true)
+            )
+            .addBooleanOption((option) =>
+              option
+                .setName("allow")
+                .setDescription(
+                  "True to allow the permissions, false to deny them."
+                )
+                .setRequired(true)
+            )
+            .addUserOption((option) =>
+              option
+                .setName("user")
+                .setDescription(
+                  "The user whose permissions you want to overwrite"
+                )
+            )
+            .addRoleOption((option) =>
+              option
+                .setName("role")
+                .setDescription(
+                  "The role whose permissions you want to overwrite"
+                )
+            )
+            .addChannelOption((option) =>
+              option
+                .setName("channel")
+                .setDescription(
+                  "The channel where you want to overwrite permissions"
+                )
             )
         )
         .addSubcommand((subcommand) =>
@@ -259,9 +313,7 @@ module.exports = {
             .setName("warnings")
             .setDescription("Shows the warnings for a user")
             .addUserOption((option) =>
-              option
-                .setName("member")
-                .setDescription("The member")
+              option.setName("member").setDescription("The member")
             )
         )
         .addSubcommand((subcommand) =>
@@ -291,6 +343,17 @@ module.exports = {
       roleGroup
         .setName("role")
         .setDescription("Role users with a specific role")
+        .addSubcommand((subcommand) =>
+          subcommand
+            .setName("info")
+            .setDescription("Gets the information of a specified role.")
+            .addRoleOption((option) =>
+              option
+                .setName("role")
+                .setDescription("The role to get the information of")
+                .setRequired(true)
+            )
+        )
         .addSubcommand((subcommand) =>
           subcommand
             .setName("all")
@@ -636,7 +699,7 @@ module.exports = {
         })
         .setDescription(`${members}`)
         .setTimestamp()
-        .setColor(interaction.guild.me.displayHexColor);
+        .setColor(interaction.guild.members.me.displayHexColor);
 
       return interaction.reply({ embeds: [embed] });
     }
@@ -657,7 +720,70 @@ module.exports = {
           guildId: interaction.guild.id,
         });
 
-        if (subcommand === "all") {
+        if (subcommand === "info") {
+          const role =
+            interaction.options.getRole("role") ||
+            interaction.guild.roles.cache.get(role) ||
+            interaction.guild.roles.cache.find(
+              (rl) =>
+                rl.name.toLowerCase() === role.slice(1).join(" ").toLowerCase()
+            );
+
+          const keyPermissions = {
+            ADMINISTRATOR: "Administrator",
+            MANAGE_GUILD: "Manage Server",
+            MANAGE_ROLES: "Manage Roles",
+            MANAGE_CHANNELS: "Manage Channels",
+            MANAGE_MESSAGES: "Manage Messages",
+            MANAGE_WEBHOOKS: "Manage Webhooks",
+            MANAGE_NICKNAMES: "Manage Nicknames",
+            MANAGE_EMOJIS_AND_STICKERS: "Manage Emojis and Stickers",
+            KICK_MEMBERS: "Kick Members",
+            BAN_MEMBERS: "Ban Members",
+            MENTION_EVERYONE: "Mention Everyone",
+            MODERATE_MEMBERS: "Timeout Members",
+          };
+
+          // Get all role permissions as an array
+          const rolePermissions = role.permissions.toArray();
+
+          // Filter to only include key permissions & maintain the correct order
+          const filteredPermissions = Object.keys(keyPermissions)
+            .filter((perm) => rolePermissions.includes(perm)) // Check if the role has this permission
+            .map((perm) => keyPermissions[perm]) // Convert to human-readable names
+            .join(", "); // Format as a single line
+
+          const embed = new MessageEmbed().addFields(
+            { name: "ID", value: role.id, inline: true },
+            { name: "Name", value: role.name, inline: true },
+            {
+              name: "Color",
+              value: `${role.color != 0 ? `#` + makehex(role.color) : "None"}`,
+              inline: true,
+            },
+            { name: "Mention", value: `\`${role}\``, inline: true },
+            { name: "Hoisted", value: role.hoist ? "Yes" : "No", inline: true },
+            { name: "Position", value: role.position.toString(), inline: true },
+            {
+              name: "Mentionable",
+              value: role.mentionable ? "Yes" : "No",
+              inline: true,
+            },
+            {
+              name: "Managed",
+              value: role.managed ? "Yes" : "No",
+              inline: true,
+            },
+            {
+              name: "Key Permissions",
+              value:
+                filteredPermissions.length > 0 ? filteredPermissions : "None",
+            }
+          )
+          .setColor(`${`#` + makehex(role.color)}`);
+
+          interaction.reply({ embeds: [embed] });
+        } else if (subcommand === "all") {
           const role =
             interaction.options.getRole("role") ||
             interaction.guild.roles.cache.get(role) ||
@@ -1342,7 +1468,7 @@ module.exports = {
           }
 
           channel.permissionOverwrites
-            .edit(interaction.guild.me, { SEND_MESSAGES: true })
+            .edit(interaction.guild.members.me, { SEND_MESSAGES: true })
             .catch(() => {});
 
           channel.permissionOverwrites
@@ -1499,7 +1625,7 @@ module.exports = {
           }
 
           channel.permissionOverwrites
-            .edit(interaction.guild.me, { SEND_MESSAGES: true })
+            .edit(interaction.guild.members.me, { SEND_MESSAGES: true })
             .catch(() => {});
 
           channel.permissionOverwrites
@@ -1572,7 +1698,7 @@ module.exports = {
               .setDescription(`${fail} | I can't view the provided channel!`)
               .setTimestamp()
               .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-              .setColor(interaction.guild.me.displayHexColor);
+              .setColor(interaction.guild.members.me.displayHexColor);
             return interaction
               .reply({ embeds: [channelerror] })
               .then(async () => {
@@ -1586,7 +1712,8 @@ module.exports = {
           }
 
           const rate = ms(interaction.options.getString("rate"));
-          if (!rate || rate < 0 || rate > 21600) {
+          console.log(rate);
+          if (isNaN(rate) || rate < 0 || rate > 21600000) {
             let embed = new MessageEmbed()
               .setAuthor({
                 name: `${interaction.user.tag}`,
@@ -1597,7 +1724,7 @@ module.exports = {
               )
               .setTimestamp()
               .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-              .setColor(interaction.guild.me.displayHexColor);
+              .setColor(interaction.guild.members.me.displayHexColor);
             return interaction
               .reply({ embeds: [embed] })
               .then(async () => {
@@ -1610,34 +1737,9 @@ module.exports = {
               .catch(() => {});
           }
 
-          const number = parseInt(rate);
-          if (isNaN(number)) {
-            let embed = new MessageEmbed()
-              .setAuthor({
-                name: `${interaction.user.tag}`,
-                iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
-              })
-              .setDescription(
-                `${fail} | Please provide a rate limit between 0 seconds and 6 hours`
-              )
-              .setTimestamp()
-              .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-              .setColor(interaction.guild.me.displayHexColor);
-            return interaction
-              .reply({ embeds: [embed] })
-              .then(async () => {
-                if (logging && logging.moderation.delete_reply === "true") {
-                  setTimeout(() => {
-                    interaction.deleteReply().catch(() => {});
-                  }, 5000);
-                }
-              })
-              .catch(() => {});
-          }
+          await channel.setRateLimitPerUser(rate / 1000);
 
-          await channel.setRateLimitPerUser(rate);
-
-          if (rate === "0") {
+          if (rate === 0) {
             return interaction
               .reply({
                 embeds: [
@@ -1645,7 +1747,7 @@ module.exports = {
                     .setDescription(
                       `${success} | Slow Mode has been disabled, good luck!`
                     )
-                    .setColor(interaction.guild.me.displayHexColor),
+                    .setColor(interaction.guild.members.me.displayHexColor),
                 ],
               })
               .then(async () => {
@@ -1667,7 +1769,7 @@ module.exports = {
                         { long: false }
                       )}**`
                     )
-                    .setColor(interaction.guild.me.displayHexColor),
+                    .setColor(interaction.guild.members.me.displayHexColor),
                 ],
               })
               .then(async () => {
@@ -1685,6 +1787,71 @@ module.exports = {
             content: "This command cannot be used in Direct Messages.",
             ephemeral: true,
           });
+        }
+      } else if (subcommand === "overwritepermissions") {
+        const permissionsData = JSON.parse(
+          fs.readFileSync(
+            "./src/assets/json/serializedPermissions.json",
+            "utf-8"
+          )
+        );
+        const channel =
+          interaction.options.getChannel("channel") || interaction.channel;
+        const user = interaction.options.getMember("user");
+        const role = interaction.options.getRole("role");
+        const serializedPermissions = interaction.options
+          .getString("permissions")
+          .split(",")
+          .map((p) => p.trim());
+        const allow = interaction.options.getBoolean("allow");
+
+        if (
+          !(
+            channel instanceof discord.TextChannel ||
+            channel instanceof discord.VoiceChannel
+          )
+        ) {
+          return interaction.reply({
+            content:
+              "You can only overwrite permissions for text or voice channels.",
+            ephemeral: true,
+          });
+        }
+
+        let permissionUpdates = {};
+        serializedPermissions.forEach((number) => {
+          if (permissionsData[number]) {
+            permissionUpdates[permissionsData[number]] = allow;
+          }
+        });
+
+        if (Object.keys(permissionUpdates).length === 0) {
+          return interaction.reply("No valid permissions were provided.");
+        }
+
+        try {
+          if (user) {
+            await channel.permissionOverwrites.edit(user.id, permissionUpdates);
+            return interaction.reply(
+              `Successfully updated permissions for ${user.tag} in ${channel.name}.`
+            );
+          }
+
+          if (role) {
+            await channel.permissionOverwrites.edit(role.id, permissionUpdates);
+            return interaction.reply(
+              `Successfully updated permissions for the role ${role.name} in ${channel.name}.`
+            );
+          }
+
+          return interaction.reply(
+            "Please provide a user or role to overwrite permissions for."
+          );
+        } catch (error) {
+          console.error(error);
+          return interaction.reply(
+            "There was an error while processing the command."
+          );
         }
       }
     } else if (subcommandGroup === "user") {
@@ -3149,7 +3316,8 @@ module.exports = {
               ephemeral: true,
             });
 
-          const mentionedMember = interaction.options.getMember("member") || interaction.member;
+          const mentionedMember =
+            interaction.options.getMember("member") || interaction.member;
 
           const warnDoc = await warnModel
             .findOne({

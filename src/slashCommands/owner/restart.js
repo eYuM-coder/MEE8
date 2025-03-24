@@ -46,8 +46,14 @@ module.exports = {
     const embed = new MessageEmbed()
       .setColor("#36393f")
       .setTitle("Stop Command Initiated")
-      .addField("Executor", interaction.user.tag, true)
-      .addField("Mode", force ? "Force Stop" : "Graceful Shutdown", true)
+      .addFields(
+        { name: "Executor", value: interaction.user.tag, inline: true },
+        {
+          name: "Mode",
+          value: force ? "Force Stop" : "Graceful Shutdown",
+          inline: true,
+        }
+      )
       .setTimestamp();
 
     await interaction.reply({ embeds: [embed], ephemeral: true });
@@ -66,7 +72,7 @@ module.exports = {
             value: "Failed to kill port 4000, proceeding with shutdown",
           });
         } else if (!silent) {
-          embed.addField({
+          embed.addFields({
             name: "Port Kill Status",
             value: "Port 4000 successfully terminated",
           });

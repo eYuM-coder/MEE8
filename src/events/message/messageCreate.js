@@ -166,7 +166,7 @@ module.exports = class extends Event {
         const rateLimit = this.ratelimit(message, cmd);
 
         if (
-          !message.channel.permissionsFor(message.guild.me).has("SEND_MESSAGES")
+          !message.channel.permissionsFor(message.guild.members.me).has("SEND_MESSAGES")
         )
           return;
 
@@ -216,7 +216,7 @@ module.exports = class extends Event {
 
         if (command.botPermission) {
           const missingPermissions = message.channel
-            .permissionsFor(message.guild.me)
+            .permissionsFor(message.guild.members.me)
             .missing(command.botPermission)
             .map((p) => permissions[p]);
 
@@ -238,7 +238,7 @@ module.exports = class extends Event {
               )
               .setTimestamp()
               .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-              .setColor(message.guild.me.displayHexColor);
+              .setColor(this.client.color.red);
             return message.channel.sendCustom(embed).catch(() => {});
           }
         }
@@ -264,7 +264,7 @@ module.exports = class extends Event {
               )
               .setTimestamp()
               .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-              .setColor(message.guild.me.displayHexColor);
+              .setColor(this.client.color.red);
             return message.channel.sendCustom(embed).catch(() => {});
           }
         }
@@ -293,8 +293,8 @@ module.exports = class extends Event {
 
   async runCommand(message, cmd, args) {
     if (
-      !message.channel.permissionsFor(message.guild.me) ||
-      !message.channel.permissionsFor(message.guild.me).has("EMBED_LINKS")
+      !message.channel.permissionsFor(message.guild.members.me) ||
+      !message.channel.permissionsFor(message.guild.members.me).has("EMBED_LINKS")
     )
       return message.channel.sendCustom(
         `${message.client.emoji.fail} Missing bot Permissions - **Embeds Links**`

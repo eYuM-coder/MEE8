@@ -37,7 +37,7 @@ module.exports = class extends Command {
         iconURL: message.author.displayAvatarURL({ dynamic: true }),
       })
       .setTimestamp()
-      .setColor(message.guild.me.displayHexColor);
+      .setColor(message.guild.members.me.displayHexColor);
     message.channel.sendCustom({ embeds: [embed] });
   }
 };

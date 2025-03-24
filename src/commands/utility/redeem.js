@@ -81,7 +81,7 @@ module.exports = class extends Command {
               .setDescription(
                 `**Premium Subscription**\n\nYou've recently redeemed a code in **${message.guild.name}** and here is your receipt:\n\n **Receipt ID:** ${ID}\n**Redeem Date:** ${DDate}\n**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}`
               )
-              .setColor(message.guild.me.displayHexColor)
+              .setColor(message.guild.members.me.displayHexColor)
               .setFooter({ text: message.guild.name }),
           ],
         });
@@ -93,7 +93,7 @@ module.exports = class extends Command {
               .setDescription(
                 `**Congratulations!**\n\n**${message.guild.name}** Is now a premium guild! Thanks a ton!\n\nIf you have any questions please contact me [here](${config.discord})\n\n**Could not send your Receipt via dms so here it is:**\n**Receipt ID:** ${ID}\n**Redeem Date:** ${DDate}\n**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n\n**Please make sure to keep this information safe, you might need it if you ever wanna refund / transfer servers.**\n\n**Expires At:** ${expires}`
               )
-              .setColor(message.guild.me.displayHexColor)
+              .setColor(message.guild.members.me.displayHexColor)
               .setFooter({ text: message.guild.name }),
           ],
         });
@@ -107,7 +107,7 @@ module.exports = class extends Command {
             .setDescription(
               `**Congratulations!**\n\n**${message.guild.name}** Is now a premium guild! Thanks a ton!\n\nIf you have any questions please contact me [here](${config.discord})\n**your receipt has been sent via dms**\n\n**Expires At:** ${expires}`
             )
-            .setColor(message.guild.me.displayHexColor)
+            .setColor(message.guild.members.me.displayHexColor)
             .setFooter({ text: message.guild.name }),
         ],
       });
@@ -116,7 +116,7 @@ module.exports = class extends Command {
         .setDescription(
           `**Premium Subscription**\n\n**${message.author.tag}** Redeemed a code in **${message.guild.name}**\n\n **Receipt ID:** ${ID}\n**Redeem Date:** ${DDate}\n**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**Redeemer Tag:** ${message.author.tag}\n**Redeemer ID:** ${message.author.id}\n\n**Expires At:** ${expires}`
         )
-        .setColor(message.guild.me.displayHexColor);
+        .setColor(message.guild.members.me.displayHexColor);
 
       webhookClient.sendCustom({
         username: `${config.botName} Premium`,

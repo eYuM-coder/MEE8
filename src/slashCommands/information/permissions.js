@@ -34,7 +34,7 @@ module.exports = {
         iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
       })
       .setTimestamp()
-      .setColor(interaction.guild.me.displayHexColor);
+      .setColor(interaction.guild.members.me.displayHexColor);
     interaction.reply({ embeds: [embed], ephemeral: true });
   },
 };

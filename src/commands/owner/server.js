@@ -57,7 +57,7 @@ module.exports = class extends Command {
         }
       )
       .setThumbnail(guild.iconURL())
-      .setColor(message.guild.me.displayHexColor);
+      .setColor(message.guild.members.me.displayHexColor);
     message.channel.sendCustom({ embed }).catch((error) => {
       message.channel.sendCustom(`Error: ${error}`);
     });

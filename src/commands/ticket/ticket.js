@@ -67,7 +67,7 @@ module.exports = class extends Command {
         let ticketCategory = message.guild.channels.cache.get(db.categoryID);
         let ticketLog = message.guild.channels.cache.get(db.ticketModlogID);
 
-        let Neonova = message.guild.me;
+        let Neonova = message.guild.members.me;
         let everyone = message.guild.roles.everyone;
 
         let user = message.author;
@@ -147,7 +147,7 @@ module.exports = class extends Command {
                 });
               }
               chan.permissionOverwrites
-                .edit(message.guild.me, { SEND_MESSAGES: true })
+                .edit(message.guild.members.me, { SEND_MESSAGES: true })
                 .catch(() => {});
               chan.permissionOverwrites.edit(everyone, { VIEW_CHANNEL: false });
 
@@ -174,7 +174,7 @@ module.exports = class extends Command {
 
               let member = message.author;
               let color = db.ticketWelcomeColor;
-              if (color == "#000000") color = message.guild.me.displayHexColor;
+              if (color == "#000000") color = message.guild.members.me.displayHexColor;
 
               if (db.ticketPing == "true") {
                 chan.send(`${member} ${ticketRole}`).catch(() => {});
@@ -224,18 +224,17 @@ module.exports = class extends Command {
                 .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
                 .setTitle(language.ticketNewTicketTitle)
                 .setTimestamp()
-                //.addField("Information" , `**User:** ${user}\n**Ticket Channel: **${chan.name}\n**Ticket:** #${serverCase}\n**Date:** ${moment(new Date()).format("dddd, MMMM Do YYYY")} `)
-                .addField(
-                  language.ticketEmbedTitleInfo,
-                  language.ticketEmbedValueInfo
+                .addFields({
+                  name: language.ticketEmbedTitleInfo,
+                  value: language.ticketEmbedValueInfo
                     .replace("{user}", `${user}`)
                     .replace("{chanName}", `${chan.name}`)
                     .replace("{serverCase}", `${serverCase}`)
                     .replace(
                       "{ticketDate}",
                       moment(new Date()).format("dddd, MMMM Do YYYY")
-                    )
-                );
+                    ),
+                });
 
               if (ticketLog) {
                 ticketLog.send({ embeds: [embedLog] }).catch(() => {});

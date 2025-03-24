@@ -19,14 +19,17 @@ module.exports = class ToggleCategoryCommand extends Command {
     try {
       // Validate input
       if (!args.length) {
-        return message.channel.sendCustom("Please specify a category to toggle!");
+        return message.channel.sendCustom(
+          "Please specify a category to toggle!"
+        );
       }
 
-      const guildDB = await Guild.findOne({ guildId: message.guild.id }) || 
+      const guildDB =
+        (await Guild.findOne({ guildId: message.guild.id })) ||
         new Guild({ guildId: message.guild.id });
 
       const { success, fail } = message.client.emoji;
-      
+
       // Get full category name, joining all args
       const inputCategory = args.join(" ");
       const type = inputCategory.toLowerCase();
@@ -47,27 +50,30 @@ module.exports = class ToggleCategoryCommand extends Command {
 
       // Find matching category (case-insensitive)
       const matchedCategory = validCategories.find(
-        cat => cat.toLowerCase() === type
+        (cat) => cat.toLowerCase() === type
       );
 
       // Validate category
       if (!matchedCategory) {
         return message.channel.sendCustom(
-          `Please provide a valid category.\n\n**Available Categories:**\n${validCategories.join(" - ")}`
+          `Please provide a valid category.\n\n**Available Categories:**\n${validCategories.join(
+            " - "
+          )}`
         );
       }
 
       // Find commands in the specified category
-      const categoryCommands = message.client.botCommands
-        .filter((cmd) => cmd.category === matchedCategory);
+      const categoryCommands = message.client.botCommands.filter(
+        (cmd) => cmd.category === matchedCategory
+      );
 
       // Ensure disabledCommands is an array
-      let disabledCommands = Array.isArray(guildDB.disabledCommands) 
-        ? guildDB.disabledCommands 
-        : (guildDB.disabledCommands || '').split(' ').filter(Boolean);
+      let disabledCommands = Array.isArray(guildDB.disabledCommands)
+        ? guildDB.disabledCommands
+        : (guildDB.disabledCommands || "").split(" ").filter(Boolean);
 
       let description;
-      const allDisabled = categoryCommands.every((cmd) => 
+      const allDisabled = categoryCommands.every((cmd) =>
         disabledCommands.includes(cmd.name)
       );
 
@@ -94,7 +100,7 @@ module.exports = class ToggleCategoryCommand extends Command {
       });
 
       // Prepare disabled commands list
-      const disabledList = 
+      const disabledList =
         disabledCommands.length > 0
           ? disabledCommands.map((cmd) => `\`${cmd}\``).join(" ")
           : "`None`";
@@ -106,11 +112,14 @@ module.exports = class ToggleCategoryCommand extends Command {
           iconURL: message.guild.iconURL({ dynamic: true }) || undefined,
         })
         .setDescription(description)
-        .addField(
-          "Disabled Commands", 
-          disabledList.length > 1024 ? "[Too Large to Display]" : disabledList,
-          true
-        )
+        .addFields({
+          name: "Disabled Commands",
+          value:
+            disabledList.length > 1024
+              ? "[Too Large to Display]"
+              : disabledList,
+          inline: true,
+        })
         .setFooter({ text: "https://neonova.eyum.org/" })
         .setTimestamp()
         .setColor(message.client.color.green);
@@ -119,7 +128,9 @@ module.exports = class ToggleCategoryCommand extends Command {
       await message.channel.sendCustom({ embeds: [embed] });
     } catch (error) {
       console.error("Error in togglecategory command:", error);
-      message.channel.sendCustom("An unexpected error occurred while processing the command.");
+      message.channel.sendCustom(
+        "An unexpected error occurred while processing the command."
+      );
     }
   }
 };

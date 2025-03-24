@@ -2,7 +2,7 @@ const Event = require("../../structures/Event");
 const Logging = require("../../database/schemas/logging");
 const discord = require("discord.js");
 const send = require("../../packages/logs/index.js");
-
+const { AuditLogEvent } = require("discord.js");
 const Maintenance = require("../../database/schemas/maintenance");
 module.exports = class extends Event {
   async run(message) {
@@ -14,6 +14,9 @@ module.exports = class extends Event {
 
     const logging = await Logging.findOne({ guildId: message.guild.id });
 
+    const logChannelDeletion = logging.server_events.channel_delete;
+      if (!logChannelDeletion) return;
+
     if (logging) {
       if (logging.server_events.toggle == "true") {
         if (message.name.indexOf("Room") >= 0) return;
@@ -22,14 +25,30 @@ module.exports = class extends Event {
           logging.server_events.channel
         );
 
+        let description = [];
+
+        const guild = message.guild;
+        const fetchedLogs = await guild.fetchAuditLogs({
+          type: AuditLogEvent,
+          limit: 1,
+        });
+        const auditEntry = fetchedLogs.entries.first();
+        const executor = auditEntry ? auditEntry.executor : null;
+
+        description.push(`The ${message.name} channel was deleted by ${executor ? executor : "Unknown"}.\n`);
+        description.push(`Channel Type: ${message.type}`);
+        description.push(`Channel Name: ${message.name}`);
+
         if (channelEmbed) {
-          let color = logging.server_events.color;
-          if (color == "#000000") color = message.client.color.red;
+          let color =
+            logging.server_events.color === "#000000"
+              ? this.client.color.red
+              : logging.server_events.color;
 
           if (logging.server_events.channel_delete == "true") {
             const embed = new discord.MessageEmbed()
-              .setDescription(`:wastebasket: ***Channel Deleted***`)
-              .addFields({name:"Channel Type", value:`${message.type}`, inline:true},{name:"Channel Name", value:`${message.name}`, inline:true})
+              .setTitle(`:wastebasket: ***Channel Deleted***`)
+              .setDescription(description.join("\n"))
               .setFooter({ text: `Channel ID: ${message.id}` })
               .setTimestamp()
               .setColor(color);
@@ -38,7 +57,7 @@ module.exports = class extends Event {
               channelEmbed &&
               channelEmbed.viewable &&
               channelEmbed
-                .permissionsFor(message.guild.me)
+                .permissionsFor(message.guild.members.me)
                 .has(["SEND_MESSAGES", "EMBED_LINKS"])
             ) {
               send(

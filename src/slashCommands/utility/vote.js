@@ -43,7 +43,7 @@ module.exports = {
             name: `${interaction.user.tag}`,
             iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
           })
-          .setColor(interaction.guild.me.displayHexColor)
+          .setColor(interaction.guild.members.me.displayHexColor)
           .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
           .setTimestamp(),
       ],

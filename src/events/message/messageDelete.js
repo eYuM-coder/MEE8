@@ -117,7 +117,7 @@ module.exports = class extends Event {
 
         if (channelEmbed) {
           let color = logging.message_events.color;
-          if (color == "#000000") color = message.client.color.red;
+          if (color == "#000000") color = this.client.color.red;
 
           if (logging.message_events.deleted == "true") {
             const embed = new MessageEmbed()
@@ -127,7 +127,7 @@ module.exports = class extends Event {
               })
               .setTimestamp()
               .setFooter({ text: `ID: ${message.id}` })
-              .setColor(message.guild.me.displayHexColor);
+              .setColor(color);
 
             if (message.content) {
               if (message.content.length > 1024)
@@ -148,7 +148,7 @@ module.exports = class extends Event {
               channelEmbed &&
               channelEmbed.viewable &&
               channelEmbed
-                .permissionsFor(message.guild.me)
+                .permissionsFor(message.guild.members.me)
                 .has(["SEND_MESSAGES", "EMBED_LINKS"])
             ) {
               send(

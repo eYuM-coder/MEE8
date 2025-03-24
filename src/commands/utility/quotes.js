@@ -34,7 +34,7 @@ module.exports = class ShowQuotesCommand extends Command {
         .setTitle("Saved Quotes");
 
       quotes.forEach((quote) => {
-        embed.addField({
+        embed.addFields({
           name: `${quote.authorID}`,
           value: `*${quote.content}*\n\n[${quote.authorID}](${quote.authorAvatar})`,
         });

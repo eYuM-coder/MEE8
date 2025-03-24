@@ -24,7 +24,7 @@ module.exports = class CatCommand extends Command {
       const catImageUrl = data[0].url;
 
       const catEmbed = new MessageEmbed()
-        .setColor(message.guild.me.displayHexColor || "#7289DA") 
+        .setColor(message.guild.members.me.displayHexColor || "#7289DA") 
         .setImage(catImageUrl)
         .setFooter(`Requested by: ${message.author.tag}`)
         .setDescription("Cats :cat:");

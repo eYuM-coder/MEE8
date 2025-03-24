@@ -24,7 +24,7 @@ module.exports = {
 
       const embed = new MessageEmbed()
         .setDescription(`\`${language.flippingCoin}\``)
-        .setColor(interaction.guild.me.displayHexColor);
+        .setColor(interaction.guild.members.me.displayHexColor);
 
       const msg = await interaction.reply({ embeds: [embed] });
 

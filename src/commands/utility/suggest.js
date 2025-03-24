@@ -27,7 +27,7 @@ module.exports = class extends Command {
 
     let suggestColor = guildDB.suggestion.suggestioncolor;
     if (suggestColor == "#000000")
-      suggestColor = message.guild.me.displayHexColor;
+      suggestColor = message.guild.members.me.displayHexColor;
 
     if (
       !guildDB.suggestion.suggestionChannelID ||
@@ -38,7 +38,7 @@ module.exports = class extends Command {
           new MessageEmbed()
             .setAuthor({
               name: `${message.author.tag}`,
-              iconURL: message.author.displayAvatarURL({ format: "png" })
+              iconURL: message.author.displayAvatarURL({ format: "png" }),
             })
             .setDescription(`${fail} ${language.suggesting1}`)
             .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
@@ -55,7 +55,7 @@ module.exports = class extends Command {
           new MessageEmbed()
             .setAuthor({
               name: `${message.author.tag}`,
-              iconURL: message.author.displayAvatarURL({ format: "png" })
+              iconURL: message.author.displayAvatarURL({ format: "png" }),
             })
             .setDescription(`${fail} ${language.suggesting2}`)
             .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
@@ -71,7 +71,7 @@ module.exports = class extends Command {
           new MessageEmbed()
             .setAuthor({
               name: `${message.author.tag}`,
-              iconURL: message.author.displayAvatarURL({ format: "png" })
+              iconURL: message.author.displayAvatarURL({ format: "png" }),
             })
             .setDescription(`${fail} ${language.suggest1}`)
             .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
@@ -86,7 +86,7 @@ module.exports = class extends Command {
           new MessageEmbed()
             .setAuthor({
               name: `${message.author.tag}`,
-              iconURL: message.author.displayAvatarURL({ format: "png" })
+              iconURL: message.author.displayAvatarURL({ format: "png" }),
             })
             .setDescription(`${fail} ${language.suggesting17}`)
             .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
@@ -99,16 +99,30 @@ module.exports = class extends Command {
       .setColor(suggestColor)
       .setTitle(`Guild Suggestions`)
       .setDescription(`**A new User just Suggested!**`)
-      .addField(`${language.report18}`, `${message.member}`, true)
-      .addField(`${language.report19}`, `${message.member.id}`, true)
-      .addField(`${language.report20}`, `${message.author.tag}`, true)
-      .addField(`Channel`, `${message.channel}`, true)
-      .addField(
-        `${language.report25}`,
-        `${moment(new Date()).format("dddd, MMMM Do YYYY")}`,
-        true
+      .addFields(
+        {
+          name: `${language.report18}`,
+          value: `${message.member}`,
+          inline: true,
+        },
+        {
+          name: `${language.report19}`,
+          value: `${message.member.id}`,
+          inline: true,
+        },
+        {
+          name: `${language.report20}`,
+          value: `${message.author.tag}`,
+          inline: true,
+        },
+        { name: `Channel`, value: `${message.channel}`, inline: true },
+        {
+          name: `${language.report25}`,
+          value: `${moment(new Date()).format("dddd, MMMM Do YYYY")}`,
+          inline: true,
+        },
+        { name: `Suggestion`, value: `\`\`\`${suggestionName}\`\`\`` }
       )
-      .addField(`Suggestion`, `\`\`\`${suggestionName}\`\`\``)
       .setFooter({
         text: message.author.tag,
         iconURL: message.author.displayAvatarURL({ dynamic: true }),
@@ -214,7 +228,7 @@ module.exports = class extends Command {
           new MessageEmbed()
             .setAuthor({
               name: `${message.author.tag}`,
-              iconURL: message.author.displayAvatarURL({ format: "png" })
+              iconURL: message.author.displayAvatarURL({ format: "png" }),
             })
             .setDescription(`${language.suggesting6} ${channel}`)
             .setFooter({ text: `${process.env.AUTH_DOMAIN}` })

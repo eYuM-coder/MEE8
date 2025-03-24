@@ -11,7 +11,9 @@ module.exports = {
         .setName("member")
         .setDescription("The user to verify")
         .setRequired(true)
-    ),
+    )
+    .setContexts(0)
+    .setIntegrationTypes(0),
   async execute(interaction) {
     const client = interaction.client;
     const fail = client.emoji.fail;

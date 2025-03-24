@@ -50,7 +50,7 @@ module.exports = {
     let fail = interaction.client.emoji.fail;
 
     let properUsage = new MessageEmbed()
-      .setColor(interaction.guild.me.displayHexColor)
+      .setColor(interaction.guild.members.me.displayHexColor)
       .setDescription(`${language.tempvc1.replace(/{prefix}/g, `${prefix}`)}`)
       .setFooter({ text: `${process.env.AUTH_DOMAIN}` });
 
@@ -74,7 +74,7 @@ module.exports = {
                 .setFooter({ text: `${process.env.AUTH_DOMAIN}` }),
             ],
           })
-          .setColor(interaction.guild.me.displayHexColor);
+          .setColor(interaction.guild.members.me.displayHexColor);
 
       if (
         !vcDB.channelId ||
@@ -154,7 +154,7 @@ module.exports = {
             ],
             ephemeral: true,
           })
-          .setColor(interaction.guild.me.displayHexColor);
+          .setColor(interaction.guild.members.me.displayHexColor);
 
       try {
         const embed = new MessageEmbed()
@@ -163,7 +163,7 @@ module.exports = {
             iconURL: `https://www.creeda.co.in/Images/loader.gif`,
           })
           .setDescription(`\`${language.tempvc6}\``)
-          .setColor(interaction.guild.me.displayHexColor);
+          .setColor(interaction.guild.members.me.displayHexColor);
         const msg = await interaction.reply({ embeds: [embed] });
 
         let category = interaction.guild.channels.cache.find(

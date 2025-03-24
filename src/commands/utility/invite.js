@@ -22,7 +22,7 @@ module.exports = class extends Command {
     const language = require(`../../data/language/${guildDB.language}.json`);
 
     const embed = new MessageEmbed()
-      .setColor(message.guild.me.displayHexColor)
+      .setColor(message.guild.members.me.displayHexColor)
       .setTitle("Invite Neonova")
       .setURL(`${process.env.AUTH_DOMAIN}/invite`)
       .setThumbnail(message.client.user.displayAvatarURL())

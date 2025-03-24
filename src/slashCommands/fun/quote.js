@@ -38,7 +38,7 @@ module.exports = {
       if (!text)
         return interaction.reply({ content: `${language.whatdoIsay}` });
 
-      if (!channel.permissionsFor(interaction.guild.me).has(["SEND_MESSAGES"]))
+      if (!channel.permissionsFor(interaction.guild.members.me).has(["SEND_MESSAGES"]))
         return interaction.reply({ content: `${language.sendmessages}` });
 
       if (!channel.permissionsFor(interaction.member).has(["SEND_MESSAGES"]))

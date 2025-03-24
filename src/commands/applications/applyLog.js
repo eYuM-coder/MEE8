@@ -28,7 +28,7 @@ module.exports = class extends Command {
       return message.channel.sendCustom({
         embeds: [
           new discord.MessageEmbed()
-            .setColor(message.guild.me.displayHexColor)
+            .setColor(message.guild.members.me.displayHexColor)
             .setDescription(
               `${message.client.emoji.fail} | ${language.applylogerrorchannel}`
             ),
@@ -51,7 +51,7 @@ module.exports = class extends Command {
           return message.channel.sendCustom({
             embeds: [
               new discord.MessageEmbed()
-                .setColor(message.guild.me.displayHexColor)
+                .setColor(message.guild.members.me.displayHexColor)
                 .setDescription(
                   `${message.client.emoji.fail} | ${language.applylogdisabled}`
                 ),
@@ -68,7 +68,7 @@ module.exports = class extends Command {
       return message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-            .setColor(message.guild.me.displayHexColor)
+            .setColor(message.guild.members.me.displayHexColor)
             .setDescription(
               `${message.client.emoji.fail} | ${language.applylogvalidchannel}`
             ),
@@ -89,7 +89,7 @@ module.exports = class extends Command {
         return message.channel.sendCustom({
           embeds: [
             new discord.MessageEmbed()
-              .setColor(message.guild.me.displayHexColor)
+              .setColor(message.guild.members.me.displayHexColor)
               .setDescription(
                 `${message.client.emoji.success} | ${language.applylogSuccess} ${channel}`
               ),

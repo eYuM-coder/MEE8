@@ -35,7 +35,7 @@ module.exports = class extends Command {
     if (!args[0]) return message.channel.sendCustom(`${language.whatdoIsay}`);
 
     // Check channel permissions
-    if (!channel.permissionsFor(message.guild.me).has(["SEND_MESSAGES"]))
+    if (!channel.permissionsFor(message.guild.members.me).has(["SEND_MESSAGES"]))
       return message.channel.sendCustom(`${language.sendmessages}`);
 
     if (!channel.permissionsFor(message.member).has(["SEND_MESSAGES"]))

@@ -128,13 +128,13 @@ module.exports = class extends Event {
                       { name: "After", value: newMessage.content }
                     )
                     .setFooter({ text: `Member ID: ${newMessage.member.id}` })
-                    .setColor(newMessage.guild.me.displayHexColor);
+                    .setColor(color);
 
                   if (
                     channelEmbed &&
                     channelEmbed.viewable &&
                     channelEmbed
-                      .permissionsFor(newMessage.guild.me)
+                      .permissionsFor(newMessage.guild.members.me)
                       .has(["SEND_MESSAGES", "EMBED_LINKS"])
                   ) {
                     send(

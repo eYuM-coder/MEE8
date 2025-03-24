@@ -80,16 +80,22 @@ module.exports = {
       .setTitle("Bug Report")
       .setThumbnail(interaction.user.displayAvatarURL({ dynamic: true }))
       .setDescription(`${report}`)
-      .addField("User", `${interaction.member}`, true)
-      .addField("User username", `${interaction.member.user.username}`, true)
-      .addField("User ID", `${interaction.member.id}`, true)
-      .addField("User Tag", `${interaction.user.tag}`, true)
-      .addField(
-        "Server",
-        `[${interaction.guild.name}](${invite || "none"})`,
-        true
+      .addFields(
+        { name: "User", value: `${interaction.member}`, inline: true },
+        {
+          name: "User username",
+          value: `${interaction.member.user.username}`,
+          inline: true,
+        },
+        { name: "User ID", value: `${interaction.member.id}`, inline: true },
+        { name: "User Tag", value: `${interaction.user.tag}`, inline: true },
+        {
+          name: "Server",
+          value: `[${interaction.guild.name}](${invite || "none"})`,
+          inline: true,
+        },
+        { name: "Bug Report ID:", value: `#${id}`, inline: true }
       )
-      .addField("Bug Report ID:", `#${id}`, true)
       .setFooter({
         text: interaction.member.displayName,
         iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
@@ -103,9 +109,11 @@ module.exports = {
       .setDescription(
         `${language.report3} Support [**Server**](${config.discord})`
       )
-      .addField("Member", `${interaction.member}`, true)
-      .addField("Message", `${report}`, true)
-      .addField("Bug Report ID:", `#${id}`, true)
+      .addFields(
+        { name: "Member", value: `${interaction.member}`, inline: true },
+        { name: "Message", value: `${report}`, inline: true },
+        { name: "Bug Report ID:", value: `#${id}`, inline: true }
+      )
       .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
       .setTimestamp()
       .setColor("GREEN");

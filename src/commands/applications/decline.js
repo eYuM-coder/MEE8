@@ -27,7 +27,7 @@ module.exports = class extends Command {
       message.channel.sendCustom({
         embeds: [
           new discord.MessageEmbed()
-            .setColor(message.guild.me.displayHexColor)
+            .setColor(message.guild.members.me.displayHexColor)
             .setDescription(
               `${message.client.emoji.fail} | ${language.approvepremium}.\n\n[Check Premium Here](${process.env.AUTH_DOMAIN}/premium)`
             ),

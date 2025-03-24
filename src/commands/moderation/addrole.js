@@ -39,7 +39,7 @@ module.exports = class extends Command {
             .setDescription(`Please Mention a Valid user mention / user ID`)
             .setTimestamp()
             .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-            .setColor(message.guild.me.displayHexColor),
+            .setColor(message.guild.members.me.displayHexColor),
         ],
       });
 
@@ -66,7 +66,7 @@ module.exports = class extends Command {
             .setDescription(`Please Provide a Valid Role / Role ID`)
             .setTimestamp()
             .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-            .setColor(message.guild.me.displayHexColor),
+            .setColor(message.guild.members.me.displayHexColor),
         ],
       });
     else if (member.roles.cache.has(role.id))
@@ -82,7 +82,7 @@ module.exports = class extends Command {
             .setDescription(`The user already has that role.`)
             .setTimestamp()
             .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-            .setColor(message.guild.me.displayHexColor),
+            .setColor(message.guild.members.me.displayHexColor),
         ],
       });
     else {
@@ -95,7 +95,7 @@ module.exports = class extends Command {
           .setDescription(
             `${success} | Added** ${role.name}** to **${member.user.tag}**`
           )
-          .setColor(message.guild.me.displayHexColor);
+          .setColor(message.guild.members.me.displayHexColor);
         message.channel
           .sendCustom({ embeds: [embed] })
           .then(async (s) => {

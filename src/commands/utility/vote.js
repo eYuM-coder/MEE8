@@ -49,7 +49,7 @@ module.exports = class extends Command {
             name: message.author.tag,
             iconURL: message.author.displayAvatarURL({ dynamic: true }),
           })
-          .setColor(message.guild.me.displayHexColor)
+          .setColor(message.guild.members.me.displayHexColor)
           .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
           .setTimestamp(),
       ],

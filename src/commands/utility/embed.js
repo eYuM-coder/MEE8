@@ -31,7 +31,7 @@ module.exports = class extends Command {
         .sendCustom(
           new MessageEmbed()
             .setDescription(`${message.client.emoji.fail} ${language.embedd1} `)
-            .setColor(message.guild.me.displayHexColor)
+            .setColor(message.guild.members.me.displayHexColor)
         )
         .catch((e) => {
           console.log(e);
@@ -42,7 +42,7 @@ module.exports = class extends Command {
           .setDescription(
             `${message.client.emoji.success} ${language.embedd2} `
           )
-          .setColor(message.guild.me.displayHexColor)
+          .setColor(message.guild.members.me.displayHexColor)
       )
       .catch((e) => {
         console.log(e);
@@ -77,7 +77,7 @@ module.exports = class extends Command {
                         .setDescription(
                           `${message.client.emoji.fail} ${language.embed15} `
                         )
-                        .setColor(message.guild.me.displayHexColor)
+                        .setColor(message.guild.members.me.displayHexColor)
                     ) + embedstarted.delete(message.author.id)
                   );
                 message.channel.sendCustom(`${language.embedd4}`).catch((e) => {
@@ -98,7 +98,7 @@ module.exports = class extends Command {
                               .setDescription(
                                 `${message.client.emoji.fail} ${language.embed15} `
                               )
-                              .setColor(message.guild.me.displayHexColor)
+                              .setColor(message.guild.members.me.displayHexColor)
                           ) + embedstarted.delete(message.author.id)
                         );
 
@@ -126,7 +126,7 @@ module.exports = class extends Command {
                                     .setDescription(
                                       `${message.client.emoji.fail} ${language.embed15} `
                                     )
-                                    .setColor(message.guild.me.displayHexColor)
+                                    .setColor(message.guild.members.me.displayHexColor)
                                 ) + embedstarted.delete(message.author.id)
                               );
 
@@ -215,7 +215,7 @@ module.exports = class extends Command {
                                                         `${message.client.emoji.fail} ${language.embed15} `
                                                       )
                                                       .setColor(
-                                                        message.guild.me
+                                                        message.guild.members.me
                                                           .displayHexColor
                                                       )
                                                   ) +
@@ -270,7 +270,7 @@ module.exports = class extends Command {
                                                               `${message.client.emoji.fail} ${language.embed15} `
                                                             )
                                                             .setColor(
-                                                              message.guild.me
+                                                              message.guild.members.me
                                                                 .displayHexColor
                                                             )
                                                         ) +
@@ -719,7 +719,7 @@ module.exports = class extends Command {
                                                               `${message.client.emoji.fail} ${language.embedd16} `
                                                             )
                                                             .setColor(
-                                                              message.guild.me
+                                                              message.guild.members.me
                                                                 .displayHexColor
                                                             )
                                                         );
@@ -732,7 +732,7 @@ module.exports = class extends Command {
                                                             `${message.client.emoji.fail} ${language.embed15} `
                                                           )
                                                           .setColor(
-                                                            message.guild.me
+                                                            message.guild.members.me
                                                               .displayHexColor
                                                           )
                                                       )
@@ -749,7 +749,7 @@ module.exports = class extends Command {
                                                           `${message.client.emoji.fail} ${language.embedd16} `
                                                         )
                                                         .setColor(
-                                                          message.guild.me
+                                                          message.guild.members.me
                                                             .displayHexColor
                                                         )
                                                     )
@@ -770,7 +770,7 @@ module.exports = class extends Command {
                                                       `${message.client.emoji.fail} ${language.embed15}`
                                                     )
                                                     .setColor(
-                                                      message.guild.me
+                                                      message.guild.members.me
                                                         .displayHexColor
                                                     )
                                                 )
@@ -790,7 +790,7 @@ module.exports = class extends Command {
                                                     `${message.client.emoji.fail} ${language.embedd16} `
                                                   )
                                                   .setColor(
-                                                    message.guild.me
+                                                    message.guild.members.me
                                                       .displayHexColor
                                                   )
                                               )
@@ -810,7 +810,7 @@ module.exports = class extends Command {
                                                 `${message.client.emoji.fail} ${language.embed15} `
                                               )
                                               .setColor(
-                                                message.guild.me.displayHexColor
+                                                message.guild.members.me.displayHexColor
                                               )
                                           )
                                           .catch((e) => {
@@ -827,7 +827,7 @@ module.exports = class extends Command {
                                               `${message.client.emoji.fail} ${language.embedd16} `
                                             )
                                             .setColor(
-                                              message.guild.me.displayHexColor
+                                              message.guild.members.me.displayHexColor
                                             )
                                         )
                                         .catch((e) => {
@@ -845,7 +845,7 @@ module.exports = class extends Command {
                                           `${message.client.emoji.fail} ${language.embed15} `
                                         )
                                         .setColor(
-                                          message.guild.me.displayHexColor
+                                          message.guild.members.me.displayHexColor
                                         )
                                     )
                                     .catch((e) => {
@@ -862,7 +862,7 @@ module.exports = class extends Command {
                                         `${message.client.emoji.fail} ${language.embedd16}`
                                       )
                                       .setColor(
-                                        message.guild.me.displayHexColor
+                                        message.guild.members.me.displayHexColor
                                       )
                                   )
                                   .catch((e) => {
@@ -879,7 +879,7 @@ module.exports = class extends Command {
                                   .setDescription(
                                     `${message.client.emoji.fail} ${language.embed15} `
                                   )
-                                  .setColor(message.guild.me.displayHexColor)
+                                  .setColor(message.guild.members.me.displayHexColor)
                               )
                               .catch((e) => {
                                 console.log(e);
@@ -894,7 +894,7 @@ module.exports = class extends Command {
                                 .setDescription(
                                   `${message.client.emoji.fail} ${language.embedd16} `
                                 )
-                                .setColor(message.guild.me.displayHexColor)
+                                .setColor(message.guild.members.me.displayHexColor)
                             )
                             .catch((e) => {
                               console.log(e);
@@ -910,7 +910,7 @@ module.exports = class extends Command {
                             .setDescription(
                               `${message.client.emoji.fail} ${language.embed15} `
                             )
-                            .setColor(message.guild.me.displayHexColor)
+                            .setColor(message.guild.members.me.displayHexColor)
                         )
                         .catch((e) => {
                           console.log(e);
@@ -925,7 +925,7 @@ module.exports = class extends Command {
                           .setDescription(
                             `${message.client.emoji.fail} ${language.embedd16}d `
                           )
-                          .setColor(message.guild.me.displayHexColor)
+                          .setColor(message.guild.members.me.displayHexColor)
                       )
                       .catch((e) => {
                         console.log(e);
@@ -945,7 +945,7 @@ module.exports = class extends Command {
                     .setDescription(
                       `${message.client.emoji.fail} ${language.embedd16} `
                     )
-                    .setColor(message.guild.me.displayHexColor)
+                    .setColor(message.guild.members.me.displayHexColor)
                 )
                 .catch((e) => {
                   console.log(e);
@@ -961,7 +961,7 @@ module.exports = class extends Command {
               .setDescription(
                 `${message.client.emoji.fail} ${language.embed15} `
               )
-              .setColor(message.guild.me.displayHexColor)
+              .setColor(message.guild.members.me.displayHexColor)
           )
           .catch((e) => {
             console.log(e);
@@ -975,7 +975,7 @@ module.exports = class extends Command {
             .setDescription(
               `${message.client.emoji.fail} ${language.embedd16} `
             )
-            .setColor(message.guild.me.displayHexColor)
+            .setColor(message.guild.members.me.displayHexColor)
         );
         embedstarted.delete(message.author.id);
       });

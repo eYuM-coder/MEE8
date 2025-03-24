@@ -40,7 +40,7 @@ module.exports = class extends Command {
       })
       .setDescription(`${language.members2.replace(/{prefix}/g, `${prefix}`)}`)
       .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-      .setColor(message.guild.me.displayHexColor);
+      .setColor(message.guild.members.me.displayHexColor);
 
     if (!args[0]) return message.channel.sendCustom(embedValid);
 
@@ -76,7 +76,7 @@ module.exports = class extends Command {
         iconURL: message.author.displayAvatarURL({ dynamic: true }),
       })
       .setTimestamp()
-      .setColor(message.guild.me.displayHexColor);
+      .setColor(message.guild.members.me.displayHexColor);
 
     const interval = 25;
     if (members.length === 0)

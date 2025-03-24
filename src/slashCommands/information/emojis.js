@@ -32,7 +32,7 @@ module.exports = {
         iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
       })
       .setTimestamp()
-      .setColor(interaction.guild.me.displayHexColor);
+      .setColor(interaction.guild.members.me.displayHexColor);
 
     const interval = 25;
     if (emojis.length === 0)

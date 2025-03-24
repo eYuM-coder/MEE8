@@ -43,7 +43,7 @@ module.exports = class extends Command {
             .setDescription("Please provide a valid user mention / user ID")
             .setTimestamp()
             .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-            .setColor(message.guild.me.displayHexColor),
+            .setColor(message.guild.members.me.displayHexColor),
         ],
       });
 
@@ -59,7 +59,7 @@ module.exports = class extends Command {
             .setDescription("Please provide a new Nickname")
             .setTimestamp()
             .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-            .setColor(message.guild.me.displayHexColor),
+            .setColor(message.guild.members.me.displayHexColor),
         ],
       });
 
@@ -80,7 +80,7 @@ module.exports = class extends Command {
               )
               .setTimestamp()
               .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-              .setColor(message.guild.me.displayHexColor),
+              .setColor(message.guild.members.me.displayHexColor),
           ],
         });
       nickname = nickname.slice(0, nickname.indexOf('"'));
@@ -96,7 +96,7 @@ module.exports = class extends Command {
               .setDescription("Provide a Nickname")
               .setTimestamp()
               .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-              .setColor(message.guild.me.displayHexColor),
+              .setColor(message.guild.members.me.displayHexColor),
           ],
         });
     }
@@ -113,7 +113,7 @@ module.exports = class extends Command {
             .setDescription("Make sure that nickname is below 32 characters")
             .setTimestamp()
             .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-            .setColor(message.guild.me.displayHexColor),
+            .setColor(message.guild.members.me.displayHexColor),
         ],
       });
     } else {
@@ -141,7 +141,7 @@ module.exports = class extends Command {
                 : ``
             }`
           )
-          .setColor(message.guild.me.displayHexColor);
+          .setColor(message.guild.members.me.displayHexColor);
         message.channel
           .sendCustom({ embeds: [embed] })
           .then(async (s) => {
@@ -247,7 +247,7 @@ module.exports = class extends Command {
               )
               .setTimestamp()
               .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-              .setColor(message.guild.me.displayHexColor),
+              .setColor(message.guild.members.me.displayHexColor),
           ],
         });
       }

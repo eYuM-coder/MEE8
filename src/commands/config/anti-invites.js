@@ -27,7 +27,7 @@ module.exports = class extends Command {
       return message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-            .setColor(message.guild.me.displayHexColor)
+            .setColor(message.guild.members.me.displayHexColor)
             .setDescription(
               `${message.client.emoji.fail} ${language.antiinvites1}`
             ),
@@ -42,7 +42,7 @@ module.exports = class extends Command {
       return message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-            .setColor(message.guild.me.displayHexColor)
+            .setColor(message.guild.members.me.displayHexColor)
             .setDescription(
               `${message.client.emoji.fail} ${language.antiinvites1}`
             ),
@@ -55,7 +55,7 @@ module.exports = class extends Command {
         return message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-              .setColor(message.guild.me.displayHexColor)
+              .setColor(message.guild.members.me.displayHexColor)
               .setDescription(
                 `${message.client.emoji.fail} ${language.moduleDisabled}`
               ),
@@ -76,7 +76,7 @@ module.exports = class extends Command {
           return message.channel.sendCustom({
             embeds: [
               new MessageEmbed()
-                .setColor(message.guild.me.displayHexColor)
+                .setColor(message.guild.members.me.displayHexColor)
                 .setDescription(
                   `${message.client.emoji.success} ${language.antiinvites3}`
                 ),
@@ -92,7 +92,7 @@ module.exports = class extends Command {
         return message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-              .setColor(message.guild.me.displayHexColor)
+              .setColor(message.guild.members.me.displayHexColor)
               .setDescription(
                 `${message.client.emoji.fail} ${language.moduleEnabled}`
               ),
@@ -113,7 +113,7 @@ module.exports = class extends Command {
           return message.channel.sendCustom({
             embeds: [
               new MessageEmbed()
-                .setColor(message.guild.me.displayHexColor)
+                .setColor(message.guild.members.me.displayHexColor)
                 .setDescription(
                   `${message.client.emoji.success} ${language.antiinvites4}`
                 ),

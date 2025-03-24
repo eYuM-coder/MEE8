@@ -25,7 +25,7 @@ module.exports = class extends Command {
     try {
       const recipient = message.content.split(/\s+/g).slice(1).join(" ");
       if (!recipient) {
-        const member = message.guild.me;
+        const member = message.guild.members.me;
         const mentionedMemberAvatar = member.user.displayAvatarURL({
           dynamic: false,
           format: "png",

@@ -33,7 +33,7 @@ module.exports = class extends Command {
         }),
       })
       .setTimestamp()
-      .setColor(message.guild.me.displayHexColor);
+      .setColor(message.guild.members.me.displayHexColor);
 
     if (servers.length <= 10) {
       const range = servers.length == 1 ? "[1]" : `[1 - ${servers.length}]`;

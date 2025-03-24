@@ -40,7 +40,7 @@ module.exports = class extends Command {
             )
             .setTimestamp()
             .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-            .setColor(message.guild.me.displayHexColor),
+            .setColor(message.guild.members.me.displayHexColor),
         ],
       });
 
@@ -59,7 +59,7 @@ module.exports = class extends Command {
             )
             .setTimestamp()
             .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-            .setColor(message.guild.me.displayHexColor),
+            .setColor(message.guild.members.me.displayHexColor),
         ],
       });
 
@@ -82,7 +82,7 @@ module.exports = class extends Command {
         message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-              .setColor(message.guild.me.displayHexColor)
+              .setColor(message.guild.members.me.displayHexColor)
               .setDescription(
                 `${message.client.emoji.fail} Auto Response Limit Reached **(10)**\n\n[Upgrade Premium Here for unlimited commands](${process.env.AUTH_DOMAIN}/premium)`
               ),
@@ -113,7 +113,7 @@ module.exports = class extends Command {
                 )
                 .setTimestamp()
                 .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-                .setColor(message.guild.me.displayHexColor),
+                .setColor(message.guild.members.me.displayHexColor),
             ],
           });
         } else {

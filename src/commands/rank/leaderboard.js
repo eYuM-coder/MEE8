@@ -46,10 +46,10 @@ module.exports = class extends Command {
           console.error("Error fetching member:", error);
         }
 
-        leaderboardEmbed.addField(
+        leaderboardEmbed.addFields({name:
           `#${i + 1} - ${member ? `${member.user.username}` : "Unknown"}`,
-          `Level: ${user.level} | XP: ${user.xp}`
-        );
+          value:`Level: ${user.level} | XP: ${user.xp}`
+      });
       }
 
       message.channel.send({ embeds: [leaderboardEmbed] });

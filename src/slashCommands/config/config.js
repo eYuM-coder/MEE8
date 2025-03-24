@@ -17,7 +17,7 @@ module.exports = {
     await interaction.reply({
       embeds: [
         new MessageEmbed()
-          .setColor(interaction.guild.me.displayHexColor)
+          .setColor(interaction.guild.members.me.displayHexColor)
           .setTitle(`${language.serversettings1}`)
           .addFields(
             {

@@ -104,7 +104,7 @@ module.exports = class extends Event {
             message.channel &&
             message.channel.viewable &&
             message.channel
-              .permissionsFor(message.guild.me)
+              .permissionsFor(message.guild.members.me)
               .has(["SEND_MESSAGES", "EMBED_LINKS"])
           ) {
             user.send({ embeds: [slowDownEmbed] }).catch(() => {});
@@ -135,7 +135,7 @@ module.exports = class extends Event {
             console.log(err);
             if (
               !message.channel
-                .permissionsFor(message.guild.me)
+                .permissionsFor(message.guild.members.me)
                 .has("SEND_MESSAGES")
             )
               return;
@@ -166,7 +166,7 @@ module.exports = class extends Event {
           } catch (err) {
             if (
               !message.channel
-                .permissionsFor(message.guild.me)
+                .permissionsFor(message.guild.members.me)
                 .has("SEND_MESSAGES")
             )
               return;
@@ -197,7 +197,7 @@ module.exports = class extends Event {
           } catch (err) {
             if (
               !message.channel
-                .permissionsFor(message.guild.me)
+                .permissionsFor(message.guild.members.me)
                 .has("SEND_MESSAGES")
             )
               return;
@@ -228,7 +228,7 @@ module.exports = class extends Event {
           } catch (err) {
             if (
               !message.channel
-                .permissionsFor(message.guild.me)
+                .permissionsFor(message.guild.members.me)
                 .has("SEND_MESSAGES")
             )
               return;
@@ -264,7 +264,7 @@ module.exports = class extends Event {
           } catch (err) {
             if (
               !message.channel
-                .permissionsFor(message.guild.me)
+                .permissionsFor(message.guild.members.me)
                 .has("SEND_MESSAGES")
             )
               return;
@@ -317,7 +317,7 @@ module.exports = class extends Event {
           } catch (err) {
             if (
               !message.channel
-                .permissionsFor(message.guild.me)
+                .permissionsFor(message.guild.members.me)
                 .has("SEND_MESSAGES")
             )
               return;
@@ -406,13 +406,13 @@ module.exports = class extends Event {
                 if (ticketCooldownLol.has(user.id)) return;
                 if (
                   !message.channel
-                    .permissionsFor(message.guild.me)
+                    .permissionsFor(message.guild.members.me)
                     .has("SEND_MESSAGES")
                 )
                   return;
                 if (
                   !message.channel
-                    .permissionsFor(message.guild.me)
+                    .permissionsFor(message.guild.members.me)
                     .has("EMBED_LINKS")
                 )
                   return;
@@ -456,7 +456,7 @@ module.exports = class extends Event {
                         "ADD_REACTIONS",
                         "MANAGE_CHANNELS",
                       ],
-                      id: message.guild.me,
+                      id: message.guild.members.me,
                     },
 
                     {
@@ -500,7 +500,7 @@ module.exports = class extends Event {
 
                   let color = db.ticketWelcomeColor;
                   if (color == "#000000")
-                    color = message.guild.me.displayHexColor;
+                    color = this.client.color.green;
 
                   if (db.ticketPing == "true") {
                     if (chan) {
@@ -583,7 +583,7 @@ module.exports = class extends Event {
                   console.log(e);
                   if (
                     !message.channel
-                      .permissionsFor(message.guild.me)
+                      .permissionsFor(message.guild.members.me)
                       .has("SEND_MESSAGES")
                   )
                     return;

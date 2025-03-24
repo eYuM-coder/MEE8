@@ -3,6 +3,7 @@ const Logging = require("../../database/schemas/logging");
 const discord = require("discord.js");
 const Maintenance = require("../../database/schemas/maintenance");
 const send = require("../../packages/logs/index");
+const { AuditLogEvent } = require("discord.js");
 
 module.exports = class extends Event {
   async run(emoji) {
@@ -20,22 +21,35 @@ module.exports = class extends Event {
           logging.server_events.channel
         );
 
+        let description = [];
+
+        const guild = emoji.guild;
+        const fetchedLogs = await guild.fetchAuditLogs({
+          type: AuditLogEvent,
+          limit: 1,
+        });
+        const auditEntry = fetchedLogs.entries.first();
+        const executor = auditEntry ? auditEntry.executor : null;
+
+        description.push(
+          `The ${emoji.name} emoji was created by ${
+            executor ? executor : "Unknown"
+          }.\n`
+        );
+        description.push(`Emoji Name: ${emoji.name}`);
+        description.push(`Emoji: ${emoji}`);
+        description.push(`Full ID: \`<:${emoji.name}:${emoji.id}>\``);
+
         if (channelEmbed) {
-          let color = logging.server_events.color;
-          if (color == "#000000") color = emoji.client.color.green;
+          let color =
+            logging.server_events.color === "#000000"
+              ? this.client.color.green
+              : logging.server_events.color;
 
           if (logging.server_events.emoji_update == "true") {
             const embed = new discord.MessageEmbed()
               .setDescription(`🆕 ***Emoji Created***`)
-              .addFields(
-                { name: "Emoji Name", value: `${emoji.name}`, inline: true },
-                { name: "Emoji", value: `${emoji}`, inline: true },
-                {
-                  name: "Full ID",
-                  value: `\`<:${emoji.name}:${emoji.id}>\``,
-                  inline: true,
-                }
-              )
+              .setDescription(description.join("\n"))
               .setFooter({ text: `Emoji ID: ${emoji.id}` })
               .setTimestamp()
               .setColor(color);

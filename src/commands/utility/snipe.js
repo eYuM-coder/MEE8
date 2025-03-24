@@ -28,7 +28,7 @@ module.exports = class extends Command {
       })
       .setFooter({ text: message.guild.name })
       .setTimestamp()
-      .setColor(message.guild.me.displayHexColor)
+      .setColor(message.guild.members.me.displayHexColor)
       .setDescription(
         `${message.client.emoji.fail} | Couldn't find any deleted message in **${channel.name}**`
       );
@@ -50,7 +50,7 @@ module.exports = class extends Command {
       })
       .setFooter({ text: message.guild.name })
       .setTimestamp()
-      .setColor(message.guild.me.displayHexColor);
+      .setColor(message.guild.members.me.displayHexColor);
 
     for (let i = 0; snipe.message.length > i; i++) {
       data.push(
@@ -61,7 +61,7 @@ module.exports = class extends Command {
         }\``
       );
 
-      embed.addField({
+      embed.addFields({
         name: `Message ${i + 1}`,
         value: `**User:** ${
           (await message.client.users.fetch(snipe.tag[i])) || "Unknown"

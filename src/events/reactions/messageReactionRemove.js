@@ -106,7 +106,7 @@ module.exports = class extends Event {
           } catch (err) {
             if (
               !message.channel
-                .permissionsFor(message.guild.me)
+                .permissionsFor(message.guild.members.me)
                 .has("SEND_MESSAGES")
             )
               return;
@@ -139,7 +139,7 @@ module.exports = class extends Event {
           } catch (err) {
             if (
               !message.channel
-                .permissionsFor(message.guild.me)
+                .permissionsFor(message.guild.members.me)
                 .has("SEND_MESSAGES")
             )
               return;

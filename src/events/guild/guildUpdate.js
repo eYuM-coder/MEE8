@@ -19,94 +19,91 @@ module.exports = class extends Event {
           logging.server_events.channel
         );
 
+        let description = [];
+
+        const guild = newGuild.guild;
+        const fetchedLogs = await guild.fetchAuditLogs({
+          type: "GUILD_UPDATE",
+          limit: 1,
+        });
+        const auditEntry = fetchedLogs.entries.first();
+        const executor = auditEntry ? auditEntry.executor : null;
+
+        description.push(
+          `The guild ${oldGuild.name} was updated by ${
+            executor ? executor : "Unknown"
+          }.\n`
+        );
+
         if (channelEmbed) {
-          let color = logging.server_events.color;
-          if (color == "#000000") color = oldGuild.client.color.yellow;
+          let color =
+            logging.server_events.color === "#000000"
+              ? this.client.color.yellow
+              : logging.server_events.color;
 
           if (logging.server_events.channel_created == "true") {
             const embed = new discord.MessageEmbed()
-              .setDescription(`:pencil: ***Guild Updated***`)
+              .setTitle(`:pencil: ***Guild Updated***`)
               .setFooter({ text: `Guild ID: ${oldGuild.id}` })
               .setTimestamp()
               .setColor(color);
 
             if (oldGuild.name !== newGuild.name) {
-              embed.addFields({
-                name: "Name Update",
-                value: `${oldGuild.name} --> ${newGuild.name}`,
-                inline: true,
-              });
-            } else {
-              embed.addFields({
-                name: "Name Update",
-                value: `Name not updated`,
-                inline: true,
-              });
+              description.push(`Name: ${oldGuild.name} --> ${newGuild.name}`);
             }
-
             if (oldGuild.verificationLevel !== newGuild.verificationLevel) {
-              embed.addFields({
-                name: "Verification Level",
-                value: `${oldGuild.verificationLevel || "none"} --> ${
-                  newGuild.verificationLevel || "none"
-                }`,
-                inline: true,
-              });
+              description.push(
+                `Verification Level: ${
+                  oldGuild.verificationLevel || "none"
+                } --> ${newGuild.verificationLevel || "none"}`
+              );
             }
 
             if (oldGuild.icon !== newGuild.icon) {
-              embed.addFields({
-                name: "Icon",
-                value: `[old Icon](${oldGuild.iconURL({
+              description.push(
+                `Icon: [Old icon](${oldGuild.iconURL({
                   dynamic: true,
                   size: 512,
-                })}) --> [new Icon](${newGuild.iconURL({
+                })}) --> [New icon](${newGuild.iconURL({
                   dynamic: true,
                   size: 512,
-                })})`,
-                inline: true,
-              });
+                })})`
+              );
             }
 
             if (oldGuild.region !== newGuild.region) {
-              embed.addFields({
-                name: "region",
-                value: `${oldGuild.region || "none"} --> ${
+              description.push(
+                `Region: ${oldGuild.region || "none"} --> ${
                   newGuild.region || "none"
-                }`,
-                inline: true,
-              });
+                }`
+              );
             }
 
             if (oldGuild.ownerID !== newGuild.ownerID) {
-              embed.addFields({
-                name: "Owner",
-                value: `<@${oldGuild.ownerID || "none"}> **(${
+              description.push(
+                `Owner: <@${oldGuild.ownerID || "none"}> **(${
                   oldGuild.ownerID
-                })** --> <@${newGuild.ownerID}>**(${newGuild.ownerID})**`,
-                inrole: true,
-              });
+                })** --> <@${newGuild.ownerID}>**(${newGuild.ownerID})**`
+              );
             }
 
             if (oldGuild.afkTimeout !== newGuild.afkTimeout) {
-              embed.addFields({
-                name: "AFK Timeout",
-                value: `${oldGuild.afkTimeout || "none"} --> ${
+              description.push(
+                `AFK Timeout: ${oldGuild.afkTimeout || "none"} --> ${
                   newGuild.afkTimeout || "none"
-                }`,
-                inline: true,
-              });
+                }`
+              );
             }
 
             if (oldGuild.afkChannelID !== newGuild.afkChannelID) {
-              embed.addFields({
-                name: "AFK Channel",
-                value: `${oldGuild.afkChannelID || "none"}> --> ${
+              description.push(
+                `AFK Channel: ${oldGuild.afkChannelID || "none"}> --> ${
                   newGuild.afkChannelID || "none"
-                }`,
-                inline: true,
-              });
+                }`
+              );
             }
+
+            embed.setDescription(description.join("\n"));
 
             if (
               channelEmbed &&

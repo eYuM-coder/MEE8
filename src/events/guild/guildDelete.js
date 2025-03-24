@@ -26,7 +26,7 @@ module.exports = class extends Event {
     );
 
     const welcomeEmbed = new Discord.MessageEmbed()
-      .setColor(`RED`)
+      .setColor(this.client.color.red)
       .setTitle("Leave Server")
       .setThumbnail(`${process.env.AUTH_DOMAIN}/logo`)
       .setDescription(`${config.botName} left a server!`)
@@ -50,7 +50,7 @@ module.exports = class extends Event {
     }).catch(() => {});
 
     const embed = new Discord.MessageEmbed()
-      .setColor("RED")
+      .setColor(this.client.color.red)
       .setDescription(`I have left the ${guild.name} server.`)
       .setFooter({
         text: `Lost ${guild.members.cache.size - 1} members • I'm now in ${

@@ -2,7 +2,11 @@ const { MessageEmbed } = require("discord.js");
 const Command = require("../../structures/Command");
 const Guild = require("../../database/schemas/Guild");
 const { stripIndent } = require("common-tags");
-const { MessageButton, MessageActionRow, MessageSelectMenu } = require("discord.js");
+const {
+  MessageButton,
+  MessageActionRow,
+  MessageSelectMenu,
+} = require("discord.js");
 const config = require("../../../config.json");
 const emojis = require("../../assets/emojis.json");
 const fs = require("fs");
@@ -46,12 +50,17 @@ module.exports = class extends Command {
 
     let categories;
     categories = this.client.utils.removeDuplicates(
-      this.client.botCommands.filter((cmd) => cmd.category !== "Owner").map((cmd) => cmd.category),
+      this.client.botCommands
+        .filter((cmd) => cmd.category !== "Owner")
+        .map((cmd) => cmd.category)
     );
 
-    if (this.client.config.owner.includes(message.author.id) || this.client.config.developers.includes(message.author.id))
+    if (
+      this.client.config.owner.includes(message.author.id) ||
+      this.client.config.developers.includes(message.author.id)
+    )
       categories = this.client.utils.removeDuplicates(
-        this.client.botCommands.map((cmd) => cmd.category),
+        this.client.botCommands.map((cmd) => cmd.category)
       );
 
     const options = [
@@ -59,7 +68,7 @@ module.exports = class extends Command {
         label: "Home",
         description: "Click to view all categories",
         value: "home",
-      }
+      },
     ];
 
     categories.forEach((category) => {
@@ -79,15 +88,15 @@ module.exports = class extends Command {
       new MessageButton()
         .setCustomId("info")
         .setLabel("More info")
-        .setStyle("SECONDARY"), // can be "PRIMARY", "SECONDARY", "SUCCESS", "DANGER", "LINK", "INFO"
+        .setStyle("SECONDARY") // can be "PRIMARY", "SECONDARY", "SUCCESS", "DANGER", "LINK", "INFO"
     );
 
     const row = new MessageActionRow().addComponents(
       new MessageSelectMenu()
-      .setCustomId("select")
-      .setPlaceholder("Select your option")
-      .addOptions(options)
-    )
+        .setCustomId("select")
+        .setPlaceholder("Select your option")
+        .addOptions(options)
+    );
 
     const green = "<:purple:826033456207233045>";
     const red = "<:redsquare:803527843661217802>";
@@ -97,8 +106,14 @@ module.exports = class extends Command {
         .setTitle(`${message.client.config.botName}'s categories`)
         .setDescription(`Choose a category from the list below`)
         .setColor("#9C59B6");
-      
-      categories.forEach((category) => {embed.addField(capitalize(category), "Use the select menu to explore this category!", true)})
+
+      categories.forEach((category) => {
+        embed.addFields({
+          name: capitalize(category),
+          value: "Use the select menu to explore this category!",
+          inline: true,
+        });
+      });
 
       let editEmbed = new MessageEmbed()
         .addFields({
@@ -132,16 +147,23 @@ module.exports = class extends Command {
         if (value != "home") {
           let _commands = "";
 
-          const commandsInCategory = this.client.botCommands.filter((cmd) => cmd.category && cmd.category.toLowerCase() === value.toLowerCase());
+          const commandsInCategory = this.client.botCommands.filter(
+            (cmd) =>
+              cmd.category && cmd.category.toLowerCase() === value.toLowerCase()
+          );
 
-          commandsInCategory.forEach((cmd) => { _commands += `- \`${cmd.name}\`: ${cmd.description}\n` });
+          commandsInCategory.forEach((cmd) => {
+            _commands += `- \`${cmd.name}\`: ${cmd.description}\n`;
+          });
 
           editEmbed
             .setDescription(_commands || "No commands found for this category.")
             .setColor("GREEN")
             .setTitle(`${emoji[value]} ${capitalize(value)} Commands`)
             .setFooter({
-              text: `Requested by ${message.author.tag} | Total ${capitalize(value)} commands: ${commandsInCategory.size}`,
+              text: `Requested by ${message.author.tag} | Total ${capitalize(
+                value
+              )} commands: ${commandsInCategory.size}`,
               iconURL: message.author.displayAvatarURL({ dynamic: true }),
             });
           return await sendmsg.edit({ embeds: [editEmbed] });
@@ -156,45 +178,55 @@ module.exports = class extends Command {
 
       if (!cmd)
         return message.channel.sendCustom(
-          `${message.client.emoji.fail} Could not find the Command you're looking for`,
+          `${message.client.emoji.fail} Could not find the Command you're looking for`
         );
 
       if (cmd.category === "Owner")
         return message.channel.sendCustom(
-          `${message.client.emoji.fail} Could not find the Command you're looking for`,
+          `${message.client.emoji.fail} Could not find the Command you're looking for`
         );
 
       let embed = new MessageEmbed();
       embed.setTitle(`Command: ${cmd.name}`);
       embed.setDescription(cmd.description);
       embed.setThumbnail(`https://neonova.eyum.org/logo.png`);
-      embed.setColor("#9C59B6")
+      embed.setColor("#9C59B6");
       embed.setFooter(
         cmd.disabled ||
           disabledCommands.includes(args[0] || args[0].toLowerCase())
           ? "This command is currently disabled."
           : message.member.displayName,
-        message.author.displayAvatarURL({ dynamic: true }),
+        message.author.displayAvatarURL({ dynamic: true })
       );
 
-      embed.addField("Usage", `\`${cmd.usage}\``, true);
-      embed.addField("category", `\`${capitalize(cmd.category)}\``, true);
+      embed.addFields(
+        { name: "Usage", value: `\`${cmd.usage}\``, inline: true },
+        {
+          name: "category",
+          value: `\`${capitalize(cmd.category)}\``,
+          inline: true,
+        }
+      );
 
       if (cmd.aliases && cmd.aliases.length && typeof cmd.aliases === "object")
-        embed.addField(
-          "Aliases",
-          cmd.aliases.map((alias) => `\`${alias}\``, true).join(", "),
-          true,
-        );
+        embed.addFields({
+          name: "Aliases",
+          value: cmd.aliases.map((alias) => `\`${alias}\``, true).join(", "),
+          inline: true,
+        });
       if (cmd.cooldown && cmd.cooldown > 1)
-        embed.addField("Cooldown", `\`${cmd.cooldown}s\``, true);
+        embed.addFields({
+          name: "Cooldown",
+          value: `\`${cmd.cooldown}s\``,
+          inline: true,
+        });
       if (cmd.examples && cmd.examples.length)
-        embed.addField(
-          "__**Examples**__",
-          cmd.examples
+        embed.addFields({
+          name: "__**Examples**__",
+          value: cmd.examples
             .map((example) => `<:purple:826033456207233045> \`${example}\``)
             .join("\n"),
-        );
+        });
 
       return message.channel.sendCustom({ embeds: [embed] });
     }

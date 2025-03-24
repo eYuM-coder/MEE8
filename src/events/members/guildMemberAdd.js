@@ -64,7 +64,7 @@ module.exports = class extends Event {
                 ),
               })
               .setTimestamp()
-              .setColor(member.guild.me.displayHexColor);
+              .setColor(member.guild.members.medisplayHexColor);
 
             if (
               channelEmbed &&
@@ -179,8 +179,14 @@ module.exports = class extends Event {
           .replace(/{user_ID}/g, `${member.id}`)
           .replace(/{guild_name}/g, `${member.guild.name}`)
           .replace(/{guild_ID}/g, `${member.guild.id}`)
-          .replace(/{memberCount}/g, `${member.guild.memberCount}`)
-          .replace(/{size}/g, `${member.guild.memberCount}`)
+          .replace(
+            /{memberCount}/g,
+            `${member.guild.members.cache.reduce((a, b) => a + b, 0)}`
+          )
+          .replace(
+            /{size}/g,
+            `${member.guild.members.cache.reduce((a, b) => a + b, 0)}`
+          )
           .replace(/{guild}/g, `${member.guild.name}`)
           .replace(
             /{member_createdAtAgo}/g,
@@ -213,8 +219,14 @@ module.exports = class extends Event {
             .replace(/{user_ID}/g, `${member.id}`)
             .replace(/{guild_name}/g, `${member.guild.name}`)
             .replace(/{guild_ID}/g, `${member.guild.id}`)
-            .replace(/{memberCount}/g, `${member.guild.memberCount}`)
-            .replace(/{size}/g, `${member.guild.memberCount}`)
+            .replace(
+              /{memberCount}/g,
+              `${member.guild.members.cache.reduce((a, b) => a + b, 0)}`
+            )
+            .replace(
+              /{size}/g,
+              `${member.guild.members.cache.reduce((a, b) => a + b, 0)}`
+            )
             .replace(/{guild}/g, `${member.guild.name}`)
             .replace(
               /{member_createdAtAgo}/g,
@@ -235,8 +247,14 @@ module.exports = class extends Event {
             .replace(/{user_ID}/g, `${member.id}`)
             .replace(/{guild_name}/g, `${member.guild.name}`)
             .replace(/{guild_ID}/g, `${member.guild.id}`)
-            .replace(/{memberCount}/g, `${member.guild.memberCount}`)
-            .replace(/{size}/g, `${member.guild.memberCount}`)
+            .replace(
+              /{memberCount}/g,
+              `${member.guild.members.cache.reduce((a, b) => a + b, 0)}`
+            )
+            .replace(
+              /{size}/g,
+              `${member.guild.members.cache.reduce((a, b) => a + b, 0)}`
+            )
             .replace(/{guild}/g, `${member.guild.name}`);
 
           if (authorName !== null) embed.setAuthor({ name: authorName });
@@ -292,8 +310,14 @@ module.exports = class extends Event {
               .replace(/{user_ID}/g, `${member.id}`)
               .replace(/{guild_name}/g, `${member.guild.name}`)
               .replace(/{guild_ID}/g, `${member.guild.id}`)
-              .replace(/{memberCount}/g, `${member.guild.memberCount}`)
-              .replace(/{size}/g, `${member.guild.memberCount}`)
+              .replace(
+                /{memberCount}/g,
+                `${member.guild.members.cache.reduce((a, b) => a + b, 0)}`
+              )
+              .replace(
+                /{size}/g,
+                `${member.guild.members.cache.reduce((a, b) => a + b, 0)}`
+              )
               .replace(/{guild}/g, `${member.guild.name}`)
               .replace(
                 /{member_createdAtAgo}/g,
@@ -336,8 +360,17 @@ module.exports = class extends Event {
                 .replace(/{user_ID}/g, `${member.id}`)
                 .replace(/{guild_name}/g, `${member.guild.name}`)
                 .replace(/{guild_ID}/g, `${member.guild.id}`)
-                .replace(/{memberCount}/g, `${member.guild.memberCount}`)
-                .replace(/{size}/g, `${member.guild.memberCount}`)
+                .replace(
+                  /{memberCount}/g,
+                  `${member.guild.members.cache.reduce((a, b) => a + b, 0)}`
+                )
+                .replace(
+                  /{size}/g,
+                  `${member.guild.guild.members.cache.reduce(
+                    (a, b) => a + b,
+                    0
+                  )}`
+                )
                 .replace(/{guild}/g, `${member.guild.name}`)
                 .replace(
                   /{member_createdAtAgo}/g,
@@ -358,8 +391,14 @@ module.exports = class extends Event {
                 .replace(/{user_ID}/g, `${member.id}`)
                 .replace(/{guild_name}/g, `${member.guild.name}`)
                 .replace(/{guild_ID}/g, `${member.guild.id}`)
-                .replace(/{memberCount}/g, `${member.guild.memberCount}`)
-                .replace(/{size}/g, `${member.guild.memberCount}`)
+                .replace(
+                  /{memberCount}/g,
+                  `${member.guild.members.cache.reduce((a, b) => a + b, 0)}`
+                )
+                .replace(
+                  /{size}/g,
+                  `${member.guild.members.cache.reduce((a, b) => a + b, 0)}`
+                )
                 .replace(/{guild}/g, `${member.guild.name}`);
 
               if (authorName !== null) embed.setAuthor({ name: authorName });

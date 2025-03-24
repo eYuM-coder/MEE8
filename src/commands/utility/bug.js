@@ -59,12 +59,22 @@ module.exports = class extends Command {
       .setTitle("Bug Report")
       .setThumbnail(message.author.displayAvatarURL({ dynamic: true }))
       .setDescription(report)
-      .addField("User", `${message.member}`, true)
-      .addField("User username", `${message.member.user.username}`, true)
-      .addField("User ID", `${message.member.id}`, true)
-      .addField("User Tag", `${message.member.user.tag}`, true)
-      .addField("Server", `[${message.guild.name}](${invite || "none "})`, true)
-      .addField("Bug Report ID:", `#${id}`, true)
+      .addFields(
+        { name: "User", value: `${message.member}`, inline: true },
+        {
+          name: "User username",
+          value: `${message.member.user.username}`,
+          inline: true,
+        },
+        { name: "User ID", value: `${message.member.id}`, inline: true },
+        { name: "User Tag", value: `${message.member.user.tag}`, inline: true },
+        {
+          name: "Server",
+          value: `[${message.guild.name}](${invite || "none "})`,
+          inline: true,
+        },
+        { name: "Bug Report ID:", value: `#${id}`, inline: true }
+      )
       .setFooter({
         text: message.member.displayName,
         iconURL: message.author.displayAvatarURL({ dynamic: true }),
@@ -78,9 +88,11 @@ module.exports = class extends Command {
       .setDescription(
         `${language.report3} Support [**Server**](${config.discord})`
       )
-      .addField("Member", `${message.member}`, true)
-      .addField("Message", `${report}`, true)
-      .addField("Bug Report ID:", `#${id}`, true)
+      .addFields(
+        { name: "Member", value: `${message.member}`, inline: true },
+        { name: "Message", value: `${report}`, inline: true },
+        { name: "Bug Report ID:", value: `#${id}`, inline: true }
+      )
       .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
       .setTimestamp()
       .setColor("GREEN");

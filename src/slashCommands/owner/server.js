@@ -70,7 +70,7 @@ module.exports = {
         }
       )
       .setThumbnail(guild.iconURL())
-      .setColor(interaction.guild.me.displayHexColor);
+      .setColor(interaction.guild.members.me.displayHexColor);
     interaction.reply({ embeds: [embed] }).catch((error) => {
       interaction.reply({ content: `Error: ${error}` });
     });

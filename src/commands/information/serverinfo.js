@@ -38,41 +38,50 @@ module.exports = class extends Command {
 
     const embed = new MessageEmbed()
       .setAuthor({ name: message.guild.name, iconURL: message.guild.iconURL() })
-      .addField(`${language.nameS}`, `${message.guild.name}`, true)
-      .addField("ID", `${message.guild.id}`, true)
-      .addField(
-        `${language.serverInfo1}`,
-        `${message.guild.members.cache.size} | ${
-          message.guild.members.cache.filter((member) => !member.user.bot).size
-        } | ${
-          message.guild.members.cache.filter((member) => member.user.bot).size
-        }`,
-        true
-      )
-      .addField(
-        `${language.verificationLevel}`,
-        message.guild.verificationLevel,
-        true
-      )
-      .addField(
-        `${language.channels}`,
-        `${message.guild.channels.cache.size}`,
-        true
-      )
-      .addField(
-        `${language.roleCount}`,
-        `${message.guild.roles.cache.size}`,
-        true
-      )
-      .addField(
-        `Created at`,
-        `${message.channel.guild.createdAt
-          .toUTCString()
-          .substr(0, 16)} **(${checkDays(message.channel.guild.createdAt)})**`,
-        true
+      .addFields(
+        {
+          name: `${language.nameS}`,
+          value: `${message.guild.name}`,
+          inline: true,
+        },
+        { name: "ID", value: `${message.guild.id}`, inline: true },
+        {
+          name: `${language.serverInfo1}`,
+          value: `${message.guild.members.cache.size} | ${
+            message.guild.members.cache.filter((member) => !member.user.bot)
+              .size
+          } | ${
+            message.guild.members.cache.filter((member) => member.user.bot).size
+          }`,
+          inline: true,
+        },
+        {
+          name: `${language.verificationLevel}`,
+          value: message.guild.verificationLevel,
+          inline: true,
+        },
+        {
+          name: `${language.channels}`,
+          value: `${message.guild.channels.cache.size}`,
+          inline: true,
+        },
+        {
+          name: `${language.roleCount}`,
+          value: `${message.guild.roles.cache.size}`,
+          inline: true,
+        },
+        {
+          name: `Created at`,
+          value: `${message.channel.guild.createdAt
+            .toUTCString()
+            .substr(0, 16)} **(${checkDays(
+            message.channel.guild.createdAt
+          )})**`,
+          inline: true,
+        }
       )
       .setThumbnail(message.guild.iconURL())
-      .setColor(message.guild.me.displayHexColor);
+      .setColor(message.guild.members.me.displayHexColor);
 
     const row = new MessageActionRow().addComponents(
       new MessageButton()

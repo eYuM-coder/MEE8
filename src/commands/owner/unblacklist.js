@@ -69,10 +69,15 @@ module.exports = class extends Command {
       const embed = new MessageEmbed()
         .setColor("BLURPLE")
         .setTitle(`Blacklist Report`)
-        .addField("Status", "Removed from the blacklist.")
-        .addField("User", `${member.user.tag} (${member.id})`)
-        .addField("Responsible", `${message.author} (${message.author.id})`)
-        .addField("Reason", reason);
+        .addFields(
+          { name: "Status", value: "Removed from the blacklist." },
+          { name: "User", value: `${member.user.tag} (${guild.id})` },
+          {
+            name: "Responsible",
+            value: `${message.author} (${message.author.id})`,
+          },
+          { name: "Reason", value: reason }
+        );
 
       webhookClient.sendCustom({
         username: "Neonova",
@@ -104,10 +109,15 @@ module.exports = class extends Command {
       const embed = new MessageEmbed()
         .setColor("BLURPLE")
         .setTitle(`Blacklist Report`)
-        .addField("Status", "Removed from the blacklist.")
-        .addField("Server", `${guild.name} (${guild.id})`)
-        .addField("Responsible", `${message.author} (${message.author.id})`)
-        .addField("Reason", reason);
+        .addFields(
+          { name: "Status", value: "Removed from the blacklist." },
+          { name: "Server", value: `${guild.name} (${guild.id})` },
+          {
+            name: "Responsible",
+            value: `${message.author} (${message.author.id})`,
+          },
+          { name: "Reason", value: reason }
+        );
 
       webhookClient.sendCustom({
         username: "Neonova",

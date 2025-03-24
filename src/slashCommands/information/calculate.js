@@ -17,6 +17,7 @@ module.exports = {
 
   async execute(interaction) {
     try {
+      await interaction.deferReply();
       let input = interaction.options.getString("expression");
 
       input = input
@@ -36,21 +37,25 @@ module.exports = {
       function evaluateExpression(expression) {
         let result;
         try {
-          result = nerdamer(expression, variables).evaluate().text();
-
+          
           if (expression.includes("/0")) {
             throw new Error("DIVIDE BY 0");
-          } else if (result === Infinity) {
+          }
+          
+          result = nerdamer(expression, variables).evaluate().text();
+
+          if (result === "Infinity") {
             throw new Error("OVERFLOW");
           }
         } catch (e) {
+          console.log(e.constructor);
           console.error(e);
           if (e.constructor.name == "SyntaxError") {
             return `ERROR: ${e.constructor.name
               .replace("Error", "")
               .toUpperCase()}`;
           } else if (e.constructor.name === "Error") {
-            return `ERROR: ${e}`;
+            return `ERROR: ${e.message}`;
           } else {
             return tokens.join("");
           }
@@ -62,9 +67,9 @@ module.exports = {
       const result = evaluateExpression(input);
 
       // Send the result
-      await interaction.reply({ content: `Result: \`${result}\`` });
+      await interaction.editReply({ content: `Result: \`${result}\`` });
     } catch (err) {
-      await interaction.reply({
+      await interaction.editReply({
         content: `ERROR: Invalid expression!`,
         ephemeral: true,
       });

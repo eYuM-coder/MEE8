@@ -281,9 +281,9 @@
 "afk2":"you may not use the everyone ping",
 "afk3":"W-why the.. thats a quiet big reason",
 "afk4":"You can go afk  every 20 seconds!",
-"afk5":"You have been set to afk\n**Reason :**",
-"afk6":"is currently afk:",
-"afk7":"It seems like you've came back! I removed your afk\n\n**afk reason:** ",
+"afk5":"You have been set to afk\n**Reason:**",
+"afk6":"is AFK:",
+"afk7":"It seems like you've came back! I removed your afk\n\n**afk reason:**",
 
 "antiinvites1":"You have to type `enable` or `disable` in order to enable/disable the module.",
 "antiinvites3":"Succesfully disabled the anti invite module",

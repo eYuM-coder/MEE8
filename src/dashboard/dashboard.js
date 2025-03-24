@@ -339,6 +339,10 @@ module.exports = async (client) => {
     renderTemplate(res, req, "policy.ejs", { botName: config.botName });
   });
 
+  app.get("/terms", (req, res) => {
+    renderTemplate(res, req, "terms.ejs", { botName: config.botName });
+  });
+
   app.get("/logout", async function (req, res) {
     if (req.user) {
       const logoutLogs = new Discord.WebhookClient({
@@ -779,7 +783,7 @@ module.exports = async (client) => {
       .setDescription(
         `**Premium Subscription**\n\n**${member.user.tag}** Redeemed a code in **${guild.name}**\n\n **Receipt ID:** ${ID}\n**Redeem Date:** ${DDate}\n**Guild Name:** ${guild.name}\n**Guild ID:** ${guild.id}\n**Redeemer Tag:** ${member.user.tag}\n**Redeemer ID:** ${member.user.id}\n\n**Expires At:** ${expires}`
       )
-      .setColor(guild.me.displayHexColor);
+      .setColor(guild.members.me.displayHexColor);
 
     premiumWeb.send({
       username: `${jsonconfig.botName} Premium`,
@@ -855,12 +859,12 @@ module.exports = async (client) => {
 
     renderTemplate(res, req, "./new/mainpage.ejs", {
       guild: guild,
-      alert: `Dashboard and bot hosted by Miri (https://www.oncemiri.net)`,
+      alert: `Dashboard and bot hosted by eYuM (https://eyum.org)`,
       join1: join1.length || 0,
       join2: join2.length || 0,
       leave1: leave1.length || 0,
       leave2: leave2.length || 0,
-      nickname: guild.me.nickname || guild.me.user.username,
+      nickname: guild.members.nickname || guild.members.me.user.username,
       settings: storedSettings,
     });
   });
@@ -927,14 +931,14 @@ module.exports = async (client) => {
     let data = req.body;
     let nickname = data.nickname;
     if (nickname && nickname.length < 1)
-      nickname = guild.me.nickname || guild.me.user.username;
+      nickname = guild.members.nickname || guild.members.me.user.username;
 
     if (data.nickname) {
       if (cooldownNickname.has(guild.id))
-        nickname = guild.me.nickname || guild.me.user.username;
-      if (!nickname) nickname = guild.me.nickname || guild.me.user.username;
+        nickname = guild.members.nickname || guild.members.me.user.username;
+      if (!nickname) nickname = guild.members.nickname || guild.members.me.user.username;
 
-      guild.me.setNickname(nickname);
+      guild.members.me.setNickname(nickname);
       cooldownNickname.add(guild.id);
       setTimeout(() => {
         cooldownNickname.delete(guild.id);
@@ -3689,7 +3693,7 @@ In the mean time, please explain your issue below`;
           ticketSettings.ticketCustom == "false"
         ) {
           let embedColor = data.reactionPanelColor;
-          if (embedColor == "#000000") embedColor = guild.me.displayHexColor;
+          if (embedColor == "#000000") embedColor = guild.members.me.displayHexColor;
           let reactionTitle = data.reactionTitle;
           if (reactionTitle.length > 200) {
             renderTemplate(res, req, "./new/maintickets.ejs", {

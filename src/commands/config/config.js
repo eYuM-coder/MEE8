@@ -23,52 +23,54 @@ module.exports = class extends Command {
     await message.channel.sendCustom({
       embeds: [
         new MessageEmbed()
-          .setColor(message.guild.me.displayHexColor)
+          .setColor(message.guild.members.me.displayHexColor)
           .setTitle(`${language.serversettings1}`)
-          .addField(
-            `Main Settings`,
-            `[\`Click here\`](${process.env.AUTH_DOMAIN}/dashboard/${message.guild.id})`,
-            true,
-          )
-          .addField(
-            `Welcome & Leave`,
-            `[\`Click here\`](${process.env.AUTH_DOMAIN}/dashboard/${message.guild.id}/welcome)`,
-            true,
-          )
-          .addField(
-            `Logging`,
-            `[\`Click here\`](${process.env.AUTH_DOMAIN}/dashboard/${message.guild.id}/logging)`,
-            true,
-          )
-          .addField(
-            `Autorole`,
-            `[\`Click here\`](${process.env.AUTH_DOMAIN}/dashboard/${message.guild.id}/autorole)`,
-            true,
-          )
-          .addField(
-            `Alt Detector`,
-            `[\`Click here\`](${process.env.AUTH_DOMAIN}/dashboard/${message.guild.id}/altdetector)`,
-            true,
-          )
-          .addField(
-            `Tickets`,
-            `[\`Click here\`](${process.env.AUTH_DOMAIN}/dashboard/${message.guild.id}/tickets)`,
-            true,
-          )
-          .addField(
-            `Suggestions`,
-            `[\`Click here\`](${process.env.AUTH_DOMAIN}/dashboard/${message.guild.id}/Suggestions)`,
-            true,
-          )
-          .addField(
-            `Server Reports`,
-            `[\`Click here\`](${process.env.AUTH_DOMAIN}/dashboard/${message.guild.id}/reports)`,
-            true,
-          )
-          .addField(
-            `Automod`,
-            `[\`Click here\`](${process.env.AUTH_DOMAIN}/dashboard/${message.guild.id}/automod)`,
-            true,
+          .addFields(
+            {
+              name: `Main Settings`,
+              value: `[\`Click here\`](${process.env.AUTH_DOMAIN}/dashboard/${message.guild.id})`,
+              inline: true,
+            },
+            {
+              name: `Welcome & Leave`,
+              value: `[\`Click here\`](${process.env.AUTH_DOMAIN}/dashboard/${message.guild.id}/welcome)`,
+              inline: true,
+            },
+            {
+              name: `Logging`,
+              value: `[\`Click here\`](${process.env.AUTH_DOMAIN}/dashboard/${message.guild.id}/logging)`,
+              inline: true,
+            },
+            {
+              name: `Autorole`,
+              value: `[\`Click here\`](${process.env.AUTH_DOMAIN}/dashboard/${message.guild.id}/autorole)`,
+              inline: true,
+            },
+            {
+              name: `Alt Detector`,
+              value: `[\`Click here\`](${process.env.AUTH_DOMAIN}/dashboard/${message.guild.id}/altdetector)`,
+              inline: true,
+            },
+            {
+              name: `Tickets`,
+              value: `[\`Click here\`](${process.env.AUTH_DOMAIN}/dashboard/${message.guild.id}/tickets)`,
+              inline: true,
+            },
+            {
+              name: `Suggestions`,
+              value: `[\`Click here\`](${process.env.AUTH_DOMAIN}/dashboard/${message.guild.id}/Suggestions)`,
+              inline: true,
+            },
+            {
+              name: `Server Reports`,
+              value: `[\`Click here\`](${process.env.AUTH_DOMAIN}/dashboard/${message.guild.id}/reports)`,
+              inline: true,
+            },
+            {
+              name: `Automod`,
+              value: `[\`Click here\`](${process.env.AUTH_DOMAIN}/dashboard/${message.guild.id}/automod)`,
+              inline: true,
+            }
           )
 
           .setFooter({ text: `${message.guild.name}` }),

@@ -46,7 +46,7 @@ module.exports = {
         )
         .setTimestamp()
         .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-        .setColor(interaction.guild.me.displayHexColor);
+        .setColor(interaction.guild.members.me.displayHexColor);
       return interaction
         .reply({ embeds: [embed] })
         .then(async () => {
@@ -72,7 +72,7 @@ module.exports = {
         )
         .setTimestamp()
         .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-        .setColor(interaction.guild.me.displayHexColor);
+        .setColor(interaction.guild.members.me.displayHexColor);
       return interaction
         .reply({ embeds: [embed] })
         .then(async () => {
@@ -106,7 +106,7 @@ module.exports = {
         interaction.reply({
           embeds: [
             new MessageEmbed()
-              .setColor(interaction.guild.me.displayHexColor)
+              .setColor(interaction.guild.members.me.displayHexColor)
               .setDescription(
                 `${interaction.client.emoji.fail} | Auto Response Limit Reached **(10)**\n\n[Upgrade to Premium here for unlimited commands](${process.env.AUTH_DOMAIN}/premium)`
               ),
@@ -138,7 +138,7 @@ module.exports = {
                 )
                 .setTimestamp()
                 .setFooter({ text: "${process.env.AUTH_DOMAIN}" })
-                .setColor(interaction.guild.me.displayHexColor),
+                .setColor(interaction.guild.members.me.displayHexColor),
             ],
             ephemeral: true,
           });

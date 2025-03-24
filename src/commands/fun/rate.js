@@ -25,7 +25,7 @@ module.exports = class extends Command {
       return message.channel.sendCustom({
         embeds: [
           new discord.MessageEmbed()
-            .setColor(message.guild.me.displayHexColor)
+            .setColor(message.guild.members.me.displayHexColor)
             .setDescription(`${language.rate1} ${rating}/10!`),
         ],
       });

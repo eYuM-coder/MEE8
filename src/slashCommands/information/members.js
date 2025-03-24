@@ -33,7 +33,7 @@ module.exports = {
       })
       .setDescription(`${language.members2.replace(/{prefix}/g, `${prefix}`)}`)
       .setFooter({ text: "https://example.com/" })
-      .setColor(interaction.guild.me.displayHexColor);
+      .setColor(interaction.guild.members.me.displayHexColor);
 
     if (!role) return interaction.reply({ embeds: [embedValid] });
 
@@ -63,7 +63,7 @@ module.exports = {
         iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
       })
       .setTimestamp()
-      .setColor(interaction.guild.me.displayHexColor);
+      .setColor(interaction.guild.members.me.displayHexColor);
 
     const interval = 25;
     if (members.length === 0)

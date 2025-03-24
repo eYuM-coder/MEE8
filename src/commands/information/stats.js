@@ -87,12 +87,25 @@ module.exports = class extends Command {
         iconURL: message.author.displayAvatarURL({ dynamic: true }),
       })
       .setTitle(`${language.neonovaInfo}`)
-      .addField(`${language.neonovaGeneral}`, `\`\`\`css\n${tech}\`\`\``, true)
-      .addField(`${language.neonovaTeam}`, `\`\`\`css\n${devs}\`\`\``, true)
-      .addField(`${language.neonovaStats}`, `\`\`\`css\n${serverStats}\`\`\``)
+      .addFields(
+        {
+          name: `${language.neonovaGeneral}`,
+          value: `\`\`\`css\n${tech}\`\`\``,
+          inline: true,
+        },
+        {
+          name: `${language.neonovaTeam}`,
+          value: `\`\`\`css\n${devs}\`\`\``,
+          inline: true,
+        },
+        {
+          name: `${language.neonovaStats}`,
+          value: `\`\`\`css\n${serverStats}\`\`\``,
+        }
+      )
       .setFooter({ text: `${process.env.AUTH_DOMAIN}/` })
       .setTimestamp()
-      .setColor(message.guild.me.displayHexColor);
+      .setColor(message.guild.members.me.displayHexColor);
     message.channel.sendCustom({ embeds: [embed] });
   }
 };

@@ -41,7 +41,7 @@ module.exports = class extends Command {
             .setDescription("Please provide a valid role")
             .setTimestamp()
             .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-            .setColor(message.guild.me.displayHexColor),
+            .setColor(message.guild.members.me.displayHexColor),
         ],
       });
 
@@ -68,7 +68,7 @@ module.exports = class extends Command {
             .setDescription("Please provide a valid role")
             .setTimestamp()
             .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-            .setColor(message.guild.me.displayHexColor),
+            .setColor(message.guild.members.me.displayHexColor),
         ],
       });
     else if (!member.roles.cache.has(role.id))
@@ -83,7 +83,7 @@ module.exports = class extends Command {
             .setDescription(`The provided user does not have the role.`)
             .setTimestamp()
             .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-            .setColor(message.guild.me.displayHexColor),
+            .setColor(message.guild.members.me.displayHexColor),
         ],
       });
     else {
@@ -96,7 +96,7 @@ module.exports = class extends Command {
           .setDescription(
             ` ${success} | Removed **${role.name}** from **${member.user.tag}**`
           )
-          .setColor(message.guild.me.displayHexColor);
+          .setColor(message.guild.members.me.displayHexColor);
         message.channel
           .sendCustom({ embeds: [embed] })
           .then(async (s) => {
@@ -185,7 +185,7 @@ module.exports = class extends Command {
               )
               .setTimestamp()
               .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-              .setColor(message.guild.me.displayHexColor),
+              .setColor(message.guild.members.me.displayHexColor),
           ],
         });
       }

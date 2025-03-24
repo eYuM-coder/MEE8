@@ -65,7 +65,10 @@ module.exports = class extends Command {
           embeds: [
             new discord.MessageEmbed()
               .setColor(client.color.green)
-              .addField("**" + language.questionTitle + "**", text),
+              .addFields({
+                name: "**" + language.questionTitle + "**",
+                value: text,
+              }),
           ],
         });
       }

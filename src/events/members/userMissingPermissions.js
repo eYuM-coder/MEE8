@@ -14,12 +14,12 @@ module.exports = class extends Event {
       )
       .setTimestamp()
       .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-      .setColor(message.guild.me.displayHexColor);
+      .setColor(this.client.color.red);
     if (
       message.channel &&
       message.channel.viewable &&
       message.channel
-        .permissionsFor(message.guild.me)
+        .permissionsFor(message.guild.members.me)
         .has(["SEND_MESSAGES", "EMBED_LINKS"])
     ) {
       message.channel.sendCustom({ embeds: [embed] }).catch(() => {});

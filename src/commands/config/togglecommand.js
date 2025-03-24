@@ -59,17 +59,31 @@ module.exports = class extends Command {
       disabled.map((c) => `\`${c}\``).join(" ") || "`None`";
 
     const embed = new discord.MessageEmbed()
-      .setAuthor({ name: `${message.author.tag}`, iconURL: message.guild.iconURL({ dynamic: true })})
+      .setAuthor({
+        name: `${message.author.tag}`,
+        iconURL: message.guild.iconURL({ dynamic: true }),
+      })
       .setDescription(description)
-      .addField("Disabled Commands", disabledCommands, true)
+      .addFields({
+        name: "Disabled Commands",
+        value: disabledCommands,
+        inline: true,
+      })
       .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
       .setTimestamp()
       .setColor(message.client.color.green);
     message.channel.sendCustom({ embeds: [embed] }).catch(() => {
       const errorEmbed = new discord.MessageEmbed()
-        .setAuthor({ name: `${message.author.tag}`, iconURL: message.guild.iconURL({ dynamic: true })})
+        .setAuthor({
+          name: `${message.author.tag}`,
+          iconURL: message.guild.iconURL({ dynamic: true }),
+        })
         .setDescription(description)
-        .addField("Disabled Commands", `[Too Large to Display]`, true)
+        .addFields({
+          name: "Disabled Commands",
+          value: `[Too Large to Display]`,
+          inline: true,
+        })
         .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
         .setTimestamp()
         .setColor(message.client.color.green);

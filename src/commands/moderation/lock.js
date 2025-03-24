@@ -51,7 +51,7 @@ module.exports = class extends Command {
     }
 
     channel.permissionOverwrites
-      .edit(message.guild.me, { SEND_MESSAGES: true })
+      .edit(message.guild.members.me, { SEND_MESSAGES: true })
       .catch(() => {});
 
     channel.permissionOverwrites

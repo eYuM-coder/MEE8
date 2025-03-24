@@ -24,7 +24,7 @@ module.exports = class extends Command {
       const embed = new discord.MessageEmbed()
         .setImage(img)
         .setFooter({ text: "/dog.ceo/api/breeds/image/random" })
-        .setColor(message.guild.me.displayHexColor);
+        .setColor(message.guild.members.me.displayHexColor);
       message.channel.sendCustom({ embeds: [embed] });
     } catch (err) {
       console.log(`${err}, command name: dog`);

@@ -8,8 +8,8 @@ module.exports = {
     .addStringOption((option) =>
       option.setName("guild").setDescription("The guild ID").setRequired(true)
     )
-    .setContexts(0)
-    .setIntegrationTypes(0),
+    .setContexts([0, 1, 2])
+    .setIntegrationTypes([0, 1]),
   async execute(interaction) {
     const guildId = interaction.options.getString("guild");
     const guild = interaction.client.guilds.cache.get(guildId);

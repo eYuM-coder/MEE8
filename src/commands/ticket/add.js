@@ -66,7 +66,7 @@ module.exports = class extends Command {
               ],
             });
 
-          let Neonova = message.guild.me;
+          let Neonova = message.guild.members.me;
           let everyone = message.guild.roles.everyone;
           let author = message.author;
 

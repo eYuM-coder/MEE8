@@ -71,7 +71,7 @@ module.exports = {
         }
       )
       .setThumbnail(interaction.guild.iconURL())
-      .setColor(interaction.guild.me.displayHexColor);
+      .setColor(interaction.guild.members.me.displayHexColor);
     interaction.reply({ embeds: [embed] });
   },
 };

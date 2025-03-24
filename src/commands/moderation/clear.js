@@ -40,13 +40,13 @@ module.exports = class extends Command {
             new MessageEmbed()
               .setAuthor({
                 name: `${message.author.tag}`,
-                iconURL: message.author.displayAvatarURL({ dynamic: true })
+                iconURL: message.author.displayAvatarURL({ dynamic: true }),
               })
               .setTitle(`${fail} Clear Error`)
               .setDescription(`I can only purge between 1 - 10000 messages.`)
               .setTimestamp()
               .setFooter({ text: `${process.env.AUTH_DOMAIN}` })
-              .setColor(message.guild.me.displayHexColor),
+              .setColor(client.color.red),
           ],
         });
       }
@@ -96,7 +96,10 @@ module.exports = class extends Command {
           // If fewer than `messagesToFetch` were deleted, stop early
           if (deletedMessages.size < messagesToFetch) {
             break;
-          } else if (deletedMessages.size !== 100 && deletedMessages.size == messagesToFetch) {
+          } else if (
+            deletedMessages.size !== 100 &&
+            deletedMessages.size == messagesToFetch
+          ) {
             break;
           }
         } catch (error) {
@@ -110,67 +113,67 @@ module.exports = class extends Command {
       }
 
       if (channel == message.channel) {
-      const embed = new MessageEmbed()
+        const embed = new MessageEmbed()
 
-        .setDescription(
-          `
+          .setDescription(
+            `
             ${success} Successfully deleted **${totalDeleted}** ${
-            totalDeleted === 1 ? "message" : "messages"
-          } ${
-            logging && logging.moderation.include_reason === "true"
-              ? `\n\n**Reason:** ${reason}`
-              : ``
-          }
+              totalDeleted === 1 ? "message" : "messages"
+            } ${
+              logging && logging.moderation.include_reason === "true"
+                ? `\n\n**Reason:** ${reason}`
+                : ``
+            }
           `
-        )
+          )
 
-        .setColor(message.guild.me.displayHexColor);
+          .setColor(client.color.green);
 
-      if (logging && logging.moderation.delete_after_executed === "true") {
-        message.delete().catch(() => {});
-      }
+        if (logging && logging.moderation.delete_after_executed === "true") {
+          message.delete().catch(() => {});
+        }
 
-      message.channel
-        .send({ embeds: [embed] })
-        .then(async (s) => {
-          if (logging && logging.moderation.delete_reply === "true") {
-            setTimeout(() => {
-              s.delete().catch(() => {});
-            }, 5000);
-          }
-        })
-        .catch(() => {});
+        message.channel
+          .send({ embeds: [embed] })
+          .then(async (s) => {
+            if (logging && logging.moderation.delete_reply === "true") {
+              setTimeout(() => {
+                s.delete().catch(() => {});
+              }, 5000);
+            }
+          })
+          .catch(() => {});
       } else {
         const embed = new MessageEmbed()
 
-        .setDescription(
-          `
+          .setDescription(
+            `
             ${success} Successfully deleted **${totalDeleted}** ${
-            totalDeleted === 1 ? "message" : "messages"
-          } from ${channel} ${
-            logging && logging.moderation.include_reason === "true"
-              ? `\n\n**Reason:** ${reason}`
-              : ``
-          }
+              totalDeleted === 1 ? "message" : "messages"
+            } from ${channel} ${
+              logging && logging.moderation.include_reason === "true"
+                ? `\n\n**Reason:** ${reason}`
+                : ``
+            }
           `
-        )
+          )
 
-        .setColor(message.guild.me.displayHexColor);
+          .setColor(client.color.green);
 
-      if (logging && logging.moderation.delete_after_executed === "true") {
-        message.delete().catch(() => {});
-      }
+        if (logging && logging.moderation.delete_after_executed === "true") {
+          message.delete().catch(() => {});
+        }
 
-      message.channel
-        .send({ embeds: [embed] })
-        .then(async (s) => {
-          if (logging && logging.moderation.delete_reply === "true") {
-            setTimeout(() => {
-              s.delete().catch(() => {});
-            }, 5000);
-          }
-        })
-        .catch(() => {});
+        message.channel
+          .send({ embeds: [embed] })
+          .then(async (s) => {
+            if (logging && logging.moderation.delete_reply === "true") {
+              setTimeout(() => {
+                s.delete().catch(() => {});
+              }, 5000);
+            }
+          })
+          .catch(() => {});
       }
 
       if (logging) {
@@ -199,16 +202,35 @@ module.exports = class extends Command {
                   if (!logcase) logcase = `1`;
 
                   const logEmbed = new MessageEmbed()
-                    .setAuthor(
-                      `Action: \`Purge\` | Case #${logcase}`,
-                      message.author.displayAvatarURL({ format: "png" })
-                    )
-                    .addField("Moderator", `${message.member}`, true)
+                    .setAuthor({
+                      name: `Action: \`Purge\` | Case #${logcase}`,
+                      iconURL: message.author.displayAvatarURL({
+                        format: "png",
+                      }),
+                    })
+                    .addFields({
+                      name: "Moderator",
+                      value: `${message.member}`,
+                      inline: true,
+                    })
                     .setTimestamp()
                     .setFooter({ text: `Responsible ID: ${message.author.id}` })
                     .setColor(color);
 
-                  send(channel, { username: `${this.client.user.username}`, embeds: [logEmbed] }).catch(() => {});
+                  send(
+                    channel,
+                    {
+                      embeds: [logEmbed],
+                    },
+                    {
+                      name: `${this.client.user.username}`,
+                      username: `${this.client.user.username}`,
+                      iconURL: this.client.user.displayAvatarURL({
+                        format: "png",
+                        dynamic: true,
+                      }),
+                    }
+                  ).catch(() => {});
 
                   logging.moderation.caseN = logcase + 1;
                   await logging.save().catch(() => {});

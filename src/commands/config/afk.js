@@ -23,7 +23,7 @@ module.exports = class extends Command {
 
     const language = require(`../../data/language/${guildDB.language}.json`);
 
-    const oldNickname = message.member.nickname || message.author.username;
+    const oldNickname = message.author.nickname || message.author.username;
     const nickname = `[AFK] ${oldNickname}`;
     const userr = message.mentions.users.first();
     if (userr) return message.channel.sendCustom(`${language.afk1}`);
@@ -50,7 +50,7 @@ module.exports = class extends Command {
 
       const embed = new discord.MessageEmbed()
         .setDescription(`${language.afk5} ${content}`)
-        .setColor(message.guild.me.displayHexColor)
+        .setColor(message.guild.members.me.displayHexColor)
         .setAuthor({
           name: `${message.author.tag}`,
           iconURL: message.author.displayAvatarURL({ dynamic: true }),

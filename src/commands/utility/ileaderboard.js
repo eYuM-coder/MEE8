@@ -44,7 +44,7 @@ module.exports = class extends Command {
     // Fixed error
 
     const embed = new MessageEmbed()
-      .setColor(message.guild.me.displayHexColor)
+      .setColor(message.guild.members.me.displayHexColor)
       .setTitle(`${message.guild.name} Invite leaderboard`)
       .setFooter({
         text: message.client.user.username,

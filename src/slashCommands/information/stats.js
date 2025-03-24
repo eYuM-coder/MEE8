@@ -160,7 +160,7 @@ module.exports = {
       )
       .setFooter({ text: `https://neonova.eyum.org` })
       .setTimestamp()
-      .setColor(interaction.guild.me.displayHexColor);
+      .setColor(interaction.guild.members.me.displayHexColor);
     interaction.reply({ embeds: [embed] });
   },
 };

@@ -3,6 +3,7 @@ const Logging = require("../../database/schemas/logging");
 const discord = require("discord.js");
 const Maintenance = require("../../database/schemas/maintenance");
 const send = require("../../packages/logs/index");
+const { AuditLogEvent } = require("discord.js");
 
 module.exports = class extends Event {
   async run(role) {
@@ -22,18 +23,32 @@ module.exports = class extends Event {
           logging.server_events.channel
         );
 
+        let description = [];
+
+        const guild = role.guild;
+        const fetchedLogs = await guild.fetchAuditLogs({
+          type: AuditLogEvent,
+          limit: 1,
+        });
+        const auditEntry = fetchedLogs.entries.first();
+        const executor = auditEntry ? auditEntry.executor : null;
+
+        description.push(
+          `**@${role.name}** was deleted by ${
+            executor ? executor : "Unknown"
+          }.\n`
+        );
+        description.push(`Role: @${role.name}`);
+        description.push(`Role Name: ${role.name}`);
+
         if (channelEmbed) {
           let color = logging.server_events.color;
           if (color == "#000000") color = role.client.color.red;
 
           if (logging.server_events.role_create == "true") {
             const embed = new discord.MessageEmbed()
-              .setDescription(`🗑️ ***Role Deleted***`)
-              .addFields({
-                name: "Role Name",
-                value: `${role.name}`,
-                inline: true,
-              })
+              .setTitle(`🗑️ ***Role Deleted***`)
+              .setDescription(description.join("\n"))
               .setFooter({ text: `Role ID: ${role.id}` })
               .setTimestamp()
               .setColor(color);

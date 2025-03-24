@@ -19,7 +19,7 @@ module.exports = class NeonovaClient extends Client {
         "GUILD_PRESENCES",
       ],
       allowedMentions: {
-        parse: ["roles", "users"],
+        parse: ["roles", "users", "everyone"],
         repliedUser: true,
       },
       presence: {

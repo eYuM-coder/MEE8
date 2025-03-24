@@ -43,7 +43,7 @@ module.exports = class extends Command {
               .setFooter({ text: `${process.env.AUTH_DOMAIN}` }),
           ],
         })
-        .setColor(message.guild.me.displayHexColor);
+        .setColor(message.guild.members.me.displayHexColor);
 
     if (name.length > 30)
       return message.channel.sendCustom(
@@ -61,7 +61,7 @@ module.exports = class extends Command {
           message.channel.sendCustom({
             embeds: [
               new MessageEmbed()
-                .setColor(message.guild.me.displayHexColor)
+                .setColor(message.guild.members.me.displayHexColor)
                 .setAuthor({
                   name: `${message.author.tag}`,
                   iconURL: message.author.displayAvatarURL({ dynamic: true })

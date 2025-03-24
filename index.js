@@ -284,7 +284,7 @@ const infobutton = new MessageEmbed()
     "Hello there pogger. If you want more info on this bot, you can check out the github repo or join the support server"
   )
   .setURL("https://github.com/eYuM-coder/Neonova/")
-  .addField("Github Repo", "https://github.com/eYuM-coder/Neonova/");
+  .addFields({name:"Github Repo", value:"https://github.com/eYuM-coder/Neonova/"});
 
 client.on("interactionCreate", async (interaction) => {
   try {
@@ -343,10 +343,10 @@ client.on("interactionCreate", async (interaction) => {
           (userChoice === "paper" && botChoice === "rock") ||
           (userChoice === "scissors" && botChoice === "paper");
         resultMessage = userWins ? "You win!" : "You lose!";
-        resultEmbed.addField(
+        resultEmbed.addFields({name:
           "Result",
-          `${resultMessage} ${emojis[userChoice]} beats ${emojis[botChoice]}`
-        );
+          value:`${resultMessage} ${emojis[userChoice]} beats ${emojis[botChoice]}`
+      });
         if (userWins) {
           resultEmbed.setColor("#00FF00");
         } else {

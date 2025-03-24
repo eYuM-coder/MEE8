@@ -28,7 +28,7 @@ module.exports = class extends Command {
     if (!guildDB) return message.channel.sendCustom(`${language.noNews}`);
 
     let embed = new MessageEmbed()
-      .setColor(message.guild.me.displayHexColor)
+      .setColor(message.guild.members.me.displayHexColor)
       .setTitle(`${message.client.config.botName} News`)
       .setDescription(
         `***__${language.datePublished}__ ${moment(guildDB.time).format(

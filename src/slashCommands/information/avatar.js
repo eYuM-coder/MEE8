@@ -32,14 +32,10 @@ module.exports = {
         .addUserOption((option) =>
           option.setName("user").setDescription("User to fetch avatar from")
         )
-    ),
+    )
+    .setContexts([0, 1, 2])
+    .setIntegrationTypes([0, 1]),
   async execute(interaction) {
-    const guildDB = await Guild.findOne({
-      guildId: interaction.guild.id,
-    });
-
-    const language = require(`../../data/language/${guildDB.language}.json`);
-
     const subcommand = interaction.options.getSubcommand();
     let member;
 
@@ -49,7 +45,7 @@ module.exports = {
 
       const embed = new MessageEmbed()
         .setAuthor({
-          name: `${language.pfpAvatar.replace("{user}", `${member.tag}`)}`,
+          name: `${member.username} avatar`,
           iconURL: member.displayAvatarURL({ dynamic: true, size: 512 }),
           url: member.displayAvatarURL({ dynamic: true, size: 512 }),
         })
@@ -61,7 +57,7 @@ module.exports = {
           })
         )
         .setFooter({
-          text: interaction.member.displayName,
+          text: interaction.user.username,
           iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
         })
         .setTimestamp()
@@ -87,7 +83,7 @@ module.exports = {
           })
         )
         .setFooter({
-          text: interaction.member.displayName,
+          text: interaction.user.username,
           iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
         })
         .setTimestamp()
@@ -101,7 +97,7 @@ module.exports = {
 
       const embed = new MessageEmbed()
         .setAuthor({
-          name: `${language.userAvatar.replace("{user}", member.tag)}`,
+          name: `${member.username}'s User Avatar`,
           iconURL: member.displayAvatarURL({ dynamic: true, size: 512 }),
           url: member.displayAvatarURL({ dynamic: true, size: 512 }),
         })
@@ -113,11 +109,11 @@ module.exports = {
           })
         )
         .setFooter({
-          text: interaction.member.displayName,
+          text: interaction.user.username,
           iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
         })
         .setTimestamp()
-        .setColor(interaction.member.displayHexColor);
+        .setColor(interaction.user.displayHexColor);
       return interaction.reply({ embeds: [embed] });
     }
   },

@@ -28,7 +28,7 @@ module.exports = {
       });
 
     let embed = new MessageEmbed()
-      .setColor(interaction.guild.me.displayHexColor)
+      .setColor(interaction.guild.members.me.displayHexColor)
       .setTitle(`${config.botName} News`)
       .setDescription(
         `***__${language.datePublished}__ ${moment(guildDB.time).format(

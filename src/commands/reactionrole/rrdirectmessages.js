@@ -35,7 +35,7 @@ module.exports = class extends Command {
       return message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-            .setColor(message.guild.me.displayHexColor)
+            .setColor(message.guild.members.me.displayHexColor)
             .setDescription(
               `${fail} Slow down here, the current command is only for premium guilds.\n\n[Check Premium Here](${process.env.AUTH_DOMAIN}/premium)`
             ),
@@ -44,7 +44,7 @@ module.exports = class extends Command {
     }
 
     let properUsage = new MessageEmbed()
-      .setColor(message.guild.me.displayHexColor)
+      .setColor(message.guild.members.me.displayHexColor)
       .setDescription(
         `__**Proper Usage**__\n\n\`1-\` ${prefix}rrdm on\n\`2-\` ${prefix}rrdm off`
       )

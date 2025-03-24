@@ -122,15 +122,15 @@ module.exports = class extends Command {
             let closeEmbed = new MessageEmbed()
               .setColor(color2)
               .setTitle("Ticket Closed")
-              .addField(
+              .addFields({name:
                 "Information",
-                `**User:** ${message.author}\n**Ticket Channel:** #${
+                value:`**User:** ${message.author}\n**Ticket Channel:** #${
                   message.channel.name
                 }\n**Reason:** ${reason}\n**Date:** ${moment(new Date()).format(
                   "dddd, MMMM Do YYYY"
                 )}\n**Transcript:** [here](${
                   process.env.AUTH_DOMAIN
-                }/paste/${ticketID})`
+                }/paste/${ticketID})`}
               );
 
             channelReact.send({ embeds: [closeEmbed] });

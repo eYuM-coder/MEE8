@@ -8,3 +8,7 @@ config.json
 env.backups
 replit_zip_error_log.txt
 .well-known
+package-lock.json
+.config
+.github
+.upm

@@ -1,3 +1,4 @@
+global.ReadableStream = require("stream/web").ReadableStream;
 const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
 const NeonovaClient = require("./Neonova.js");
 const Guild = require("./src/database/models/leveling.js");

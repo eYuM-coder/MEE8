@@ -6,16 +6,34 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName("calculate")
     .setDescription("Calculate an expression with stored variables!")
-    .addStringOption((option) =>
-      option
-        .setName("expression")
-        .setDescription("The equation to evaluate")
-        .setRequired(true)
+    .addSubcommandGroup((group) =>
+      group
+        .setName("temp-conversion")
+        .setDescription(
+          "Converts a temperature unit to Fahrenheit, Celsius, or Kelvin!"
+        )
+        .addSubcommand((subcommand) =>
+          subcommand
+            .setName("ftoc")
+            .setDescription("Calculates Fahrenheit to Celsius")
+        )
+    )
+    .addSubcommand((subcommand) =>
+      subcommand
+        .setName("equation")
+        .setDescription("Calculates an equation!")
+        .addStringOption((option) =>
+          option
+            .setName("expression")
+            .setDescription("The equation to evaluate")
+            .setRequired(true)
+        )
     )
     .setContexts([0, 1, 2])
     .setIntegrationTypes([0, 1]),
 
   async execute(interaction) {
+    const subcommand = interaction.options.getSubcommand();
     try {
       await interaction.deferReply();
       let input = interaction.options.getString("expression");
@@ -37,11 +55,10 @@ module.exports = {
       function evaluateExpression(expression) {
         let result;
         try {
-          
           if (expression.includes("/0")) {
             throw new Error("DIVIDE BY 0");
           }
-          
+
           result = nerdamer(expression, variables).evaluate().text();
 
           if (result === "Infinity") {

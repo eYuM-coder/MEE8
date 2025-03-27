@@ -110,7 +110,11 @@ module.exports = class extends Event {
         .setFooter({ text: `Channel ID: ${newChannel.id}` })
         .setTimestamp()
         .setColor(color)
-        .setDescription(description.join("\n"));
+        if (description.join("\n").length > 4096) {
+          embed.setDescription(description.join("\n").slice(0, 4093) + "...");
+        } else {
+          embed.setDescription(description.join("\n"));
+        }
 
       // Send the log message
       if (channelEmbed.viewable && channelEmbed.permissionsFor(guild.me).has(["SEND_MESSAGES", "EMBED_LINKS"])) {

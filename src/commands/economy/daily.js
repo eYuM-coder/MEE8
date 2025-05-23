@@ -1,7 +1,6 @@
 const Command = require("../../structures/Command");
 const { MessageEmbed } = require("discord.js");
 const Profile = require("../../database/models/economy/profile.js");
-const { createProfile } = require("../../utils/utils.js");
 
 module.exports = class extends Command {
   constructor(...args) {
@@ -13,43 +12,43 @@ module.exports = class extends Command {
     })
   }
   async run(message) {
-    const profile = await Profile.findOne({ guildId: message.guild.id, userID: message.author.id });
+    const profile = await Profile.findOne({ userID: message.author.id });
     if (!profile) {
-      await createProfile(message.author, message.guild);
+      await createProfile(message.author);
       await message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-            .setColor("BLURPLE")
-            .setDescription(`Creating profile.\nUse this command again to collect your daily earnings.`)
+            .setColor(message.client.color.red)
+            .setDescription(`You currently do not have a profile registered!\nUse the /register command to register your profile.`)
         ]
       });
     } else {
       if (!profile.lastDaily) {
         await Profile.updateOne(
           {
-            userID: message.author.id, guildId: message.guild.id
+            userID: message.author.id
           },
           { $set: { lastDaily: Date.now() } }
         );
-        await Profile.updateOne({ userID: message.author.id, guildId: message.guild.id })
+        await Profile.updateOne({ userID: message.author.id })
         await message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-              .setColor("BLURPLE")
+              .setColor(message.client.color.green)
               .setTitle(`${message.author.username}'s Daily`)
               .setDescription(`You have collected todays earnings ($50000).\nCome back tommorow to collect more.`)
           ]
         });
       } else if (Date.now() - profile.lastDaily > 86400000) {
         await Profile.updateOne(
-          { userID: message.author.id, guildId: message.guild.id },
+          { userID: message.author.id },
           { $set: { lastDaily: Date.now() } }
         );
-        await Profile.updateOne({ userID: message.author.id, guildId: message.guild.id }, { $inc: { wallet: 50000 } });
+        await Profile.updateOne({ userID: message.author.id }, { $inc: { wallet: 50000 } });
         await message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-              .setColor("BLURPLE")
+              .setColor(message.client.color.green)
               .setTitle(`${message.author.username}'s Daily`)
               .setDescription(`You have collected your daily earnings of $50000.`)
           ]
@@ -63,7 +62,7 @@ module.exports = class extends Command {
         await message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-              .setColor("BLURPLE")
+              .setColor(message.client.color.red)
               .setTitle(`${message.author.username}'s Daily`)
               .setDescription(`You have to wait ${hours}h ${minutes}m ${seconds}s before you can collect your daily earnings!`)
           ]

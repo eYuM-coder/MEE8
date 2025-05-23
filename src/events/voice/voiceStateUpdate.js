@@ -106,7 +106,7 @@ module.exports = class extends Event {
                 channelEmbed &&
                 channelEmbed.viewable &&
                 channelEmbed
-                  .permissionsFor(newState.guild.me)
+                  .permissionsFor(newState.guild.members.me)
                   .has(["SEND_MESSAGES", "EMBED_LINKS"])
               ) {
                 send(
@@ -149,7 +149,7 @@ module.exports = class extends Event {
                 channelEmbed &&
                 channelEmbed.viewable &&
                 channelEmbed
-                  .permissionsFor(newState.guild.me)
+                  .permissionsFor(newState.guild.members.me)
                   .has(["SEND_MESSAGES", "EMBED_LINKS"])
               ) {
                 send(
@@ -189,7 +189,7 @@ module.exports = class extends Event {
                   channelEmbed &&
                   channelEmbed.viewable &&
                   channelEmbed
-                    .permissionsFor(newState.guild.me)
+                    .permissionsFor(newState.guild.members.me)
                     .has(["SEND_MESSAGES", "EMBED_LINKS"])
                 ) {
                   send(

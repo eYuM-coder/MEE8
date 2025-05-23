@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" type="image/png" href="<%=domain%>/logo.png" />
+  <link rel="icon" type="image/png" href="https://cdn.eyum.dev/neonova/i/output_001.png" />
   <title>
     <%= title %>
   </title>
@@ -14,6 +14,24 @@
 </head>
 
 <body>
+  <script type="text/javascript">
+    var currentFrame = 1;
+    var totalFrames = 36;
+    var favicons = [];
+
+    for (var i = 1; i <= totalFrames; i++) {
+      favicons.push(`https://cdn.eyum.dev/neonova/i/output_${String(i).padStart(3, '0')}.png`);
+    }
+
+    function changeFavicon() {
+      var favicon = document.querySelector("link[rel='icon']");
+      favicon.href = favicons[currentFrame - 1];
+      currentFrame = (currentFrame % totalFrames) + 1;
+    }
+
+    setInterval(changeFavicon, 100);
+  </script>
+
   <script type="text/javascript">
     var preload = document.createElement("div");
     preload.className = "preloader";
@@ -26,6 +44,7 @@
       }, 600);
     });
   </script>
+
   <noscript>
     <div class="no-js">
       To view the page please enable javascript in your browser

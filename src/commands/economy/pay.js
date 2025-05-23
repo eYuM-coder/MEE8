@@ -1,85 +1,94 @@
 const Command = require("../../structures/Command");
 const { MessageEmbed } = require("discord.js");
 const Profile = require("../../database/models/economy/profile");
-const { createProfile } = require("../../utils/utils.js");
+const { parseAmount, isValidAmount, abbreviateNumber } = require("../../utils/parseAmount");
 
 module.exports = class extends Command {
   constructor(...args) {
     super(...args, {
       name: "pay",
-      description: "Pay a user some money from your wallet",
+      description: "Pay a user some money from your wallet.",
       category: "Economy",
       usage: "pay <user> <amount>",
-      examples: "pay @Peter 500",
-      cooldown: 5
+      examples: ["pay @Peter 500"],
+      cooldown: 5,
     });
   }
+
   async run(message, args) {
     const user = message.mentions.members.first();
-    const amount = args.slice(1).join("");
-    const profile = await Profile.findOne({ userID: message.author.id, guildId: message.guild.id });
-    const profileChecker = await Profile.findOne({ userID: user.id, guildId: message.guild.id });
-    if (!profile) {
-      await createProfile(message.author, message.guild);
-      await message.channel.sendCustom({
-        embeds: [
-          new MessageEmbed()
-            .setColor("BLURPLE")
-            .setDescription(`Creating profile.\nUse this command again to use it.`)
-        ]
-      });
-    } else {
-      if (!user) {
-        message.channel.sendCustom({
-          embeds: [
-            new MessageEmbed()
-              .setColor(message.client.color.red)
-              .setDescription(`Who do I pay?`)
-          ]
-        });
-      } else if (user.id == message.author.id) {
-        message.channel.sendCustom({
-          embeds: [
-            new MessageEmbed()
-              .setColor(message.client.color.red)
-              .setDescription(`You can't pay yourself!`)
-          ]
-        });
-      } else {
-        if (!profileChecker) {
-          await message.channel.sendCustom({
+        const amountInput = args.slice(1).trim().toLowerCase();
+        const senderID = message.author.id;
+    
+        if (!user) {
+          return message.channel.sendCustom({
             embeds: [
               new MessageEmbed()
-                .setColor("RED")
-                .setDescription(`${user} does not have a profile!`)
-            ]
-          });
-        } else {
-          await Profile.updateOne({
-            userID: message.author.id,
-            guildId: message.guild.id
-          }, {
-            $inc: {
-              wallet: - amount
-            }
-          });
-          await Profile.updateOne({
-            userID: user.id,
-            guildId: message.guild.id
-          }, {
-            $inc: {
-              wallet: amount
-            }
-          });
-          await message.channel.sendCustom({
-            embeds: [
-              new MessageEmbed()
-                .setColor(message.client.color.green)
-                .setDescription(`You payed $${amount} to ${user}.`)
-            ]
+                .setColor(message.client.color.red)
+                .setDescription("You must mention a user to pay."),
+            ],
+            ephemeral: true,
           });
         }
-      }
-    }
+    
+        if (user.id === senderID) {
+          return message.channel.sendCustom({
+            embeds: [
+              new MessageEmbed()
+                .setColor(message.client.color.red)
+                .setDescription("You can't pay yourself."),
+            ],
+            ephemeral: true,
+          });
+        }
+    
+        const senderProfile = await Profile.findOne({ userID: senderID });
+        const recipientProfile = await Profile.findOne({ userID: user.id });
+    
+        if (!senderProfile) {
+          return message.channel.sendCustom({
+            embeds: [
+              new MessageEmbed()
+                .setColor(message.client.color.red)
+                .setDescription("You do not have a profile. Use `/register` first."),
+            ],
+            ephemeral: true,
+          });
+        }
+    
+        if (!recipientProfile) {
+          return message.channel.sendCustom({
+            embeds: [
+              new MessageEmbed()
+                .setColor(message.client.color.red)
+                .setDescription(`${user} does not have a profile. They should use \`/register\`.`),
+            ],
+            ephemeral: true,
+          });
+        }
+    
+        const amount = parseAmount(amountInput, senderProfile.wallet);
+    
+        if (!isValidAmount(amount, senderProfile.wallet)) {
+          return message.channel.sendCustom({
+            embeds: [
+              new MessageEmbed()
+                .setColor(message.client.color.red)
+                .setDescription("Please enter a valid amount — a positive number, abbreviation, percentage, or `all`."),
+            ],
+            ephemeral: true,
+          });
+        }
+    
+        await Profile.updateOne({ userID: senderID }, { $inc: { wallet: -amount } });
+        await Profile.updateOne({ userID: user.id }, { $inc: { wallet: amount } });
+    
+        return message.channel.sendCustom({
+          embeds: [
+            new MessageEmbed()
+              .setColor(message.client.color.green)
+              .setDescription(`You paid $${abbreviateNumber(amount)} to ${user}.`),
+          ],
+        });
   }
 };

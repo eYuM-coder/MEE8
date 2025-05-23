@@ -95,8 +95,6 @@ module.exports = {
 
   async execute(interaction) {
     const subcommand = interaction.options.getSubcommand();
-    const subcommandGroup = interaction.options.getSubcommandGroup();
-    if (subcommandGroup === "temp-conversion") {
       if (subcommand === "ctof") {
         const celsius = interaction.options.getString("celsius");
         if (isNaN(celsius))
@@ -158,15 +156,10 @@ module.exports = {
         const fahrenheit = ((kelvin - 273.15) * 9) / 5 + 32;
         return interaction.reply({ content: `${fahrenheit.toFixed(2)}°F` });
       }
-    }
     if (subcommand === "equation") {
       try {
         await interaction.deferReply();
         let input = interaction.options.getString("expression");
-
-        input = input
-          .replace(/(?<=[a-zA-Z])(?=\d)/g, "*")
-          .replace(/(?<=[a-zA-Z])(?=[a-zA-Z])/g, "*");
 
         // Fetch stored variables from the database
         const storedVars = await variablesDB.findOne({ _id: "variables" });
@@ -178,36 +171,105 @@ module.exports = {
           input = input.replace(regex, value);
         }
 
-        function evaluateExpression(expression) {
-          let result;
+        function safeEvaluate(expression) {
           try {
-            if (expression.includes("/0")) {
-              throw new Error("DIVIDE BY 0");
-            }
-
-            result = nerdamer(expression, variables).evaluate().text();
-
-            if (result === "Infinity") {
-              throw new Error("OVERFLOW");
-            }
+              const result = evaluateExpression(expression);
+              return result;
           } catch (e) {
-            console.log(e.constructor);
-            console.error(e);
-            if (e.constructor.name == "SyntaxError") {
-              return `ERROR: ${e.constructor.name
-                .replace("Error", "")
-                .toUpperCase()}`;
-            } else if (e.constructor.name === "Error") {
-              return `ERROR: ${e.message}`;
-            } else {
-              return tokens.join("");
-            }
+              throw new Error(`${e.message}`);
           }
+      }
+      
+      function finalTransformString(input) {
+          // Block inputs with numbers or underscores
+          input = input.replace(/pi/gi, 'π'); // Normalize all forms of "pi" to lowercase
+          
+          // Insert * between π and a-z or A-Z
+      input = input.replace(/π(?=[a-zA-Z])/g, 'π*');
+      input = input.replace(/(?<=[a-zA-Z])π/g, '*π');
+          
+          if (/[_]/.test(input)) return null;
+      
+          return transformRecursive(input);
+      }
+      
+      function transformRecursive(input, inFunction = false) {
+          let result = '';
+          let i = 0;
+      
+          while (i < input.length) {
+              if (/[a-zA-Z]/.test(input[i])) {
+                  // Check for function name followed by (
+                  let j = i;
+                  while (j < input.length && /[a-zA-Z]/.test(input[j])) j++;
+      
+                  if (input[j] === '(') {
+                      // It's a function
+                      const funcName = input.slice(i, j);
+                      const { content, end } = extractParenContent(input, j);
+      
+                      // Recursively process inside the function
+                      const transformedInner = transformRecursive(content, true);
+                      result += funcName + '(' + transformedInner + ')';
+                      i = end + 1;
+                  } else {
+                      // Regular word (not function)
+                      const word = input.slice(i, j);
+                      result += addAsterisks(word);
+                      i = j;
+                  }
+              } else if (input[i] === '(') {
+                  const { content, end } = extractParenContent(input, i);
+                  const transformedInner = transformRecursive(content, false);
+                  result += '(' + transformedInner + ')';
+                  i = end + 1;
+              } else {
+                  result += input[i++];
+              }
+          }
+      
           return result;
-        }
+      }
+      
+      function extractParenContent(str, startIndex) {
+          // Assumes str[startIndex] === '('
+          let depth = 1;
+          let i = startIndex + 1;
+      
+          while (i < str.length && depth > 0) {
+              if (str[i] === '(') depth++;
+              else if (str[i] === ')') depth--;
+              i++;
+          }
+      
+          return {
+              content: str.slice(startIndex + 1, i - 1),
+              end: i - 1
+          };
+      }
+      
+      function addAsterisks(word) {
+          return word.replace(/([a-zA-Z])(?=[a-zA-Z])/g, '$1*');
+      }
+      
+      function evaluateExpression(expression) {
+          let final = finalTransformString(expression);
+          const divisionByZeroRegex = /\d\s*\/\s*0(?!\s*\.\d)/;
+          
+          if (expression.match(divisionByZeroRegex)) {
+              throw new Error("DIVIDE BY 0");
+              return `DIVIDE BY 0`;
+          }
+          
+          for (const [varName, value] of Object.entries(variables)) {
+              const regex = new RegExp(`\\b${varName}\\b`, "g");
+              final = final.replace(regex, value);
+          }
+      
+          return nerdamer(final, variables).evaluate().text();
+      }
 
-        // Evaluate the final expression with mathjs
-        const result = evaluateExpression(input);
+      let result = safeEvaluate(input);
 
         // Send the result
         await interaction.editReply({ content: `Result: \`${result}\`` });

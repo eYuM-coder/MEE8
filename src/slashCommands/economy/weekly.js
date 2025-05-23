@@ -4,12 +4,11 @@ const Profile = require("../../database/models/economy/profile");
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("beg")
-    .setDescription("Beg for money")
+    .setName("weekly")
+    .setDescription("Collect your weekly earnings.")
     .setContexts([0, 1, 2])
     .setIntegrationTypes([0, 1]),
   async execute(interaction) {
-    const amount = Math.floor(Math.random() * 2000);
     const profile = await Profile.findOne({
       userID: interaction.user.id,
     });
@@ -17,71 +16,69 @@ module.exports = {
       await interaction.reply({
         embeds: [
           new MessageEmbed()
-            .setColor(interaction.client.color.green)
+            .setColor(interaction.client.color.red)
             .setDescription(
               `You currently do not have a profile registered!\nUse the /register command to register your profile.`
             ),
         ],
-        ephemeral: true,
       });
     } else {
-      if (!profile.lastBeg) {
+      if (!profile.lastWeekly) {
         await Profile.updateOne(
-          {
-            userID: interaction.user.id,
-          },
-          { $set: { lastBeg: Date.now() } }
-        );
-        await Profile.updateOne(
-          { userID: interaction.user.id},
-          { $inc: { wallet: amount } }
-        );
-        await interaction.reply({
-          embeds: [
-            new MessageEmbed()
-              .setColor(interaction.client.color.green)
-              .setTitle(`${interaction.user.username}'s Beg`)
-              .setDescription(
-                `You have begged ($${amount}).\nCome back in 3 minutes to beg again.`
-              ),
-          ],
-        });
-      } else if (Date.now() - profile.lastBeg > 180000) {
-        await Profile.updateOne(
-          {
-            userID: interaction.user.id,
-          },
-          { $set: { lastBeg: Date.now() } }
+          { userID: interaction.user.id },
+          { $set: { lastWeekly: Date.now() } }
         );
         await Profile.updateOne(
           { userID: interaction.user.id },
-          { $inc: { wallet: amount } }
+          { $inc: { wallet: 500000 } }
         );
         await interaction.reply({
           embeds: [
             new MessageEmbed()
               .setColor(interaction.client.color.green)
-              .setTitle(`${interaction.user.username}'s Beg`)
-              .setDescription(`You begged for a total of $${amount}.`),
+              .setTitle(`${interaction.user.username}'s Weekly`)
+              .setDescription(
+                `You have collected this weeks earnings ($500,000).\nCome back next week to collect more`
+              ),
+          ],
+        });
+      } else if (Date.now() - profile.lastWeekly > 604800000) {
+        await Profile.updateOne(
+          { userID: interaction.user.id },
+          { $set: { lastWeekly: Date.now() } }
+        );
+        await Profile.updateOne(
+          { userID: interaction.user.id },
+          { $inc: { wallet: 500000 } }
+        );
+        await interaction.reply({
+          embeds: [
+            new MessageEmbed()
+              .setColor(interaction.client.color.green)
+              .setTitle(`${interaction.user.username}'s Weekly`)
+              .setDescription(`You have collected your weekly earnings.`),
           ],
         });
       } else {
-        const lastBeg = new Date(profile.lastBeg);
+        const lastWeekly = new Date(profile.lastWeekly);
         const timeLeft = Math.round(
-          (lastBeg.getTime() + 180000 - Date.now()) / 1000
+          (lastWeekly.getTime() + 604800000 - Date.now()) / 1000
         );
-        const minutes = Math.floor(timeLeft / 60);
-        const seconds = timeLeft - minutes * 60;
+        const days = Math.floor(timeLeft / 86400);
+        const hours = Math.floor((timeLeft - days * 86400) / 3600);
+        const minutes = Math.floor(
+          (timeLeft - days * 86400 - hours * 3600) / 60
+        );
+        const seconds = timeLeft - days * 86400 - hours * 3600 - minutes * 60;
         await interaction.reply({
           embeds: [
             new MessageEmbed()
               .setColor(interaction.client.color.red)
-              .setTitle(`${interaction.user.username}'s Beg cooldown`)
+              .setTitle(`${interaction.user.username}'s Weekly`)
               .setDescription(
-                `You have to wait ${minutes}m ${seconds}s before you can beg again!`
+                `You have to wait ${days}d ${hours}h ${minutes}m ${seconds}s before you can collect your weekly earnings!`
               ),
           ],
-          ephemeral: true,
         });
       }
     }

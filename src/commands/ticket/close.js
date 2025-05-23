@@ -6,6 +6,7 @@ const transcriptSchema = require("../../database/models/transcript.js");
 const randoStrings = require("../../packages/randostrings.js");
 const random = new randoStrings();
 const moment = require("moment");
+const send = require("../../packages/logs/index.js");
 module.exports = class extends Command {
   constructor(...args) {
     super(...args, {
@@ -133,7 +134,7 @@ module.exports = class extends Command {
                 }/paste/${ticketID})`}
               );
 
-            channelReact.send({ embeds: [closeEmbed] });
+            send(channelReact, { embeds: [closeEmbed] }, { name: `Ticket Logs`, username: `Ticket Logs`, icon: "https://neonova.eyum.org/logo.png" });
             message.author.send({ embeds: [closeEmbed] });
           }
 

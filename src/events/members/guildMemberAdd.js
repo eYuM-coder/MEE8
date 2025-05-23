@@ -70,7 +70,7 @@ module.exports = class extends Event {
               channelEmbed &&
               channelEmbed.viewable &&
               channelEmbed
-                .permissionsFor(member.guild.me)
+                .permissionsFor(member.guild.members.me)
                 .has(["SEND_MESSAGES", "EMBED_LINKS"])
             ) {
               send(
@@ -335,7 +335,7 @@ module.exports = class extends Event {
                 greetChannel &&
                 greetChannel.viewable &&
                 greetChannel
-                  .permissionsFor(member.guild.me)
+                  .permissionsFor(member.guild.members.me)
                   .has(["SEND_MESSAGES", "EMBED_LINKS"])
               ) {
                 greetChannel.send(`${text}`).catch(() => {});
@@ -366,7 +366,7 @@ module.exports = class extends Event {
                 )
                 .replace(
                   /{size}/g,
-                  `${member.guild.guild.members.cache.reduce(
+                  `${member.guild.members.cache.reduce(
                     (a, b) => a + b,
                     0
                   )}`
@@ -445,7 +445,7 @@ module.exports = class extends Event {
                 greetChannel &&
                 greetChannel.viewable &&
                 greetChannel
-                  .permissionsFor(member.guild.me)
+                  .permissionsFor(member.guild.members.me)
                   .has(["SEND_MESSAGES", "EMBED_LINKS"])
               ) {
                 greetChannel.send({ embeds: [embed] }).catch(() => {});

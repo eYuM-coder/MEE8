@@ -1,8 +1,10 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageEmbed } = require("discord.js");
 const Profile = require("../../database/models/economy/profile");
-const { createProfile } = require("../../utils/utils.js");
-const { execute } = require("../fun/dm.js");
+
+function abbreviateNumber(number) {
+  return number >= 1e12 ? `${(number / 1e12).toFixed(2)}T` : number >= 1e9 ? `${(number / 1e9).toFixed(2)}B` : number >= 1e6 ? `${(number / 1e6).toFixed(2)}M` : number >= 1e3 ? `${(number / 1e3).toFixed(2)}K` : number.toString();
+}
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -17,23 +19,21 @@ module.exports = {
         .setDescription("The amount to add")
         .setRequired(true)
     )
-    .setContexts(0)
-    .setIntegrationTypes(0),
+    .setContexts([0, 1, 2])
+    .setIntegrationTypes([0, 1]),
   async execute(interaction) {
-    const user = interaction.options.getMember("member");
+    const user = interaction.options.getUser("member");
     const amount = interaction.options.getInteger("amount");
     const profile = await Profile.findOne({
       userID: user.id,
-      guildId: interaction.guild.id,
     });
     if (!profile) {
-      await createProfile(user, interaction.guild);
       await interaction.reply({
         embeds: [
           new MessageEmbed()
-            .setColor("BLURPLE")
+            .setColor(interaction.client.color.yellow)
             .setDescription(
-              `Creating profile.\nUse this command again to use it.`
+              `${user} does not have a profile registered! They can use the /register command to register their profile.`
             ),
         ],
         ephemeral: true,
@@ -42,15 +42,14 @@ module.exports = {
       await Profile.updateOne(
         {
           userID: user.id,
-          guildId: interaction.guild.id,
         },
         { $inc: { wallet: amount } }
       );
       await interaction.reply({
         embeds: [
           new MessageEmbed()
-            .setColor("BLURPLE")
-            .setDescription(`Added $${amount} to ${user}`),
+            .setColor(interaction.client.color.green)
+            .setDescription(`Added $${abbreviateNumber(amount)} to ${user}`),
         ],
       });
     }

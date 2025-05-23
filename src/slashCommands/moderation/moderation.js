@@ -9,6 +9,7 @@ const ms = require("ms");
 const ReactionMenu = require("../../data/ReactionMenu.js");
 const darkpassword = require("generate-password");
 const randoStrings = require("../../packages/randostrings.js");
+const random = new randoStrings();
 const warnModel = require("../../database/models/moderation.js");
 const fs = require("node:fs");
 async function usePrettyMs(ms) {

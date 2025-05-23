@@ -13,24 +13,64 @@
 
       <script>
         const colorThemes = [
-          { background: 'linear-gradient(to right, #1c1c1d, #182848)', color: '#333;' },
-          { background: 'linear-gradient(to right, #333, #333)', color: '#333' },
-          // Add more color themes as needed
+          { background: 'linear-gradient(to right, #0a0a0a, #0d1b2a)', color: '#d1d9e6' },
+          { background: 'linear-gradient(to right, #0b0c10, #1f2833)', color: '#c5c6c7' },
         ];
 
         let themeIndex = 0;
+        let isTransitioning = false;
 
         function toggleTheme() {
+          if (isTransitioning) return;
+
+          isTransitioning = true;
           const body = document.body;
+          const button = document.querySelector('.theme-toggle-button');
+          const icon = button.querySelector('i');
 
-          // Cycle through color themes
-          themeIndex = (themeIndex + 1) % colorThemes.length;
+          icon.classList.remove('fa-adjust');
+          icon.classList.add('fa-spinner');
+          icon.style.animation = 'spin 1s linear infinite';
 
-          // Apply the current color theme
-          body.style.background = colorThemes[themeIndex].background;
-          body.style.color = colorThemes[themeIndex].color;
+          const overlay = document.createElement('div');
+          overlay.style.position = 'absolute';
+          overlay.style.top = 0;
+          overlay.style.left = 0;
+          overlay.style.width = '100%';
+          overlay.style.height = `${document.documentElement.scrollHeight}px`;
+          overlay.style.zIndex = '-1';
+          overlay.style.background = colorThemes[(themeIndex + 1) % colorThemes.length].background;
+          overlay.style.opacity = 0;
+          overlay.style.transition = 'opacity 1s';
+
+          body.appendChild(overlay);
+
+          setTimeout(() => {
+            overlay.style.opacity = 1;
+            body.style.color = colorThemes[(themeIndex + 1) % colorThemes.length].color;
+          }, 0);
+
+          setTimeout(() => {
+            themeIndex = (themeIndex + 1) % colorThemes.length;
+            body.style.background = colorThemes[themeIndex].background;
+            body.removeChild(overlay);
+
+            icon.classList.remove('fa-spinner');
+            icon.classList.add('fa-adjust');
+            icon.style.animation = '';
+
+            isTransitioning = false;
+          }, 1000);
         }
       </script>
+
+      <style>
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      </style>
+
 
       <body>
 
@@ -41,18 +81,20 @@
                 <div class="col-12 text-center parallax-fade-top">
                   <p>Neonova</p>
 
-                  <h1>The best Multipurpose <br>Discord Bot offering an alternative to MEE6.</h1>
-                  <p style="font-size: 13px">Serving <b id="odometer" class="odometer">
+                  <h1>The handcrafted <br>Discord bot</h1>
+                  <p style="font-size: 13px">Proudly serving <b id="odometer" class="odometer">
                       <%= bot.guilds.cache.reduce((a, g)=> a + g.memberCount, 0) %>
                     </b> members in <b id="odometer2" class="odometer">
                       <%= bot.guilds.cache.size %> guilds
-                    </b> servers.</p>
+                    </b> servers!</p>
                   <div class='buttons flex'>
                     <a class='button btn btn-blurple' href='/invite'><span><i class="fab fa-discord fa-2x"></i> Add
                         to Discord</span></a>
                     <a class='button btn btn-default' href='/dashboard'><span><i class="fa fa-bar-chart"
                           aria-hidden="true"></i> Dashboard</span></a>
-                    <button onclick="toggleTheme()" class="button">Toggle Theme</button>
+                          <a class="button btn btn-default theme-toggle-button" onclick="toggleTheme()" style="cursor: pointer;">
+                            <span><i class="fa fa-adjust" aria-hidden="true"></i> Change Theme</span>
+                          </a>
                   </div>
                 </div>
               </div>
@@ -104,35 +146,37 @@
             <div class="product-image"><img src="<%= domain %>/cards/logging.png"></div>
             <div class="product-text">
               <h2 class="product-title">Advanced Logging</h2>
-              <p>With Neonova, you can fully customize logging. Neonova lets you set your own log settings from member logging
-                to command and voice logging!</p>
+              <p>With Neonova, you can make your logging experience truly your own! Whether it’s tracking member activity or customizing commands and voice logs, you have complete control. It’s logging, the way you like it!</p>
             </div>
           </div>
+
           <div class="product-row">
             <div class="product-image"><img src="<%= domain %>/cards/embeds.png"></div>
             <div class="product-text">
-              <h2 class="product-title">Design Embeds</h2>
-              <p>Neonova Allows you to make, and send embeds to any channel. You can even send it as your own webhook or
-                save it as a Custom Command!</p>
+              <h2 class="product-title">Custom Embeds</h2>
+              <p>Neonova makes it super easy to create and send lovely, personalized embeds to any channel! You can even send them as your very own webhook or save them as custom commands. Let your creativity shine!</p>
             </div>
           </div>
 
           <div class="product-row">
             <div class="product-image"><img src="<%= domain %>/cards/application.png"></div>
             <div class="product-text">
-              <h2 class="product-title">Create Applications</h2>
-              <p>Manage your server applications with Neonova!</p>
+              <h2 class="product-title">Server Applications</h2>
+              <p>Managing your server applications has never been this simple and fun! With Neonova, you can keep everything running smoothly and effortlessly. We’ve got your back!</p>
             </div>
           </div>
+
           <div class="product-row">
             <div class="product-image"><img src="<%= domain %>/cards/rr.png"></div>
             <div class="product-text">
               <h2 class="product-title">Reaction Roles</h2>
-              <p>Create your own reaction roles directly from Neonova's Dashboard!</p>
+              <p>Set up your very own reaction roles directly from Neonova’s dashboard! It’s an easy, fun way to interact with your community and make them feel right at home.</p>
             </div>
           </div>
+
           <div style="padding-top: 100px"></div>
-        </div>
+
+          </div>
 
 
         </section>
@@ -155,12 +199,12 @@
                   <div class="row">
                     <div class="col-12 text-center parallax-fade-top">
                       <p>Neonova</p>
-                      <h1>The best multipurpose <br>multilingual Discord Bot</h1>
-                      <p style="font-size: 13px">Serving <b id="odometer" class="odometer">
+                      <h1>The handcrafted <br>Discord Bot</h1>
+                      <p style="font-size: 13px">Proudly serving <b id="odometer" class="odometer">
                           <%= bot.guilds.cache.reduce((a, g)=> a + g.memberCount, 0) %>
                         </b> members in <b id="odometer2" class="odometer">
                           <%= bot.guilds.cache.size %>
-                        </b> servers.</p>
+                        </b> servers!</p>
                       <div class='buttons flex'>
                         <a class='button btn btn-blurple' href='/invite'><span><i class="fab fa-discord fa-2x"></i> Add
                             to Discord</span></a>
@@ -217,7 +261,7 @@
               .glow {
                 width: 80%;
                 height: 60px;
-                background: linear-gradient(90deg, #dd4949, #5e40e4);
+                background: linear-gradient(to right, #0a0a0a, #0d1b2a);
                 position: absolute;
                 margin: 0 auto;
                 left: 0;
@@ -229,41 +273,41 @@
             </style>
 
 
-            <div class="content-container">
-              <div id="os2" class="product-row">
-                <div class="product-image"><img src="<%= domain %>/cards/logging.png"></div>
-                <div class="product-text">
-                  <h2 class="product-title">Advanced Logging</h2>
-                  <p>With Neonova, you can fully customize logging. Neonova lets you set your own log settings from member
-                    logging to command and voice logging!</p>
-                </div>
-              </div>
-              <div class="product-row">
-                <div class="product-image"><img src="<%= domain %>/cards/embeds.png"></div>
-                <div class="product-text">
-                  <h2 class="product-title">Design Embeds</h2>
-                  <p>Neonova allows you to make, and send embeds to any channel. You can even send it as your own webhook
-                    or save it as a custom command!</p>
-                </div>
-              </div>
+<div class="content-container">
+  <div id="os2" class="product-row">
+    <div class="product-image"><img src="<%= domain %>/cards/logging.png"></div>
+    <div class="product-text">
+      <h2 class="product-title">Advanced Logging</h2>
+      <p>With Neonova, you can make your logging experience truly your own! Whether it’s tracking member activity or customizing commands and voice logs, you have complete control. It’s logging, the way you like it!</p>
+    </div>
+  </div>
 
-              <div class="product-row">
-                <div class="product-image"><img src="<%= domain %>/cards/application.png"></div>
-                <div class="product-text">
-                  <h2 class="product-title">Create Applications</h2>
-                  <p>Manage your server applications with Neonova!</p>
-                </div>
-              </div>
-              <div class="product-row">
-                <div class="product-image"><img src="<%= domain %>/cards/rr.png"></div>
-                <div class="product-text">
-                  <h2 class="product-title">Reaction Roles</h2>
-                  <p>Create your own reaction roles directly from Neonova's Dashboard!</p>
-                </div>
-              </div>
+  <div class="product-row">
+    <div class="product-image"><img src="<%= domain %>/cards/embeds.png"></div>
+    <div class="product-text">
+      <h2 class="product-title">Custom Embeds</h2>
+      <p>Neonova makes it super easy to create and send lovely, personalized embeds to any channel! You can even send them as your very own webhook or save them as custom commands. Let your creativity shine!</p>
+    </div>
+  </div>
 
-              <div style="padding-top: 100px"></div>
-            </div>
+  <div class="product-row">
+    <div class="product-image"><img src="<%= domain %>/cards/application.png"></div>
+    <div class="product-text">
+      <h2 class="product-title">Server Applications</h2>
+      <p>Managing your server applications has never been this simple and fun! With Neonova, you can keep everything running smoothly and effortlessly. We’ve got your back!</p>
+    </div>
+  </div>
+
+  <div class="product-row">
+    <div class="product-image"><img src="<%= domain %>/cards/rr.png"></div>
+    <div class="product-text">
+      <h2 class="product-title">Reaction Roles</h2>
+      <p>Set up your very own reaction roles directly from Neonova’s dashboard! It’s an easy, fun way to interact with your community and make them feel right at home.</p>
+    </div>
+  </div>
+</div>
+
+
 
 
           </section>
@@ -278,114 +322,126 @@
         <% } %>
   </div>
   <style>
-    .button {
-      background-color: #04AA6D;
-      /* Green */
-      border: none;
-      color: white;
-      padding: 13px 30px;
-      text-align: center;
-      text-decoration: none;
-      display: inline-block;
-      font-size: 13px;
-    }
+.button {
+  padding: 13px 30px;
+  font-size: 13px;
+  font-weight: 600;
+  background: linear-gradient(135deg, #7289da, #5e78d5);
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(114, 137, 218, 0.5);
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.3s ease;
+}
 
-    .button:hover {
-      transform: translateY(-5px);
-      /* Move the image up by 5 pixels on hover */
-    }
+.button:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 16px rgba(114, 137, 218, 0.5);
+}
 
-    #myBtn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: rgb(0, 0, 0);
-      background: rgba(0, 0, 0, 0.7);
-      width: 50px;
-      height: 50px;
-      display: block;
-      text-decoration: none;
-      -webkit-border-radius: 35px;
-      -moz-border-radius: 35px;
-      border-radius: 35px;
-      display: none;
-      -webkit-transition: all 0.3s linear;
-      -moz-transition: all 0.3s ease;
-      -ms-transition: all 0.3s ease;
-      -o-transition: all 0.3s ease;
-      transition: all 0.3s ease;
-    }
+#myBtn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  background: rgba(20, 20, 20, 0.8);
+  backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+  box-shadow: 0 8px 32px rgba(20, 20, 20, 0.8);
+  display: none;
+  text-align: center;
+  line-height: 50px;
+  transition: all 0.3s ease;
+}
 
-    .theme-toggle {
-      margin-top: 20px;
-    }
+#myBtn:hover {
+  background: rgba(20, 20, 20, 0.9);
+  transform: scale(1.1);
+}
 
-    #myBtn i {
-      color: #fff;
-      margin: 0;
-      position: relative;
-      left: 16px;
-      top: 13px;
-      font-size: 19px;
-      -webkit-transition: all 0.3s ease;
-      -moz-transition: all 0.3s ease;
-      -ms-transition: all 0.3s ease;
-      -o-transition: all 0.3s ease;
-      transition: all 0.3s ease;
-    }
+#myBtn i {
+  font-size: 19px;
+  color: #ffffff;
+  vertical-align: middle;
+  position: relative;
+  top: 1px;
+  transition: all 0.3s ease;
+}
+
+#myBtn:hover i {
+  top: 3px;
+}
+
+.btn {
+  margin: 10px;
+  padding: 12px 36px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  background: linear-gradient(135deg, #7289da, #5e78d5);
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(114, 137, 218, 0.5);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 16px rgba(114, 137, 218, 0.5);
+}
+
+.btn-default {
+  background: rgba(30, 30, 30, 0.95);
+  box-shadow: 0 4px 12px rgba(30, 30, 30, 0.5);
+}
+
+.btn-default:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 16px rgba(30, 30, 30, 0.5);
+}
+
+.btn-blurple {
+  padding: 12px 36px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(99, 126, 223, 0.5);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.btn-blurple:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 16px rgba(99, 126, 223, 0.5);
+}
+
+.btn i {
+  vertical-align: middle;
+  position: relative;
+  top: 1px;
+  margin-right: 8px;
+}
+
+.btn-blurple i.fa-2x {
+  font-size: 1.2em !important;
+  position: relative;
+  top: 2px;
+}
 
 
-    #myBtn:hover {
-      background: rgba(0, 0, 0, 0.9);
-    }
-
-    .btn {
-      border: none;
-      margin: 10px;
-      color: #ffffff;
-      cursor: pointer;
-      font-size: 16px;
-      padding: 10px 30px;
-      border-radius: 5px;
-      display: inline-block;
-      background-color: var(--secondary-color);
-      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-      transition: all 0.5s;
-    }
-
-    .btn {
-      border: none;
-      margin: 10px;
-      color: #ffffff;
-      cursor: pointer;
-      font-size: 16px;
-      padding: 10px 30px;
-      border-radius: 5px;
-      display: inline-block;
-      background-color: var(--secondary-color);
-      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-      transition: all 0.5s;
-    }
-
-    .btn-blurple {
-      background-color: #7289da;
-    }
-
-    .btn-default {
-      background-color: #2f2f2f;
-    }
-
-    .btn i {
-      top: 3px;
-      font-size: 125%;
-      margin: 0 4px 0 0;
-      position: relative;
-    }
-
-    #myBtn:hover i {
-      color: #fff;
-      top: 5px;
-    }
 
     /* #images
 ================================================== */
@@ -429,15 +485,11 @@
     .product-row .product-image {
       width: 70%;
       margin: 0 auto;
-      animation: goUpandDown 5s ease-in-out infinite;
     }
 
-    /* .product-row .product-image:hover {
-	transform: scale(1.1);
-} */
     body {
       transition: background 0.3s ease, color 0.3s ease;
-      background: linear-gradient(to right, #1c1c1d, #182848);
+      background: linear-gradient(to right, #0a0a0a, #0d1b2a);
       font-family: Arial, sans-serif;
       color: #ffffff;
     }
@@ -822,7 +874,7 @@
   <br>
 
   <script>
-    // ===== Scroll to Top ==== 
+    // ===== Scroll to Top ====
     $(window).scroll(function () {
       if ($(this).scrollTop() >= 50) { // If page is scrolled more than 50px
         $('#return-to-top').fadeIn(200); // Fade in the arrow
@@ -837,35 +889,34 @@
     });
   </script>
 
-  <script>
-    function randomNum2(min, max) {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
+<script>
+  function randomNum(min, max, fluctuationFactor) {
+    return Math.floor(Math.random() * (max - min) * fluctuationFactor) + min;
+  }
 
+  var myInt = setInterval(function () {
+    var size = document.getElementById("size").value || `180000`;
+    var max2 = parseInt(size) + (parseInt(size) * 0.01);
+    var fluctuationFactor = Math.max(0.01, 0.05 + Math.log10(parseInt(size)) * 0.05);
+    var random2 = randomNum(parseInt(size), parseInt(max2), fluctuationFactor);
 
+    odometer.innerHTML = random2
+  }, 2000);
+</script>
 
-    var myInt = setInterval(function () {
-      var size = document.getElementById("size").value || `180000`;
-      var max2 = parseInt(size) + 2000
-      var random2 = randomNum2(parseInt(size), parseInt(max2));
+<script>
+  function randomNum(min, max, fluctuationFactor) {
+    return Math.floor(Math.random() * (max - min) * fluctuationFactor) + min;
+  }
 
-      odometer.innerHTML = random2
-    }, 2000);
-  </script>
-  <script>
-    function randomNum(min, max) {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-
-    var myInt = setInterval(function () {
-
-      var size2 = document.getElementById("size2").value;
-      var max = parseInt(size2) + 10
-      var random = randomNum(parseInt(size2), parseInt(max));
-      odometer2.innerHTML = random
-
-    }, 2000);
-  </script>
+  var myInt = setInterval(function () {
+    var size2 = document.getElementById("size2").value;
+    var max = parseInt(size2) + 10;
+    var fluctuationFactor = Math.max(0.01, 0.05 + Math.log10(parseInt(size2)) * 0.05);
+    var random = randomNum(parseInt(size2), parseInt(max), fluctuationFactor);
+    odometer2.innerHTML = random;
+  }, 2000);
+</script>
 
   <script src='https://github.hubspot.com/odometer/odometer.js'></script>
   <%- include("partials/mainfooter") %>
@@ -876,7 +927,7 @@
           width: 100vw;
           /* Use 100% of the viewport width */
           height: 60px;
-          background: linear-gradient(90deg, #dd4949, #5e40e4);
+          background: linear-gradient(to right, #0a0a0a, #0d1b2a);
           position: fixed;
           /* Use fixed positioning to make it cover the entire viewport */
           top: 0;

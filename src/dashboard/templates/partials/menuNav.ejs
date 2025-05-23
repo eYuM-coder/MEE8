@@ -15,9 +15,6 @@
           <a href="/support" class="nav-link">Support</a>
         </li>
         <li class="nav-list-item">
-          <a href="/commands" class="nav-link">Commands</a>
-        </li>
-        <li class="nav-list-item">
           <a href="/manage" class="nav-link">Manage</a>
         </li>
         <li class="nav-list-item">
@@ -32,13 +29,10 @@
         <a href="<%=domain%>/server" target="_blank" rel="noopener">Support</a>
       </li>
       <li>
-        <a href="<%=domain%>/commands" target="_blank" rel="noopener">Commands</a>
-      </li>
-      <li>
         <a href="<%=domain%>/manage" target="_blank" rel="noopener">Manage</a>
       </li>
       <% if (user.avatar) { avatar="https://cdn.discordapp.com/avatars/" + user.id + "/" + user.avatar + ".png?size=128"
-        ; } else { avatar="https://cdn.glitch.com/82fe990a-7942-42e3-9790-39807ccdb9f6%2Ficon-404.png?v=1602412158188" ;
+        ; } else { avatar="https://cdn.eyum.dev/neonova/profile-user.png" ;
         } %>
         <a class="avatar-container dropdownHead" id="dropdownHead" onclick="dropdown(this)"><img class="user-avatar"
             src="<%= avatar %>" /><span class="user-name">
@@ -47,9 +41,6 @@
         <% } else { %>
           <li>
             <a href="<%=domain%>/support" target="_blank" rel="noopener">Support</a>
-          </li>
-          <li>
-            <a href="<%=domain%>/commands" target="_blank" rel="noopener">Commands</a>
           </li>
           <li>
             <a href="<%=domain%>/manage" target="_blank" rel="noopener">Manage</a>

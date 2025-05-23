@@ -57,7 +57,7 @@ module.exports = {
     `;
 
     // Get all commands, subcommands, and subcommand groups
-    const commandsList = Array.from(
+    const commandsList = [];/* Array.from(
       interaction.client.slashCommands.values()
     ).flatMap((cmd) => {
       if (
@@ -85,7 +85,7 @@ module.exports = {
           };
         }
       });
-    });
+    });*/
 
     const totalCommands = commandsList.reduce((count, item) => {
       if (item.type === "group") {

@@ -1,7 +1,6 @@
 const Command = require("../../structures/Command");
 const { MessageEmbed } = require("discord.js");
 const Profile = require("../../database/models/economy/profile.js");
-const { createProfile } = require("../../utils/utils.js");
 
 module.exports = class extends Command {
   constructor(...args) {
@@ -14,41 +13,40 @@ module.exports = class extends Command {
   }
   async run(message) {
     const profile = await Profile.findOne({
-      userID: message.author.id,
-      guildId: message.guild.id
+      userID: message.author.id
     });
     if (!profile) {
-      await createProfile(message.author, message.guild);
+      await createProfile(message.author);
       await message.channel.sendCustom({
         embeds: [
           new MessageEmbed()
-            .setColor("BLURPLE")
-            .setDescription(`Creating profile.\nUse this command again to collect your monthly earnings`)
+            .setColor(message.client.color.red)
+            .setDescription(`You currently do not have a profile registered!\nUse the /register command to register your profile.`)
         ]
       });
     } else {
       if (!profile.lastMonthly) {
         await Profile.updateOne(
-          { userID: message.author.id, guildId: message.guild.id }, { $set: { lastMonthly: Date.now() } }
+          { userID: message.author.id }, { $set: { lastMonthly: Date.now() } }
         );
-        await Profile.updateOne({ userID: message.author.id, guildId: message.guild.id }, { $inc: { wallet: 2500000 } });
+        await Profile.updateOne({ userID: message.author.id }, { $inc: { wallet: 2500000 } });
         await message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-              .setColor("BLURPLE")
+              .setColor(message.client.color.green)
               .setTitle(`${message.author.username}'s Monthly`)
               .setDescription(`You have collected this month's earnings ($2,500,000).\nCome back next month to collect more`)
           ]
         });
       } else if (Date.now() - profile.lastMonthly > 2592000000) {
         await Profile.updateOne(
-          { userID: message.author.id, guildId: message.guild.id }, { $set: { lastMonthly: Date.now() } }
+          { userID: message.author.id }, { $set: { lastMonthly: Date.now() } }
         );
-        await Profile.updateOne({ userID: message.author.id, guildId: message.guild.id }, { $inc: { wallet: 2500000 } });
+        await Profile.updateOne({ userID: message.author.id }, { $inc: { wallet: 2500000 } });
         await message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-              .setColor("BLURPLE")
+              .setColor(message.client.color.green)
               .setTitle(`${message.author.username}'s Monthly`)
               .setDescription(`You have collected your monthly earnings of $2,500,000.`)
           ]
@@ -63,7 +61,7 @@ module.exports = class extends Command {
         await message.channel.sendCustom({
           embeds: [
             new MessageEmbed()
-              .setColor("BLURPLE")
+              .setColor(message.client.color.red)
               .setTitle(`${message.author.username}'s Monthly`)
               .setDescription(`You have to wait ${days}d ${hours}h ${minutes}m ${seconds}s before you can collect your monthly earnings!`)
           ]

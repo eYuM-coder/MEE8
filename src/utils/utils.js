@@ -107,7 +107,7 @@ async function getCaseNumber(client, guild, modLog) {
   const message = (await modLog.messages.fetch({ limit: 100 }))
     .filter(
       (m) =>
-        m.member === guild.me &&
+        m.member === guild.members.me &&
         m.embeds[0] &&
         m.embeds[0].type == "rich" &&
         m.embeds[0].footer &&
@@ -136,14 +136,14 @@ function getStatus(...args) {
   return "enabled";
 }
 
-async function createProfile(user, guild) {
-  const profile = await Profile.findOne({ userID: user.id, guildId: guild.id });
+async function createProfile(user) {
+  const profile = await Profile.findOne({ userID: user.id });
   if (!profile) {
     const newProfile = await new Profile({
-      guildId: guild.id,
       userID: user.id,
       wallet: 0,
       bank: 0,
+      bankCapacity: 5000,
       lastDaily: new Date() - 86400000,
       lastWeekly: new Date() - 604800000,
       lastMonthly: new Date() - 2592000000,

@@ -58,7 +58,7 @@ module.exports = class extends Event {
               channelEmbed &&
               channelEmbed.viewable &&
               channelEmbed
-                .permissionsFor(newEmoji.guild.me)
+                .permissionsFor(newEmoji.guild.members.me)
                 .has(["SEND_MESSAGES", "EMBED_LINKS"])
             ) {
               send(

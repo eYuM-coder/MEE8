@@ -25,19 +25,36 @@ module.exports = class extends Event {
 
       const guild = newChannel.guild;
       let fetchedLogs;
+      let overwriteLogs;
 
       try {
         // Fetch the most recent channel update audit log
-        fetchedLogs = await guild.fetchAuditLogs({ type: 'CHANNEL_OVERWRITE_UPDATE', limit: 1 });
+        fetchedLogs = await guild.fetchAuditLogs({ type: 'CHANNEL_UPDATE', limit: 1 });
+      } catch (error) {
+        console.error("Error fetching audit logs:", error);
+        return;
+      }
+
+      try {
+        overwriteLogs = await guild.fetchAuditLogs({ type: "CHANNEL_OVERWRITE_UPDATE", limit: 1 });
       } catch (error) {
         console.error("Error fetching audit logs:", error);
         return;
       }
 
       const auditEntry = fetchedLogs?.entries?.first();
-      if (!auditEntry || auditEntry.target?.id !== newChannel.id) return;
+      const overwriteEntry = overwriteLogs?.entries?.first();
+      let executor = null;
+let reason = null;
 
-      const { executor, reason } = auditEntry;
+if (auditEntry && auditEntry.target?.id === newChannel.id) {
+  executor = auditEntry.executor;
+  reason = auditEntry.reason;
+} else if (overwriteEntry && overwriteEntry.target?.id === newChannel.id) {
+  executor = overwriteEntry.executor;
+  reason = overwriteEntry.reason;
+}
+
       let description = [];
       let color = logging.server_events.color === "#000000" ? "#FFFF00" : logging.server_events.color;
       let type = newChannel.type === "GUILD_CATEGORY" ? "Category" : newChannel.type === "GUILD_TEXT" ? "Text Channel" : "Voice Channel";
@@ -117,7 +134,7 @@ module.exports = class extends Event {
         }
 
       // Send the log message
-      if (channelEmbed.viewable && channelEmbed.permissionsFor(guild.me).has(["SEND_MESSAGES", "EMBED_LINKS"])) {
+      if (channelEmbed.viewable && channelEmbed.permissionsFor(guild.members.me).has(["SEND_MESSAGES", "EMBED_LINKS"])) {
         send(channelEmbed, { embeds: [embed] }, {
           name: this.client.user.username,
           username: this.client.user.username,

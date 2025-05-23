@@ -388,7 +388,7 @@ module.exports = class extends Event {
                 .users.remove(user.id)
                 .catch(() => {});
 
-              let id = serverCase.padStart(4, "0");
+              let id = String(serverCase).padStart(4, "0");
               let chann = `ticket-${id}`;
 
               let array = [];
@@ -505,11 +505,11 @@ module.exports = class extends Event {
                   if (db.ticketPing == "true") {
                     if (chan) {
                       if (
-                        !chan.permissionsFor(chan.guild.me).has("SEND_MESSAGES")
+                        !chan.permissionsFor(chan.guild.members.me).has("SEND_MESSAGES")
                       )
                         return;
                       if (
-                        !chan.permissionsFor(chan.guild.me).has("EMBED_LINKS")
+                        !chan.permissionsFor(chan.guild.members.me).has("EMBED_LINKS")
                       )
                         return;
 
@@ -574,6 +574,7 @@ module.exports = class extends Event {
                       },
                       {
                         name: `Ticket Logs`,
+                        username: `Ticket Logs`,
                         icon: `https://neonova.eyum.org/logo.png`,
                       }
                     ).catch(() => {});

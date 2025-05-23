@@ -31,7 +31,7 @@ module.exports = class extends Event {
       (ch) =>
         ch.type === "GUILD_TEXT" &&
         ch
-          .permissionsFor(guild.me)
+          .permissionsFor(guild.members.me)
           .has(["SEND_MESSAGES", "VIEW_CHANNEL", "EMBED_LINKS"])
     );
 
@@ -59,7 +59,7 @@ module.exports = class extends Event {
         try {
           if (
             channel.viewable &&
-            channel.permissionsFor(guild.me).has("MANAGE_ROLES")
+            channel.permissionsFor(guild.members.me).has("MANAGE_ROLES")
           ) {
             if (channel.type === "GUILD_TEXT")
               await channel.permissionOverwrites.edit(muteRole, {
@@ -113,7 +113,7 @@ module.exports = class extends Event {
         .addFields({
           name: "\u200b",
           value:
-            "**[Invite](https://invite.neonova.eyum.org) | " +
+            "**[Invite](https://neonova.eyum.org/invite) | " +
             `[Support Server](${process.env.AUTH_DOMAIN}/support) | ` +
             `[Dashboard](${process.env.AUTH_DOMAIN}/dashboard)**`,
         });

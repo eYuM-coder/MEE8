@@ -1,6 +1,6 @@
-const Command = require("../../structures/Command");
+const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageEmbed } = require("discord.js");
-const Profile = require("../../database/models/economy/profile.js");
+const Profile = require("../../database/models/economy/profile");
 
 function abbreviateNumber(number) {
   return number >= 1e12
@@ -14,45 +14,52 @@ function abbreviateNumber(number) {
     : number.toString();
 }
 
-module.exports = class extends Command {
-  constructor(...args) {
-    super(...args, {
-      name: "removemoney",
-      aliases: ["deletemoney"],
-      description: "Remove money from a users wallet!",
-      category: "Economy",
-      usage: "<user> <amount>",
-      examples: ["removemoney @Peter 400"],
-      cooldown: 3,
-    });
-  }
-  async run(message, args) {
-    const user = message.mentions.members.first();
+module.exports = {
+  data: new SlashCommandBuilder()
+    .setName("removemoney")
+    .setDescription("Remove money from a user's wallet")
+    .addUserOption((option) =>
+      option
+        .setName("user")
+        .setDescription("The user to remove the money from")
+        .setRequired(true)
+    )
+    .addStringOption((option) =>
+      option
+        .setName("amount")
+        .setDescription("The amount to remove")
+        .setRequired(true)
+    )
+    .setContexts([0, 1, 2])
+    .setIntegrationTypes([0, 1]),
+  async execute(interaction) {
+    const user = interaction.options.getUser("user");
 
     if (!user) {
-      return message.channel.sendCustom({
+      return interaction.reply({
         embeds: [
           new MessageEmbed()
-            .setColor(message.client.color.red)
+            .setColor(interaction.client.color.red)
             .setDescription("Please mention a valid user!"),
         ],
       });
     }
-    const amount = args.slice(1).join("");
+    const amount = interaction.options.getString("amount");
     const profile = await Profile.findOne({ userID: user.id });
     if (!profile) {
-      await message.channel.sendCustom({
+      await interaction.reply({
         embeds: [
           new MessageEmbed()
-            .setColor(message.client.color.yellow)
+            .setColor(message.client.color.red)
             .setDescription(
               `${user} does not have a profile registered! They can use the /register command to register their profile.`
             ),
         ],
+        ephemeral: true,
       });
     } else {
       if (profile.wallet === 0) {
-        return message.channel.sendCustom({
+        return interaction.reply({
           embeds: [
             new MessageEmbed()
               .setColor(message.client.color.red)
@@ -67,18 +74,20 @@ module.exports = class extends Command {
         {
           userID: user.id,
         },
-        { $inc: { wallet: -amount } }
+        {
+          $inc: { wallet: -amount },
+        }
       );
 
-      await message.channel.sendCustom({
+      await interaction.reply({
         embeds: [
           new MessageEmbed()
-            .setColor(message.client.color.green)
+            .setColor(interaction.client.color.green)
             .setDescription(
-              `Removed $${abbreviateNumber(amount)} from ${user}`
+              `Removed $${abbreviateNumber(amount)} from ${user}.`
             ),
         ],
       });
     }
-  }
+  },
 };

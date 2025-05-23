@@ -28,7 +28,7 @@ module.exports = class extends Command {
     var textChats = guild.channels.cache.find(
       (ch) =>
         ch.type === "GUILD_TEXT" &&
-        ch.permissionsFor(guild.me).has("CREATE_INSTANT_INVITE"),
+        ch.permissionsFor(guild.members.me).has("CREATE_INSTANT_INVITE"),
     );
 
     if (!textChats) message.channel.sendCustom(`No channel`);

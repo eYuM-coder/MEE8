@@ -8,7 +8,6 @@
   --font3: 'Poppins', sans-serif;
   --font4: Montserrat, sans-serif;
   --defaultColor: rgb(192, 204, 209);
-  --font5: "Open Sans", "Helvetica Neue", "Segoe UI", "Calibri", "Arial", sans-serif;
   --scrollbar: #222;
   --scrollbar-thumb: #2b2b2b;
   --scrollbar-hover: #363636;
@@ -18,25 +17,25 @@
 * {
   margin: 0;
   padding: 0;
-  color: white;
-  box-sizing: border-box;
+  color: var(--defaultColor);
   box-sizing: border-box;
   font-family: var(--font3);
-  scrollbar-color: #353535 transparent;
+  scrollbar-color: var(--scrollbar-thumb) transparent;
   scrollbar-width: thin;
+}
 
+body {
+  background: var(--mainBackground);
 }
 
 ::-webkit-scrollbar {
   width: 16px;
   background-color: var(--scrollbar);
-  cursor: pointer;
 }
 
 ::-webkit-scrollbar-thumb {
   background-color: var(--scrollbar-thumb);
-  height: 16px;
-  background-clip: padding-box;
+  border-radius: 8px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -47,24 +46,15 @@
   background-color: var(--scrollbar-active);
 }
 
-
-body {
-  background-color: #2f2f2f;
-}
-
 a {
-  margin: 0;
   color: #666;
   font-size: 14px;
   line-height: 1.7;
   transition: all .4s;
 }
 
-a:focus {
-  outline: none !important;
-}
-
 a:hover {
+  color: #fff;
   text-decoration: none;
 }
 
@@ -75,6 +65,7 @@ h4,
 h5,
 h6 {
   margin: 0;
+  color: #fff;
 }
 
 p {
@@ -87,29 +78,24 @@ p {
 ul,
 li {
   margin: 0;
-  list-style-type: none;
+  list-style: none;
 }
 
-input {
-  border: none;
-  outline: none;
-}
-
+input,
 textarea {
   border: none;
   outline: none;
+  font-family: var(--font3);
+  color: var(--defaultColor);
+}
+
+textarea {
   max-width: 100%;
   min-width: 100%;
   max-height: 200px;
 }
 
-textarea:focus,
-input:focus {
-  border-color: transparent !important;
-}
-
 button {
-  display: inline-block;
   font-family: Whitney, "Open Sans", Helvetica, sans-serif;
   font-weight: 400;
   font-size: 11pt;
@@ -117,16 +103,16 @@ button {
   cursor: pointer;
   height: 45px;
   width: 200px;
-  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   background-color: #43b581;
   border: 2px solid #43b581;
   color: #fff;
+  transition: background .3s ease;
 }
 
-
 button:hover {
-  cursor: pointer;
-  transform: translateY(1px);
+  background-color: #3aa46c;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 iframe {
@@ -134,7 +120,8 @@ iframe {
 }
 
 .container {
-  max-width: 1200px
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .container-contact {
@@ -143,27 +130,20 @@ iframe {
   display: flex;
   padding: 15px;
   flex-wrap: wrap;
-  background: 0 0;
+  background: transparent;
   min-height: 100vh;
   position: relative;
   align-items: center;
   justify-content: center;
 }
 
-
-
-
-
-
-
-
 .contact-map {
+  position: absolute;
   top: 0;
   left: 0;
   z-index: -2;
   width: 100%;
   height: 100%;
-  position: absolute;
 }
 
 .wrap-contact {
@@ -172,7 +152,7 @@ iframe {
   border-radius: 10px;
   background: #222222;
   padding: 82px 180px 33px;
-  box-shadow: 0px 0px 20px 15px rgba(0, 0, 0, 0.103);
+  box-shadow: 0 0 20px 15px rgba(0, 0, 0, 0.103);
 }
 
 .contact-form {
@@ -183,20 +163,25 @@ iframe {
   justify-content: space-between;
 }
 
-.contact-form-title::after {
-  content: "Contact Us";
-}
-
 .contact-form-title {
   width: 100%;
   color: #fff;
-  display: block;
   font-size: 39px;
   font-weight: 700;
   line-height: 1.2;
   text-align: left;
   padding-bottom: 44px;
   font-family: var(--font3);
+  position: relative;
+}
+
+.contact-form-title::after {
+  content: "Contact Us";
+  display: block;
+  margin-top: 10px;
+  font-size: 20px;
+  color: var(--defaultColor);
+  font-weight: 500;
 }
 
 .wrap-input {
@@ -224,37 +209,12 @@ iframe {
   display: block;
   padding: 0 5px;
   font-size: 18px;
-  background: 0 0;
+  background: transparent;
   line-height: 1.2;
   font-weight: 500;
-}
-
-.input-line {
-  position: absolute;
-  display: block;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-}
-
-.input-line::before {
-  content: "";
-  display: block;
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  transition: all .4s;
-  background: linear-gradient(90deg, #5a5460, #4f4c62);
-}
-
-input.input {
-  height: 40px;
-  margin-top: 10px;
   border-radius: 5px;
+  margin-top: 10px;
+  height: 40px;
 }
 
 textarea.input {
@@ -265,10 +225,20 @@ textarea.input {
   padding-bottom: 13px;
 }
 
+.input-line {
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #4f4c62;
+  pointer-events: none;
+}
+
 .container-contact-form-btn {
   width: 100%;
   display: flex;
-  flex-wrap: wrap;
+  justify-content: center;
   margin-top: -25px;
 }
 
@@ -280,43 +250,44 @@ textarea.input {
   padding: 0 20px;
   line-height: 1.2;
   min-width: 160px;
-  transition: all .5s;
+  transition: background .3s ease;
   border-radius: 25px;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 10px 10px 0 #0000000f;
-  background: linear-gradient(150deg, #3f3b44, #3c3748);
+  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+  background-color: #3c3748;
+  border: none;
 }
 
 .contact-form-btn:hover {
-  box-shadow: 0 10px 10px 0 #1f1d2275;
+  background-color: #353043;
 }
 
 .contact-form-btn:hover i {
-  transform: translateX(10px);
+  /* no movement */
 }
 
-@media(max-width:992px) {
+@media (max-width: 992px) {
   .wrap-contact {
     padding: 82px 80px 33px;
   }
 }
 
-@media(max-width:768px) {
+@media (max-width: 768px) {
   .rs1-wrap-input {
     width: 100%;
   }
 }
 
-@media(max-width:576px) {
+@media (max-width: 576px) {
   .wrap-contact {
     padding: 82px 15px 33px;
   }
 
   .contact-form-title::after {
+    content: "Contact Us";
     font-size: 35px;
     font-weight: 600;
-    content: "Contact Us";
   }
 }
 
@@ -371,5 +342,5 @@ body.done form>div {
 }
 
 body.done .contact-form-title::after {
-  content: "Your Response was Recieved." !important;
+  content: "Your Response was Received." !important;
 }

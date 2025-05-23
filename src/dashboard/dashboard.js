@@ -279,10 +279,6 @@ module.exports = async (client) => {
     }
   );
 
-  app.get("/commands", (req, res) => {
-    renderTemplate(res, req, "commands.ejs", { botName: config.botName });
-  });
-
   app.get("/color", (req, res) => {
     var url = req.protocol + "://" + req.get("host") + req.originalUrl;
     renderTemplate(res, req, "color.ejs", {
@@ -379,10 +375,6 @@ module.exports = async (client) => {
   app.get("/premium", (req, res) => {
     renderTemplate(res, req, "premium.ejs", { botName: config.botName });
   });
-  app.get("/changelog", (req, res) => {
-    renderTemplate(res, req, "changelog.ejs", { botName: config.botName });
-  });
-
   app.get("/", async (req, res) => {
     renderTemplate(res, req, "index.ejs", { botName: config.botName });
   });

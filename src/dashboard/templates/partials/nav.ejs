@@ -1,294 +1,668 @@
-<nav class="nav" role="navigation">
-  <style>
-    .name {
-      position: relative;
-      display: inline-block;
-    }
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="<%= domain %>" class="logo">
+      <img src="<%= domain %>/logo.png" alt="Neonova Logo" class="logo-image">
+      <span class="brand-name" id="rgb-text">
+        <span>N</span><span>e</span><span>o</span><span>n</span><span>o</span><span>v</span><span>a</span>
+      </span>
+    </a>
 
-    .name:hover::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(61, 57, 57, 0.5);
-      border-radius: 50%;
-      z-index: -1;
+    <ul class="nav-links">
+      <li><a href="/"><i class="fas fa-home"></i><span>Home</span></a></li>
+      <li><a href="/support"><i class="fas fa-life-ring"></i><span>Support</span></a></li>
+      <li><a href="/stats"><i class="fas fa-chart-line"></i><span>Stats</span></a></li>
+        <li><a href="/premium"><i class="fas fa-crown"></i> Premium</a></li>
+    </ul>
 
-    }
-  </style>
-  <span class="logo"><a href="<%=domain%>" rel="noopener" aria-label="Open home page"><span class="name"><img
-          src="<%= domain %>/logo.png" alt="logo" style="
-                    width: 40px;
-                    height: 40px;
-                    vertical-align: middle;
-                    border-radius: 50%;
-                  " /></span></a></span>
-  <link rel="icon" type="image/png" href="<%= domain %>/logo.png" />
-  <div id="mobile">
-    <nav class="header__nav nav-bar">
-      <div class="toggle-menu">
-        <div class="line line1"></div>
-        <div class="line line2"></div>
-        <div class="line line3"></div>
-      </div>
-      <ul class="nav-list">
-        <li class="nav-list-item"><a href="/" class="nav-link">Home</a></li>
-        <li class="nav-list-item">
-          <a href="/support" class="nav-link">Support</a>
-        </li>
-        <style>
-
-        </style>
-
-        <li class="nav-list-item">
-          <a href="/stats" class="nav-link">Stats</a>
-        </li>
-        <li class="nav-list-item">
-          <a href="/commands" class="nav-link">Commands</a>
-        </li>
-        <li class="nav-list-item">
-          <a href="/status" class="nav-link">Status</a>
-        </li>
-      </ul>
-    </nav>
-  </div>
-  <ul class="menu">
-    <% if (user) { %>
-      <li>
-        <a href="<%=domain%>/server" target="_blank" rel="noopener">Support</a>
-      </li>
-      <li>
-        <a href="<%=domain%>/commands" target="_blank" rel="noopener">Commands</a>
-      </li>
-      <% if (user.avatar) { avatar="https://cdn.discordapp.com/avatars/" + user.id + "/" + user.avatar + ".png?size=128"
-        ; } else { avatar="https://cdn.glitch.com/82fe990a-7942-42e3-9790-39807ccdb9f6%2Ficon-404.png?v=1602412158188" ;
-        } %>
-        <a class="avatar-container dropdownHead" id="dropdownHead" onclick="dropdown(this)"><img class="user-avatar"
-            src="<%= avatar %>" /><span class="user-name">
-            <%= user.username %>
-          </span></a>
+    <div class="navbar-right">
+      <% if (user) { %>
+        <div class="user-menu">
+          <button class="profile-button" id="profileButton">
+            <img
+              src="<%= user.avatar ? ('https://cdn.discordapp.com/avatars/' + user.id + '/' + user.avatar + '.png?size=128') : 'https://cdn.glitch.com/82fe990a-7942-42e3-9790-39807ccdb9f6%2Ficon-404.png?v=1602412158188' %>"
+              alt="Avatar">
+            <span class="username">
+              <%= user.username %>
+            </span>
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="dropdown-menu" id="userDropdown">
+            <a href="/dashboard"><i class="fas fa-th-large"></i> My Servers</a>
+            <div class="dropdown-divider"></div>
+            <a href="/logout" class="logout-option"><i class="fas fa-sign-out-alt"></i> Logout</a>
+          </div>
+        </div>
         <% } else { %>
-
-          <li>
-            <a href="<%=domain%>/stats" target="_blank" rel="noopener">Stats</a>
-          </li>
-          <li>
-            <a href="<%=domain%>/support" target="_blank" rel="noopener">Support</a>
-          </li>
-          <li>
-            <a href="https://status.neonova.eyum.org/status" target="_blank" rel="noopener">Status</a>
-          </li>
-          <li>
-            <a href="<%=domain%>/commands" target="_blank" rel="noopener">Commands</a>
-          </li>
-          <li><a href="<%=domain%>/login">Login</a></li>
+          <a href="/login" class="login-btn"><i class="fas fa-sign-in-alt"></i> Login</a>
           <% } %>
-  </ul>
-
-  <ul class="dropdown" id="dropdown">
-    <div class="cross-container">
-      <div class="cross"></div>
+            <button class="menu-button" id="mobileMenuButton">
+              <i class="fas fa-bars"></i>
+            </button>
     </div>
-    <% if (path==="/dashboard" ) { %>
-      <span><a class="dropdown-li" href="<%=domain%>/">
-          <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
-            <path d="M0 0h24v24H0V0z" fill="none" />
-            <path d="M12 5.69l5 4.5V18h-2v-6H9v6H7v-7.81l5-4.5M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3z" />
-          </svg>
-          Home</a></span>
-      <% } else if (path !=="/" ) { %>
-        <span><a class="dropdown-li" href="<%=domain%>/"><svg xmlns="http://www.w3.org/2000/svg" height="24"
-              viewBox="0 0 24 24" width="24">
-              <path d="M0 0h24v24H0V0z" fill="none" />
-              <path d="M12 5.69l5 4.5V18h-2v-6H9v6H7v-7.81l5-4.5M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3z" />
-            </svg>
-            Home</a></span>
-        <span><a class="dropdown-li" href="<%=domain%>/dashboard"><svg xmlns="http://www.w3.org/2000/svg" height="24"
-              viewBox="0 0 24 24" width="24">
-              <path d="M0 0h24v24H0z" fill="none" />
-              <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" />
-            </svg>
-            My Servers</a></span>
-        <% } else { %>
-          <span><a class="dropdown-li" href="<%=domain%>/dashboard"><svg xmlns="http://www.w3.org/2000/svg" height="24"
-                viewBox="0 0 24 24" width="24">
-                <path d="M0 0h24v24H0z" fill="none" />
-                <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" />
-              </svg>
-              My Servers</a></span>
-          <% } %>
-
-            <span><a class="dropdown-li logout" href="<%=domain%>/logout" class="logout"><svg width="20" height="20"
-                  viewBox="0 0 98.28 68.04">
-                  <path fill="none" d="M82.78 0h15.5v68.04h-15.5z" />
-                  <path d="M0 0h.51v68.04H0zM56 47.11V60.1H8.39V7.94H56v12.99h7.88V0H.51v68.04h63.37V47.11H56z" />
-                  <path fill="none" d="M0 0h22.97v68.04H0z" />
-                  <path
-                    d="M41.87 38.04h40.85l-9.93 9.9 5.63 5.67 19.35-19.49-19.35-19.48-5.63 5.57L82.51 30H41.87v8.04z" />
-                </svg>
-                Logout</a></span>
-  </ul>
+  </div>
 </nav>
-<script>
-  var toggleButton = document.querySelector(".toggle-menu");
-  var navBar = document.querySelector(".nav-bar");
-  toggleButton.addEventListener("click", function () {
-    navBar.classList.toggle("toggle");
-  });
-</script>
+
+<!-- Mobile Menu Modal -->
+<div class="mobile-menu-overlay" id="mobileMenuOverlay">
+  <div class="mobile-menu">
+    <div class="mobile-menu-header">
+      <a href="<%= domain %>" class="logo">
+        <img src="<%= domain %>/logo.png" alt="Neonova Logo" class="logo-image">
+        <span class="brand-name" id="mobile-rgb-text">
+          <span>N</span><span>e</span><span>o</span><span>n</span><span>o</span><span>v</span><span>a</span>
+        </span>
+      </a>
+      <button class="close-menu" id="closeMenu">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div class="mobile-menu-content">
+      <ul class="mobile-nav-links">
+        <li><a href="/"><i class="fas fa-home"></i> Home</a></li>
+        <li><a href="/support"><i class="fas fa-life-ring"></i> Support</a></li>
+        <li><a href="/stats"><i class="fas fa-chart-line"></i> Stats</a></li>
+        <li><a href="/premium"><i class="fas fa-crown"></i> Premium</a></li>
+      </ul>
+
+      <div class="mobile-menu-footer">
+        <% if (user) { %>
+          <div class="user-info">
+            <img
+              src="<%= user.avatar ? ('https://cdn.discordapp.com/avatars/' + user.id + '/' + user.avatar + '.png?size=128') : 'https://cdn.glitch.com/82fe990a-7942-42e3-9790-39807ccdb9f6%2Ficon-404.png?v=1602412158188' %>"
+              alt="Avatar">
+            <span>
+              <%= user.username %>
+            </span>
+          </div>
+          <div class="mobile-user-links">
+            <a href="/dashboard"><i class="fas fa-th-large"></i> My Servers</a>
+            <a href="/logout" class="logout-option"><i class="fas fa-sign-out-alt"></i> Logout</a>
+          </div>
+          <% } else { %>
+            <a href="/login" class="mobile-login-btn"><i class="fas fa-sign-in-alt"></i> Login with Discord</a>
+            <% } %>
+      </div>
+    </div>
+  </div>
+</div>
+
 <style>
-  @media (min-width: 950px) {
-    .nav li {
-      float: left;
+  /* Core Styles */
+  .navbar {
+    position: sticky;
+    top: 20px;
+    margin: 0 auto;
+    max-width: 1200px;
+    background: rgba(20, 20, 20, 0.8);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .navbar-inner {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    position: relative;
+  }
+
+  /* Logo Styles */
+  .logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+  }
+
+  .logo-image {
+    height: 34px;
+    width: 34px;
+    border-radius: 10px;
+    animation: spin 12s linear infinite;
+  }
+
+
+  .brand-name,
+  #mobile-rgb-text {
+    margin-left: 0.75rem;
+    font-size: 1.35rem;
+    font-weight: 600;
+    display: inline-flex;
+    letter-spacing: 0.5px;
+  }
+
+  #rgb-text span,
+  #mobile-rgb-text span {
+    position: relative;
+  }
+
+  /* Navigation Links */
+  .nav-links {
+    display: flex;
+    list-style: none;
+    margin: 0 auto;
+    padding: 0;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nav-links li {
+    margin: 0 0.8rem;
+    position: relative;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    color: #e6e6e6;
+    font-weight: 500;
+    font-size: 0.95rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    transition: all 0.2s ease;
+  }
+
+  .nav-links a i {
+    margin-right: 0.5rem;
+    font-size: 1rem;
+  }
+
+  .nav-links a:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
     }
 
-    .nav li a {
-      padding: 20px 30px;
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* Right Side Navigation */
+  .navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-left: auto;
+  }
+
+  /* Login Button */
+  .login-btn {
+    display: flex;
+    align-items: center;
+    padding: 0.6rem 1.2rem;
+    background: linear-gradient(135deg, #7289da, #5e78d5);
+    border-radius: 10px;
+    color: white;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(114, 137, 218, 0.3);
+  }
+
+  .login-btn i {
+    margin-right: 0.5rem;
+  }
+
+  .login-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(114, 137, 218, 0.4);
+  }
+
+  /* User Menu */
+  .user-menu {
+    position: relative;
+  }
+
+  .profile-button {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.06);
+    border: none;
+    border-radius: 10px;
+    padding: 0.35rem 0.75rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #e6e6e6;
+  }
+
+  .profile-button:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .profile-button img {
+    height: 28px;
+    width: 28px;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .profile-button i {
+    margin-left: 0.5rem;
+    font-size: 0.8rem;
+    transition: transform 0.3s ease;
+  }
+
+  .profile-button.active i {
+    transform: rotate(180deg);
+  }
+
+  .username {
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    top: calc(100% + 0.75rem);
+    right: 0;
+    min-width: 200px;
+    background: rgba(30, 30, 30, 0.95);
+    backdrop-filter: blur(15px);
+    border-radius: 12px;
+    padding: 0.5rem 0;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    z-index: 1001;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .dropdown-menu.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .dropdown-menu a {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1.25rem;
+    color: #e6e6e6;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+  }
+
+  .dropdown-menu a:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #ffffff;
+  }
+
+  .dropdown-menu a i {
+    margin-right: 0.75rem;
+    font-size: 1rem;
+    width: 20px;
+    text-align: center;
+  }
+
+  .dropdown-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 0.5rem 0;
+  }
+
+  .logout-option {
+    color: #ff6b6b !important;
+  }
+
+  /* Mobile Menu Button */
+  .menu-button {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #e6e6e6;
+    cursor: pointer;
+    padding: 0.25rem;
+    transition: color 0.2s ease;
+  }
+
+  .menu-button:hover {
+    color: #ffffff;
+  }
+
+  /* Mobile Menu */
+  .mobile-menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+    z-index: 2000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .mobile-menu-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .mobile-menu {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 85%;
+    max-width: 360px;
+    height: 100%;
+    background: rgba(25, 25, 25, 0.95);
+    backdrop-filter: blur(15px);
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+    display: flex;
+    flex-direction: column;
+    box-shadow: -5px 0 30px rgba(0, 0, 0, 0.5);
+    border-top-left-radius: 24px;
+    border-bottom-left-radius: 24px;
+  }
+
+  .mobile-menu-overlay.show .mobile-menu {
+    transform: translateX(0);
+  }
+
+  .mobile-menu-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .close-menu {
+    background: none;
+    border: none;
+    color: #e6e6e6;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    transition: color 0.2s ease;
+  }
+
+  .close-menu:hover {
+    color: #ffffff;
+  }
+
+  .mobile-menu-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1.5rem 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    background: linear-gradient(to bottom,
+        rgba(25, 25, 25, 0.95) 0%,
+        rgba(28, 28, 28, 0.95) 100%);
+  }
+
+  .mobile-nav-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .mobile-nav-links li {
+    margin-bottom: 0.5rem;
+  }
+
+  .mobile-nav-links a {
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    color: #e6e6e6;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+
+  .mobile-nav-links a:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #ffffff;
+  }
+
+  .mobile-nav-links a i {
+    margin-right: 1rem;
+    width: 20px;
+    text-align: center;
+  }
+
+  .mobile-menu-footer {
+    padding: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .user-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .user-info img {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    margin-right: 1rem;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .user-info span {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #ffffff;
+  }
+
+  .mobile-user-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .mobile-user-links a {
+    display: flex;
+    align-items: center;
+    color: #e6e6e6;
+    text-decoration: none;
+    font-size: 0.95rem;
+    padding: 0.6rem 0;
+    transition: color 0.2s ease;
+  }
+
+  .mobile-user-links a:hover {
+    color: #ffffff;
+  }
+
+  .mobile-user-links a i {
+    margin-right: 0.75rem;
+    width: 20px;
+    text-align: center;
+  }
+
+  .mobile-login-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.85rem;
+    background: linear-gradient(135deg, #7289da, #5e78d5);
+    border-radius: 10px;
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(114, 137, 218, 0.3);
+  }
+
+  .mobile-login-btn i {
+    margin-right: 0.5rem;
+  }
+
+  .mobile-login-btn:hover {
+    box-shadow: 0 6px 16px rgba(114, 137, 218, 0.4);
+  }
+
+  /* Responsive Styles */
+  @media (max-width: 1024px) {
+    .navbar {
+      max-width: 90%;
+      padding: 0 1rem;
     }
 
-    .nav .menu {
-      clear: none;
-      float: right;
-      max-height: none;
+    .nav-links {
+      display: none;
     }
 
-    .nav .menu-icon {
+    .menu-button {
+      display: block;
+    }
+
+    .login-btn {
+      display: none;
+    }
+
+    .navbar-right {
+      margin-left: auto;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .navbar-inner {
+      padding: 0.6rem 1rem;
+    }
+
+    .navbar {
+      top: 10px;
+      border-radius: 12px;
+    }
+
+    .logo-image {
+      height: 28px;
+      width: 28px;
+    }
+
+    .brand-name {
+      font-size: 1.15rem;
+    }
+
+    .login-btn {
+      padding: 0.5rem 0.85rem;
+      font-size: 0.85rem;
+    }
+
+    .profile-button {
+      padding: 0.25rem 0.5rem;
+    }
+
+    .profile-button img {
+      height: 24px;
+      width: 24px;
+    }
+
+    .username {
       display: none;
     }
   }
-
-  .nav-bar {
-    border-top: 60px;
-    position: absolute;
-    background-color: #2f2f2f;
-    top: 0;
-    right: 100%;
-    height: 100vh;
-    width: 250px;
-    display: flex;
-    transition: position 2.9s;
-    -webkit-transition: position 2.9s;
-    -moz-transition: position 2.9s;
-    -ms-transition: position 2.9s;
-    -o-transition: position 2.9s;
-  }
-
-  .toggle {
-    left: 0;
-    box-shadow: 1px 0 15px 2px rgba(0, 0, 0, 0.4);
-  }
-
-  .toggle-menu {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    width: 40px;
-    height: 30px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    padding: 2px 2px 2px 3px;
-    border-radius: 5px;
-    cursor: pointer;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    -ms-border-radius: 5px;
-    -o-border-radius: 5px;
-  }
-
-  .line {
-    width: 100%;
-    height: 3px;
-    border-radius: 5px;
-    background-color: #fff;
-    transition: transform 0.2s ease-out;
-    -webkit-transition: transform 0.2s ease-out;
-    -moz-transition: transform 0.2s ease-out;
-    -ms-transition: transform 0.2s ease-out;
-    -o-transition: transform 0.2s ease-out;
-  }
-
-  .toggle .line1 {
-    background-color: #000000;
-    transform: scale(0.9) rotateZ(-45deg) translate(-6px, 4px);
-  }
-
-  .toggle .line2 {
-    display: none;
-  }
-
-  .toggle .line3 {
-    background-color: #000000;
-    transform: scale(0.9) rotateZ(45deg) translate(-6px, -4px);
-  }
-
-  .toggle .toggle-menu {
-    background-color: white;
-  }
-
-  .nav-list {
-    list-style: none;
-  }
-
-  .nav-list-item {
-    padding: 10px 0;
-  }
-
-  nav.glow {
-    width: 100vw;
-    /* Use 100% of the viewport width */
-    height: 60px;
-    background: linear-gradient(90deg, #dd4949, #5e40e4);
-    position: fixed;
-    /* Use fixed positioning to make it cover the entire viewport */
-    top: 0;
-    left: 0;
-    right: 0;
-    border-radius: 50%;
-    transform: translateY(-20%);
-    filter: blur(160px);
-    z-index: -1;
-    /* Put it behind other content */
-  }
-
-  .nav-link {
-    color: #fff;
-    font-size: 22px;
-    text-decoration: none;
-    position: relative;
-    padding-bottom: 4px;
-  }
-
-  .nav-link::before {
-    position: absolute;
-    content: "";
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    height: 1px;
-    background-color: #fff;
-    transform: scaleX(0);
-    transition: transform 0.4s ease-in-out;
-    transform-origin: left;
-    -webkit-transition: transform 0.4s ease-in-out;
-    -moz-transition: transform 0.4s ease-in-out;
-    -ms-transition: transform 0.4s ease-in-out;
-    -o-transition: transform 0.4s ease-in-out;
-  }
-
-  .nav-link:hover::before {
-    transform: scaleX(1);
-  }
-
-  #mobile {
-    display: none;
-  }
-
-  @media only screen and (max-width: 768px) {
-    #mobile {
-      display: block;
-    }
-  }
 </style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // RGB Animation for the brand name
+    function animateRGB(elementId) {
+      const chars = document.querySelectorAll(`#${elementId} span`);
+      let baseHue = 0;
+
+      function animate() {
+        baseHue = (baseHue + 0.5) % 360;
+
+        chars.forEach((char, i) => {
+          const phaseShift = (chars.length - i) * 15;
+          const hue = (baseHue + phaseShift) % 360;
+          char.style.color = `hsl(${hue}, 100%, 60%)`;
+          char.style.textShadow = `0 0 10px hsla(${hue}, 100%, 50%, 0.5)`;
+        });
+
+        requestAnimationFrame(animate);
+      }
+
+      animate();
+    }
+
+    // Initialize RGB animations
+    animateRGB('rgb-text');
+    animateRGB('mobile-rgb-text');
+
+    // User menu dropdown toggle
+    const profileButton = document.getElementById('profileButton');
+    const userDropdown = document.getElementById('userDropdown');
+
+    if (profileButton && userDropdown) {
+      profileButton.addEventListener('click', function (e) {
+        e.stopPropagation();
+        this.classList.toggle('active');
+        userDropdown.classList.toggle('show');
+      });
+
+      document.addEventListener('click', function (e) {
+        if (!profileButton.contains(e.target) && !userDropdown.contains(e.target)) {
+          profileButton.classList.remove('active');
+          userDropdown.classList.remove('show');
+        }
+      });
+    }
+
+    // Mobile menu functionality
+    const mobileMenuButton = document.getElementById('mobileMenuButton');
+    const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+    const closeMenu = document.getElementById('closeMenu');
+
+    if (mobileMenuButton && mobileMenuOverlay && closeMenu) {
+      mobileMenuButton.addEventListener('click', function () {
+        mobileMenuOverlay.classList.add('show');
+        document.body.style.overflow = 'hidden';
+      });
+
+      function closeModal() {
+        mobileMenuOverlay.classList.remove('show');
+        document.body.style.overflow = '';
+      }
+
+      closeMenu.addEventListener('click', closeModal);
+
+      mobileMenuOverlay.addEventListener('click', function (e) {
+        if (e.target === mobileMenuOverlay) {
+          closeModal();
+        }
+      });
+
+      // Close on ESC key
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && mobileMenuOverlay.classList.contains('show')) {
+          closeModal();
+        }
+      });
+
+      // Close mobile menu on window resize if desktop view
+      window.addEventListener('resize', function () {
+        if (window.innerWidth > 1024 && mobileMenuOverlay.classList.contains('show')) {
+          closeModal();
+        }
+      });
+    }
+  });
+</script>

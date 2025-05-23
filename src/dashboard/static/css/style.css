@@ -5,25 +5,37 @@
 
 
 :root {
-  --white: #222;
-  --preloader: #222;
-  --spinner: #888;
-  --spinner-border: #333;
-  --link: #fff;
-  --server-hover: #1c264573;
-  --logout: 240, 71, 71;
-  --logout-background: 240, 71, 71, 0.1;
-  --edit: 68, 179, 127;
-  --edit-hover: 47, 124, 88;
-  --button: #44474c;
-  --button-hover: #3b3e42;
-  --svg: #fff;
-  --text: #fff;
-  --scrollbar: #222;
-  --scrollbar-thumb: #2b2b2b;
-  --scrollbar-hover: #363636;
-  --scrollbar-active: #454545;
+  /* BACKGROUNDS & SURFACES */
+  --white:              #222;                  /* same as before */
+  --preloader:          #0C0E12;               /* almost-black with a hint of blue */
+  --spinner:            #2A2C36;               /* blue-gray spinner */
+  --spinner-border:     #41465A;               /* subtle blue in the border */
+
+  /* TEXT & ICONS */
+  --text:               #E0E8F8;               /* very light, cool-white */
+  --svg:                #E0E8F8;               /* match text */
+
+  /* LINKS & ACCENTS */
+  --link:               #A8D4FF;               /* soft, light-blue link */
+  --button:             #2E3138;               /* dark button base with blue undertone */
+  --button-hover:       #353A44;               /* button hover lifts brightness slightly */
+  --server-hover:       rgba(168, 212, 255, 0.1); /* blue-tinted hover */
+
+  /* NEGATIVE (LOGOUT/ERROR) */
+  --logout:             240, 71, 90;           /* red with a touch of blue (leans slightly magenta) */
+  --logout-background:  rgba(240, 71, 90, 0.1);
+
+  /* POSITIVE (EDIT/SUCCESS) */
+  --edit:               102, 187, 146;         /* green with a cool-blue hint */
+  --edit-hover:         76, 175, 120;
+
+  /* SCROLLBARS */
+  --scrollbar:          #181A1F;               /* dark track with blue undertone */
+  --scrollbar-thumb:    #2E3139;
+  --scrollbar-hover:    #383C47;
+  --scrollbar-active:   #434854;
 }
+
 
 .no-js {
   background: #f44336;
@@ -63,10 +75,13 @@
 }
 
 .spinner {
-  width: 550px;
-  height: 550px;
+  width: 250px;
+  height: 250px;
   position: absolute;
-  background: url(https://i.imgur.com/83q5LqX.png);
+  background: url(https://cdn.eyum.dev/neonova/gif.gif);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
   top: 0;
   bottom: 0;
   left: 0;
@@ -76,38 +91,20 @@
 }
 
 .preloader.fade {
-  opacity: 0
+  opacity: 0;
 }
 
 @keyframes spinning {
   0% {
     top: 0px;
-    background: url(https://i.imgur.com/83q5LqX.png)
-  }
-
-  12% {
-    top: 0px;
-    background: url(https://i.imgur.com/83q5LqX.png)
-  }
-
-  15% {
-    top: 0px;
-    background: url(https://i.imgur.com/kPAqFEM.png)
-  }
-
-  17% {
-    top: 0px;
-    background: url(https://i.imgur.com/kPAqFEM.png)
   }
 
   50% {
     top: 80px;
-    background: url(https://i.imgur.com/83q5LqX.png)
   }
 
   100% {
     top: 0px;
-    background: url(https://i.imgur.com/83q5LqX.png)
   }
 }
 

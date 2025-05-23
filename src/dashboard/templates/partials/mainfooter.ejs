@@ -1,41 +1,50 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<button id="return-to-top"><i class="icon-chevron-up"></i></button>
+<button id="return-to-top">
+  <i class="fas fa-chevron-up"></i>
+</button>
 
-<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
-  integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
+<link
+  href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css"
+  rel="stylesheet"
+/>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+/>
+
 <div id="mobileScreen">
   <footer>
     <nav class="footer-inner">
       <section class="footer-item">
         <h1>Neonova</h1>
-
         <h2>
-          Neonova is a multi-purpose discord bot <br />ready to skill up and boost
-          up <br />your Discord server!
+          Neonova is a multi-purpose discord bot<br />
+          ready to skill up and boost up<br />
+          your Discord server!
         </h2>
         <br />
-        <a href="https://www.patreon.com/neonovabot"><img alt="become a patron"
-            src="https://c5.patreon.com/external/logo/become_a_patron_button.png" /></a>
+        <a href="https://www.patreon.com/neonovabot" class="patreon-button">
+          <img
+            alt="become a patron"
+            src="https://c5.patreon.com/external/logo/become_a_patron_button.png"
+          />
+        </a>
       </section>
 
       <section class="footer-item">
         <h3>Useful links</h3>
-        <ul>
+        <ul class="footer-links">
           <li><a href="/policy">Policy</a></li>
           <li><a href="/faq">FAQ</a></li>
-          <li><a href="https://docs.neonova.eyum.org">Docs</a></li>
           <li><a href="/premium">Premium</a></li>
         </ul>
       </section>
 
       <section class="footer-item">
-        <h3>&nbsp;</h3>
-        <ul>
+        <h3>Resources</h3>
+        <ul class="footer-links">
           <li><a href="/report">Report</a></li>
           <li><a href="/team">Team</a></li>
-          <li><a href="/changelog">Changelog</a></li>
           <li><a href="/manage">Manage</a></li>
           <li><a href="/support">Support</a></li>
           <li><a href="/Embeds">Embeds</a></li>
@@ -46,15 +55,15 @@
 
       <section class="footer-item">
         <h3>Contact</h3>
-        <p>
-          <i class="fab" style="font-size: 16px"> &#xf392; </i>
-          theeyum<br /><a href="/contact">or here</a>
+        <p class="contact-info">
+          <a href="https://www.eyum.dev/" target="_blank">eYuM.dev</a><br />
+          <a href="/contact">Contact us</a>
         </p>
       </section>
 
       <section class="footer-item">
         <h3>Legal</h3>
-        <ul>
+        <ul class="footer-links">
           <li><a href="/terms">Terms</a></li>
           <li><a href="/policy">Privacy</a></li>
         </ul>
@@ -67,13 +76,17 @@
   </footer>
 
   <div class="ready">
-    <button class="right"
-      onclick="PopupCenter('<%= `${https}discordapp.com/oauth2/authorize?client_id=${clientID}&scope=bot%20applications.commands&response_type=code&redirect_uri=${encodeURIComponent(`${domain}/thanks`)}&permissions=1642761419863` %>', 'Add Neonova to your server.', 500, 666)">
-      Invite Me
+    <button
+      class="invite-button"
+      onclick="PopupCenter('<%=
+      `${https}discordapp.com/oauth2/authorize?client_id=${clientID}&scope=bot%20applications.commands&response_type=code&redirect_uri=${encodeURIComponent(`${domain}/thanks`)}` %>',
+      'Add Neonova to your server.', 500, 666)"
+    >
+      <i class="fab fa-discord"></i> Invite Me
     </button>
 
-    <p>
-      <b style="font-size: 20px">Ready to Boost Your discord Server?</b><br />
+    <p class="ready-text">
+      <b>Ready to Boost Your Discord Server?</b><br />
       Neonova is the best discord bot to grow your discord server.
     </p>
   </div>
@@ -81,18 +94,18 @@
 
 <style>
   body {
-    background: linear-gradient(to right, #1c1c1d, #182848);
-    font-family: Arial, sans-serif;
+    background: linear-gradient(to right, #0a0a0a, #0d1b2a);
+    font-family: "Poppins", Arial, sans-serif;
     color: #ffffff;
+    margin: 0;
+    padding: 0;
   }
 
   .glow {
     width: 100vw;
-    /* Use 100% of the viewport width */
     height: 60px;
     background: linear-gradient(90deg, #dd4949, #5e40e4);
     position: fixed;
-    /* Use fixed positioning to make it cover the entire viewport */
     top: 0;
     left: 0;
     right: 0;
@@ -100,7 +113,6 @@
     transform: translateY(-20%);
     filter: blur(160px);
     z-index: -1;
-    /* Put it behind other content */
   }
 
   #return-to-top {
@@ -108,34 +120,21 @@
     position: fixed;
     bottom: 20px;
     right: 20px;
-    background: rgb(0, 0, 0);
     background: rgba(0, 0, 0, 0.7);
     width: 50px;
     height: 50px;
-    display: block;
-    text-decoration: none;
-    -webkit-border-radius: 35px;
-    -moz-border-radius: 35px;
     border-radius: 35px;
     display: none;
-    -webkit-transition: all 0.3s linear;
-    -moz-transition: all 0.3s ease;
-    -ms-transition: all 0.3s ease;
-    -o-transition: all 0.3s ease;
     transition: all 0.3s ease;
+    cursor: pointer;
   }
 
   #return-to-top i {
     color: #fff;
-    margin: 0;
     position: relative;
     left: 1px;
     top: 1px;
     font-size: 19px;
-    -webkit-transition: all 0.3s ease;
-    -moz-transition: all 0.3s ease;
-    -ms-transition: all 0.3s ease;
-    -o-transition: all 0.3s ease;
     transition: all 0.3s ease;
   }
 
@@ -144,85 +143,82 @@
   }
 
   #return-to-top:hover i {
-    color: #fff;
     top: 5px;
   }
 
-  .right {
+  .invite-button {
+    background-color: #7289da;
+    border: none;
+    color: #fff;
+    font-family: "Poppins", Whitney, "Open Sans", Helvetica, sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    height: 48px;
+    width: 250px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
     position: absolute;
     right: 0;
     margin-right: 80px;
-    background-color: #7289da;
-    border: 2px solid #7289da;
-    color: #fff;
-    display: inline-block;
-    font-family: Whitney, "Open Sans", Helvetica, sans-serif;
-    font-weight: 400;
-    font-size: 11pt;
-    border-radius: 3px;
-    cursor: pointer;
-    height: 45px;
-    width: 250px;
-    box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  .right:active {
-    transform: translateY(2px);
+  .invite-button i {
+    margin-right: 8px;
   }
 
-  .right:hover {
+  .invite-button:hover {
+    box-shadow: 0 7px 14px rgba(0, 0, 0, 0.3);
+    background-color: #5e78d5;
+  }
+
+  .invite-button:active {
     transform: translateY(1px);
   }
 
   .ready {
-    margin-top: 100px;
-    margin-bottom: 100px;
-    margin-right: 150px;
-    margin-left: 120px;
+    margin: 100px 150px 100px 120px;
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+
+  .ready-text {
+    font-weight: 300;
+    line-height: 1.8;
+  }
+
+  .ready-text b {
+    font-size: 22px;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 5px;
   }
 
   footer {
-    background-color: #222222;
-    font-family: "Lato", sans-serif;
-    padding: 85px 0 285px 0;
-    border: 5px solid #2f2f2f;
+    background: linear-gradient(to right, #0a0a0a, #0d1b2a);
+    font-family: "Lato", "Poppins", sans-serif;
+    padding: 85px 0 285px;
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 5px;
-    margin-left: 80px;
-    background: linear-gradient(to right, #1c1c1d, #182848);
-    margin-right: 80px;
-  }
-
-  .footer-glow {
-    width: 100vw;
-    /* Use 100% of the viewport width */
-    height: 60px;
-    background: linear-gradient(90deg, #dd4949, #5e40e4);
-    position: fixed;
-    /* Use fixed positioning to make it cover the entire viewport */
-    top: 0;
-    left: 0;
-    right: 0;
-    border-radius: 50%;
-    transform: translateY(-20%);
-    filter: blur(160px);
-    z-index: -1;
-    /* Put it behind other content */
-
-
+    margin: 0 80px;
   }
 
   .footer-inner {
     width: 90%;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 120px;
     max-width: 1170px;
+    margin: 0 auto 120px;
     position: relative;
   }
 
   .footer-item {
     float: left;
-    margin: 0 7.2% 0 0;
+    margin-right: 7.2%;
   }
 
   .footer-item:nth-of-type(4) {
@@ -239,48 +235,27 @@
     position: relative;
     font-weight: 400;
     font-size: 16px;
-    transition: 1s;
-    transition-delay: 0.2s;
+    transition: all 0.3s ease;
     padding: 14px;
-  }
-
-  .footer-button:after {
-    content: "";
-    position: absolute;
-    top: 45px;
-    right: 13px;
-    background-color: white;
-    height: 1px;
-    width: 86px;
-    transition: 0.6s;
-  }
-
-  .footer-button:hover {
-    color: black;
-    background-color: white;
-  }
-
-  .footer-button:hover:after {
-    width: 112px;
-    right: 0px;
+    border-radius: 8px;
   }
 
   h1 {
     font-weight: 900;
     color: white;
-    font-size: 24px;
-    letter-spacing: 2px;
-    margin: 0;
-    padding-bottom: 10px;
+    font-size: 28px;
+    letter-spacing: 1px;
+    margin: 0 0 10px;
   }
 
   h2 {
     font-weight: 300;
+    font-size: 14px;
     line-height: 1.8;
-    font-size: 13px;
     color: #d1d1d1;
     letter-spacing: 0.03em;
-    padding: 15px 0 0 0;
+    margin: 0;
+    padding-top: 15px;
   }
 
   .color {
@@ -289,46 +264,67 @@
   }
 
   h3 {
-    font-weight: 400;
-    font-size: 13px;
+    font-weight: 600;
+    font-size: 16px;
     color: white;
-    margin: 0;
-    padding-bottom: 9px;
     letter-spacing: 0.03em;
+    margin: 0 0 12px;
   }
 
-  h3.desktop {
-    padding-top: 30px;
-  }
-
-  ul {
-    line-height: 1.8;
-    list-style-type: none;
+  .footer-links {
+    list-style: none;
     padding: 0;
+    line-height: 2;
+  }
+
+  .footer-links li {
+    margin-bottom: 8px;
   }
 
   li {
     font-weight: 300;
-    font-size: 13px;
+    font-size: 14px;
     color: #d1d1d1;
     letter-spacing: 0.03em;
   }
 
   p {
     font-weight: 300;
-    font-size: 13px;
-    padding: 0;
+    font-size: 14px;
     line-height: 1.8;
     letter-spacing: 0.03em;
+    margin: 0;
+    padding: 0;
+  }
+
+  .contact-info i {
+    margin-right: 8px;
+    color: #7289da;
   }
 
   a {
     text-decoration: none;
     color: #d1d1d1;
+    transition: all 0.3s ease;
+    position: relative;
   }
 
   a:hover {
     color: white;
+  }
+
+  .footer-links a:hover {
+    color: #7289da;
+    padding-left: 3px;
+  }
+
+  .patreon-button {
+    display: inline-block;
+    transition: all 0.3s ease;
+  }
+
+  .patreon-button:hover {
+    opacity: 0.9;
   }
 
   .desktop {
@@ -336,7 +332,7 @@
   }
 
   .footer-inner:after {
-    content: "© 2024 Hotsuop, All rights reserved";
+    content: "© 2024-2025 eYuM.dev, All rights reserved";
     font-weight: 300;
     letter-spacing: 0.03em;
     font-size: 13px;
@@ -349,42 +345,38 @@
 
   @media (max-width: 1024px) {
     footer {
-      padding: 50px 0 70px 0 !important;
+      padding: 50px 0 70px !important;
     }
 
     .footer-inner {
-      border-bottom: 1px solid #333;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       padding-bottom: 490px;
       margin-bottom: 50px;
     }
 
     .footer-item {
-      margin: 0 0 42px 0;
+      float: none;
       width: 50%;
+      margin: 0 0 42px;
     }
 
     .footer-item:nth-of-type(1) {
-      border-bottom: 1px solid #333;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       padding-bottom: 32px;
-      float: none;
       width: 100%;
     }
 
-    .footer-item:nth-of-type(2) {
-      clear: both;
-    }
-
-    .footer-item:nth-of-type(4) {
-      clear: both;
-      display: block;
-    }
-
+    .footer-item:nth-of-type(2),
+    .footer-item:nth-of-type(4),
     .footer-item:nth-of-type(6) {
       clear: both;
     }
 
+    .footer-item:nth-of-type(4) {
+      display: block;
+    }
+
     .footer-item:nth-of-type(7) {
-      clear: both;
       float: left;
       margin: 20px 0 0 -13px;
     }
@@ -405,21 +397,7 @@
     background-size: cover;
     position: relative;
     background-image: url("<%= domain %>/logo.png");
-    animation: hover 3s infinite linear;
-  }
-
-  @keyframes hover {
-    0% {
-      top: 0px;
-    }
-
-    50% {
-      top: 80px;
-    }
-
-    100% {
-      top: 0px;
-    }
+    filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.3));
   }
 
   #mobileScreen {
@@ -432,53 +410,36 @@
     }
   }
 </style>
+
 <script>
-  function PopupCenter(e, n, t, i) {
-    var o = void 0 != window.screenLeft ? window.screenLeft : screen.left,
-      d = void 0 != window.screenTop ? window.screenTop : screen.top,
-      c = window.innerWidth
-        ? window.innerWidth
-        : document.documentElement.clientWidth
-          ? document.documentElement.clientWidth
-          : screen.width,
-      w = window.innerHeight
-        ? window.innerHeight
-        : document.documentElement.clientHeight
-          ? document.documentElement.clientHeight
-          : screen.height,
-      r = c / 2 - t / 2 + o,
-      h = w / 2 - i / 2 + d,
-      s = window.open(
-        e,
-        n,
-        "scrollbars=yes, width=" +
-        t +
-        ", height=" +
-        i +
-        ", top=" +
-        h +
-        ", left=" +
-        r
-      );
-    window.focus && s.focus();
+  function PopupCenter(url, title, w, h) {
+    const dualScreenLeft = window.screenLeft ?? screen.left;
+    const dualScreenTop = window.screenTop ?? screen.top;
+    const width =
+      window.innerWidth || document.documentElement.clientWidth || screen.width;
+    const height =
+      window.innerHeight ||
+      document.documentElement.clientHeight ||
+      screen.height;
+    const left = width / 2 - w / 2 + dualScreenLeft;
+    const top = height / 2 - h / 2 + dualScreenTop;
+    const newWindow = window.open(
+      url,
+      title,
+      `scrollbars=yes, width=${w}, height=${h}, top=${top}, left=${left}`
+    );
+    newWindow?.focus();
   }
-</script>
-<script>
+
   $(window).scroll(function () {
     if ($(this).scrollTop() >= 50) {
-      // If page is scrolled more than 50px
-      $("#return-to-top").fadeIn(200); // Fade in the arrow
+      $("#return-to-top").fadeIn(200);
     } else {
-      $("#return-to-top").fadeOut(200); // Else fade out the arrow
+      $("#return-to-top").fadeOut(200);
     }
   });
+
   $("#return-to-top").click(function () {
-    // When arrow is clicked
-    $("body,html").animate(
-      {
-        scrollTop: 0, // Scroll to top of body
-      },
-      500
-    );
+    $("body,html").animate({ scrollTop: 0 }, 500);
   });
 </script>

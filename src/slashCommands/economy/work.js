@@ -1,28 +1,24 @@
-const Command = require("../../structures/Command");
+const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageEmbed } = require("discord.js");
-const Profile = require("../../database/models/economy/profile.js");
+const Profile = require("../../database/models/economy/profile");
 
-module.exports = class extends Command {
-  constructor(...args) {
-    super(...args, {
-      name: "work",
-      description: "Earn money by working",
-      category: "Economy",
-      cooldown: 30,
-    });
-  }
-
-  async run(message) {
+module.exports = {
+  data: new SlashCommandBuilder()
+    .setName("work")
+    .setDescription("Earn money by working for a random job.")
+    .setContexts([0, 1, 2])
+    .setIntegrationTypes([0, 1]),
+  async execute(interaction) {
     try {
       const profile = await Profile.findOne({
-        userID: message.author.id,
+        userID: interaction.user.id,
       });
 
       if (!profile) {
-        return message.channel.send({
+        return interaction.reply({
           embeds: [
             new MessageEmbed()
-              .setColor(message.client.color.yellow)
+              .setColor(interaction.client.color.red)
               .setDescription(
                 `You currently do not have a profile registered!\nUse the /register command to register your profile.`
               ),
@@ -183,7 +179,7 @@ module.exports = class extends Command {
       const now = Date.now();
       const xpGained = selectedJob.xp;
       await Profile.updateOne(
-        { userID: message.author.id },
+        { userID: interaction.user.id },
         {
           $inc: { wallet: earnings, xp: xpGained },
           $set: {
@@ -193,11 +189,11 @@ module.exports = class extends Command {
         }
       );
 
-      message.channel.send({
+      interaction.reply({
         embeds: [
           new MessageEmbed()
-            .setColor("GREEN")
-            .setTitle(`${message.author.username}'s Work - ${selectedJob.name}`)
+            .setColor(interaction.client.color.green)
+            .setTitle(`${interaction.user.username}'s Work - ${selectedJob.name}`)
             .setDescription(
               `You worked as a ${selectedJob.name} and earned $${earnings}.`
             ),
@@ -205,17 +201,17 @@ module.exports = class extends Command {
       });
     } catch (error) {
       console.error("Error occurred:", error);
-      message.channel.send({
+      interaction.reply({
         embeds: [
           new MessageEmbed()
-            .setColor("RED")
+            .setColor(interaction.client.color.red)
             .setDescription("An error occurred while processing the command."),
         ],
       });
     }
-  }
+  },
 
   calculateRequiredXP(level) {
     return Math.pow(level * 100, 2);
-  }
+  },
 };

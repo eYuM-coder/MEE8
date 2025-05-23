@@ -1,42 +1,41 @@
-const Command = require("../../structures/Command");
-const { MessageEmbed } = require("discord.js");
-const Profile = require("../../database/models/economy/profile.js");
+const { SlashCommandBuilder } = require("@discordjs/builders");
 
-module.exports = class extends Command {
-  constructor(...args) {
-    super(...args, {
-      name: "slots",
-      description: "Gamble a certain amount of money in slots",
-      category: "Economy",
-      cooldown: 3,
-    });
-  }
-
-  async run(message, args) {
+module.exports = {
+  data: new SlashCommandBuilder()
+    .setName("slots")
+    .setDescription("Play a simulation of a slots machine!")
+    .addStringOption((option) =>
+      option
+        .setName("bet")
+        .setDescription("The amount of money you want to bet")
+    )
+    .setContexts([0, 1, 2])
+    .setIntegrationTypes([0, 1]),
+  async execute(interaction) {
     try {
-      const bet = parseInt(args[0]);
+      const bet = interaction.options.getString("bet");
 
       // Check if the bet is a valid number
       if (isNaN(bet) || bet <= 0) {
-        return message.channel.send({
+        return interaction.reply({
           embeds: [
             new MessageEmbed()
-              .setColor(message.client.color.red)
+              .setColor(interaction.client.color.red)
               .setDescription("Please enter a valid bet amount."),
           ],
         });
       }
 
       const profile = await Profile.findOne({
-        userID: message.author.id,
+        userID: interaction.user.id,
       });
 
       // Check if the user has a profile, create one if not
       if (!profile) {
-        return message.channel.send({
+        return interaction.reply({
           embeds: [
             new MessageEmbed()
-              .setColor(message.client.color.red)
+              .setColor(interaction.client.color.red)
               .setDescription(
                 `You currently do not have a profile registered!\nUse the /register command to register your profile.`
               ),
@@ -46,10 +45,10 @@ module.exports = class extends Command {
 
       // Check if the user has enough money to place the bet
       if (profile.wallet < bet) {
-        return message.channel.send({
+        return interaction.reply({
           embeds: [
             new MessageEmbed()
-              .setColor(message.client.color.red)
+              .setColor(interaction.client.color.red)
               .setDescription("You don't have enough money to place that bet."),
           ],
         });
@@ -63,7 +62,7 @@ module.exports = class extends Command {
       const winnings = outcome === "win" ? bet * 2 : 0;
 
       await Profile.updateOne(
-        { userID: message.author.id },
+        { userID: interaction.user.id },
         {
           $inc: {
             wallet: outcome === "win" ? winnings : -bet,
@@ -72,15 +71,15 @@ module.exports = class extends Command {
       );
 
       // Send a message with the outcome
-      message.channel.send({
+      interaction.reply({
         embeds: [
           new MessageEmbed()
             .setColor(
               outcome === "win"
-                ? message.client.color.green
-                : message.client.color.red
+                ? interaction.client.color.green
+                : interaction.client.color.red
             )
-            .setTitle(`${message.author.username}'s Slots Game`)
+            .setTitle(`${interaction.user.username}'s Slots Game`)
             .setDescription(
               outcome === "win"
                 ? `Congratulations! You won $${winnings}.`
@@ -90,13 +89,13 @@ module.exports = class extends Command {
       });
     } catch (error) {
       console.error("Error occurred:", error);
-      message.channel.send({
+      interaction.reply({
         embeds: [
           new MessageEmbed()
-            .setColor(message.client.color.red)
+            .setColor(interaction.client.color.red)
             .setDescription("An error occurred while processing the command."),
         ],
       });
     }
-  }
+  },
 };

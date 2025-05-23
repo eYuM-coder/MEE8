@@ -13,3 +13,5 @@ package-lock.json
 .github
 .upm
 .replit
+commandCache.json
+playit/playit-linux-amd64

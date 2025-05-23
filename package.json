@@ -101,8 +101,7 @@
     "winston": "^3.3.3",
     "ytdl-core": "^4.11.5",
     "zalgo": "0.0.1",
-    "zalgolize": "^1.2.4",
-    "zlib": "^1.0.5"
+    "zalgolize": "^1.2.4"
   },
   "name": "neonova",
   "version": "1.0.0",

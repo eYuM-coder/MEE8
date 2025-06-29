@@ -4,7 +4,6 @@ const config = require("../../../config.json");
 const webhookClient = new WebhookClient({
   url: config.webhooks.blacklist,
 });
-
 const Blacklist = require("../../database/schemas/blacklist");
 
 module.exports = class extends Command {
@@ -18,11 +17,16 @@ module.exports = class extends Command {
   }
 
   async run(message, args) {
-    if (
-      !message.client.config.owner.includes(message.author.id) &&
-      message.client.config.developers.includes(message.author.id)
-    ) {
-      return message.channel.sendCustom(`This command is for the owner.`);
+    if (!message.client.config.owner.includes(message.author.id)) {
+      return message.channel.sendCustom({
+        embeds: [
+          new MessageEmbed()
+            .setColor(message.client.color.red)
+            .setDescription(
+              `${message.client.emoji.fail} | You are not the owner of this bot.`
+            ),
+        ],
+      });
     }
     const match = message.content.match(/\d{18}/);
     let member;
@@ -40,7 +44,7 @@ module.exports = class extends Command {
 
     if (args.length < 1)
       return message.channel.sendCustom(
-        `Please provide me with a user or guild blacklist`,
+        `Please provide me with a user or guild blacklist`
       );
     if (args.length < 2)
       return message.channel.sendCustom(`Provide me with a user`);
@@ -56,7 +60,7 @@ module.exports = class extends Command {
         },
         (err, user) => {
           user.deleteOne();
-        },
+        }
       );
       message.channel.sendCustom({
         embed: {
@@ -95,7 +99,7 @@ module.exports = class extends Command {
         },
         (err, server) => {
           server.deleteOne();
-        },
+        }
       );
 
       message.channel.sendCustom({

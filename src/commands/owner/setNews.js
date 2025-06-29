@@ -1,5 +1,6 @@
 const Command = require("../../structures/Command");
 const NewsSchema = require("../../database/schemas/Neonova");
+const { MessageEmbed } = require("discord.js");
 
 module.exports = class extends Command {
   constructor(...args) {
@@ -12,8 +13,16 @@ module.exports = class extends Command {
   }
 
   async run(message, args) {
-    if (message.client.config.developers.includes(message.author.id)) {
-      return message.channel.sendCustom(`This command is for the owner.`);
+    if (!message.client.config.owner.includes(message.author.id)) {
+      return message.channel.sendCustom({
+        embeds: [
+          new MessageEmbed()
+            .setColor(message.client.color.red)
+            .setDescription(
+              `${message.client.emoji.fail} | You are not the owner of this bot.`
+            ),
+        ],
+      });
     }
     let news = args.join(" ").split("").join("");
     if (!news) return message.channel.send("Please enter news.");
@@ -32,7 +41,7 @@ module.exports = class extends Command {
       {
         news: news,
         time: new Date(),
-      },
+      }
     );
   }
 };

@@ -1,3 +1,4 @@
+const { MessageEmbed } = require("discord.js");
 const Command = require("../../structures/Command");
 
 module.exports = class extends Command {
@@ -13,11 +14,18 @@ module.exports = class extends Command {
 
   async run(message, args) {
     if (
-      message.client.config.owner.includes(message.author.id) || message.client.config.developers.includes(message.author.id)
+      !message.client.config.owner.includes(message.author.id) &&
+      !message.client.config.developers.includes(message.author.id)
     ) {
-      // do nothing
-    } else {
-      return message.channel.sendCustom(`You are not the owner or a developer of this bot.`);
+      return message.channel.sendCustom({
+        embeds: [
+          new MessageEmbed()
+            .setColor(message.client.color.red)
+            .setDescription(
+              `${message.client.emoji.fail} | You are not the owner or a developer of this bot.`
+            ),
+        ],
+      });
     }
     const input = args.join(" ");
     if (!input) return message.channel.sendCustom(`What do I evaluate?`);

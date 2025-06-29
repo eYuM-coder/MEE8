@@ -1,6 +1,5 @@
 const Command = require("../../structures/Command");
 const { MessageEmbed } = require("discord.js");
-const moment = require("moment");
 
 module.exports = class extends Command {
   constructor(...args) {
@@ -25,6 +24,18 @@ module.exports = class extends Command {
     const guildId = args[0];
     const guild = message.client.guilds.cache.get(guildId);
     if (!guild) return message.channel.sendCustom(`Invalid guild ID`);
+
+    if (!message.client.config.owner.includes(message.author.id)) {
+      return message.channel.sendCustom({
+        embeds: [
+          new MessageEmbed()
+            .setColor(message.client.color.red)
+            .setDescription(
+              `${message.client.emoji.fail} | You are not the owner of this bot.`
+            ),
+        ],
+      });
+    }
 
     const embed = new MessageEmbed()
       .setAuthor({ name: guild.name, iconURL: guild.iconURL() })

@@ -15,12 +15,16 @@ module.exports = class extends Command {
 
   async run(message, args) {
     const guildId = args[0];
-    if (
-      message.client.config.owner.includes(message.author.id)
-    ) {
-      // do nothing
-    } else {
-      return message.channel.sendCustom(`You are not the owner of this bot.`);
+    if (!message.client.config.owner.includes(message.author.id)) {
+      return message.channel.sendCustom({
+        embeds: [
+          new MessageEmbed()
+            .setColor(message.client.color.red)
+            .setDescription(
+              `${message.client.emoji.fail} | You are not the owner of this bot.`
+            ),
+        ],
+      });
     }
     if (!rgx.test(guildId))
       return message.channel.sendCustom(`Provide a guild`);

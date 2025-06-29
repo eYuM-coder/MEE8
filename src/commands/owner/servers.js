@@ -1,6 +1,7 @@
 const Command = require("../../structures/Command");
 const ReactionMenu = require("../../data/ReactionMenu.js");
 const { MessageEmbed } = require("discord.js");
+
 module.exports = class extends Command {
   constructor(...args) {
     super(...args, {
@@ -16,9 +17,15 @@ module.exports = class extends Command {
       !message.client.config.owner.includes(message.author.id) &&
       !message.client.config.developers.includes(message.author.id)
     ) {
-      return message.channel.sendCustom(
-        `You are not a developer or the owner of this bot.`
-      );
+      return message.channel.sendCustom({
+        embeds: [
+          new MessageEmbed()
+            .setColor(message.client.color.red)
+            .setDescription(
+              `${message.client.emoji.fail} | You are not a developer or the owner of this bot.`
+            ),
+        ],
+      });
     }
     const servers = message.client.guilds.cache.map((guild) => {
       return `\`${guild.id}\` - **${guild.name}** - \`${guild.memberCount}\` members`;

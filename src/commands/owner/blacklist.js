@@ -5,6 +5,7 @@ const webhookClient = new WebhookClient({
   url: config.webhooks.blacklist,
 });
 const Blacklist = require("../../database/schemas/blacklist");
+
 module.exports = class extends Command {
   constructor(...args) {
     super(...args, {
@@ -17,10 +18,16 @@ module.exports = class extends Command {
   }
 
   async run(message, args) {
-    if (message.client.config.owner.includes(message.author.id)) {
-      // do nothing
-    } else {
-      return message.channel.sendCustom(`You are not the owner of this bot.`);
+    if (!message.client.config.owner.includes(message.author.id)) {
+      return message.channel.sendCustom({
+        embeds: [
+          new MessageEmbed()
+            .setColor(message.client.color.red)
+            .setDescription(
+              `${message.client.emoji.fail} | You are not the owner of this bot.`
+            ),
+        ],
+      });
     }
 
     const match = message.content.match(/\d{18}/);

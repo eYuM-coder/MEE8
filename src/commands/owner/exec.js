@@ -1,3 +1,4 @@
+const { MessageEmbed } = require("discord.js");
 const Command = require("../../structures/Command");
 const { exec } = require("child_process");
 
@@ -13,21 +14,25 @@ module.exports = class extends Command {
   }
 
   async run(message, args) {
-    if (
-      message.client.config.owner.includes(message.author.id)
-    ) {
-      // do nothing
-    } else {
-      return message.channel.sendCustom(`You are not the owner of this bot.`);
+    if (!message.client.config.owner.includes(message.author.id)) {
+      return message.channel.sendCustom({
+        embeds: [
+          new MessageEmbed()
+            .setColor(message.client.color.fail)
+            .setDescription(
+              `${message.client.emoji.fail} | You are not the owner of this bot.`
+            ),
+        ],
+      });
     }
     if (message.content.includes("config.json"))
       return message.channel.sendCustom(
-        "Due to privacy reasons, we can't show the config.json file.",
+        "Due to privacy reasons, we can't show the config.json file."
       );
 
     if (args.length < 1)
       return message.channel.sendCustom(
-        "You have to give me some text to execute!",
+        "You have to give me some text to execute!"
       );
 
     exec(args.join(" "), (error, stdout) => {

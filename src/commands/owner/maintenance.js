@@ -1,5 +1,7 @@
 const Command = require("../../structures/Command");
 const Maintenance = require("../../database/schemas/maintenance");
+const { MessageEmbed } = require("discord.js");
+
 module.exports = class extends Command {
   constructor(...args) {
     super(...args, {
@@ -11,16 +13,20 @@ module.exports = class extends Command {
   }
 
   async run(message, args) {
-    if (
-      message.client.config.owner.includes(message.author.id)
-    ) {
-      // do nothing
-    } else {
-      return message.channel.sendCustom(`You are not the owner of this bot.`);
+    if (!message.client.config.owner.includes(message.author.id)) {
+      return message.channel.sendCustom({
+        embeds: [
+          new MessageEmbed()
+            .setColor(message.client.color.red)
+            .setDescription(
+              `${message.client.emoji.fail} | You are not the owner of this bot.`
+            ),
+        ],
+      });
     }
     if (!args[0])
       return message.channel.sendCustom(
-        "Would you like to enable or disable maintenance mode?",
+        "Would you like to enable or disable maintenance mode?"
       );
 
     const maintenance = await Maintenance.findOne({

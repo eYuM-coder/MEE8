@@ -1,3 +1,4 @@
+const { MessageEmbed } = require("discord.js");
 const Command = require("../../structures/Command");
 const { exec } = require("child_process");
 
@@ -12,12 +13,16 @@ module.exports = class extends Command {
   }
 
   async run(message) {
-    if (
-      !message.client.config.owner.includes(message.author.id) &&
-      (!message.client.config.developers.includes(message.author.id) ||
-        message.client.config.developers.includes(message.author.id))
-    ) {
-      return message.channel.sendCustom(`This command is for the owner.`);
+    if (!message.client.config.owner.includes(message.author.id)) {
+      return message.channel.sendCustom({
+        embeds: [
+          new MessageEmbed()
+            .setColor(message.client.color.red)
+            .setDescription(
+              `${message.client.emoji.fail} | You are not the owner of this bot.`
+            ),
+        ],
+      });
     }
 
     try {

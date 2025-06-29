@@ -158,17 +158,13 @@ module.exports = {
     const subcommand = interaction.options.getSubcommand();
 
     if (subcommand === "addbadge") {
-      if (
-        !config.owner.includes(interaction.user.id) &&
-        (config.developers.includes(interaction.user.id) ||
-          !config.developers.includes(interaction.user.id))
-      ) {
+      if (!config.owner.includes(interaction.user.id)) {
         return interaction.reply({
           embeds: [
             new MessageEmbed()
               .setColor(client.color.red)
               .setDescription(
-                `${client.emoji.fail} | This command is for the owner.`
+                `${client.emoji.fail} | You are not the owner of this bot.`
               ),
           ],
           ephemeral: true,
@@ -218,17 +214,13 @@ module.exports = {
         ephemeral: true,
       });
     } else if (subcommand === "blacklist") {
-      if (
-        !config.owner.includes(interaction.user.id) &&
-        (config.developers.includes(interaction.user.id) ||
-          !config.developers.includes(interaction.user.id))
-      ) {
+      if (!config.owner.includes(interaction.user.id)) {
         return interaction.reply({
           embeds: [
             new MessageEmbed()
               .setColor(client.color.red)
               .setDescription(
-                `${client.emoji.fail} | This command is for the owner.`
+                `${client.emoji.fail} | You are not the owner of this bot.`
               ),
           ],
           ephemeral: true,
@@ -339,17 +331,13 @@ module.exports = {
         });
       }
     } else if (subcommand === "clearbackups") {
-      if (
-        !config.owner.includes(interaction.user.id) &&
-        (config.developers.includes(interaction.user.id) ||
-          !config.developers.includes(interaction.user.id))
-      ) {
+      if (!config.owner.includes(interaction.user.id)) {
         return interaction.reply({
           embeds: [
             new MessageEmbed()
               .setColor(client.color.red)
               .setDescription(
-                `${client.emoji.fail} | This command is for the owner.`
+                `${client.emoji.fail} | You are not the owner of this bot.`
               ),
           ],
           ephemeral: true,
@@ -380,17 +368,13 @@ module.exports = {
         setTimeout(() => {}, 3000);
       });
     } else if (subcommand === "createbackup") {
-      if (
-        !config.owner.includes(interaction.user.id) &&
-        (config.developers.includes(interaction.user.id) ||
-          !config.developers.includes(interaction.user.id))
-      ) {
+      if (!config.owner.includes(interaction.user.id)) {
         return interaction.reply({
           embeds: [
             new MessageEmbed()
               .setColor(client.color.red)
               .setDescription(
-                `${client.emoji.fail} | This command is for the owner.`
+                `${client.emoji.fail} | You are not the owner of this bot.`
               ),
           ],
           ephemeral: true,
@@ -444,7 +428,10 @@ module.exports = {
           content: `What do I evaluate?`,
           ephemeral: true,
         });
-      if (!input.toLowerCase().includes("token")) {
+      if (
+        !input.toLowerCase().includes("token") ||
+        config.owner.includes(interaction.user.id)
+      ) {
         let embed = ``;
 
         try {
@@ -469,17 +456,13 @@ module.exports = {
       await interaction.deferReply({ ephemeral: true });
       const thing = interaction.options.getString("thing-to-exec");
 
-      if (
-        !config.owner.includes(interaction.user.id) &&
-        (config.developers.includes(interaction.user.id) ||
-          !config.developers.includes(interaction.user.id))
-      ) {
+      if (!config.owner.includes(interaction.user.id)) {
         return interaction.reply({
           embeds: [
             new MessageEmbed()
               .setColor(client.color.red)
               .setDescription(
-                `${client.emoji.fail} | This command is for the owner.`
+                `${client.emoji.fail} | You are not the owner of this bot.`
               ),
           ],
           ephemeral: true,
@@ -570,17 +553,13 @@ module.exports = {
 
       await interaction.deferReply({ ephemeral: true });
 
-      if (
-        !config.owner.includes(interaction.user.id) &&
-        (config.developers.includes(interaction.user.id) ||
-          config.developers.includes(interaction.user.id))
-      ) {
+      if (!config.owner.includes(interaction.user.id)) {
         return interaction.editReply({
           embeds: [
             new MessageEmbed()
               .setColor(client.color.red)
               .setDescription(
-                `${client.emoji.fail} | This command is for the owner.`
+                `${client.emoji.fail} | You are not the owner of this bot.`
               ),
           ],
           ephemeral: true,
@@ -599,20 +578,15 @@ module.exports = {
         .setColor(interaction.guild.members.me.displayHexColor);
       interaction.editReply({ embeds: [embed], ephemeral: true });
     } else if (subcommand === "stop") {
-      const client = client;
       const userId = interaction.user.id;
 
-      if (
-        !config.owner.includes(userId) &&
-        (config.developers.includes(userId) ||
-          !config.developers.includes(userId))
-      ) {
+      if (!config.owner.includes(userId)) {
         return interaction.reply({
           embeds: [
             new MessageEmbed()
               .setColor(client.color.red)
               .setDescription(
-                "You do not have permission to execute this command."
+                `${client.emoji.fail} | You are not the owner of this bot.`
               ),
           ],
           ephemeral: true,
@@ -696,22 +670,17 @@ module.exports = {
         let days = Math.floor(diff / 86400000);
         return days + (days == 1 ? " day" : " days") + " ago";
       }
-      const client = client;
       const guildId = interaction.options.getString("guild");
       const guild = client.guilds.cache.get(guildId);
       if (!guild) return interaction.reply({ content: `Invalid guild ID` });
 
-      if (
-        !config.owner.includes(interaction.user.id) &&
-        (config.developers.includes(interaction.user.id) ||
-          !config.developers.includes(interaction.user.id))
-      ) {
+      if (!config.owner.includes(interaction.user.id)) {
         return interaction.reply({
           embeds: [
             new MessageEmbed()
               .setColor(client.color.red)
               .setDescription(
-                `${client.emoji.fail} | This command is for the owner.`
+                `${client.emoji.fail} | You are not the owner of this bot.`
               ),
           ],
           ephemeral: true,
@@ -762,8 +731,7 @@ module.exports = {
 
       if (
         !config.owner.includes(interaction.user.id) &&
-        (config.developers.includes(interaction.user.id) ||
-          !config.developers.includes(interaction.user.id))
+        !config.developers.includes(interaction.user.id)
       ) {
         return interaction.reply({
           embeds: [
@@ -805,17 +773,13 @@ module.exports = {
         );
       }
     } else if (subcommand === "setnews") {
-      if (
-        !config.owner.includes(interaction.user.id) &&
-        (config.developers.includes(interaction.user.id) ||
-          !config.developers.includes(interaction.user.id))
-      ) {
+      if (!config.owner.includes(interaction.user.id)) {
         return interaction.reply({
           embeds: [
             new MessageEmbed()
               .setColor(client.color.red)
               .setDescription(
-                `${client.emoji.fail} | This command is for the owner.`
+                `${client.emoji.fail} | You are not the owner of this bot.`
               ),
           ],
           ephemeral: true,
